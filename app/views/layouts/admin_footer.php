@@ -23,7 +23,7 @@
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
-        
+        /// test
         // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function(event) {
             const sidebar = document.getElementById('sidebar');
