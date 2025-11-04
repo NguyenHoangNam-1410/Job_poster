@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../helpers/Auth.php';
 
 $reason = $_GET['reason'] ?? 'login';
 $isLoggedIn = Auth::isLoggedIn();
-$isCustomer = Auth::isCustomer();
+$isGuest = Auth::isGuest();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,7 +41,7 @@ $isCustomer = Auth::isCustomer();
         <!-- Message -->
         <div class="mb-8">
             <h2 class="text-3xl font-bold text-gray-800 mb-4">
-                <?php if ($reason === 'forbidden' && $isCustomer): ?>
+                <?php if ($reason === 'forbidden' && $isGuest): ?>
                     Admin Access Only
                 <?php else: ?>
                     Unauthorized Access
@@ -51,7 +51,7 @@ $isCustomer = Auth::isCustomer();
                 <?php 
                 if ($reason === 'expired') {
                     echo "Your session has expired. Please log in again.";
-                } elseif ($reason === 'forbidden' && $isCustomer) {
+                } elseif ($reason === 'forbidden' && $isGuest) {
                     echo "This area is restricted to administrators only.";
                 } elseif ($reason === 'forbidden') {
                     echo "You don't have permission to access this page.";
@@ -61,7 +61,7 @@ $isCustomer = Auth::isCustomer();
                 ?>
             </p>
             <p class="text-gray-500">
-                <?php if ($reason === 'forbidden' && $isCustomer): ?>
+                <?php if ($reason === 'forbidden' && $isGuest): ?>
                     If you need admin access, please contact the system administrator.
                 <?php else: ?>
                     Please authenticate to continue.
@@ -72,7 +72,7 @@ $isCustomer = Auth::isCustomer();
         <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <?php if ($reason === 'forbidden' && $isLoggedIn): ?>
-                <!-- Customer trying to access admin area - show home button -->
+                <!-- Guest trying to access admin area - show home button -->
                 <a href="/mywebsite/public/" 
                    class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-lg hover:bg-red-700 transform hover:scale-105 transition-all duration-200">
                     <?= Icons::home('w-5 h-5 mr-2') ?>
@@ -102,7 +102,7 @@ $isCustomer = Auth::isCustomer();
         <div class="mt-12 text-gray-500 text-sm">
             <?php if (!$isLoggedIn): ?>
                 <p>Don't have an account? <a href="/mywebsite/public/signup" class="text-red-600 hover:underline">Sign up here</a></p>
-            <?php elseif ($isCustomer && $reason === 'forbidden'): ?>
+            <?php elseif ($isGuest && $reason === 'forbidden'): ?>
                 <p>Need help finding something? <a href="/mywebsite/public/shop" class="text-red-600 hover:underline">Browse our products</a></p>
             <?php endif; ?>
         </div>

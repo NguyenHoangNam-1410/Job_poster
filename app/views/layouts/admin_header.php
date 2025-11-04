@@ -34,7 +34,7 @@
             <!-- Dashboard Section -->
             <div class="menu-section">Dashboard</div>
             <a href="/Job_poster/public/"
-                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/Job_poster/public/') !== false && strpos($_SERVER['REQUEST_URI'], '/users') === false && strpos($_SERVER['REQUEST_URI'], '/products') === false ? 'active' : '' ?>">
+                class="menu-item <?= rtrim($_SERVER['REQUEST_URI'], '/') === '/Job_poster/public' ? 'active' : '' ?>">
                 <?= Icons::home() ?>
                 Homepage
             </a>
@@ -47,12 +47,28 @@
                 Users
             </a>
 
-            <!-- Discount Management -->
-            <div class="menu-section">Discount Management</div>
-            <a href="/Job_poster/public/discounts"
-                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/discounts') !== false ? 'active' : '' ?>">
+            <!-- Category Management -->
+            <div class="menu-section">Category Management</div>
+            <a href="/Job_poster/public/job-categories"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/job-categories') !== false ? 'active' : '' ?>">
                 <?= Icons::tag() ?>
-                Discounts
+                Categories
+            </a>
+
+            <!-- Job Management -->
+            <div class="menu-section">Job Management</div>
+            <a href="/Job_poster/public/jobs"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false ? 'active' : '' ?>">
+                <?= Icons::briefcase() ?>
+                Jobs
+            </a>
+
+            <!-- Request Posting -->
+            <div class="menu-section">Request Posting</div>
+            <a href="/Job_poster/public/approvals"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/approvals') !== false ? 'active' : '' ?>">
+                <?= Icons::checklist() ?>
+                Request Posting
             </a>
 
             <!-- Add more menu items here easily -->

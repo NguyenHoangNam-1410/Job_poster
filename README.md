@@ -48,7 +48,7 @@ Job_poster/
 │   └── views/             # View templates
 │       ├── admin/         # Admin panel views
 │       ├── layouts/       # Shared layouts (header, footer)
-│       └── public/        # Customer-facing views
+│       └── public/        # Guest-facing views
 ├── config/                # Configuration files
 ├── public/                # Public assets and entry point
 │   ├── index.php         # Main router
@@ -104,12 +104,12 @@ Job_poster/
      ```
 
 6. **Access the Application**
-   - Customer Interface: http://localhost/Job_poster/public/
+   - Guest Interface: http://localhost/Job_poster/public/
    - Admin Panel: http://localhost/Job_poster/public/users
 
 ## 💡 Usage
 
-### Customer Flow
+### Guest Flow
 ...
 
 ### Admin Flow

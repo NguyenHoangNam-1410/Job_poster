@@ -1,0 +1,74 @@
+UI/UX COMPONENTS:
+1. Admin: 6 main views
+-User manage: only manage employers, staff
+-Manage job category
+-Job posting request => Approve or reject
+-Manage job (Edit and Delete)
+-Stat view: Number of jobs, number of active employers,...
+-Staff action history
+
+2. Staff: 3 main views
+-Job posting request => Approve or reject
+-Review reports, complaints
+-Manage job (Edit and Delete)
+
+3. Employer: 2 main views
+-Create edit their own company profile (name, logo, contact, website, 
+description)
+-Job manage (the job belongs to the creater company)
+-Each account belongs to one company
+-Report posting
+
+4. Guest: 2 main views
+-Browse job (search by title, location or keyword, filter by category)
+-View job detail, cannot post job
+
+5. Login
+- If no login => Guest
+- If login => Give authentication base on role
+- If sign up, only sign up as employer => must provide all required field in business logic
+
+6. Design
+-Header: Logo, title
+-Navbar: Home, About Us
+-Footer: Contact, Policy, Copyright, Hiring (optional)
+
+-Admin navbar: Admin
+-Admin sidebar: User, Job Category, Job request, Job manage, Stat, History
+
+-Staff navbar: Staff
+-Staff sidebar: Job request, Report, Job manage
+
+-Employer navbar: Employer
+-Employer sidebar: Job post, Report Issue
+
+-Guest navber: Job, Login
+-Guest sidebar: X
+
+-------------------------------------------------------------------
+BUSINESS LOGIC:
+-Email always unique among all user type
+-Employer must have (while login):
+o Company Name 
+o Contact Person & Email/Phone 
+o Company Logo (file upload) 
+o Company Website 
+o Company Description
+-Job must have these info:
+o Job Title 
+o Location (city/address) 
+o Job Description (duties, responsibilities) 
+o Requirements (degree, field of study, certifications, skills, years of 
+experience) 
+o Salary (optional) 
+o Application Deadline 
+o Job Category (must belong to an existing category) 
+
+-Job category always form as dropdown list, ref to job category where admin create
+-Only show aproved jobs to guest and employer
+-Job is draft state only show privately to employer who created it
+-Admin can create new or delete other admin, but cant edit other admins. Can edit their own info
+-Admin can create, edit and delete staff, but cant create new guest, or new employer
+
+
+

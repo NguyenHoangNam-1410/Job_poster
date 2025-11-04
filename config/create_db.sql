@@ -8,7 +8,7 @@ CREATE TABLE `USERS` (
     `UID` INT AUTO_INCREMENT PRIMARY KEY,
     `Email` VARCHAR(255) NOT NULL,
     `Password` VARCHAR(255) NOT NULL,
-    `Role` ENUM('Customer','Admin','Employer') NOT NULL DEFAULT 'Customer',
+    `Role` ENUM('Guest','Admin','Staff','Employer') NOT NULL DEFAULT 'Guest',
     `Name` VARCHAR(255) NOT NULL,
     `Avatar` TEXT,
     `is_active` TINYINT(1) NOT NULL DEFAULT 1,
@@ -43,7 +43,14 @@ CREATE TABLE `JOBS` (
     `requirements` TEXT,
     `salary` DECIMAL(10,2),
     `deadline` DATETIME,
-    `status` ENUM('open','closed','draft','paused') NOT NULL DEFAULT 'open',
+    status ENUM(
+        'draft',
+        'pending',
+        'approved',
+        'rejected',
+        'overdue',
+        'soft_deleted'
+    ) NOT NULL DEFAULT 'draft',
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (`employer_id`) REFERENCES `EMPLOYERS`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -79,6 +86,17 @@ CREATE TABLE `STAFF_ACTIONS` (
     FOREIGN KEY (`job_id`) REFERENCES `JOBS`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     INDEX (`user_id`),
     INDEX (`job_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE JOB_REVIEWS (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    job_id INT NOT NULL,
+    reviewed_by INT NOT NULL,          -- admin or staff UID
+    action ENUM('approve', 'reject') NOT NULL,
+    reason TEXT,                       -- rejection reason or notes
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (job_id) REFERENCES JOBS(id) ON DELETE CASCADE,
+    FOREIGN KEY (reviewed_by) REFERENCES USERS(UID) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `FEEDBACK` (

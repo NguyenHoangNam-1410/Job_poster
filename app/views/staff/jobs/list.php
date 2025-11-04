@@ -1,0 +1,333 @@
+<?php $pageTitle = 'Job Management'; ?>
+<?php
+include __DIR__ . '/../../layouts/admin_header.php';
+require_once __DIR__ . '/../../../helpers/Icons.php';
+
+?>
+
+<div class="list-container">
+    <div class="list-content">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="list-header">Job Management</h1>
+                <p class="text-gray-600 mt-2">Manage and review job postings (Approved, Overdue, and Deleted Jobs)</p>
+            </div>
+        </div>
+
+        <!-- Search and Filter Form -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <form method="GET" action="/Job_poster/public/jobs" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <!-- Search -->
+                    <div class="lg:col-span-2">
+                        <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search by Title</label>
+                        <input 
+                            type="text" 
+                            id="search" 
+                            name="search" 
+                            value="<?= htmlspecialchars($pagination['search'] ?? '') ?>"
+                            placeholder="Search job title..."
+                            class="form-input w-full"
+                        >
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div>
+                        <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                        <select id="category" name="category" class="form-select">
+                            <option value="">All Categories</option>
+                            <?php foreach ($categories as $category): ?>
+                                <option value="<?= $category->getId() ?>" 
+                                    <?= ($pagination['category_filter'] ?? '') == $category->getId() ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($category->getCategoryName()) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- Location Filter -->
+                    <div>
+                        <label for="location" class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                        <select id="location" name="location" class="form-select">
+                            <option value="">All Locations</option>
+                            <?php foreach ($locations as $location): ?>
+                                <option value="<?= htmlspecialchars($location) ?>" 
+                                    <?= ($pagination['location_filter'] ?? '') == $location ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($location) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                        <select id="status" name="status" class="form-select">
+                            <option value="">All Statuses</option>
+                            <option value="approved" <?= ($pagination['status_filter'] ?? '') == 'approved' ? 'selected' : '' ?>>Approved</option>
+                            <option value="overdue" <?= ($pagination['status_filter'] ?? '') == 'overdue' ? 'selected' : '' ?>>Overdue</option>
+                            <option value="soft_deleted" <?= ($pagination['status_filter'] ?? '') == 'soft_deleted' ? 'selected' : '' ?>>Deleted</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <div>
+                        <label for="per_page" class="block text-sm font-medium text-gray-700 mb-2">Per Page</label>
+                        <select id="per_page" name="per_page" class="form-select">
+                            <option value="10" <?= ($pagination['per_page'] ?? 10) == 10 ? 'selected' : '' ?>>10</option>
+                            <option value="25" <?= ($pagination['per_page'] ?? 10) == 25 ? 'selected' : '' ?>>25</option>
+                            <option value="50" <?= ($pagination['per_page'] ?? 10) == 50 ? 'selected' : '' ?>>50</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="submit" class="btn-submit">
+                            <?= Icons::filter('btn-icon') ?>
+                            Apply Filters
+                        </button>
+                        <a href="/Job_poster/public/jobs" class="btn-cancel">
+                            Clear
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <?php if (isset($_GET['error'])): ?>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <span class="block sm:inline"><?= htmlspecialchars($_GET['error']) ?></span>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['success'])): ?>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <span class="block sm:inline"><?= htmlspecialchars($_GET['success']) ?></span>
+            </div>
+        <?php endif; ?>
+
+        <?php if (empty($jobs)): ?>
+            <div class="list-table-wrapper">
+                <div id="empty-state" class="text-center py-12">
+                    <?= Icons::emptyState() ?>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">No jobs found</h3>
+                    <p class="mt-1 text-sm text-gray-500">
+                        <?php if (!empty($pagination['search']) || !empty($pagination['category_filter']) || !empty($pagination['location_filter']) || !empty($pagination['status_filter'])): ?>
+                            No jobs match your filters. Try adjusting your search criteria.
+                        <?php else: ?>
+                            No jobs available for management.
+                        <?php endif; ?>
+                    </p>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="list-table-wrapper">
+                <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200" id="jobsTable">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="table-header">Title</th>
+                            <th class="table-header">Employer</th>
+                            <th class="table-header">Location</th>
+                            <th class="table-header">Salary</th>
+                            <th class="table-header">Deadline</th>
+                            <th class="table-header">Status</th>
+                            <th class="table-header">Categories</th>
+                            <th class="table-header">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jobsTableBody" class="bg-white divide-y divide-gray-200">
+                        <?php foreach ($jobs as $job): ?>
+                            <tr class="hover:bg-gray-50" id="job-row-<?= $job->getId() ?>">
+                                <td class="table-cell font-medium">
+                                    <?= htmlspecialchars($job->getTitle()) ?>
+                                </td>
+                                <td class="table-cell">
+                                    <?= htmlspecialchars($job->getEmployerName() ?? 'N/A') ?>
+                                </td>
+                                <td class="table-cell">
+                                    <?= htmlspecialchars($job->getLocation() ?? 'N/A') ?>
+                                </td>
+                                <td class="table-cell">
+                                    <?php if ($job->getSalary()): ?>
+                                        <?= number_format($job->getSalary(), 0, ',', '.') ?> VND
+                                    <?php else: ?>
+                                        <span class="text-gray-400">Negotiable</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="table-cell">
+                                    <?php if ($job->getDeadline()): ?>
+                                        <?= date('Y-m-d', strtotime($job->getDeadline())) ?>
+                                    <?php else: ?>
+                                        <span class="text-gray-400">N/A</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="table-cell">
+                                    <span class="px-2 py-1 rounded text-sm <?= $job->getStatusColor() ?>">
+                                        <?php 
+                                            $status = $job->getStatus();
+                                            echo $status === 'soft_deleted' ? 'Deleted' : ucfirst(str_replace('_', ' ', $status));
+                                        ?>
+                                    </span>
+                                </td>
+                                <td class="table-cell">
+                                    <?php 
+                                    $categories = $job->getCategories();
+                                    if (!empty($categories)): 
+                                    ?>
+                                        <div class="flex flex-wrap gap-1">
+                                            <?php foreach (array_slice($categories, 0, 2) as $cat): ?>
+                                                <span class="px-2 py-1 text-xs rounded bg-blue-50 text-blue-700">
+                                                    <?= htmlspecialchars($cat['name']) ?>
+                                                </span>
+                                            <?php endforeach; ?>
+                                            <?php if (count($categories) > 2): ?>
+                                                <span class="px-2 py-1 text-xs rounded bg-gray-100 text-gray-600">
+                                                    +<?= count($categories) - 2 ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <span class="text-gray-400 text-sm">No categories</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="table-cell">
+                                    <div class="flex gap-2">
+                                        <a href="/Job_poster/public/jobs/edit/<?= $job->getId() ?>"
+                                            class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm">
+                                            <?= Icons::edit('w-4 h-4 mr-1') ?>
+                                            Edit
+                                        </a>
+                                        
+                                        <button
+                                            onclick="deleteJob(<?= $job->getId() ?>, '<?= htmlspecialchars($job->getTitle(), ENT_QUOTES) ?>')"
+                                            class="inline-flex items-center text-red-600 hover:text-red-900 text-sm focus:outline-none">
+                                            <?= Icons::delete('w-4 h-4 mr-1') ?>
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <?php if ($pagination['total_pages'] > 1): ?>
+                <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <!-- Results info -->
+                        <div class="text-sm text-gray-700">
+                            Showing 
+                            <span class="font-medium"><?= min(($pagination['current_page'] - 1) * $pagination['per_page'] + 1, $pagination['total_records']) ?></span>
+                            to 
+                            <span class="font-medium"><?= min($pagination['current_page'] * $pagination['per_page'], $pagination['total_records']) ?></span>
+                            of 
+                            <span class="font-medium"><?= $pagination['total_records'] ?></span>
+                            jobs
+                        </div>
+
+                        <!-- Pagination buttons -->
+                        <div class="flex items-center gap-2">
+                            <?php
+                            $baseUrl = '/Job_poster/public/jobs?';
+                            if (!empty($pagination['search'])) {
+                                $baseUrl .= 'search=' . urlencode($pagination['search']) . '&';
+                            }
+                            if (!empty($pagination['category_filter'])) {
+                                $baseUrl .= 'category=' . urlencode($pagination['category_filter']) . '&';
+                            }
+                            if (!empty($pagination['location_filter'])) {
+                                $baseUrl .= 'location=' . urlencode($pagination['location_filter']) . '&';
+                            }
+                            if (!empty($pagination['status_filter'])) {
+                                $baseUrl .= 'status=' . urlencode($pagination['status_filter']) . '&';
+                            }
+                            $baseUrl .= 'per_page=' . $pagination['per_page'] . '&';
+
+                            // Calculate page range to show
+                            $maxVisiblePages = 5;
+                            $startPage = max(1, $pagination['current_page'] - floor($maxVisiblePages / 2));
+                            $endPage = min($pagination['total_pages'], $startPage + $maxVisiblePages - 1);
+                            $startPage = max(1, $endPage - $maxVisiblePages + 1);
+                            ?>
+
+                            <!-- Previous button -->
+                            <?php if ($pagination['current_page'] > 1): ?>
+                                <a href="<?= $baseUrl ?>page=<?= $pagination['current_page'] - 1 ?>" 
+                                   class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                                    Previous
+                                </a>
+                            <?php else: ?>
+                                <span class="px-3 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-300 rounded-md cursor-not-allowed">
+                                    Previous
+                                </span>
+                            <?php endif; ?>
+
+                            <!-- Page numbers -->
+                            <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+                                <?php if ($i == $pagination['current_page']): ?>
+                                    <span class="px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-md">
+                                        <?= $i ?>
+                                    </span>
+                                <?php else: ?>
+                                    <a href="<?= $baseUrl ?>page=<?= $i ?>" 
+                                       class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                                        <?= $i ?>
+                                    </a>
+                                <?php endif; ?>
+                            <?php endfor; ?>
+
+                            <!-- Next button -->
+                            <?php if ($pagination['current_page'] < $pagination['total_pages']): ?>
+                                <a href="<?= $baseUrl ?>page=<?= $pagination['current_page'] + 1 ?>" 
+                                   class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                                    Next
+                                </a>
+                            <?php else: ?>
+                                <span class="px-3 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-300 rounded-md cursor-not-allowed">
+                                    Next
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script src="/Job_poster/public/javascript/notyf.min.js"></script>
+<script>
+const notyf = new Notyf({
+    duration: 3000,
+    position: { x: 'right', y: 'top' }
+});
+
+function deleteJob(id, title) {
+    if (confirm(`⚠️ DELETE JOB\n\nAre you sure you want to delete "${title}"?\n\nThis action cannot be undone!`)) {
+        fetch(`/Job_poster/public/jobs/hard-delete/${id}`, {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                notyf.success(data.message);
+                const row = document.getElementById(`job-row-${id}`);
+                if (row) row.remove();
+                setTimeout(() => window.location.reload(), 1000);
+            } else {
+                notyf.error(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            notyf.error('An error occurred while deleting the job.');
+        });
+    }
+}
+</script>
+
+<?php include __DIR__ . '/../../layouts/admin_footer.php'; ?>
