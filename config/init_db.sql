@@ -65,3 +65,18 @@ VALUES
 (2, 5, 'Pause', 'Paused due to salary update request.'),
 (7, 6, 'Approve', 'All requirements valid, approved.'),
 (2, 8, 'Close', 'Closed after hiring completed.');
+
+-- Feedback from users
+
+INSERT INTO FEEDBACK (user_id, comments, created_at)
+VALUES
+(1, 'The job application process was smooth and intuitive. Great platform!', '2025-10-01 10:15:00'),
+(2, 'We should improve moderation speed for new job postings.', '2025-10-02 14:22:00'),
+(3, 'Posting jobs was easy, but I’d love to have analytics on applicant activity.', '2025-10-03 09:00:00'),
+(4, 'Nice UI, but notifications for applicants could be improved.', '2025-10-05 11:45:00'),
+(5, 'Had trouble editing job details after publishing, please check.', '2025-10-06 16:30:00'),
+(6, 'Found a great job quickly, thank you for this service!', '2025-10-07 08:20:00'),
+(7, 'The admin dashboard works well, but filtering logs could be faster.', '2025-10-08 13:40:00'),
+(8, 'EduLink integration looks promising. Keep it up!', '2025-10-09 18:10:00'),
+(1, 'Could you add a dark mode option? It would be great for late-night use.', '2025-10-10 22:15:00'),
+(4, 'Love the design tools integration with Figma previews.', '2025-10-11 09:55:00');
