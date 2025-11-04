@@ -12,45 +12,62 @@ class UserDAO {
     
     // CREATE
     public function create(User $user) {
-        $sql = "INSERT INTO LOGIN (Name, Email, Password, Role) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO USERS (Name, Email, Password, Role, Avatar, is_active) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("ssss", 
-            $user->getUsername(),
-            $user->getEmail(),
-            password_hash($user->getPassword(), PASSWORD_DEFAULT),
-            $user->getRole()
+        
+        $name = $user->getName();
+        $email = $user->getEmail();
+        $hashedPassword = password_hash($user->getPassword(), PASSWORD_DEFAULT);
+        $role = $user->getRole();
+        $avatar = $user->getAvatar();
+        $isActive = $user->getIsActive();
+        
+        $stmt->bind_param("sssssi", 
+            $name,
+            $email,
+            $hashedPassword,
+            $role,
+            $avatar,
+            $isActive
         );
         return $stmt->execute();
     }
     
-    // READ - Get all users with pagination and search
-    public function getAll($search = '', $limit = null, $offset = 0) {
-        $sql = "SELECT * FROM LOGIN";
+    // READ - Get all users with pagination, search, and role filter
+    public function getAll($search = '', $roleFilter = '', $limit = null, $offset = 0) {
+        $sql = "SELECT UID, Name, Email, Role, Avatar, is_active, created_at, updated_at FROM USERS WHERE 1=1";
+        $params = [];
+        $types = '';
         
         // Add search condition if search term provided
         if (!empty($search)) {
-            $sql .= " WHERE (Name LIKE ? OR Email LIKE ?)";
+            $sql .= " AND (Name LIKE ? OR Email LIKE ?)";
+            $searchTerm = "%{$search}%";
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+            $types .= 'ss';
+        }
+
+        // Add role filter if provided
+        if (!empty($roleFilter)) {
+            $sql .= " AND Role = ?";
+            $params[] = $roleFilter;
+            $types .= 's';
         }
 
         $sql .= " ORDER BY UID DESC";
         
         if ($limit !== null) {
             $sql .= " LIMIT ? OFFSET ?";
+            $params[] = $limit;
+            $params[] = $offset;
+            $types .= 'ii';
         }
 
         $stmt = $this->db->prepare($sql);
         
-        if (!empty($search)) {
-            $searchTerm = "%{$search}%";
-            if ($limit !== null) {
-                $stmt->bind_param("ssii", $searchTerm, $searchTerm, $limit, $offset);
-            } else {
-                $stmt->bind_param("ss", $searchTerm, $searchTerm);
-            }
-        } else {
-            if ($limit !== null) {
-                $stmt->bind_param("ii", $limit, $offset);
-            }
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
         }
         
         $stmt->execute();
@@ -62,26 +79,40 @@ class UserDAO {
                 $row['UID'],
                 $row['Name'],
                 $row['Email'],
-                $row['Role']
+                $row['Role'],
+                null, // Don't return password
+                $row['Avatar'],
+                $row['is_active']
             );
             $users[] = $user;
         }
         return $users;
     }
 
-    // Get total count for pagination
-    public function getTotalCount($search = '') {
-        $sql = "SELECT COUNT(*) as total FROM LOGIN";
+    // Get total count for pagination with role filter
+    public function getTotalCount($search = '', $roleFilter = '') {
+        $sql = "SELECT COUNT(*) as total FROM USERS WHERE 1=1";
+        $params = [];
+        $types = '';
         
         if (!empty($search)) {
-            $sql .= " WHERE (Name LIKE ? OR Email LIKE ?)";
+            $sql .= " AND (Name LIKE ? OR Email LIKE ?)";
+            $searchTerm = "%{$search}%";
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+            $types .= 'ss';
+        }
+
+        if (!empty($roleFilter)) {
+            $sql .= " AND Role = ?";
+            $params[] = $roleFilter;
+            $types .= 's';
         }
         
         $stmt = $this->db->prepare($sql);
         
-        if (!empty($search)) {
-            $searchTerm = "%{$search}%";
-            $stmt->bind_param("ss", $searchTerm, $searchTerm);
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
         }
         
         $stmt->execute();
@@ -93,7 +124,7 @@ class UserDAO {
     
     // READ - Get by ID
     public function getById($id) {
-        $sql = "SELECT * FROM LOGIN WHERE UID = ?";
+        $sql = "SELECT UID, Name, Email, Role, Avatar, is_active, created_at, updated_at FROM USERS WHERE UID = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("i", $id);
         $stmt->execute();
@@ -104,21 +135,54 @@ class UserDAO {
                 $row['UID'],
                 $row['Name'],
                 $row['Email'],
-                $row['Role']
+                $row['Role'],
+                null, // Don't return password
+                $row['Avatar'],
+                $row['is_active']
             );
         }
         return null;
     }
+
+    // Check if email exists (for unique email validation)
+    public function emailExists($email, $excludeId = null) {
+        $sql = "SELECT UID FROM USERS WHERE Email = ?";
+        $params = [$email];
+        $types = 's';
+        
+        if ($excludeId !== null) {
+            $sql .= " AND UID != ?";
+            $params[] = $excludeId;
+            $types .= 'i';
+        }
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        return $result->num_rows > 0;
+    }
     
     // UPDATE
     public function update(User $user) {
-        $sql = "UPDATE LOGIN SET Name = ?, Email = ?, Role = ? WHERE UID = ?";
+        $sql = "UPDATE USERS SET Name = ?, Email = ?, Role = ?, Avatar = ?, is_active = ? WHERE UID = ?";
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("sssi", 
-            $user->getUsername(),
-            $user->getEmail(),
-            $user->getRole(),
-            $user->getId()
+        
+        $name = $user->getName();
+        $email = $user->getEmail();
+        $role = $user->getRole();
+        $avatar = $user->getAvatar();
+        $isActive = $user->getIsActive();
+        $id = $user->getId();
+        
+        $stmt->bind_param("ssssii", 
+            $name,
+            $email,
+            $role,
+            $avatar,
+            $isActive,
+            $id
         );
         return $stmt->execute();
     }
@@ -126,27 +190,8 @@ class UserDAO {
     // DELETE
     public function delete($id) {
         try {
-            // First, try to delete from related tables (if they exist)
-            // Delete from ADMIN table if exists
-            $sql = "DELETE FROM ADMIN WHERE UID = ?";
-            $stmt = $this->db->prepare($sql);
-            if ($stmt) {
-                $stmt->bind_param("i", $id);
-                $stmt->execute();
-                $stmt->close();
-            }
-            
-            // Delete from CUSTOMER table if exists
-            $sql = "DELETE FROM CUSTOMER WHERE UID = ?";
-            $stmt = $this->db->prepare($sql);
-            if ($stmt) {
-                $stmt->bind_param("i", $id);
-                $stmt->execute();
-                $stmt->close();
-            }
-            
-            // Now delete from LOGIN table
-            $sql = "DELETE FROM LOGIN WHERE UID = ?";
+            // The database has CASCADE DELETE set up, so we just delete from USERS
+            $sql = "DELETE FROM USERS WHERE UID = ?";
             $stmt = $this->db->prepare($sql);
             if (!$stmt) {
                 throw new Exception("Prepare failed: " . $this->db->error);

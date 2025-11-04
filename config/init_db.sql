@@ -3,12 +3,12 @@ USE job_poster;
 -- Users
 INSERT INTO USERS (Email, Password, Role, Name, Avatar, is_active)
 VALUES
-('alice@example.com', 'hashed_pw1', 'Customer', 'Alice Nguyen', NULL, 1),
+('alice@example.com', 'hashed_pw1', 'Staff', 'Alice Nguyen', NULL, 1),
 ('bob@example.com', 'hashed_pw2', 'Admin', 'Bob Tran', NULL, 1),
 ('chris@example.com', 'hashed_pw3', 'Employer', 'Chris Le', NULL, 1),
 ('diana@example.com', 'hashed_pw4', 'Employer', 'Diana Pham', NULL, 1),
 ('edward@example.com', 'hashed_pw5', 'Employer', 'Edward Vu', NULL, 1),
-('fiona@example.com', 'hashed_pw6', 'Customer', 'Fiona Huynh', NULL, 1),
+('fiona@example.com', 'hashed_pw6', 'Staff', 'Fiona Huynh', NULL, 1),
 ('george@example.com', 'hashed_pw7', 'Admin', 'George Dao', NULL, 1),
 ('hannah@example.com', 'hashed_pw8', 'Employer', 'Hannah Trinh', NULL, 1);
 

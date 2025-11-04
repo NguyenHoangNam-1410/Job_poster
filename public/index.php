@@ -89,6 +89,44 @@ if ($path === '/users') {
     $controller = new DiscountController();
     $controller->destroy($matches[1]);
 
+// Job Category CRUD Routes
+} elseif ($path === '/job-categories') {
+    // List all job categories
+    require_once '../app/controllers/JobCategoryController.php';
+    $controller = new JobCategoryController();
+    $controller->index();
+    exit;
+    
+} elseif ($path === '/job-categories/create') {
+    // Show create form
+    require_once '../app/controllers/JobCategoryController.php';
+    $controller = new JobCategoryController();
+    $controller->create();
+    
+} elseif ($path === '/job-categories/store' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Store new job category
+    require_once '../app/controllers/JobCategoryController.php';
+    $controller = new JobCategoryController();
+    $controller->store();
+    
+} elseif (preg_match('/^\/job-categories\/edit\/(\d+)$/', $path, $matches)) {
+    // Show edit form
+    require_once '../app/controllers/JobCategoryController.php';
+    $controller = new JobCategoryController();
+    $controller->edit($matches[1]);
+    
+} elseif (preg_match('/^\/job-categories\/update\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Update job category
+    require_once '../app/controllers/JobCategoryController.php';
+    $controller = new JobCategoryController();
+    $controller->update($matches[1]);
+    
+} elseif (preg_match('/^\/job-categories\/delete\/(\d+)$/', $path, $matches)) {
+    // Delete job category
+    require_once '../app/controllers/JobCategoryController.php';
+    $controller = new JobCategoryController();
+    $controller->destroy($matches[1]);
+
 } else {
     // Public routes
     switch ($path) {

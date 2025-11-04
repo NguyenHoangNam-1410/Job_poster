@@ -8,7 +8,7 @@ CREATE TABLE `USERS` (
     `UID` INT AUTO_INCREMENT PRIMARY KEY,
     `Email` VARCHAR(255) NOT NULL,
     `Password` VARCHAR(255) NOT NULL,
-    `Role` ENUM('Customer','Admin','Employer') NOT NULL DEFAULT 'Customer',
+    `Role` ENUM('Guest','Admin','Staff','Employer') NOT NULL DEFAULT 'Guest',
     `Name` VARCHAR(255) NOT NULL,
     `Avatar` TEXT,
     `is_active` TINYINT(1) NOT NULL DEFAULT 1,

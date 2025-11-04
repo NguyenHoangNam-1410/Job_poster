@@ -1,4 +1,4 @@
-<?php $pageTitle = 'Quản lý người dùng'; ?>
+<?php $pageTitle = 'Job Categories Management'; ?>
 <?php
 include __DIR__ . '/../../layouts/admin_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
@@ -8,46 +8,35 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
     <div class="list-content">
         <div class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="list-header">User</h1>
-                <p class="text-gray-600 mt-2">Manage system users and their roles</p>
+                <h1 class="list-header">Job Categories</h1>
+                <p class="text-gray-600 mt-2">Manage job categories for job filtering and organization</p>
             </div>
-            <a href="/Job_poster/public/users/create"
+            <a href="/Job_poster/public/job-categories/create"
                 class="btn-submit">
                 <?= Icons::add('btn-icon') ?>
-                Add User
+                Add Category
             </a>
         </div>
 
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <form method="GET" action="/Job_poster/public/users" class="flex flex-col sm:flex-row gap-4">
+            <form method="GET" action="/Job_poster/public/job-categories" class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
-                    <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search Users</label>
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search Categories</label>
                     <input 
                         type="text" 
                         id="search" 
                         name="search" 
                         value="<?= htmlspecialchars($pagination['search'] ?? '') ?>"
-                        placeholder="Search by username or email..."
+                        placeholder="Search by category name..."
                         class="form-input w-full"
                     >
-                </div>
-                <div class="sm:w-40">
-                    <label for="role" class="block text-sm font-medium text-gray-700 mb-2">Role</label>
-                    <select id="role" name="role" class="form-select">
-                        <option value="" <?= empty($pagination['role_filter']) ? 'selected' : '' ?>>All Roles</option>
-                        <option value="Admin" <?= ($pagination['role_filter'] ?? '') == 'Admin' ? 'selected' : '' ?>>Admin</option>
-                        <option value="Staff" <?= ($pagination['role_filter'] ?? '') == 'Staff' ? 'selected' : '' ?>>Staff</option>
-                        <option value="Employer" <?= ($pagination['role_filter'] ?? '') == 'Employer' ? 'selected' : '' ?>>Employer</option>
-                        <option value="Guest" <?= ($pagination['role_filter'] ?? '') == 'Guest' ? 'selected' : '' ?>>Guest</option>
-                    </select>
                 </div>
                 <div class="sm:w-32">
                     <label for="per_page" class="block text-sm font-medium text-gray-700 mb-2">Per Page</label>
                     <select id="per_page" name="per_page" class="form-select">
                         <option value="10" <?= ($pagination['per_page'] ?? 10) == 10 ? 'selected' : '' ?>>10</option>
                         <option value="25" <?= ($pagination['per_page'] ?? 10) == 25 ? 'selected' : '' ?>>25</option>
-                        <option value="50" <?= ($pagination['per_page'] ?? 10) == 50 ? 'selected' : '' ?>>50</option>
                     </select>
                 </div>
                 <div class="flex gap-2 items-end">
@@ -55,23 +44,29 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                         <?= Icons::filter('btn-icon') ?>
                         Search
                     </button>
-                    <a href="/Job_poster/public/users" class="btn-cancel">
+                    <a href="/Job_poster/public/job-categories" class="btn-cancel">
                         Clear
                     </a>
                 </div>
             </form>
         </div>
 
-        <?php if (empty($users)): ?>
+        <?php if (isset($_GET['error'])): ?>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <span class="block sm:inline"><?= htmlspecialchars($_GET['error']) ?></span>
+            </div>
+        <?php endif; ?>
+
+        <?php if (empty($categoriesWithCounts)): ?>
             <div class="list-table-wrapper">
                 <div id="empty-state" class="text-center py-12">
                     <?= Icons::emptyState() ?>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No users found</h3>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">No categories found</h3>
                     <p class="mt-1 text-sm text-gray-500">
                         <?php if (!empty($pagination['search'])): ?>
-                            No users match your search. Try different keywords.
+                            No categories match your search. Try different keywords.
                         <?php else: ?>
-                            Let's create a user
+                            Get started by creating a new job category.
                         <?php endif; ?>
                     </p>
                 </div>
@@ -79,66 +74,55 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
         <?php else: ?>
             <div class="list-table-wrapper">
                 <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200" id="usersTable">
+                <table class="min-w-full divide-y divide-gray-200" id="categoriesTable">
                     <thead>
                         <tr class="bg-gray-50">
                             <th class="table-header">ID</th>
-                            <th class="table-header">Username</th>
-                            <th class="table-header">Email</th>
-                            <th class="table-header">Role</th>
+                            <th class="table-header">Category Name</th>
+                            <th class="table-header">Jobs Count</th>
                             <th class="table-header">Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
-                        <?php foreach ($users as $user): ?>
-                            <tr class="hover:bg-gray-50" id="user-row-<?= $user->getId() ?>">
+                    <tbody id="categoriesTableBody" class="bg-white divide-y divide-gray-200">
+                        <?php foreach ($categoriesWithCounts as $item): ?>
+                            <?php 
+                                $category = $item['category']; 
+                                $jobCount = $item['job_count'];
+                                $canDelete = $item['can_delete'];
+                            ?>
+                            <tr class="hover:bg-gray-50" id="category-row-<?= $category->getId() ?>">
                                 <td class="table-cell table-cell-text">
-                                    <?= $user->getId() ?>
+                                    <?= $category->getId() ?>
+                                </td>
+                                <td class="table-cell font-medium">
+                                    <?= htmlspecialchars($category->getCategoryName()) ?>
                                 </td>
                                 <td class="table-cell">
-                                    <?= htmlspecialchars($user->getUsername()) ?>
-                                </td>
-                                <td class="table-cell">
-                                    <?= htmlspecialchars($user->getEmail()) ?>
-                                </td>
-                                <td class="table-cell">
-                                    <span
-                                        class="px-2 py-1 rounded <?php 
-                                            switch($user->getRole()) {
-                                                case 'Admin': echo 'bg-red-100 text-red-800'; break;
-                                                case 'Staff': echo 'bg-blue-100 text-blue-800'; break;
-                                                case 'Employer': echo 'bg-purple-100 text-purple-800'; break;
-                                                default: echo 'bg-green-100 text-green-800';
-                                            }
-                                        ?>"><?= htmlspecialchars($user->getRole()) ?></span>
-                                </td>
-                                <td class="table-cell">
-                                    <?php 
-                                    $canEdit = ($user->getId() == $currentUserId) || ($user->getRole() !== 'Admin');
-                                    $canDelete = ($user->getId() != $currentUserId);
-                                    ?>
-                                    <?php if ($canEdit): ?>
-                                        <a href="/Job_poster/public/users/edit/<?= $user->getId() ?>"
-                                            class="inline-flex items-center text-blue-600 hover:text-blue-900 mr-3">
-                                            <?= Icons::edit('w-5 h-5 mr-1') ?>
-                                            Edit
-                                        </a>
-                                    <?php else: ?>
-                                        <span class="inline-flex items-center text-gray-400 mr-3 cursor-not-allowed" title="Cannot edit other administrators">
-                                            <?= Icons::edit('w-5 h-5 mr-1') ?>
-                                            Edit
+                                    <?php if ($jobCount > 0): ?>
+                                        <span class="px-2 py-1 rounded bg-blue-100 text-blue-800 text-sm">
+                                            <?= $jobCount ?> job<?= $jobCount != 1 ? 's' : '' ?>
                                         </span>
+                                    <?php else: ?>
+                                        <span class="text-gray-400 text-sm">No jobs</span>
                                     <?php endif; ?>
+                                </td>
+                                <td class="table-cell">
+                                    <a href="/Job_poster/public/job-categories/edit/<?= $category->getId() ?>"
+                                        class="inline-flex items-center text-blue-600 hover:text-blue-900 mr-3">
+                                        <?= Icons::edit('w-5 h-5 mr-1') ?>
+                                        Edit
+                                    </a>
                                     
                                     <?php if ($canDelete): ?>
                                         <button
-                                            onclick="deleteUser(<?= $user->getId() ?>, '<?= htmlspecialchars($user->getUsername(), ENT_QUOTES) ?>')"
+                                            onclick="deleteCategory(<?= $category->getId() ?>, '<?= htmlspecialchars($category->getCategoryName(), ENT_QUOTES) ?>')"
                                             class="inline-flex items-center text-red-600 hover:text-red-900 focus:outline-none">
                                             <?= Icons::delete('w-5 h-5 mr-1') ?>
                                             Delete
                                         </button>
                                     <?php else: ?>
-                                        <span class="inline-flex items-center text-gray-400 cursor-not-allowed" title="Cannot delete yourself">
+                                        <span class="inline-flex items-center text-gray-400 cursor-not-allowed" 
+                                              title="Cannot delete category with assigned jobs">
                                             <?= Icons::delete('w-5 h-5 mr-1') ?>
                                             Delete
                                         </span>
@@ -162,18 +146,15 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                             <span class="font-medium"><?= min($pagination['current_page'] * $pagination['per_page'], $pagination['total_records']) ?></span>
                             of 
                             <span class="font-medium"><?= $pagination['total_records'] ?></span>
-                            users
+                            categories
                         </div>
 
                         <!-- Pagination buttons -->
                         <div class="flex items-center gap-2">
                             <?php
-                            $baseUrl = '/Job_poster/public/users?';
+                            $baseUrl = '/Job_poster/public/job-categories?';
                             if (!empty($pagination['search'])) {
                                 $baseUrl .= 'search=' . urlencode($pagination['search']) . '&';
-                            }
-                            if (!empty($pagination['role_filter'])) {
-                                $baseUrl .= 'role=' . urlencode($pagination['role_filter']) . '&';
                             }
                             $baseUrl .= 'per_page=' . $pagination['per_page'] . '&';
 
@@ -252,6 +233,44 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
     </div>
 </div>
 
-<script src="/Job_poster/public/javascript/user.js"></script>
+<script src="/Job_poster/public/javascript/notyf.min.js"></script>
+<script>
+const notyf = new Notyf({
+    duration: 3000,
+    position: { x: 'right', y: 'top' }
+});
+
+function deleteCategory(id, name) {
+    if (confirm(`Are you sure you want to delete the category "${name}"?`)) {
+        fetch(`/Job_poster/public/job-categories/delete/${id}`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                notyf.success(data.message);
+                // Remove the row from table
+                const row = document.getElementById(`category-row-${id}`);
+                if (row) {
+                    row.remove();
+                }
+                // Reload page after a short delay to update counts
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                notyf.error(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            notyf.error('An error occurred while deleting the category.');
+        });
+    }
+}
+</script>
 
 <?php include __DIR__ . '/../../layouts/admin_footer.php'; ?>

@@ -47,12 +47,12 @@
                 Users
             </a>
 
-            <!-- Discount Management -->
-            <div class="menu-section">Discount Management</div>
-            <a href="/Job_poster/public/discounts"
-                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/discounts') !== false ? 'active' : '' ?>">
+            <!-- Category Management -->
+            <div class="menu-section">Category Management</div>
+            <a href="/Job_poster/public/job-categories"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/job-categories') !== false ? 'active' : '' ?>">
                 <?= Icons::tag() ?>
-                Discounts
+                    Categories
             </a>
 
             <!-- Add more menu items here easily -->

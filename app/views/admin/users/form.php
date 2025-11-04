@@ -8,10 +8,10 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 // Determine if we're in edit mode or create mode
 $isEditMode = isset($user) && $user !== null;
 $formAction = $isEditMode 
-    ? "/Job_poster/public/users/update/{$user->getUsername()}" 
+    ? "/Job_poster/public/users/update/{$user->getId()}" 
     : "/Job_poster/public/users/store";
 $submitButtonText = $isEditMode ? 'Update' : 'Create New';
-$pageHeading = $isEditMode ? "Update user #{$user->getUsername()}" : 'Create New User';
+$pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User';
 ?>
 
 <div class="form-background">
@@ -30,11 +30,11 @@ $pageHeading = $isEditMode ? "Update user #{$user->getUsername()}" : 'Create New
                 <!-- Username -->
                 <div>
                     <label class="form-label">
-                        Username <span class="required">*</span>
+                        Name <span class="required">*</span>
                     </label>
                     <input type="text" name="username" required
                            value="<?= $isEditMode ? htmlspecialchars($user->getUsername()) : '' ?>"
-                           class="form-input" placeholder="Enter username">
+                           class="form-input" placeholder="Enter name">
                 </div>
 
                 <!-- Email -->
@@ -64,8 +64,8 @@ $pageHeading = $isEditMode ? "Update user #{$user->getUsername()}" : 'Create New
                         Role <span class="required">*</span>
                     </label>
                     <select name="role" required class="form-select">
-                        <option value="Customer" <?= $isEditMode && $user->getRole() === 'Customer' ? 'selected' : '' ?>>Customer</option>
                         <option value="Admin" <?= $isEditMode && $user->getRole() === 'Admin' ? 'selected' : '' ?>>Admin</option>
+                        <option value="Staff" <?= $isEditMode && $user->getRole() === 'Staff' ? 'selected' : '' ?>>Staff</option>
                     </select>
                 </div>
             </div>
@@ -76,7 +76,15 @@ $pageHeading = $isEditMode ? "Update user #{$user->getUsername()}" : 'Create New
                 <?= Icons::infoCircle('form-info-icon') ?>
                 <div>
                     <p class="form-info-title">Note</p>
-                    <p class="form-info-text">Password cannot be changed through this form. Please contact the administrator to reset the password.</p>
+                    <p class="form-info-text">Password cannot be changed through this form. Only Admin and Staff roles can be managed here. Guest and Employer accounts are managed separately.</p>
+                </div>
+            </div>
+            <?php else: ?>
+            <div class="form-info-box">
+                <?= Icons::infoCircle('form-info-icon') ?>
+                <div>
+                    <p class="form-info-title">Note</p>
+                    <p class="form-info-text">Only Admin and Staff roles can be created here. Guest and Employer accounts are managed separately. Emails must be unique across all user types.</p>
                 </div>
             </div>
             <?php endif; ?>
