@@ -50,45 +50,7 @@ if ($path === '/users') {
     require_once '../app/controllers/UserController.php';
     $controller = new UserController();
     $controller->destroy($matches[1]);
-
-// Discount CRUD Routes
-} elseif ($path === '/discounts') {
-    // List all discounts
-    require_once '../app/controllers/DiscountController.php';
-    $controller = new DiscountController();
-    $controller->index();
-    exit;
     
-} elseif ($path === '/discounts/create') {
-    // Show create form
-    require_once '../app/controllers/DiscountController.php';
-    $controller = new DiscountController();
-    $controller->create();
-    
-} elseif ($path === '/discounts/store' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Store new discount
-    require_once '../app/controllers/DiscountController.php';
-    $controller = new DiscountController();
-    $controller->store();
-    
-} elseif (preg_match('/^\/discounts\/edit\/(\d+)$/', $path, $matches)) {
-    // Show edit form
-    require_once '../app/controllers/DiscountController.php';
-    $controller = new DiscountController();
-    $controller->edit($matches[1]);
-    
-} elseif (preg_match('/^\/discounts\/update\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Update discount
-    require_once '../app/controllers/DiscountController.php';
-    $controller = new DiscountController();
-    $controller->update($matches[1]);
-    
-} elseif (preg_match('/^\/discounts\/delete\/(\d+)$/', $path, $matches)) {
-    // Delete discount
-    require_once '../app/controllers/DiscountController.php';
-    $controller = new DiscountController();
-    $controller->destroy($matches[1]);
-
 // Job Category CRUD Routes
 } elseif ($path === '/job-categories') {
     // List all job categories
@@ -126,6 +88,74 @@ if ($path === '/users') {
     require_once '../app/controllers/JobCategoryController.php';
     $controller = new JobCategoryController();
     $controller->destroy($matches[1]);
+
+// Job Management Routes (Staff/Admin)
+} elseif ($path === '/jobs') {
+    // List all jobs
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->index();
+    
+} elseif (preg_match('/^\/jobs\/edit\/(\d+)$/', $path, $matches)) {
+    // Show edit form
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->edit($matches[1]);
+    
+} elseif (preg_match('/^\/jobs\/update\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Update job
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->update($matches[1]);
+    
+} elseif (preg_match('/^\/jobs\/soft-delete\/(\d+)$/', $path, $matches)) {
+    // Soft delete job
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->softDelete($matches[1]);
+    
+} elseif (preg_match('/^\/jobs\/hard-delete\/(\d+)$/', $path, $matches)) {
+    // Hard delete job
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->hardDelete($matches[1]);
+    
+} elseif (preg_match('/^\/jobs\/restore\/(\d+)$/', $path, $matches)) {
+    // Restore soft deleted job
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->restore($matches[1]);
+    
+} elseif (preg_match('/^\/jobs\/change-status\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Change job status
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->changeStatus($matches[1]);
+
+// Job Approval Routes (Staff/Admin)
+} elseif ($path === '/jobs/approval') {
+    // List jobs pending approval
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->approvalIndex();
+    
+} elseif (preg_match('/^\/jobs\/approval\/detail\/(\d+)$/', $path, $matches)) {
+    // Show job detail for approval
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->approvalDetail($matches[1]);
+    
+} elseif (preg_match('/^\/jobs\/approval\/approve\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Approve job
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->approveJob($matches[1]);
+    
+} elseif (preg_match('/^\/jobs\/approval\/reject\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Reject job
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->rejectJob($matches[1]);
 
 } else {
     // Public routes

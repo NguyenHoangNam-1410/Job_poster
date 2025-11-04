@@ -55,6 +55,22 @@
                     Categories
             </a>
 
+            <!-- Job Management -->
+            <div class="menu-section">Job Management</div>
+            <a href="/Job_poster/public/jobs"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false ? 'active' : '' ?>">
+                <?= Icons::box() ?>
+                    Jobs
+            </a>
+
+            <!-- Request Posting -->
+            <div class="menu-section">Request Posting</div>
+            <a href="/Job_poster/public/jobs/approval"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/jobs/approval') !== false ? 'active' : '' ?>">
+                <?= Icons::box() ?>
+                    Request Posting
+            </a>
+
             <!-- Add more menu items here easily -->
             <!-- Example:
             <div class="menu-section">Báo cáo</div>
