@@ -9,7 +9,7 @@ class Database
     private $username = "root";
     private $db_name = "job_poster";
     private $db_password = "";
-
+    private $port = 8889;
     public function __construct()
     {
         $this->conn = new mysqli($this->servername, $this->username, $this->db_password, $this->db_name);

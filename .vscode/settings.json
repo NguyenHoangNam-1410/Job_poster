@@ -1,25 +1,3 @@
 {
-    // Reduce overall UI zoom (0 = default)
-    "window.zoomLevel": 0,
-
-    // Make editor tabs smaller so they don't occupy too much horizontal space
-    // Options: "fit" (default) or "shrink"
-    "workbench.editor.tabSizing": "shrink",
-
-    // Hide the tab close button to save space (optional)
-    "workbench.editor.tabCloseButton": "off",
-
-    // Show shorter labels for tabs where possible
-    "workbench.editor.labelFormat": "short",
-
-    // Keep icons off to reduce width
-    "workbench.editor.showIcons": false,
-    "workbench.editor.tabActionCloseVisibility": false,
-    "python-envs.pythonProjects": [
-        {
-            "path": "public/image/new/1",
-            "envManager": "ms-python.python:venv",
-            "packageManager": "ms-python.python:pip"
-        }
-    ]
+   
 }
