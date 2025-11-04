@@ -50,7 +50,7 @@ if ($path === '/users') {
     require_once '../app/controllers/UserController.php';
     $controller = new UserController();
     $controller->destroy($matches[1]);
-    
+
 // Job Category CRUD Routes
 } elseif ($path === '/job-categories') {
     // List all job categories
@@ -133,25 +133,25 @@ if ($path === '/users') {
     $controller->changeStatus($matches[1]);
 
 // Job Approval Routes (Staff/Admin)
-} elseif ($path === '/jobs/approval') {
+} elseif ($path === '/approvals') {
     // List jobs pending approval
     require_once '../app/controllers/JobController.php';
     $controller = new JobController();
     $controller->approvalIndex();
     
-} elseif (preg_match('/^\/jobs\/approval\/detail\/(\d+)$/', $path, $matches)) {
+} elseif (preg_match('/^\/approvals\/detail\/(\d+)$/', $path, $matches)) {
     // Show job detail for approval
     require_once '../app/controllers/JobController.php';
     $controller = new JobController();
     $controller->approvalDetail($matches[1]);
     
-} elseif (preg_match('/^\/jobs\/approval\/approve\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+} elseif (preg_match('/^\/approvals\/approve\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     // Approve job
     require_once '../app/controllers/JobController.php';
     $controller = new JobController();
     $controller->approveJob($matches[1]);
     
-} elseif (preg_match('/^\/jobs\/approval\/reject\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+} elseif (preg_match('/^\/approvals\/reject\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     // Reject job
     require_once '../app/controllers/JobController.php';
     $controller = new JobController();

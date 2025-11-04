@@ -34,7 +34,7 @@
             <!-- Dashboard Section -->
             <div class="menu-section">Dashboard</div>
             <a href="/Job_poster/public/"
-                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/Job_poster/public/') !== false && strpos($_SERVER['REQUEST_URI'], '/users') === false && strpos($_SERVER['REQUEST_URI'], '/products') === false ? 'active' : '' ?>">
+                class="menu-item <?= rtrim($_SERVER['REQUEST_URI'], '/') === '/Job_poster/public' ? 'active' : '' ?>">
                 <?= Icons::home() ?>
                 Homepage
             </a>
@@ -52,23 +52,23 @@
             <a href="/Job_poster/public/job-categories"
                 class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/job-categories') !== false ? 'active' : '' ?>">
                 <?= Icons::tag() ?>
-                    Categories
+                Categories
             </a>
 
             <!-- Job Management -->
             <div class="menu-section">Job Management</div>
             <a href="/Job_poster/public/jobs"
                 class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false ? 'active' : '' ?>">
-                <?= Icons::box() ?>
-                    Jobs
+                <?= Icons::briefcase() ?>
+                Jobs
             </a>
 
             <!-- Request Posting -->
             <div class="menu-section">Request Posting</div>
-            <a href="/Job_poster/public/jobs/approval"
-                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/jobs/approval') !== false ? 'active' : '' ?>">
-                <?= Icons::box() ?>
-                    Request Posting
+            <a href="/Job_poster/public/approvals"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/approvals') !== false ? 'active' : '' ?>">
+                <?= Icons::checklist() ?>
+                Request Posting
             </a>
 
             <!-- Add more menu items here easily -->

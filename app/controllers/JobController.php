@@ -314,7 +314,7 @@ class JobController {
             $job = $this->jobService->getJobById($id);
             
             if (!$job) {
-                header('Location: /Job_poster/public/jobs/approval?error=' . urlencode('Job not found'));
+                header('Location: /Job_poster/public/approvals?error=' . urlencode('Job not found'));
                 exit;
             }
 
@@ -324,7 +324,7 @@ class JobController {
             $error = null;
             require_once __DIR__ . '/../views/staff/jobs_approval/detail.php';
         } catch (Exception $e) {
-            header('Location: /Job_poster/public/jobs/approval?error=' . urlencode($e->getMessage()));
+            header('Location: /Job_poster/public/approvals?error=' . urlencode($e->getMessage()));
             exit;
         }
     }
@@ -338,11 +338,11 @@ class JobController {
                 $success = $this->jobService->approveJobWithReview($id, $currentUserId, $reason);
                 
                 if ($success) {
-                    header('Location: /Job_poster/public/jobs/approval?success=' . urlencode('Job approved successfully'));
+                    header('Location: /Job_poster/public/approvals?success=' . urlencode('Job approved successfully'));
                     exit;
                 }
             } catch (Exception $e) {
-                header('Location: /Job_poster/public/jobs/approval/detail/' . $id . '?error=' . urlencode($e->getMessage()));
+                header('Location: /Job_poster/public/approvals/detail/' . $id . '?error=' . urlencode($e->getMessage()));
                 exit;
             }
         }
@@ -361,11 +361,11 @@ class JobController {
                 $success = $this->jobService->rejectJobWithReview($id, $currentUserId, $reason);
                 
                 if ($success) {
-                    header('Location: /Job_poster/public/jobs/approval?success=' . urlencode('Job rejected successfully'));
+                    header('Location: /Job_poster/public/approvals?success=' . urlencode('Job rejected successfully'));
                     exit;
                 }
             } catch (Exception $e) {
-                header('Location: /Job_poster/public/jobs/approval/detail/' . $id . '?error=' . urlencode($e->getMessage()));
+                header('Location: /Job_poster/public/approvals/detail/' . $id . '?error=' . urlencode($e->getMessage()));
                 exit;
             }
         }

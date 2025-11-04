@@ -15,7 +15,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <form method="GET" action="/Job_poster/public/jobs/approval" class="space-y-4">
+            <form method="GET" action="/Job_poster/public/approvals" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <!-- Search -->
                     <div class="lg:col-span-2">
@@ -56,7 +56,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                         <?= Icons::filter('btn-icon') ?>
                         Apply Filters
                     </button>
-                    <a href="/Job_poster/public/jobs/approval" class="btn-cancel">
+                    <a href="/Job_poster/public/approvals" class="btn-cancel">
                         Clear
                     </a>
                 </div>
@@ -128,7 +128,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                         <?= date('Y-m-d H:i', strtotime($job->getUpdatedAt())) ?>
                                     </td>
                                     <td class="table-cell">
-                                        <a href="/Job_poster/public/jobs/approval/detail/<?= $job->getId() ?>"
+                                        <a href="/Job_poster/public/approvals/detail/<?= $job->getId() ?>"
                                             class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">
                                             <?= Icons::view('w-4 h-4 mr-1') ?>
                                             Detail
@@ -158,7 +158,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                             <!-- Pagination buttons -->
                             <div class="flex items-center gap-2">
                                 <?php
-                                $baseUrl = '/Job_poster/public/jobs/approval?';
+                                $baseUrl = '/Job_poster/public/approvals?';
                                 if (!empty($pagination['search'])) {
                                     $baseUrl .= 'search=' . urlencode($pagination['search']) . '&';
                                 }
