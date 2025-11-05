@@ -131,15 +131,15 @@ VALUES
 (32, 3);
 
 -- Staff Actions
-INSERT INTO STAFF_ACTIONS (user_id, job_id, action_type, action_note)
+INSERT INTO STAFF_ACTIONS (user_id, job_id, action_type, action_date)
 VALUES
-(2, 1, 'Review', 'Checked job posting details, approved listing.'),
-(2, 2, 'Approve', 'Approved after QA check.'),
-(7, 3, 'Reject', 'Incomplete description, requested revision.'),
-(7, 4, 'Review', 'Verified marketing job details.'),
-(2, 5, 'Pause', 'Paused due to salary update request.'),
-(7, 6, 'Approve', 'All requirements valid, approved.'),
-(2, 8, 'Close', 'Closed after hiring completed.');
+(2, 1, 'Review', '2025-10-01 10:15:00'),
+(2, 2, 'Approve', '2025-10-02 14:22:00'),
+(7, 3, 'Reject', '2025-10-03 09:00:00'),
+(7, 4, 'Review', '2025-10-05 11:45:00'),
+(2, 5, 'Update', '2025-10-06 16:30:00'),
+(7, 6, 'Approve', '2025-10-07 08:20:00'),
+(2, 8, 'Close', '2025-10-08 13:40:00');
 
 -- Feedback from users
 
