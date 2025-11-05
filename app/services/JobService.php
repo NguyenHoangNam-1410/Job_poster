@@ -1,14 +1,17 @@
 <?php
 require_once __DIR__ . '/../dao/JobDAO.php';
 require_once __DIR__ . '/../dao/JobCategoryDAO.php';
+require_once __DIR__ . '/StaffActionService.php';
 
 class JobService {
     private $jobDAO;
     private $categoryDAO;
+    private $staffActionService;
 
     public function __construct() {
         $this->jobDAO = new JobDAO();
         $this->categoryDAO = new JobCategoryDAO();
+        $this->staffActionService = new StaffActionService();
     }
 
     // Get all jobs with filters and pagination
@@ -66,11 +69,16 @@ class JobService {
             $this->jobDAO->updateJobCategories($jobId, $data['categories']);
         }
 
+        // Log staff action
+        if ($jobId && $currentUserId) {
+            $this->staffActionService->logAction($currentUserId, $jobId, 'job_created');
+        }
+
         return $jobId;
     }
 
     // Update job
-    public function updateJob($id, $data) {
+    public function updateJob($id, $data, $currentUserId = null) {
         $job = $this->jobDAO->getById($id);
         if (!$job) {
             throw new Exception("Job not found.");
@@ -81,6 +89,10 @@ class JobService {
             throw new Exception("Job title is required.");
         }
 
+        // Track if status changed
+        $oldStatus = $job->getStatus();
+        $statusChanged = false;
+
         $job->setTitle($data['title']);
         $job->setLocation($data['location'] ?? null);
         $job->setDescription($data['description'] ?? null);
@@ -89,8 +101,9 @@ class JobService {
         $job->setDeadline($data['deadline'] ?? null);
 
         // Update status if provided
-        if (isset($data['status'])) {
+        if (isset($data['status']) && $data['status'] !== $oldStatus) {
             $job->setStatus($data['status']);
+            $statusChanged = true;
         }
 
         $result = $this->jobDAO->update($job);
@@ -98,6 +111,15 @@ class JobService {
         // Update categories
         if (isset($data['categories'])) {
             $this->jobDAO->updateJobCategories($id, $data['categories']);
+        }
+
+        // Log staff action
+        if ($result && $currentUserId) {
+            if ($statusChanged) {
+                $this->staffActionService->logAction($currentUserId, $id, 'status_changed_to_' . $data['status']);
+            } else {
+                $this->staffActionService->logAction($currentUserId, $id, 'job_updated');
+            }
         }
 
         return $result;
@@ -116,31 +138,50 @@ class JobService {
             throw new Exception("Invalid status.");
         }
 
-        return $this->jobDAO->changeStatus($id, $newStatus);
+        $result = $this->jobDAO->changeStatus($id, $newStatus);
+
+        // Log staff action
+        if ($result && $currentUserId) {
+            $this->staffActionService->logAction($currentUserId, $id, 'status_changed_to_' . $newStatus);
+        }
+
+        return $result;
     }
 
     // Soft delete job
-    public function softDeleteJob($id) {
+    public function softDeleteJob($id, $currentUserId = null) {
         $job = $this->jobDAO->getById($id);
         if (!$job) {
             throw new Exception("Job not found.");
         }
 
-        return $this->jobDAO->softDelete($id);
+        $result = $this->jobDAO->softDelete($id);
+
+        // Log staff action
+        if ($result && $currentUserId) {
+            $this->staffActionService->logAction($currentUserId, $id, 'job_soft_deleted');
+        }
+
+        return $result;
     }
 
     // Hard delete job
-    public function hardDeleteJob($id) {
+    public function hardDeleteJob($id, $currentUserId = null) {
         $job = $this->jobDAO->getById($id);
         if (!$job) {
             throw new Exception("Job not found.");
+        }
+
+        // Log staff action before deletion
+        if ($currentUserId) {
+            $this->staffActionService->logAction($currentUserId, $id, 'job_hard_deleted');
         }
 
         return $this->jobDAO->hardDelete($id);
     }
 
     // Restore soft deleted job (change status from soft_deleted to draft)
-    public function restoreJob($id) {
+    public function restoreJob($id, $currentUserId = null) {
         $job = $this->jobDAO->getById($id);
         if (!$job) {
             throw new Exception("Job not found.");
@@ -150,7 +191,14 @@ class JobService {
             throw new Exception("Job is not soft deleted.");
         }
 
-        return $this->jobDAO->changeStatus($id, 'draft');
+        $result = $this->jobDAO->changeStatus($id, 'draft');
+
+        // Log staff action
+        if ($result && $currentUserId) {
+            $this->staffActionService->logAction($currentUserId, $id, 'job_restored');
+        }
+
+        return $result;
     }
 
     // Approve job
@@ -186,6 +234,10 @@ class JobService {
         if ($statusChanged) {
             // Create review record with optional reason/notes
             $this->jobDAO->createReview($id, $currentUserId, 'approve', $reason);
+            
+            // Log staff action
+            $this->staffActionService->logAction($currentUserId, $id, 'job_approved');
+            
             return true;
         }
         
@@ -209,6 +261,10 @@ class JobService {
         if ($statusChanged) {
             // Create review record with reason
             $this->jobDAO->createReview($id, $currentUserId, 'reject', $reason);
+            
+            // Log staff action
+            $this->staffActionService->logAction($currentUserId, $id, 'job_rejected');
+            
             return true;
         }
         

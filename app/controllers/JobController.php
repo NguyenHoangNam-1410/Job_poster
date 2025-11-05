@@ -66,7 +66,7 @@ class JobController {
             $job = $this->jobService->getJobById($id);
             
             if (!$job) {
-                header('Location: /Job_poster/public/jobs?error=' . urlencode('Job not found'));
+                header('Location: /Job_poster/public/jobs-manage?error=' . urlencode('Job not found'));
                 exit;
             }
 
@@ -76,7 +76,7 @@ class JobController {
             
             require_once __DIR__ . '/../views/staff/jobs/form.php';
         } catch (Exception $e) {
-            header('Location: /Job_poster/public/jobs?error=' . urlencode($e->getMessage()));
+            header('Location: /Job_poster/public/jobs-manage?error=' . urlencode($e->getMessage()));
             exit;
         }
     }
@@ -84,9 +84,10 @@ class JobController {
     public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-                $success = $this->jobService->updateJob($id, $_POST);
+                $currentUserId = $this->getCurrentUserId();
+                $success = $this->jobService->updateJob($id, $_POST, $currentUserId);
                 if ($success) {
-                    header('Location: /Job_poster/public/jobs?success=' . urlencode('Job updated successfully'));
+                    header('Location: /Job_poster/public/jobs-manage?success=' . urlencode('Job updated successfully'));
                     exit;
                 }
             } catch (Exception $e) {
@@ -104,7 +105,8 @@ class JobController {
                   strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 
         try {
-            $result = $this->jobService->softDeleteJob($id);
+            $currentUserId = $this->getCurrentUserId();
+            $result = $this->jobService->softDeleteJob($id, $currentUserId);
             if ($result) {
                 if ($isAjax) {
                     header('Content-Type: application/json');
@@ -115,7 +117,7 @@ class JobController {
                     ]);
                     exit;
                 } else {
-                    header('Location: /Job_poster/public/jobs?success=' . urlencode('Job soft deleted successfully'));
+                    header('Location: /Job_poster/public/jobs-manage?success=' . urlencode('Job soft deleted successfully'));
                     exit;
                 }
             } else {
@@ -132,7 +134,7 @@ class JobController {
                 ]);
                 exit;
             } else {
-                header('Location: /Job_poster/public/jobs?error=' . urlencode($e->getMessage()));
+                header('Location: /Job_poster/public/jobs-manage?error=' . urlencode($e->getMessage()));
                 exit;
             }
         }
@@ -144,7 +146,8 @@ class JobController {
                   strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 
         try {
-            $result = $this->jobService->hardDeleteJob($id);
+            $currentUserId = $this->getCurrentUserId();
+            $result = $this->jobService->hardDeleteJob($id, $currentUserId);
             if ($result) {
                 if ($isAjax) {
                     header('Content-Type: application/json');
@@ -155,7 +158,7 @@ class JobController {
                     ]);
                     exit;
                 } else {
-                    header('Location: /Job_poster/public/jobs?success=' . urlencode('Job permanently deleted'));
+                    header('Location: /Job_poster/public/jobs-manage?success=' . urlencode('Job permanently deleted'));
                     exit;
                 }
             } else {
@@ -172,7 +175,7 @@ class JobController {
                 ]);
                 exit;
             } else {
-                header('Location: /Job_poster/public/jobs?error=' . urlencode($e->getMessage()));
+                header('Location: /Job_poster/public/jobs-manage?error=' . urlencode($e->getMessage()));
                 exit;
             }
         }
@@ -203,7 +206,7 @@ class JobController {
                         ]);
                         exit;
                     } else {
-                        header('Location: /Job_poster/public/jobs?success=' . urlencode('Job status changed successfully'));
+                        header('Location: /Job_poster/public/jobs-manage?success=' . urlencode('Job status changed successfully'));
                         exit;
                     }
                 } else {
@@ -220,7 +223,7 @@ class JobController {
                     ]);
                     exit;
                 } else {
-                    header('Location: /Job_poster/public/jobs?error=' . urlencode($e->getMessage()));
+                    header('Location: /Job_poster/public/jobs-manage?error=' . urlencode($e->getMessage()));
                     exit;
                 }
             }
@@ -233,7 +236,8 @@ class JobController {
                   strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 
         try {
-            $result = $this->jobService->restoreJob($id);
+            $currentUserId = $this->getCurrentUserId();
+            $result = $this->jobService->restoreJob($id, $currentUserId);
             if ($result) {
                 if ($isAjax) {
                     header('Content-Type: application/json');
@@ -244,7 +248,7 @@ class JobController {
                     ]);
                     exit;
                 } else {
-                    header('Location: /Job_poster/public/jobs?success=' . urlencode('Job restored successfully'));
+                    header('Location: /Job_poster/public/jobs-manage?success=' . urlencode('Job restored successfully'));
                     exit;
                 }
             } else {
@@ -261,7 +265,7 @@ class JobController {
                 ]);
                 exit;
             } else {
-                header('Location: /Job_poster/public/jobs?error=' . urlencode($e->getMessage()));
+                header('Location: /Job_poster/public/jobs-manage?error=' . urlencode($e->getMessage()));
                 exit;
             }
         }

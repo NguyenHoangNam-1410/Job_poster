@@ -57,7 +57,7 @@
 
             <!-- Job Management -->
             <div class="menu-section">Job Management</div>
-            <a href="/Job_poster/public/jobs"
+            <a href="/Job_poster/public/jobs-manage"
                 class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false ? 'active' : '' ?>">
                 <?= Icons::briefcase() ?>
                 Jobs
@@ -69,6 +69,30 @@
                 class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/approvals') !== false ? 'active' : '' ?>">
                 <?= Icons::checklist() ?>
                 Request Posting
+            </a>
+
+            <!-- History -->
+            <div class="menu-section">History</div>
+            <a href="/Job_poster/public/staff-actions"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/staff-actions') !== false ? 'active' : '' ?>">
+                <?= Icons::history() ?>
+                History
+            </a>
+
+            <!-- Statistics -->
+            <div class="menu-section">Statistics</div>
+            <a href="/Job_poster/public/statistics"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/statistics') !== false ? 'active' : '' ?>">
+                <?= Icons::statistic() ?>
+                Statistics
+            </a>
+
+            <!-- Feedback -->
+            <div class="menu-section">Feedback</div>
+            <a href="/Job_poster/public/feedbacks"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/feedbacks') !== false ? 'active' : '' ?>">
+                <?= Icons::comment() ?>
+                Feedback
             </a>
 
             <!-- Add more menu items here easily -->

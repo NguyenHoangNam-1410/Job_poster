@@ -27,7 +27,7 @@
                 </div>
                 <nav class="hidden md:flex space-x-6">
                     <a href="/Job_poster/public/" class="hover:text-yellow-300 transition">Home</a>
-                    <a href="/Job_poster/public/jobs" class="hover:text-yellow-300 transition">Jobs</a>
+                    <a href="/Job_poster/public/jobs-manage" class="hover:text-yellow-300 transition">Jobs</a>
                     <a href="/Job_poster/public/users" class="hover:text-yellow-300 transition">Admin</a>
                 </nav>
             </div>

@@ -284,5 +284,118 @@ class Icons
             d="M9 12l2 2 4-4m-6 8h8a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2h1" />
     </svg>';
     }
+
+    /**
+     * History Icon
+     */
+    public static function history($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>';
+    }
+
+    /**
+     * General Icon (for miscellaneous use)
+     */
+    public static function general($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>';
+    }
+
+    /**
+     * Comment Icon (for comments or feedback)
+     */
+    public static function comment($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+    </svg>';
+    }
+
+    public static function statistic($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M20.488 9H15V3.512a9.025 9.025 0 015.488 5.488z" />
+    </svg>';
+    }
+
+    /**
+     * Clock Icon (for pending status)
+     */
+    public static function clock($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>';
+    }
+
+    /**
+     * Warning Icon (for overdue status)
+     */
+    public static function warning($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>';
+    }
+
+    /**
+     * Trending Up Icon (for statistics/growth)
+     */
+    public static function trendingUp($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+        </svg>';
+    }
+
+    /**
+     * Award/Badge Icon (for top performers)
+     */
+    public static function award($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+        </svg>';
+    }
+
+    /**
+     * People/Team Icon (for staff)
+     */
+    public static function team($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+        </svg>';
+    }
+
+    /**
+     * Building/Company Icon (for employers)
+     */
+    public static function building($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        </svg>';
+    }
 }
 ?>

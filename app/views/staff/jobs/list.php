@@ -16,7 +16,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <form method="GET" action="/Job_poster/public/jobs" class="space-y-4">
+            <form method="GET" action="/Job_poster/public/jobs-manage" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                     <!-- Search -->
                     <div class="lg:col-span-2">
@@ -85,7 +85,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                             <?= Icons::filter('btn-icon') ?>
                             Apply Filters
                         </button>
-                        <a href="/Job_poster/public/jobs" class="btn-cancel">
+                        <a href="/Job_poster/public/jobs-manage" class="btn-cancel">
                             Clear
                         </a>
                     </div>
@@ -192,7 +192,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                 </td>
                                 <td class="table-cell">
                                     <div class="flex gap-2">
-                                        <a href="/Job_poster/public/jobs/edit/<?= $job->getId() ?>"
+                                        <a href="/Job_poster/public/jobs-manage/edit/<?= $job->getId() ?>"
                                             class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm">
                                             <?= Icons::edit('w-4 h-4 mr-1') ?>
                                             Edit
@@ -230,7 +230,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                         <!-- Pagination buttons -->
                         <div class="flex items-center gap-2">
                             <?php
-                            $baseUrl = '/Job_poster/public/jobs?';
+                            $baseUrl = '/Job_poster/public/jobs-manage?';
                             if (!empty($pagination['search'])) {
                                 $baseUrl .= 'search=' . urlencode($pagination['search']) . '&';
                             }
@@ -307,7 +307,7 @@ const notyf = new Notyf({
 
 function deleteJob(id, title) {
     if (confirm(`⚠️ DELETE JOB\n\nAre you sure you want to delete "${title}"?\n\nThis action cannot be undone!`)) {
-        fetch(`/Job_poster/public/jobs/hard-delete/${id}`, {
+        fetch(`/Job_poster/public/jobs-manage/hard-delete/${id}`, {
             method: 'GET',
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })

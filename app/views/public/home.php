@@ -9,7 +9,7 @@ include __DIR__ . '/../layouts/public_header.php';
             <h2 class="text-5xl font-bold mb-4">Welcome</h2>
             <p class="text-xl mb-8 opacity-90">Find your dream job</p>
             <div class="flex justify-center space-x-4">
-                <a href="/Job_poster/public/jobs" 
+                <a href="/Job_poster/public/jobs-manage" 
                    class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-300 hover:text-purple-700 transition duration-300">
                     View Job
                 </a>

@@ -90,7 +90,7 @@ if ($path === '/users') {
     $controller->destroy($matches[1]);
 
 // Job Management Routes (Staff/Admin)
-} elseif ($path === '/jobs') {
+} elseif ($path === '/jobs-manage') {
     // List all jobs
     require_once '../app/controllers/JobController.php';
     $controller = new JobController();
@@ -157,7 +157,32 @@ if ($path === '/users') {
     $controller = new JobController();
     $controller->rejectJob($matches[1]);
 
-} else {
+
+// Staff Action Logs Routes (Admin)
+} elseif ($path === '/staff-actions') {
+    // List staff actions
+    require_once '../app/controllers/StaffActionController.php';
+    $controller = new StaffActionController();
+    $controller->index();
+} 
+
+// Staff Action Logs Routes (Admin)
+elseif ($path === '/feedbacks') {
+    // List feedbacks
+    require_once '../app/controllers/FeedbackController.php';
+    $controller = new FeedbackController();
+    $controller->index();
+} 
+
+// Statistics Routes (Admin)
+elseif ($path === '/statistics') {
+    // Show statistics dashboard
+    require_once '../app/controllers/StatisticController.php';
+    $controller = new StatisticController();
+    $controller->index();
+} 
+
+else {
     // Public routes
     switch ($path) {
         case '/':
