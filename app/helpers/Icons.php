@@ -76,6 +76,17 @@ class Icons
     }
 
     /**
+     * Reject/Cross Icon
+     */
+    public static function reject($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>';
+    }
+
+    /**
      * Empty State Icon (for tables)
      */
     public static function emptyState($classes = 'mx-auto h-12 w-12')

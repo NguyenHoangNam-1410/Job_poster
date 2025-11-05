@@ -168,9 +168,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 <button 
                     onclick="showRejectForm()"
                     class="inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
+                    <?= Icons::reject('w-5 h-5 mr-2') ?>
                     Reject Job
                 </button>
 
