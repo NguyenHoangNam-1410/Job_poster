@@ -37,12 +37,11 @@ header.-translate-y-full {
 </style>
 
 <!-- 🌟 HERO -->
-<section class="hero-bg relative min-h-screen flex flex-col items-center justify-center text-center bg-fixed bg-cover bg-center">
+<section class="hero-bg relative min-h-screen flex flex-col items-center justify-center text-center bg-cover bg-center">
   <div class="container mx-auto px-6 relative z-10">
-    <!-- 🔹 Hộp nền đục mờ chứa toàn bộ nút -->
-    <div class="mt-60 inline-flex flex-wrap justify-center gap-5 px-10 py-6
-                bg-gray-800/50 backdrop-blur-md border border-gray-700/50 
-                rounded-2xl shadow-2xl animate-fadeInUp">
+    <!-- 🔹 Hộp nền trắng chứa toàn bộ nút -->
+    <div class="mt-60 inline-flex flex-wrap justify-center gap-5 px-10 py-8
+                bg-white border border-gray-200 rounded-3xl shadow-2xl animate-fadeInUp">
       
       <!-- Nút chính -->
       <a href="/Job_poster/public/index.php?r=/jobs"
@@ -53,32 +52,32 @@ header.-translate-y-full {
 
       <!-- Nút phụ -->
       <a href="#about"
-         class="px-7 py-4 rounded-lg bg-white text-gray-800 text-lg font-medium 
-                hover:bg-gray-100 transition">
+         class="px-7 py-4 rounded-lg bg-gray-100 text-gray-800 text-lg font-medium 
+                hover:bg-gray-200 transition">
         About
       </a>
 
       <a href="#benefits"
-         class="px-7 py-4 rounded-lg bg-white text-gray-800 text-lg font-medium 
-                hover:bg-gray-100 transition">
+         class="px-7 py-4 rounded-lg bg-gray-100 text-gray-800 text-lg font-medium 
+                hover:bg-gray-200 transition">
         Benefits
       </a>
 
       <a href="#promo"
-         class="px-7 py-4 rounded-lg bg-white text-gray-800 text-lg font-medium 
-                hover:bg-gray-100 transition">
+         class="px-7 py-4 rounded-lg bg-gray-100 text-gray-800 text-lg font-medium 
+                hover:bg-gray-200 transition">
         Video
       </a>
 
       <a href="#news"
-         class="px-7 py-4 rounded-lg bg-white text-gray-800 text-lg font-medium 
-                hover:bg-gray-100 transition">
+         class="px-7 py-4 rounded-lg bg-gray-100 text-gray-800 text-lg font-medium 
+                hover:bg-gray-200 transition">
         News
       </a>
 
       <a href="#feedback"
-         class="px-7 py-4 rounded-lg bg-white text-gray-800 text-lg font-medium 
-                hover:bg-gray-100 transition">
+         class="px-7 py-4 rounded-lg bg-gray-100 text-gray-800 text-lg font-medium 
+                hover:bg-gray-200 transition">
         Feedback
       </a>
     </div>
