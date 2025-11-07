@@ -185,6 +185,17 @@ elseif ($path === '/statistics') {
 else {
     // Public routes
     switch ($path) {
+
+ /* ==== AJAX ENDPOINTS (thêm 2 case này) ==== */
+ case '/ajax/jobs_filters.php':
+    require __DIR__ . '/ajax/jobs_filters.php';
+    exit;
+
+case '/ajax/jobs_list.php':
+    require __DIR__ . '/ajax/jobs_list.php';
+    exit;
+/* ========================================= */
+
         case '/':
         case '/home':
             include '../app/views/public/home.php';

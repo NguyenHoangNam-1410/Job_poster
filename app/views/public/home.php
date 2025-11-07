@@ -44,11 +44,12 @@ header.-translate-y-full {
                 bg-white border border-gray-200 rounded-3xl shadow-2xl animate-fadeInUp">
       
       <!-- Nút chính -->
-      <a href="/Job_poster/public/index.php?r=/jobs"
-         class="bg-purple-600 text-white px-10 py-4 rounded-lg font-semibold text-lg 
-                hover:bg-purple-700 transition shadow-md">
-        Browse Jobs
-      </a>
+      <a href="/Job_poster/public/jobs"
+   class="bg-purple-600 text-white px-10 py-4 rounded-lg font-semibold text-lg 
+          hover:bg-purple-700 transition shadow-md">
+  Browse Jobs
+</a>
+
 
       <!-- Nút phụ -->
       <a href="#about"
