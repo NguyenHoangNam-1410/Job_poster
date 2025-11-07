@@ -183,7 +183,22 @@ elseif ($path === '/statistics') {
 } 
 
 else {
+
+    
     // Public routes
+
+    if (preg_match('#^/jobs/show/(\d+)$#', $path, $m) || preg_match('#^/jobs/(\d+)$#', $path, $m)) {
+        require_once '../app/controllers/PublicJobController.php';
+        (new PublicJobController())->show((int)$m[1]);
+        exit;
+    }
+
+    if ($path === '/jobs') {
+        require_once '../app/controllers/PublicJobController.php';
+        (new PublicJobController())->index();
+        exit;
+    }
+
     switch ($path) {
 
  /* ==== AJAX ENDPOINTS (thêm 2 case này) ==== */
@@ -193,6 +208,10 @@ else {
 
 case '/ajax/jobs_list.php':
     require __DIR__ . '/ajax/jobs_list.php';
+    exit;
+
+case '/ajax/jobs_related.php':
+    require __DIR__ . '/ajax/jobs_related.php';
     exit;
 /* ========================================= */
 

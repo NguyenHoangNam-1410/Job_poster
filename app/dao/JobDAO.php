@@ -384,14 +384,15 @@ public function searchPublic($q, $categoryId, $location, $status, $page, $perPag
     $types = '';
 
     if ($status === '' || $status === 'all') {
-        $where[] = "JOBS.status = 'approved'";
+        $where[] = "(JOBS.status IN ('approved','recruiting','overdue'))";
     } elseif ($status === 'recruiting') {
-        $where[] = "(JOBS.status='approved' AND JOBS.deadline >= NOW())";
+        $where[] = "((JOBS.status='approved' AND JOBS.deadline >= NOW()) OR JOBS.status='recruiting')";
     } elseif ($status === 'overdue') {
-        $where[] = "(JOBS.status='approved' AND JOBS.deadline < NOW())";
+        $where[] = "((JOBS.status='approved' AND JOBS.deadline < NOW()) OR JOBS.status='overdue')";
     } else {
         $where[] = "JOBS.status = 'approved'";
     }
+    
 
     if ($q !== '') {
         $where[] =
@@ -479,4 +480,86 @@ public function searchPublic($q, $categoryId, $location, $status, $page, $perPag
     return ['total'=>$total, 'rows'=>$rows];
 }
 
+}
+
+/* ===== Additional helper added at bottom (non-breaking) ===== */
+if (!function_exists('jp_get_related_public_jobs')) {
+    /**
+     * Fetch related public jobs by same company, location, or overlapping categories.
+     * Returns an array of rows similar to searchPublic() items.
+     */
+    function jp_get_related_public_jobs(int $jobId, int $limit = 12): array {
+        $database = new Database();
+        $conn = $database->conn;
+
+        // Get base info
+        $stmtBase = $conn->prepare("SELECT employer_id, location FROM JOBS WHERE id = ?");
+        if (!$stmtBase) return [];
+        $stmtBase->bind_param("i", $jobId);
+        $stmtBase->execute();
+        $base = $stmtBase->get_result()->fetch_assoc();
+        if (!$base) return [];
+        $employerId = (int)($base['employer_id'] ?? 0);
+        $location   = (string)($base['location'] ?? '');
+
+        $sql = "
+          SELECT
+            j.id,
+            j.title,
+            COALESCE(e.company_name,'') AS company,
+            j.location,
+            j.created_at AS posted_at,
+            j.deadline,
+            CASE
+              WHEN j.status='approved' AND j.deadline < NOW() THEN 'overdue'
+              WHEN j.status='approved' THEN 'recruiting'
+              ELSE j.status
+            END AS public_status
+          FROM JOBS j
+          LEFT JOIN EMPLOYERS e ON e.id = j.employer_id
+          WHERE j.id <> ?
+            AND j.status IN ('approved','recruiting','overdue')
+            AND (
+              j.employer_id = ?
+              OR (? <> '' AND j.location LIKE CONCAT('%', ?, '%'))
+              OR EXISTS (
+                SELECT 1 FROM JOB_CATEGORY_MAP m
+                WHERE m.job_id = j.id
+                  AND m.category_id IN (SELECT category_id FROM JOB_CATEGORY_MAP WHERE job_id = ?)
+              )
+            )
+          ORDER BY j.created_at DESC, j.id DESC
+          LIMIT ?
+        ";
+
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) return [];
+        $stmt->bind_param("iissii", $jobId, $employerId, $location, $location, $jobId, $limit);
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+        // Attach tags (categories)
+        $ids = array_map(fn($r)=> (int)$r['id'], $rows);
+        $tagsMap = [];
+        if (!empty($ids)) {
+            $in     = implode(",", array_fill(0, count($ids), "?"));
+            $inType = str_repeat("i", count($ids));
+            $sqlTag = "
+              SELECT m.job_id, c.category_name AS name
+              FROM JOB_CATEGORY_MAP m
+              JOIN JOB_CATEGORIES c ON c.id = m.category_id
+              WHERE m.job_id IN ($in)
+              ORDER BY c.category_name
+            ";
+            $stmtT = $conn->prepare($sqlTag);
+            if ($stmtT) {
+                $stmtT->bind_param($inType, ...$ids);
+                $stmtT->execute();
+                $rsT = $stmtT->get_result();
+                while ($r = $rsT->fetch_assoc()) $tagsMap[(int)$r['job_id']][] = $r['name'];
+            }
+        }
+        foreach ($rows as &$r) $r['tags'] = $tagsMap[(int)$r['id']] ?? [];
+        return $rows;
+    }
 }

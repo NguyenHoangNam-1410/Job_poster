@@ -9,7 +9,9 @@ function route(string $r, array $qs = []): string {
   $qs = array_merge(['r' => $r], $qs);
   return BASE_PUBLIC . '/index.php?' . http_build_query($qs);
 }
-function job_link($id){ return route('/jobs/show', ['id' => $id]); }
+function job_link($id){
+  return BASE_PUBLIC . '/jobs/show/' . (int)$id;
+}
 function ic($name,$class='w-4 h-4'){
   if (class_exists('Icons') && method_exists('Icons', $name)) return Icons::$name($class);
   $map=['search'=>'🔎','mapPin'=>'📍','briefcase'=>'💼','clock'=>'⏱️','filter'=>'🧰'];
@@ -65,7 +67,7 @@ function status_badge_class($st){
         </select>
 
         <select id="location" name="location" class="rounded-xl border-gray-300">
-          <option value="">All locations</opxtion>
+          <option value="">All locations</option>
           <?php foreach ($locations as $l): ?>
             <option value="<?= htmlspecialchars($l) ?>"><?= htmlspecialchars($l) ?></option>
           <?php endforeach; ?>
@@ -136,7 +138,7 @@ function status_badge_class($st){
           <?php endif; ?>
           <div class="mt-4 flex justify-between items-center">
             <span class="text-xs text-gray-500"><?= htmlspecialchars(($job['field']??'') . (($job['field']??'') && ($job['expertise']??'')?' • ':'') . ($job['expertise']??'')) ?></span>
-            <a href="<?= htmlspecialchars(job_link($job['id'])) ?>" class="text-sm font-medium text-gray-900 hover:underline">View details →</a>
+            <a href="<?= htmlspecialchars(job_link($job['id'])) ?>" class="text-indigo-600 hover:underline">View details</a>
           </div>
         </div>
       </article>
@@ -169,7 +171,6 @@ async function loadFilters(){
     const cats = d.categories ?? d.cats ?? [];
     const locs = d.locations  ?? d.locs ?? [];
     const stts = d.statuses   ?? d.stts ?? ['all','recruiting','overdue'];
-
     elCat.innerHTML = '<option value="">All categories</option>' + cats.map(c=>`<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
     elLoc.innerHTML = '<option value="">All locations</option>' + locs.map(l=>`<option value="${escapeHtml(l)}">${escapeHtml(l)}</option>`).join('');
     elSt.innerHTML  = '<option value="">All statuses</option>'   + stts.map(s=>`<option value="${s}">${capStatus(s)}</option>`).join('');
@@ -205,9 +206,10 @@ function card(job){
   const posted = job.posted_at ? formatDate(job.posted_at) : '';
   const st = job.public_status || job.status || '';
   const tags = (job.tags||[]).map(t=>`<span class="inline-flex items-center rounded-full border border-gray-200 px-2.5 py-1 text-xs font-medium text-gray-700 bg-gray-50">${escapeHtml(t)}</span>`).join('');
+  const link = `${BASE}/jobs/show/${encodeURIComponent(job.id)}`;
   return `
     <article class="group overflow-hidden rounded-2xl bg-white shadow border border-gray-100 hover:shadow-md transition">
-      <a href="<?= htmlspecialchars(route('/jobs/show')) ?>&id=${job.id}">
+      <a href="${link}">
         <div class="aspect-[16/9] bg-gray-100 overflow-hidden">
           <img src="${escapeAttr(thumb)}" alt="${escapeAttr(job.title)}" class="h-full w-full object-cover group-hover:scale-[1.02] transition" loading="lazy">
         </div>
@@ -226,7 +228,7 @@ function card(job){
         ${tags?`<div class="mt-3 flex flex-wrap gap-2">${tags}</div>`:''}
         <div class="mt-4 flex justify-between items-center">
           <span class="text-xs text-gray-500">${escapeHtml((job.field||''))}${job.field&&job.expertise?' • ':''}${escapeHtml(job.expertise||'')}</span>
-          <a href="<?= htmlspecialchars(route('/jobs/show')) ?>&id=${job.id}" class="text-sm font-medium text-gray-900 hover:underline">View details →</a>
+          <a href="${link}" class="text-indigo-600 hover:underline">View details</a>
         </div>
       </div>
     </article>
@@ -246,6 +248,7 @@ function renderPager(){
     a.addEventListener('click',e=>{
       e.preventDefault();
       const p = parseInt(a.getAttribute('data-page')||'1',10);
+      const totalPages = Math.max(1, Math.ceil(lastTotal / perPage));
       if (p>=1 && p<=totalPages) { page = p; loadJobs(); window.scrollTo({top:0, behavior:'smooth'}); }
     });
   });
