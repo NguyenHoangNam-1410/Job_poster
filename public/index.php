@@ -189,6 +189,15 @@ else {
         case '/home':
             include '../app/views/public/home.php';
             break;
+
+            case '/jobs':
+                include '../app/views/public/jobs/jobslisting.php';
+                break;
+    
+            case '/jobs/show':
+                include '../app/views/public/jobs/show.php';
+                break;
+    
         
         default:
             http_response_code(404);
