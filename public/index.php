@@ -105,7 +105,7 @@ if ($path === '/users') {
 
         // Jobs listing & Job detail (đã thêm)
         case '/jobs':
-            include '../app/views/public/jobs/index.php';
+            include '../app/views/public/jobs/jobslisting.php';
             break;
 
         case '/jobs/show':
