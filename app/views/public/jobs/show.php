@@ -1,6 +1,6 @@
 <?php
 $pageTitle = "Job Details";
-$additionalCSS = [];
+$additionalCSS = ['/Job_poster/public/css/jobs-artistic.css'];
 $additionalJS  = [];
 require dirname(__DIR__, 2) . '/layouts/public_header.php';
 
@@ -58,87 +58,201 @@ if ($reqStr!=='') {
 }
 $left = days_left($deadlineRaw);
 ?>
-<main class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 text-left">
-  <nav class="text-sm text-gray-600 mb-3">
-    <a href="<?= BASE_PUBLIC ?>/jobs" class="hover:underline">Jobs</a> / <span><?= h($title) ?></span>
-  </nav>
+<style>
+@keyframes float {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  33% { transform: translateY(-20px) translateX(10px); }
+  66% { transform: translateY(10px) translateX(-10px); }
+}
 
-  <div class="mt-6 grid lg:grid-cols-3 gap-6">
-    <section class="lg:col-span-2 space-y-6 text-left">
-      <div class="rounded-2xl overflow-hidden border border-gray-200">
-        <img src="<?= h($banner) ?>" alt="" class="w-full h-56 md:h-64 object-cover">
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.bg-animated {
+  position: relative;
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+}
+
+.bg-animated::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(6, 136, 180, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: float 20s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.bg-animated::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -5%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(6, 136, 180, 0.05) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: float 25s ease-in-out infinite reverse;
+  pointer-events: none;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+.section-card {
+  animation: fadeIn 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.section-card:nth-child(1) { animation-delay: 0.1s; }
+.section-card:nth-child(2) { animation-delay: 0.2s; }
+.section-card:nth-child(3) { animation-delay: 0.3s; }
+.section-card:nth-child(4) { animation-delay: 0.4s; }
+.section-card:nth-child(5) { animation-delay: 0.5s; }
+.section-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Custom Scrollbar for Sidebar */
+#rel-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+#rel-list::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 3px;
+}
+
+#rel-list::-webkit-scrollbar-thumb {
+  background: #0688B4;
+  border-radius: 3px;
+}
+
+#rel-list::-webkit-scrollbar-thumb:hover {
+  background: #056a8a;
+}
+</style>
+
+<main class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 text-left bg-animated">
+  <div class="content-wrapper">
+    <nav class="text-sm text-gray-500 mb-6">
+      <a href="<?= BASE_PUBLIC ?>/jobs" class="hover:text-gray-900 transition-colors">Jobs</a> <span class="mx-2">/</span> <span class="text-gray-900"><?= h($title) ?></span>
+    </nav>
+
+    <div class="mt-6 grid lg:grid-cols-3 gap-8">
+      <section class="lg:col-span-2 space-y-8 text-left">
+        <!-- Banner -->
+        <div class="section-card overflow-hidden bg-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <img src="<?= h($banner) ?>" alt="" class="w-full h-64 object-cover">
       </div>
 
-      <header class="text-left">
-        <h1 class="text-3xl font-bold"><?= h($title) ?></h1>
-        <p class="mt-1 text-gray-700"><?= h($company) ?> • <?= h($location) ?></p>
+        <!-- Header -->
+        <header class="section-card text-left border-b border-gray-200 pb-6">
+        <h1 class="text-4xl font-bold text-gray-900 leading-tight mb-3"><?= h($title) ?></h1>
+        <p class="text-lg text-gray-600 mb-4"><?= h($company) ?> <span class="mx-2">•</span> <?= h($location) ?></p>
         <?php if (!empty($chips)): ?>
-          <div class="mt-2 flex flex-wrap gap-2">
+          <div class="flex flex-wrap gap-2">
             <?php foreach ($chips as $c): if(!$c) continue; ?>
-              <span class="px-3 py-1 rounded-full text-sm bg-gray-100 border border-gray-200"><?= h($c) ?></span>
+              <span class="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300"><?= h($c) ?></span>
             <?php endforeach; ?>
           </div>
         <?php else: ?>
-          <div class="mt-2 text-gray-500 text-sm">No information provided yet</div>
+          <div class="text-gray-400 text-sm">No categories available</div>
         <?php endif; ?>
       </header>
 
-      <?php if ($salary !== 'No information provided yet'): ?>
-        <div>
-          <h3 class="text-lg font-semibold">Salary</h3>
-          <p class="mt-1 text-gray-800 text-left"><?= $salary ?></p>
-        </div>
-      <?php endif; ?>
+        <?php if ($salary !== 'No information provided yet'): ?>
+          <!-- Salary -->
+          <div class="section-card border-l-4 border-teal-600 pl-6 py-2 bg-white shadow-sm hover:shadow-md transition-all duration-300" style="border-color: #0688B4;">
+            <h3 class="text-sm font-semibold uppercase tracking-wide mb-2" style="color: #0688B4;">Salary</h3>
+            <p class="text-2xl font-bold text-gray-900"><?= $salary ?></p>
+          </div>
+        <?php endif; ?>
 
-      <div>
-        <h2 class="text-xl font-semibold">Job Description</h2>
-        <div class="mt-2 text-gray-800 whitespace-pre-wrap text-left leading-relaxed">
-          <?php if ($desc===''): ?>
-            <p>No information provided yet</p>
+        <!-- Job Description -->
+        <div class="section-card bg-white p-6 shadow-sm hover:shadow-md transition-shadow duration-300 border-l-2" style="border-color: #0688B4;">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Job Description</h2>
+          <div class="text-gray-700 whitespace-pre-wrap leading-relaxed">
+            <?php if ($desc===''): ?>
+              <p class="text-gray-400">No information provided yet</p>
+            <?php else: ?>
+              <?= nl2br(h($desc)) ?>
+            <?php endif; ?>
+          </div>
+        </div>
+
+        <!-- Requirements -->
+        <div class="section-card bg-white p-6 shadow-sm hover:shadow-md transition-shadow duration-300 border-l-2" style="border-color: #0688B4;">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">Requirements</h3>
+          <?php if (!empty($reqs)): ?>
+            <ul class="space-y-2 list-disc list-inside text-gray-700">
+              <?php foreach ($reqs as $r): ?>
+                <li><?= h($r) ?></li>
+              <?php endforeach; ?>
+            </ul>
           <?php else: ?>
-            <?= nl2br(h($desc)) ?>
+            <p class="text-gray-400">No information provided yet</p>
           <?php endif; ?>
         </div>
-      </div>
 
-      <div>
-        <h3 class="text-lg font-semibold">Requirements</h3>
-        <?php if (!empty($reqs)): ?>
-          <ul class="mt-2 list-disc ms-5 text-gray-800">
-            <?php foreach ($reqs as $r): ?><li><?= h($r) ?></li><?php endforeach; ?>
-          </ul>
-        <?php else: ?>
-          <p class="mt-2 text-gray-700">No information provided yet</p>
-        <?php endif; ?>
-      </div>
-
-      <div class="rounded-2xl border border-gray-200 p-5">
-        <h3 class="text-lg font-semibold">Quick info</h3>
-        <dl class="mt-3 text-gray-700 grid sm:grid-cols-2 gap-y-2">
-          <div class="flex justify-between sm:justify-start sm:gap-3"><dt class="font-medium">Company</dt><dd><?= h($company) ?></dd></div>
-          <div class="flex justify-between sm:justify-start sm:gap-3"><dt class="font-medium">Location</dt><dd><?= h($location) ?></dd></div>
-          <div class="flex justify-between sm:justify-start sm:gap-3"><dt class="font-medium">Deadline</dt><dd><?= h($deadline) ?></dd></div>
-          <div class="flex justify-between sm:justify-start sm:gap-3"><dt class="font-medium">Posted</dt><dd><?= h($posted) ?></dd></div>
-          <div class="flex justify-between sm:justify-start sm:gap-3"><dt class="font-medium">Status</dt><dd class="capitalize"><?= h($statusLbl) ?></dd></div>
-        </dl>
-        <?php if ($left !== null): ?>
-          <p class="mt-3 text-sm <?= $left<=3?'text-red-600':'text-gray-600' ?>"><?= $left>=0 ? $left.' days left' : 'Closed' ?></p>
-        <?php else: ?>
-          <p class="mt-3 text-sm text-gray-600">Closed</p>
-        <?php endif; ?>
-        <a href="#" class="mt-5 w-full inline-flex justify-center rounded-xl bg-gray-900 text-white px-4 py-2 font-medium hover:bg-gray-800 transition">Apply Now</a>
-      </div>
-    </section>
-
-    <aside class="lg:col-span-1">
-      <div class="rounded-2xl border border-gray-200 p-5 sticky top-6">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-semibold">Relevant jobs</h3>
-          <a href="<?= BASE_PUBLIC ?>/jobs" class="text-sm text-indigo-600 hover:underline">See all</a>
+        <!-- Quick Info -->
+        <div class="section-card bg-white p-6 shadow-sm hover:shadow-md transition-shadow duration-300 border-l-2" style="border-color: #0688B4;">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">Quick Info</h3>
+          <dl class="space-y-3">
+            <div class="flex justify-between py-2 border-b border-gray-100">
+              <dt class="text-sm font-medium text-gray-500">Company</dt>
+              <dd class="text-sm font-semibold text-gray-900"><?= h($company) ?></dd>
+            </div>
+            <div class="flex justify-between py-2 border-b border-gray-100">
+              <dt class="text-sm font-medium text-gray-500">Location</dt>
+              <dd class="text-sm font-semibold text-gray-900"><?= h($location) ?></dd>
+            </div>
+            <div class="flex justify-between py-2 border-b border-gray-100">
+              <dt class="text-sm font-medium text-gray-500">Deadline</dt>
+              <dd class="text-sm font-semibold text-gray-900"><?= h($deadline) ?></dd>
+            </div>
+            <div class="flex justify-between py-2 border-b border-gray-100">
+              <dt class="text-sm font-medium text-gray-500">Posted</dt>
+              <dd class="text-sm font-semibold text-gray-900"><?= h($posted) ?></dd>
+            </div>
+            <div class="flex justify-between py-2 border-b border-gray-100">
+              <dt class="text-sm font-medium text-gray-500">Status</dt>
+              <dd class="text-sm font-semibold text-gray-900 capitalize"><?= h($statusLbl) ?></dd>
+            </div>
+          </dl>
+          <?php if ($left !== null): ?>
+            <div class="mt-4 p-3 text-center" style="background-color: <?= $left<=3 ? '#fee2e2' : 'rgba(6, 136, 180, 0.1)' ?>; border: 1px solid <?= $left<=3 ? '#fca5a5' : '#0688B4' ?>;">
+              <p class="text-sm font-medium <?= $left<=3 ? 'text-red-600' : '' ?>" style="<?= $left<=3 ? '' : 'color: #0688B4;' ?>"><?= $left>=0 ? $left.' days left' : 'Closed' ?></p>
+            </div>
+          <?php else: ?>
+            <div class="mt-4 p-3 bg-gray-50 border border-gray-200 text-center">
+              <p class="text-sm font-medium text-gray-700">Closed</p>
+            </div>
+          <?php endif; ?>
+          <a href="#" class="mt-5 w-full inline-flex justify-center text-white px-6 py-3 font-semibold hover:opacity-90 transition-all duration-300 shadow-md hover:shadow-lg" style="background-color: #0688B4;">
+            Apply Now
+          </a>
         </div>
-        <div id="rel-list" class="mt-4 space-y-3"></div>
-      </div>
-    </aside>
+      </section>
+
+      <aside class="lg:col-span-1">
+        <!-- Relevant Jobs -->
+        <div class="section-card bg-white border border-gray-200 sticky top-6 shadow-sm hover:shadow-md transition-shadow duration-300" style="max-height: calc(100vh - 3rem); display: flex; flex-direction: column;">
+          <div class="p-6 pb-4 border-b border-gray-100">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-bold text-gray-900">Relevant Jobs</h3>
+              <a href="<?= BASE_PUBLIC ?>/jobs" class="text-sm font-medium hover:underline transition-colors" style="color: #0688B4;">See all →</a>
+            </div>
+          </div>
+          <div id="rel-list" class="p-6 pt-4 space-y-3 overflow-y-auto" style="flex: 1; scrollbar-width: thin; scrollbar-color: #0688B4 #f3f4f6;"></div>
+        </div>
+      </aside>
+    </div>
   </div>
 </main>
 
@@ -172,15 +286,15 @@ function relCard(j){
   const comp  = escapeHtml(j.company || j.company_name || j.employer_name || '');
   const loc   = escapeHtml(j.location||'');
   const st    = normStatus(j.public_status || j.status || '');
-  const badge = st ? `<span class="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium ${statusClass(st)}">${capStatus(st)}</span>` : '';
+  const badge = st ? `<span class="inline-flex items-center px-2 py-0.5 text-[10px] font-medium ${statusClass(st)}">${capStatus(st)}</span>` : '';
   return `
     <a href="${jobLink(j.id)}"
-       class="group block rounded-xl border border-gray-200 bg-white px-4 py-3 hover:shadow-lg transition duration-300 will-change-transform transform hover:-translate-y-0.5 opacity-0 translate-y-2">
-      <div class="flex items-start justify-between gap-2">
-        <h4 class="text-sm font-semibold leading-snug line-clamp-2 group-hover:underline">${title}</h4>
+       class="group block border border-gray-200 bg-white px-4 py-3 hover:border-gray-900 transition-all duration-200 opacity-0 translate-y-2">
+      <div class="flex items-start justify-between gap-2 mb-1">
+        <h4 class="text-sm font-semibold leading-snug line-clamp-2 group-hover:text-gray-900">${title}</h4>
         ${badge}
       </div>
-      <p class="mt-1 text-xs text-gray-600">${comp}${comp&&loc?' • ':''}${loc}</p>
+      <p class="mt-1 text-xs text-gray-500">${comp}${comp&&loc?' • ':''}${loc}</p>
     </a>
   `;
 }

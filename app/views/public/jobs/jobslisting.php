@@ -1,6 +1,6 @@
 <?php
 $pageTitle = "Browse Jobs";
-$additionalCSS = [];
+$additionalCSS = ['/Job_poster/public/css/jobs-artistic.css'];
 $additionalJS  = [];
 require dirname(__DIR__, 2) . '/layouts/public_header.php';
 
@@ -48,58 +48,71 @@ function status_badge_class($st){
   }
 }
 ?>
-<main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-  <div class="flex flex-wrap items-center gap-3">
-    <form action="<?= htmlspecialchars(BASE_PUBLIC . '/index.php') ?>" method="GET" class="w-full">
-      <input type="hidden" name="r" value="/jobs">
-      <div class="relative">
-        <input id="q" name="q" value="<?= htmlspecialchars($q) ?>" type="text" placeholder="Search job title, company, keywords…"
-               class="w-full rounded-2xl border-gray-300 pl-10 pr-4 py-3 focus:border-gray-500 focus:ring-gray-500">
-        <span class="absolute inset-y-0 left-3 flex items-center pointer-events-none"><?= ic('search','w-5 h-5') ?></span>
-      </div>
+<script>
+document.body.classList.add('jobs-listing-page');
+</script>
+<main>
+  <!-- Hero Section with Large Typography -->
+  <section class="jobs-hero">
+    <div class="jobs-hero-bg-text">JOBS</div>
+    <h1 class="jobs-hero-title">FIND YOUR<br>DREAM JOB</h1>
+    <p class="jobs-hero-subtitle">Discover opportunities that match your passion. Explore our curated collection of jobs from innovative companies.</p>
+  </section>
 
-      <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        <select id="category" name="category" class="rounded-xl border-gray-300">
-          <option value="">All categories</option>
-          <?php foreach ($categories as $c): ?>
-            <option value="<?= htmlspecialchars($c['id']) ?>"><?= htmlspecialchars($c['name']) ?></option>
-          <?php endforeach; ?>
-        </select>
+  <!-- Artistic Search Section -->
+  <section class="jobs-search-section">
+    <div class="jobs-search-container">
+      <form action="<?= htmlspecialchars(BASE_PUBLIC . '/index.php') ?>" method="GET" class="w-full">
+        <input type="hidden" name="r" value="/jobs">
+        <div class="relative mb-4">
+          <input id="q" name="q" value="<?= htmlspecialchars($q) ?>" type="text" placeholder="Search job title, company, keywords…"
+                 class="jobs-search-input">
+          <span class="jobs-search-icon"><?= ic('search','w-6 h-6') ?></span>
+        </div>
 
-        <select id="location" name="location" class="rounded-xl border-gray-300">
-          <option value="">All locations</option>
-          <?php foreach ($locations as $l): ?>
-            <option value="<?= htmlspecialchars($l) ?>"><?= htmlspecialchars($l) ?></option>
-          <?php endforeach; ?>
-        </select>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <select id="category" name="category" class="jobs-filter-select">
+            <option value="">All categories</option>
+            <?php foreach ($categories as $c): ?>
+              <option value="<?= htmlspecialchars($c['id']) ?>"><?= htmlspecialchars($c['name']) ?></option>
+            <?php endforeach; ?>
+          </select>
 
-        <select id="status" name="status" class="rounded-xl border-gray-300">
-          <option value="">All statuses</option>
-          <?php
-            $statuses = $statuses ?: ['all','recruiting','overdue'];
-            foreach ($statuses as $s):
-          ?>
-            <option value="<?= htmlspecialchars($s) ?>"><?= $s==='recruiting'?'Recruiting':($s==='overdue'?'Overdue':ucfirst(htmlspecialchars($s))) ?></option>
-          <?php endforeach; ?>
-        </select>
+          <select id="location" name="location" class="jobs-filter-select">
+            <option value="">All locations</option>
+            <?php foreach ($locations as $l): ?>
+              <option value="<?= htmlspecialchars($l) ?>"><?= htmlspecialchars($l) ?></option>
+            <?php endforeach; ?>
+          </select>
 
-        <div class="h-10"></div>
-      </div>
+          <select id="status" name="status" class="jobs-filter-select">
+            <option value="">All statuses</option>
+            <?php
+              $statuses = $statuses ?: ['all','recruiting','overdue'];
+              foreach ($statuses as $s):
+            ?>
+              <option value="<?= htmlspecialchars($s) ?>"><?= $s==='recruiting'?'Recruiting':($s==='overdue'?'Overdue':ucfirst(htmlspecialchars($s))) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+      </form>
 
-      <div id="activeBar" class="mt-3 flex flex-wrap items-center gap-3">
+      <div id="activeBar" class="jobs-active-filters">
         <div id="activeBadges" class="flex flex-wrap items-center gap-2"></div>
-        <a id="clearAll" href="<?= htmlspecialchars(route('/jobs')) ?>" class="hidden text-sm text-gray-600 hover:underline">✕ Clear all</a>
-        <span id="activeCount" class="ml-auto text-sm text-gray-500 hidden"></span>
+        <a id="clearAll" href="<?= htmlspecialchars(route('/jobs')) ?>" class="hidden text-sm" style="color: #0688B4; text-decoration: underline; margin-left: 1rem;">✕ Clear all</a>
+        <span id="activeCount" class="ml-auto text-sm hidden" style="color: #4a4a4a;"></span>
       </div>
-    </form>
-  </div>
+    </div>
+  </section>
 
-  <div class="mt-6 flex items-center justify-between">
-    <h2 id="count" class="text-lg text-gray-700">Showing <?= count($rows) ?> jobs</h2>
-    <div id="pageInfo" class="text-sm text-gray-500">Page 1</div>
-  </div>
+  <!-- Count Section -->
+  <section class="jobs-count-section">
+    <h2 id="count" class="jobs-count-text">Showing <?= count($rows) ?> jobs</h2>
+    <div id="pageInfo" class="text-sm" style="color: #4a4a4a; margin-top: 0.5rem;">Page 1</div>
+  </section>
 
-  <div id="grid" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  <!-- Jobs Grid -->
+  <div id="grid" class="jobs-grid">
     <?php foreach ($rows as $job): ?>
       <?php
         $thumb = $job['thumbnail_url'] ?: 'images/jobs/placeholder.jpg';
@@ -107,45 +120,51 @@ function status_badge_class($st){
         $st = $job['public_status'] ?? ($job['status'] ?? '');
         $label = $st === 'recruiting' ? 'Recruiting' : ucfirst($st);
       ?>
-      <article class="group overflow-hidden rounded-2xl bg-white shadow border border-gray-100 hover:shadow-md transition">
-        <a href="<?= htmlspecialchars(job_link($job['id'])) ?>">
-          <div class="aspect-[16/9] bg-gray-100 overflow-hidden">
+      <a href="<?= htmlspecialchars(job_link($job['id'])) ?>" class="job-card-wrapper">
+        <article class="job-card-artistic">
+          <div class="job-card-image-wrapper">
             <img src="<?= htmlspecialchars($thumb) ?>" alt="<?= htmlspecialchars($job['title']) ?>"
-                 class="h-full w-full object-cover group-hover:scale-[1.02] transition" loading="lazy">
-          </div>
-        </a>
-        <div class="p-4">
-          <div class="flex items-start justify-between gap-3">
-            <h3 class="text-base font-semibold leading-tight line-clamp-2"><?= htmlspecialchars($job['title']) ?></h3>
-            <?php if (!empty($job['type'])): ?>
-              <span class="text-xs rounded-full bg-gray-100 px-2 py-1 whitespace-nowrap"><?= htmlspecialchars($job['type']) ?></span>
-            <?php endif; ?>
-          </div>
-          <p class="mt-1 text-sm text-gray-600"><?= htmlspecialchars($job['company'] ?? '') ?></p>
-          <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-gray-700">
-            <span class="inline-flex items-center gap-1">📍<?= htmlspecialchars($job['location'] ?? '') ?></span>
-            <span class="inline-flex items-center gap-1">⏱️<?= date('M j, Y', $posted) ?></span>
+                 class="job-card-image" loading="lazy">
             <?php if ($st): ?>
-              <span class="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium <?= status_badge_class($st) ?>"><?= htmlspecialchars($label) ?></span>
+              <span class="job-card-status <?= htmlspecialchars($st) ?>"><?= htmlspecialchars($label) ?></span>
             <?php endif; ?>
           </div>
-          <?php if (!empty($job['tags'])): ?>
-            <div class="mt-3 flex flex-wrap gap-2">
-              <?php foreach ($job['tags'] as $tg): ?>
-                <span class="inline-flex items-center rounded-full border border-gray-200 px-2.5 py-1 text-xs font-medium text-gray-700 bg-gray-50"><?= htmlspecialchars($tg) ?></span>
-              <?php endforeach; ?>
+          <div class="job-card-content">
+            <h3 class="job-card-title"><?= htmlspecialchars($job['title']) ?></h3>
+            <p class="job-card-company"><?= htmlspecialchars($job['company'] ?? '') ?></p>
+            <div class="job-card-meta">
+              <div class="job-card-meta-item">
+                <span>📍</span>
+                <span><?= htmlspecialchars($job['location'] ?? '') ?></span>
+              </div>
+              <div class="job-card-meta-item">
+                <span>⏱️</span>
+                <span><?= date('M j, Y', $posted) ?></span>
+              </div>
+              <?php if (!empty($job['type'])): ?>
+                <div class="job-card-meta-item">
+                  <span>💼</span>
+                  <span><?= htmlspecialchars($job['type']) ?></span>
+                </div>
+              <?php endif; ?>
             </div>
-          <?php endif; ?>
-          <div class="mt-4 flex justify-between items-center">
-            <span class="text-xs text-gray-500"><?= htmlspecialchars(($job['field']??'') . (($job['field']??'') && ($job['expertise']??'')?' • ':'') . ($job['expertise']??'')) ?></span>
-            <a href="<?= htmlspecialchars(job_link($job['id'])) ?>" class="text-indigo-600 hover:underline">View details</a>
+            <?php if (!empty($job['tags'])): ?>
+              <div class="job-card-tags">
+                <?php foreach ($job['tags'] as $tg): ?>
+                  <span class="job-card-tag"><?= htmlspecialchars($tg) ?></span>
+                <?php endforeach; ?>
+              </div>
+            <?php endif; ?>
+            <div class="job-card-footer">
+              <span class="text-xs"><?= htmlspecialchars(($job['field']??'') . (($job['field']??'') && ($job['expertise']??'')?' • ':'') . ($job['expertise']??'')) ?></span>
+            </div>
           </div>
-        </div>
-      </article>
+        </article>
+      </a>
     <?php endforeach; ?>
   </div>
 
-  <nav id="pager" class="mt-6 flex items-center justify-center gap-2" aria-label="Pagination"></nav>
+  <nav id="pager" class="jobs-pagination" aria-label="Pagination"></nav>
 </main>
 
 <script>
@@ -193,8 +212,12 @@ async function loadJobs(){
     const r=await fetch(makeURL());
     const d=await r.json();
     lastTotal = parseInt(d.total||0,10);
-    count.textContent = `Showing ${(d.rows||[]).length} of ${lastTotal} jobs`;
-    grid.innerHTML = (d.rows||[]).map(card).join('') || `<div class="col-span-full text-center text-gray-500 border border-dashed rounded-2xl py-12">No jobs found</div>`;
+    count.textContent = `${(d.rows||[]).length} jobs found`;
+    if((d.rows||[]).length === 0) {
+      grid.innerHTML = `<div class="jobs-no-results"><h3 class="jobs-no-results-title">NO JOBS FOUND</h3><p class="jobs-no-results-text">Try adjusting your search or filters to find more opportunities.</p></div>`;
+    } else {
+      grid.innerHTML = (d.rows||[]).map(card).join('');
+    }
     pageInfo.textContent = `Page ${page}`;
     renderPager();
     renderBadges();
@@ -205,52 +228,58 @@ function card(job){
   const thumb = job.thumbnail_url || 'images/jobs/placeholder.jpg';
   const posted = job.posted_at ? formatDate(job.posted_at) : '';
   const st = job.public_status || job.status || '';
-  const tags = (job.tags||[]).map(t=>`<span class="inline-flex items-center rounded-full border border-gray-200 px-2.5 py-1 text-xs font-medium text-gray-700 bg-gray-50">${escapeHtml(t)}</span>`).join('');
+  const tags = (job.tags||[]).map(t=>`<span class="job-card-tag">${escapeHtml(t)}</span>`).join('');
   const link = `${BASE}/jobs/show/${encodeURIComponent(job.id)}`;
+  const statusBadge = st ? `<span class="job-card-status ${st}">${capStatus(st)}</span>` : '';
+  const typeMeta = job.type ? `<div class="job-card-meta-item"><span>💼</span><span>${escapeHtml(job.type)}</span></div>` : '';
+  const fieldInfo = `${escapeHtml(job.field||'')}${job.field&&job.expertise?' • ':''}${escapeHtml(job.expertise||'')}`;
+  
   return `
-    <article class="group overflow-hidden rounded-2xl bg-white shadow border border-gray-100 hover:shadow-md transition">
-      <a href="${link}">
-        <div class="aspect-[16/9] bg-gray-100 overflow-hidden">
-          <img src="${escapeAttr(thumb)}" alt="${escapeAttr(job.title)}" class="h-full w-full object-cover group-hover:scale-[1.02] transition" loading="lazy">
+    <a href="${link}" class="job-card-wrapper">
+      <article class="job-card-artistic">
+        <div class="job-card-image-wrapper">
+          <img src="${escapeAttr(thumb)}" alt="${escapeAttr(job.title)}" class="job-card-image" loading="lazy">
+          ${statusBadge}
         </div>
-      </a>
-      <div class="p-4">
-        <div class="flex items-start justify-between gap-3">
-          <h3 class="text-base font-semibold leading-tight line-clamp-2">${escapeHtml(job.title)}</h3>
-          ${job.type ? `<span class="text-xs rounded-full bg-gray-100 px-2 py-1 whitespace-nowrap">${escapeHtml(job.type)}</span>` : ``}
+        <div class="job-card-content">
+          <h3 class="job-card-title">${escapeHtml(job.title)}</h3>
+          <p class="job-card-company">${escapeHtml(job.company||'')}</p>
+          <div class="job-card-meta">
+            <div class="job-card-meta-item">
+              <span>📍</span>
+              <span>${escapeHtml(job.location||'')}</span>
+            </div>
+            ${posted?`<div class="job-card-meta-item"><span>⏱️</span><span>${posted}</span></div>`:''}
+            ${typeMeta}
+          </div>
+          ${tags?`<div class="job-card-tags">${tags}</div>`:''}
+          <div class="job-card-footer">
+            <span class="text-xs">${fieldInfo}</span>
+          </div>
         </div>
-        <p class="mt-1 text-sm text-gray-600">${escapeHtml(job.company||'')}</p>
-        <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-gray-700">
-          <span class="inline-flex items-center gap-1">📍${escapeHtml(job.location||'')}</span>
-          ${posted?`<span class="inline-flex items-center gap-1">⏱️${posted}</span>`:''}
-          ${st?`<span class="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium ${statusClass(st)}">${capStatus(st)}</span>`:''}
-        </div>
-        ${tags?`<div class="mt-3 flex flex-wrap gap-2">${tags}</div>`:''}
-        <div class="mt-4 flex justify-between items-center">
-          <span class="text-xs text-gray-500">${escapeHtml((job.field||''))}${job.field&&job.expertise?' • ':''}${escapeHtml(job.expertise||'')}</span>
-          <a href="${link}" class="text-indigo-600 hover:underline">View details</a>
-        </div>
-      </div>
-    </article>
+      </article>
+    </a>
   `;
 }
 
 function renderPager(){
   const totalPages = Math.max(1, Math.ceil(lastTotal / perPage));
-  const prevDisabled = page<=1 ? 'opacity-50 pointer-events-none' : '';
-  const nextDisabled = page>=totalPages ? 'opacity-50 pointer-events-none' : '';
+  const prevDisabled = page<=1;
+  const nextDisabled = page>=totalPages;
   pager.innerHTML = `
-    <a class="px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-700 hover:bg-gray-50 ${prevDisabled}" href="#" data-page="${page-1}">Prev</a>
-    <span class="px-3 py-2 rounded-lg bg-gray-900 text-white text-sm">${page}</span>
-    <a class="px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-700 hover:bg-gray-50 ${nextDisabled}" href="#" data-page="${page+1}">Next</a>
+    <button class="jobs-pagination-btn" ${prevDisabled ? 'disabled' : ''} data-page="${page-1}">← Prev</button>
+    <span class="jobs-pagination-current">${page}</span>
+    <button class="jobs-pagination-btn" ${nextDisabled ? 'disabled' : ''} data-page="${page+1}">Next →</button>
   `;
-  pager.querySelectorAll('a[data-page]').forEach(a=>{
-    a.addEventListener('click',e=>{
-      e.preventDefault();
-      const p = parseInt(a.getAttribute('data-page')||'1',10);
-      const totalPages = Math.max(1, Math.ceil(lastTotal / perPage));
-      if (p>=1 && p<=totalPages) { page = p; loadJobs(); window.scrollTo({top:0, behavior:'smooth'}); }
-    });
+  pager.querySelectorAll('button[data-page]').forEach(btn=>{
+    if(!btn.disabled) {
+      btn.addEventListener('click',e=>{
+        e.preventDefault();
+        const p = parseInt(btn.getAttribute('data-page')||'1',10);
+        const totalPages = Math.max(1, Math.ceil(lastTotal / perPage));
+        if (p>=1 && p<=totalPages) { page = p; loadJobs(); window.scrollTo({top:0, behavior:'smooth'}); }
+      });
+    }
   });
 }
 
@@ -278,7 +307,7 @@ function renderBadges(){
   if(elSt.value){ items.push({k:'status', label:capStatus(elSt.value)}); }
 
   activeBadges.innerHTML = items.map(it=>`
-    <button type="button" class="inline-flex items-center gap-2 rounded-xl border px-3 py-1.5 text-sm text-gray-700 bg-gray-50 hover:bg-gray-100"
+    <button type="button" class="jobs-filter-badge"
             data-k="${it.k}">
       <span>${escapeHtml(it.label)}</span>
       <span aria-hidden="true">✕</span>

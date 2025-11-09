@@ -1,0 +1,1170 @@
+/* Gen Z Artistic Style - Jobs Listing Page */
+/* Using current color scheme: #0688B4 (teal/blue) */
+
+:root {
+  --primary-teal: #0688B4;
+  --primary-teal-dark: #056a8a;
+  --primary-teal-light: #0aa5d1;
+  --accent-pink: #e8a5b8;
+  --accent-purple: #8B5CF6;
+  --accent-cyan: #0dc3db;
+  --accent-green: #10b981;
+  --accent-grey: #8b9dc3;
+  --accent-blue: #4a90e2;
+  --bg-off-white: #faf9f6;
+  --bg-texture: rgba(250, 249, 246, 0.95);
+  --text-black: #1a1a1a;
+  --text-grey: #4a4a4a;
+  --shadow-float: 0 20px 60px rgba(6, 136, 180, 0.15);
+  --shadow-glow: 0 0 30px rgba(6, 136, 180, 0.3);
+}
+
+/* Vintage Chic Artistic Background */
+body.jobs-listing-page {
+  background: #fefefe;
+  background-image: 
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.015) 2px, rgba(0,0,0,0.015) 4px);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  min-height: 100vh;
+}
+
+/* Large Bold Typography - Hero Section */
+.jobs-hero {
+  position: relative;
+  padding: 5rem 2rem 7rem;
+  overflow: hidden;
+  max-width: 1400px;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+.jobs-hero-title {
+  font-size: clamp(2.5rem, 10vw, 7rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  border-bottom: 3px solid #1a1a1a;
+  padding-bottom: 1rem;
+  display: inline-block;
+}
+
+.jobs-hero-subtitle {
+  font-size: clamp(0.95rem, 2vw, 1.2rem);
+  font-weight: 400;
+  color: #4a4a4a;
+  margin-top: 1.5rem;
+  max-width: 600px;
+  line-height: 1.7;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Large background text element */
+.jobs-hero-bg-text {
+  position: absolute;
+  right: -5%;
+  top: 5%;
+  font-size: clamp(6rem, 20vw, 18rem);
+  font-weight: 900;
+  color: rgba(6, 136, 180, 0.06);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Vintage Search Section */
+.jobs-search-section {
+  position: relative;
+  padding: 2rem;
+  margin: -4rem auto 4rem;
+  max-width: 1400px;
+  z-index: 10;
+}
+
+.jobs-search-container {
+  background: #fefefe;
+  border: 2px solid #1a1a1a;
+  border-radius: 0;
+  padding: 2rem;
+  box-shadow: 6px 6px 0 rgba(6, 136, 180, 0.15);
+  position: relative;
+}
+
+.jobs-search-container::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: -6px;
+  bottom: -6px;
+  background: rgba(6, 136, 180, 0.05);
+  z-index: -1;
+}
+
+/* Search Input - Vintage */
+.jobs-search-input {
+  width: 100%;
+  padding: 1rem 1.25rem 1rem 3rem;
+  font-size: 1rem;
+  border: 2px solid #1a1a1a;
+  border-radius: 0;
+  background: white;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.jobs-search-input:focus {
+  outline: none;
+  border-color: var(--primary-teal);
+  box-shadow: 4px 4px 0 rgba(6, 136, 180, 0.3);
+  transform: translate(-2px, -2px);
+}
+
+.jobs-search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #1a1a1a;
+  font-size: 1.25rem;
+  opacity: 0.6;
+}
+
+/* Filter Selects - Vintage */
+.jobs-filter-select {
+  padding: 0.875rem 1rem;
+  border: 2px solid #1a1a1a;
+  border-radius: 0;
+  background: white;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.jobs-filter-select:focus {
+  outline: none;
+  border-color: var(--primary-teal);
+  box-shadow: 3px 3px 0 rgba(6, 136, 180, 0.3);
+  transform: translate(-1px, -1px);
+}
+
+.jobs-filter-select:hover {
+  background: #f8f8f8;
+}
+
+/* Vertical Text Labels - Artistic */
+.vertical-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-black);
+  position: absolute;
+  left: -2rem;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
+/* Layered Colored Blocks */
+.art-block {
+  position: relative;
+  border-radius: 20px;
+  padding: 2rem;
+  margin: 1rem 0;
+  box-shadow: var(--shadow-float);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.art-block-pink {
+  background: var(--accent-pink);
+  transform: translateX(-20px);
+}
+
+.art-block-grey {
+  background: var(--accent-grey);
+  transform: translateX(20px);
+  margin-top: -2rem;
+}
+
+.art-block:hover {
+  transform: translateX(0) translateY(-8px);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Job Cards - Vintage Chic & Artistic */
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.job-card-wrapper {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .jobs-grid {
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .jobs-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+.job-card-artistic {
+  background: #fefefe;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  position: relative;
+  border: 2px solid #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px);
+  cursor: pointer;
+}
+
+.job-card-artistic::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 1px solid rgba(6, 136, 180, 0.3);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.job-card-artistic::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: -8px;
+  bottom: -8px;
+  background: rgba(6, 136, 180, 0.05);
+  z-index: -2;
+  transition: transform 0.3s ease;
+}
+
+.job-card-artistic:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 8px 8px 0 rgba(6, 136, 180, 0.2);
+}
+
+.job-card-artistic:hover::before {
+  opacity: 1;
+}
+
+.job-card-artistic:hover::after {
+  transform: translate(4px, 4px);
+}
+
+.job-card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+  background: #e8e8e8;
+  border-bottom: 2px solid #1a1a1a;
+}
+
+.job-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  filter: grayscale(20%) contrast(1.1);
+}
+
+.job-card-artistic:hover .job-card-image {
+  transform: scale(1.1);
+  filter: grayscale(0%) contrast(1.2);
+}
+
+.job-card-status {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  z-index: 2;
+  border: 2px solid #1a1a1a;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+  font-family: 'Courier New', monospace;
+}
+
+.job-card-status.recruiting {
+  background: #1a1a1a;
+  color: #10b981;
+}
+
+.job-card-status.overdue {
+  background: #1a1a1a;
+  color: #ef4444;
+}
+
+.job-card-content {
+  padding: 1.25rem;
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #fefefe;
+}
+
+.job-card-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-transform: uppercase;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.job-card-company {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary-teal);
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-family: 'Courier New', monospace;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+.job-card-company::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: var(--primary-teal);
+}
+
+.job-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex: 1;
+  padding-left: 0.5rem;
+  border-left: 2px solid rgba(6, 136, 180, 0.2);
+}
+
+.job-card-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #4a4a4a;
+  font-weight: 400;
+  font-family: 'Courier New', monospace;
+}
+
+.job-card-meta-item span:first-child {
+  font-size: 0.9rem;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.job-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.job-card-tag {
+  padding: 0.25rem 0.6rem;
+  border-radius: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: transparent;
+  color: #1a1a1a;
+  border: 1.5px solid #1a1a1a;
+  transition: all 0.2s ease;
+  font-family: 'Courier New', monospace;
+  pointer-events: none;
+}
+
+.job-card-tag:hover {
+  background: #1a1a1a;
+  color: white;
+  transform: translate(-2px, -2px);
+  box-shadow: 2px 2px 0 rgba(6, 136, 180, 0.3);
+}
+
+.job-card-footer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 2px solid #1a1a1a;
+  margin-top: auto;
+}
+
+.job-card-footer .text-xs {
+  font-size: 0.7rem;
+  color: #6a6a6a;
+  font-weight: 400;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Count Section - Vintage Bold */
+.jobs-count-section {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.jobs-count-text {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 900;
+  color: #1a1a1a;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  border-bottom: 3px solid #1a1a1a;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+/* Pagination - Vintage */
+.jobs-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.jobs-pagination-btn {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #1a1a1a;
+  border-radius: 0;
+  background: white;
+  color: #1a1a1a;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Courier New', monospace;
+  box-shadow: 3px 3px 0 rgba(6, 136, 180, 0.2);
+}
+
+.jobs-pagination-btn:hover:not(:disabled) {
+  background: #1a1a1a;
+  color: white;
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(6, 136, 180, 0.3);
+}
+
+.jobs-pagination-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: #ccc;
+  color: #ccc;
+  box-shadow: none;
+}
+
+.jobs-pagination-current {
+  padding: 0.75rem 1.5rem;
+  background: #1a1a1a;
+  color: white;
+  border-radius: 0;
+  font-weight: 800;
+  font-size: 0.9rem;
+  border: 2px solid #1a1a1a;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 3px 3px 0 rgba(6, 136, 180, 0.3);
+}
+
+/* Active Filters - Vintage */
+.jobs-active-filters {
+  padding: 1.5rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.jobs-filter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 2px solid #1a1a1a;
+  border-radius: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-right: 0.75rem;
+  margin-bottom: 0.75rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 2px 2px 0 rgba(6, 136, 180, 0.2);
+}
+
+.jobs-filter-badge:hover {
+  background: #1a1a1a;
+  color: white;
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 rgba(6, 136, 180, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .jobs-hero {
+    padding: 2rem 1rem 4rem;
+  }
+  
+  .jobs-hero-bg-text {
+    right: -20%;
+    font-size: clamp(4rem, 20vw, 10rem);
+  }
+  
+  .jobs-search-section {
+    padding: 1rem;
+    margin: -2rem auto 2rem;
+  }
+  
+  .jobs-search-container {
+    padding: 1.5rem;
+  }
+  
+  .jobs-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+  
+  .job-card-image-wrapper {
+    height: 120px;
+  }
+  
+  .job-card-content {
+    padding: 1rem;
+  }
+  
+  .job-card-artistic:hover {
+    transform: translate(-2px, -2px);
+  }
+  
+  .job-card-artistic:hover::after {
+    transform: translate(2px, 2px);
+  }
+  
+  .vertical-label {
+    display: none;
+  }
+  
+  .art-block {
+    transform: none !important;
+    margin: 1rem 0;
+  }
+}
+
+/* No results message */
+.jobs-no-results {
+  text-align: center;
+  padding: 4rem 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  border: 2px solid #1a1a1a;
+  background: #fefefe;
+  box-shadow: 6px 6px 0 rgba(6, 136, 180, 0.15);
+}
+
+.jobs-no-results-title {
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  border-bottom: 3px solid #1a1a1a;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.jobs-no-results-text {
+  font-size: 1rem;
+  color: #4a4a4a;
+  line-height: 1.7;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 1rem;
+}
+
+/* Job Detail Page - Vintage Chic */
+.job-detail-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.job-detail-breadcrumb {
+  margin-bottom: 2rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #4a4a4a;
+}
+
+.job-detail-breadcrumb-link {
+  color: var(--primary-teal);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.job-detail-breadcrumb-link:hover {
+  color: #1a1a1a;
+  text-decoration: underline;
+}
+
+.job-detail-breadcrumb-separator {
+  margin: 0 0.5rem;
+  color: #6a6a6a;
+}
+
+.job-detail-breadcrumb-current {
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+.job-detail-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .job-detail-container {
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+  }
+}
+
+.job-detail-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.job-detail-banner {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border: 2px solid #1a1a1a;
+  background: #e8e8e8;
+}
+
+.job-detail-banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(20%) contrast(1.1);
+  transition: filter 0.3s ease;
+}
+
+.job-detail-banner:hover .job-detail-banner-image {
+  filter: grayscale(0%) contrast(1.2);
+}
+
+.job-detail-status {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  z-index: 2;
+  border: 2px solid #1a1a1a;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+  font-family: 'Courier New', monospace;
+}
+
+.job-detail-status.recruiting {
+  background: #1a1a1a;
+  color: #10b981;
+}
+
+.job-detail-status.overdue {
+  background: #1a1a1a;
+  color: #ef4444;
+}
+
+.job-detail-header {
+  padding: 1.5rem 0;
+  border-bottom: 2px solid #1a1a1a;
+}
+
+.job-detail-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.job-detail-company {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-teal);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-family: 'Courier New', monospace;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+.job-detail-company::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--primary-teal);
+}
+
+.job-detail-location {
+  font-size: 0.95rem;
+  color: #4a4a4a;
+  margin-bottom: 1rem;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.job-detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.job-detail-tag {
+  padding: 0.4rem 0.9rem;
+  border-radius: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: transparent;
+  color: #1a1a1a;
+  border: 1.5px solid #1a1a1a;
+  font-family: 'Courier New', monospace;
+  transition: all 0.2s ease;
+}
+
+.job-detail-tag:hover {
+  background: #1a1a1a;
+  color: white;
+  transform: translate(-2px, -2px);
+  box-shadow: 2px 2px 0 rgba(6, 136, 180, 0.3);
+}
+
+.job-detail-section {
+  padding: 2rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.job-detail-section:last-of-type {
+  border-bottom: none;
+}
+
+.job-detail-section-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  border-bottom: 3px solid #1a1a1a;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.job-detail-salary {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-teal);
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.job-detail-content {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #1a1a1a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.job-detail-content p {
+  margin-bottom: 1rem;
+}
+
+.job-detail-empty {
+  color: #6a6a6a;
+  font-style: italic;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.job-detail-requirements {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.job-detail-requirement-item {
+  padding: 0.75rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #1a1a1a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.job-detail-requirement-item:last-child {
+  border-bottom: none;
+}
+
+.job-detail-requirement-item::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--primary-teal);
+  font-weight: 700;
+}
+
+/* Sidebar */
+.job-detail-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .job-detail-sidebar {
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+  }
+}
+
+.job-detail-info-card,
+.job-detail-related-card {
+  background: #fefefe;
+  border: 2px solid #1a1a1a;
+  border-radius: 0;
+  padding: 2rem;
+  box-shadow: 6px 6px 0 rgba(6, 136, 180, 0.15);
+  position: relative;
+  background-image: 
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px);
+}
+
+.job-detail-info-card::before,
+.job-detail-related-card::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: -6px;
+  bottom: -6px;
+  background: rgba(6, 136, 180, 0.05);
+  z-index: -1;
+}
+
+.job-detail-info-title,
+.job-detail-related-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  border-bottom: 3px solid #1a1a1a;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.job-detail-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+.job-detail-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.job-detail-info-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.job-detail-info-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6a6a6a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Courier New', monospace;
+}
+
+.job-detail-info-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.job-detail-status-value-recruiting {
+  color: #10b981;
+}
+
+.job-detail-status-value-overdue {
+  color: #ef4444;
+}
+
+.job-detail-days-left {
+  margin-top: 1.5rem;
+  padding: 0.75rem;
+  background: rgba(6, 136, 180, 0.08);
+  border: 1.5px solid rgba(6, 136, 180, 0.2);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary-teal);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Courier New', monospace;
+}
+
+.job-detail-days-left-urgent {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.job-detail-apply-btn {
+  display: block;
+  width: 100%;
+  padding: 1rem 2rem;
+  margin-top: 1.5rem;
+  background: #1a1a1a;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 2px solid #1a1a1a;
+  font-family: 'Courier New', monospace;
+  box-shadow: 3px 3px 0 rgba(6, 136, 180, 0.3);
+  transition: all 0.2s ease;
+}
+
+.job-detail-apply-btn:hover {
+  background: var(--primary-teal);
+  border-color: var(--primary-teal);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+.job-detail-related-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.job-detail-related-link {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary-teal);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Courier New', monospace;
+  transition: all 0.2s ease;
+}
+
+.job-detail-related-link:hover {
+  color: #1a1a1a;
+  text-decoration: underline;
+}
+
+.job-detail-related-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Related Jobs Cards - Black Border */
+.job-show-page .rounded-xl .mt-4 a,
+.job-show-page .rounded-xl #rel-list a,
+.job-show-page .rounded-xl .space-y-3 a {
+  display: block;
+  padding: 1rem;
+  background: #ffffff !important;
+  border: 2px solid #1a1a1a !important;
+  border-radius: 8px !important;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+  position: relative;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.job-show-page .rounded-xl .mt-4 a:hover,
+.job-show-page .rounded-xl #rel-list a:hover,
+.job-show-page .rounded-xl .space-y-3 a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary-teal) !important;
+}
+
+.job-detail-related-list a h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.job-detail-related-list a p {
+  font-size: 0.8rem;
+  color: #6a6a6a;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.job-detail-related-list a .inline-flex {
+  margin-top: 0.5rem;
+}
+
+.job-detail-related-badge {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 2px solid #1a1a1a;
+  font-family: 'Courier New', monospace;
+}
+
+.job-detail-related-badge-recruiting {
+  background: #1a1a1a;
+  color: #10b981;
+}
+
+.job-detail-related-badge-overdue {
+  background: #1a1a1a;
+  color: #ef4444;
+}
+
+/* Job Show Page - Original Style (removed custom styling) */
+
