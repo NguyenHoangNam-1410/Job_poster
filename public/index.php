@@ -197,12 +197,51 @@ elseif ($path === '/profile') {
 } 
 
 else {
+
+    
     // Public routes
+
+    if (preg_match('#^/jobs/show/(\d+)$#', $path, $m) || preg_match('#^/jobs/(\d+)$#', $path, $m)) {
+        require_once '../app/controllers/PublicJobController.php';
+        (new PublicJobController())->show((int)$m[1]);
+        exit;
+    }
+
+    if ($path === '/jobs') {
+        require_once '../app/controllers/PublicJobController.php';
+        (new PublicJobController())->index();
+        exit;
+    }
+
     switch ($path) {
+
+ /* ==== AJAX ENDPOINTS (thêm 2 case này) ==== */
+ case '/ajax/jobs_filters.php':
+    require __DIR__ . '/ajax/jobs_filters.php';
+    exit;
+
+case '/ajax/jobs_list.php':
+    require __DIR__ . '/ajax/jobs_list.php';
+    exit;
+
+case '/ajax/jobs_related.php':
+    require __DIR__ . '/ajax/jobs_related.php';
+    exit;
+/* ========================================= */
+
         case '/':
         case '/home':
             include '../app/views/public/home.php';
             break;
+
+            case '/jobs':
+                include '../app/views/public/jobs/jobslisting.php';
+                break;
+    
+            case '/jobs/show':
+                include '../app/views/public/jobs/show.php';
+                break;
+    
         
         default:
             http_response_code(404);

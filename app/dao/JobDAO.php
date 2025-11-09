@@ -4,13 +4,14 @@ require_once __DIR__ . '/../models/Job.php';
 
 class JobDAO {
     private $db;
+    private $conn;
     
     public function __construct() {
         $database = new Database();
         $this->db = $database->conn;
+        $this->conn = $database->conn;
     }
     
-    // CREATE
     public function create(Job $job) {
         $sql = "INSERT INTO JOBS (employer_id, posted_by, title, location, description, requirements, salary, deadline, status) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -44,7 +45,6 @@ class JobDAO {
         return false;
     }
     
-    // READ - Get all jobs with filters, search, and pagination
     public function getAll($search = '', $categoryFilter = '', $locationFilter = '', $statusFilter = '', $limit = null, $offset = 0) {
         $sql = "SELECT DISTINCT j.id, j.employer_id, j.posted_by, j.title, j.location, j.description, 
                 j.requirements, j.salary, j.deadline, j.status, j.created_at, j.updated_at,
@@ -59,7 +59,6 @@ class JobDAO {
         $params = [];
         $types = '';
         
-        // Add search condition (by title)
         if (!empty($search)) {
             $sql .= " AND j.title LIKE ?";
             $searchTerm = "%{$search}%";
@@ -67,14 +66,12 @@ class JobDAO {
             $types .= 's';
         }
         
-        // Add category filter
         if (!empty($categoryFilter)) {
             $sql .= " AND jcm.category_id = ?";
             $params[] = $categoryFilter;
             $types .= 'i';
         }
         
-        // Add location filter
         if (!empty($locationFilter)) {
             $sql .= " AND j.location LIKE ?";
             $locationTerm = "%{$locationFilter}%";
@@ -82,9 +79,7 @@ class JobDAO {
             $types .= 's';
         }
         
-        // Add status filter
         if (!empty($statusFilter)) {
-            // Check if multiple statuses (comma-separated)
             if (strpos($statusFilter, ',') !== false) {
                 $statuses = explode(',', $statusFilter);
                 $placeholders = implode(',', array_fill(0, count($statuses), '?'));
@@ -121,7 +116,6 @@ class JobDAO {
         
         while ($row = $result->fetch_assoc()) {
             $job = $this->mapRowToJob($row);
-            // Load categories for each job
             $job->setCategories($this->getJobCategories($job->getId()));
             $jobs[] = $job;
         }
@@ -129,7 +123,6 @@ class JobDAO {
         return $jobs;
     }
     
-    // Get total count for pagination
     public function getTotalCount($search = '', $categoryFilter = '', $locationFilter = '', $statusFilter = '') {
         $sql = "SELECT COUNT(DISTINCT j.id) as total 
                 FROM JOBS j
@@ -160,7 +153,6 @@ class JobDAO {
         }
         
         if (!empty($statusFilter)) {
-            // Check if multiple statuses (comma-separated)
             if (strpos($statusFilter, ',') !== false) {
                 $statuses = explode(',', $statusFilter);
                 $placeholders = implode(',', array_fill(0, count($statuses), '?'));
@@ -189,7 +181,6 @@ class JobDAO {
         return $row['total'];
     }
     
-    // READ - Get by ID with employer and category info
     public function getById($id) {
         $sql = "SELECT j.*, e.company_name as employer_name, u.Name as posted_by_name
                 FROM JOBS j
@@ -203,16 +194,12 @@ class JobDAO {
         
         if ($row = $result->fetch_assoc()) {
             $job = $this->mapRowToJob($row);
-            
-            // Get categories for this job
             $job->setCategories($this->getJobCategories($id));
-            
             return $job;
         }
         return null;
     }
     
-    // Get categories for a specific job
     public function getJobCategories($jobId) {
         $sql = "SELECT jc.id, jc.category_name 
                 FROM JOB_CATEGORIES jc
@@ -233,7 +220,6 @@ class JobDAO {
         return $categories;
     }
     
-    // Get unique locations for filter dropdown
     public function getUniqueLocations() {
         $sql = "SELECT DISTINCT location FROM JOBS WHERE location IS NOT NULL AND location != '' ORDER BY location ASC";
         $stmt = $this->db->prepare($sql);
@@ -247,7 +233,6 @@ class JobDAO {
         return $locations;
     }
     
-    // UPDATE
     public function update(Job $job) {
         $sql = "UPDATE JOBS SET 
                 title = ?, 
@@ -283,19 +268,15 @@ class JobDAO {
         return $stmt->execute();
     }
     
-    // UPDATE job categories
     public function updateJobCategories($jobId, $categoryIds) {
-        // First, delete existing categories
         $sql = "DELETE FROM JOB_CATEGORY_MAP WHERE job_id = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("i", $jobId);
         $stmt->execute();
         
-        // Then, insert new categories
         if (!empty($categoryIds)) {
             $sql = "INSERT INTO JOB_CATEGORY_MAP (job_id, category_id) VALUES (?, ?)";
             $stmt = $this->db->prepare($sql);
-            
             foreach ($categoryIds as $categoryId) {
                 $stmt->bind_param("ii", $jobId, $categoryId);
                 $stmt->execute();
@@ -305,7 +286,6 @@ class JobDAO {
         return true;
     }
     
-    // CHANGE STATUS
     public function changeStatus($id, $newStatus) {
         $sql = "UPDATE JOBS SET status = ? WHERE id = ?";
         $stmt = $this->db->prepare($sql);
@@ -313,38 +293,30 @@ class JobDAO {
         return $stmt->execute();
     }
     
-    // SOFT DELETE
     public function softDelete($id) {
         return $this->changeStatus($id, 'soft_deleted');
     }
     
-    // HARD DELETE
     public function hardDelete($id) {
         try {
-            // Categories will be deleted automatically due to CASCADE
             $sql = "DELETE FROM JOBS WHERE id = ?";
             $stmt = $this->db->prepare($sql);
             if (!$stmt) {
                 throw new Exception("Prepare failed: " . $this->db->error);
             }
-            
             $stmt->bind_param("i", $id);
             $result = $stmt->execute();
-            
             if (!$result) {
                 throw new Exception("Execute failed: " . $stmt->error);
             }
-            
             $stmt->close();
             return $result;
-            
         } catch (Exception $e) {
             error_log("JobDAO hardDelete error: " . $e->getMessage());
             throw $e;
         }
     }
     
-    // Helper method to map database row to Job object
     private function mapRowToJob($row) {
         $job = new Job(
             $row['id'],
@@ -374,7 +346,6 @@ class JobDAO {
         return $job;
     }
 
-    // CREATE REVIEW
     public function createReview($jobId, $reviewedBy, $action, $reason = null) {
         $sql = "INSERT INTO JOB_REVIEWS (job_id, reviewed_by, action, reason) VALUES (?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
@@ -382,7 +353,6 @@ class JobDAO {
         return $stmt->execute();
     }
 
-    // GET LATEST REVIEW for a job
     public function getLatestReview($jobId) {
         $sql = "SELECT jr.*, u.Name as reviewer_name 
                 FROM JOB_REVIEWS jr
@@ -400,5 +370,196 @@ class JobDAO {
         }
         return null;
     }
+
+   /* =========================================================
+ * PUBLIC FILTERS + SEARCH (for /public/ajax/* endpoints)
+ * =======================================================*/
+public function searchPublic($q, $categoryId, $location, $status, $page, $perPage) {
+    $page    = max(1, (int)$page);
+    $perPage = max(1, (int)$perPage);
+    $off     = ($page - 1) * $perPage;
+
+    $where = [];
+    $binds = [];
+    $types = '';
+
+    if ($status === '' || $status === 'all') {
+        $where[] = "(JOBS.status IN ('approved','recruiting','overdue'))";
+    } elseif ($status === 'recruiting') {
+        $where[] = "((JOBS.status='approved' AND JOBS.deadline >= NOW()) OR JOBS.status='recruiting')";
+    } elseif ($status === 'overdue') {
+        $where[] = "((JOBS.status='approved' AND JOBS.deadline < NOW()) OR JOBS.status='overdue')";
+    } else {
+        $where[] = "JOBS.status = 'approved'";
+    }
+    
+
+    if ($q !== '') {
+        $where[] =
+          "("
+          . "JOBS.title LIKE CONCAT('%', ?, '%')"
+          . " OR JOBS.description LIKE CONCAT('%', ?, '%')"
+          . " OR e.company_name LIKE CONCAT('%', ?, '%')"
+          . " OR EXISTS (SELECT 1 FROM JOB_CATEGORY_MAP m2 "
+          . "            JOIN JOB_CATEGORIES c2 ON c2.id = m2.category_id "
+          . "            WHERE m2.job_id = JOBS.id AND c2.category_name LIKE CONCAT('%', ?, '%'))"
+          . ")";
+        $binds[] = $q; $binds[] = $q; $binds[] = $q; $binds[] = $q;
+        $types  .= 'ssss';
+    }
+
+    $catId = (int)$categoryId;
+    if ($catId > 0) {
+        $where[] = "EXISTS (SELECT 1 FROM JOB_CATEGORY_MAP m WHERE m.job_id = JOBS.id AND m.category_id = ?)";
+        $binds[] = $catId; $types .= 'i';
+    }
+
+    if ($location !== '') {
+        $where[] = "JOBS.location LIKE CONCAT('%', ?, '%')";
+        $binds[] = $location; $types .= 's';
+    }
+
+    $whereSql = $where ? ("WHERE " . implode(" AND ", $where)) : "";
+
+    $sqlCnt = "SELECT COUNT(*) AS c FROM JOBS LEFT JOIN EMPLOYERS e ON e.id = JOBS.employer_id $whereSql";
+    $stmtCnt = $this->conn->prepare($sqlCnt);
+    if ($types !== '') $stmtCnt->bind_param($types, ...$binds);
+    $stmtCnt->execute();
+    $total = (int)($stmtCnt->get_result()->fetch_assoc()['c'] ?? 0);
+
+    $sql = "
+      SELECT
+        JOBS.id,
+        JOBS.title,
+        COALESCE(e.company_name,'') AS company,
+        JOBS.location,
+        JOBS.created_at AS posted_at,
+        JOBS.deadline,
+        CASE
+          WHEN JOBS.status='approved' AND JOBS.deadline < NOW() THEN 'overdue'
+          WHEN JOBS.status='approved' THEN 'recruiting'
+          ELSE JOBS.status
+        END AS public_status,
+        '' AS thumbnail_url
+      FROM JOBS
+      LEFT JOIN EMPLOYERS e ON e.id = JOBS.employer_id
+      $whereSql
+      ORDER BY JOBS.created_at DESC, JOBS.id DESC
+      LIMIT ? OFFSET ?
+    ";
+
+    $stmt = $this->conn->prepare($sql);
+    if ($types === '') {
+        $stmt->bind_param("ii", $perPage, $off);
+    } else {
+        $stmt->bind_param($types . "ii", ...array_merge($binds, [$perPage, $off]));
+    }
+    $stmt->execute();
+    $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+    $ids = array_map(fn($r)=> (int)$r['id'], $rows);
+    $tagsMap = [];
+    if (!empty($ids)) {
+        $in     = implode(",", array_fill(0, count($ids), "?"));
+        $inType = str_repeat("i", count($ids));
+        $sqlTag = "
+          SELECT m.job_id, c.category_name AS name
+          FROM JOB_CATEGORY_MAP m
+          JOIN JOB_CATEGORIES c ON c.id = m.category_id
+          WHERE m.job_id IN ($in)
+          ORDER BY c.category_name
+        ";
+        $stmtT = $this->conn->prepare($sqlTag);
+        $stmtT->bind_param($inType, ...$ids);
+        $stmtT->execute();
+        $rsT = $stmtT->get_result();
+        while ($r = $rsT->fetch_assoc()) $tagsMap[(int)$r['job_id']][] = $r['name'];
+    }
+    foreach ($rows as &$r) $r['tags'] = $tagsMap[(int)$r['id']] ?? [];
+
+    return ['total'=>$total, 'rows'=>$rows];
 }
 
+}
+
+/* ===== Additional helper added at bottom (non-breaking) ===== */
+if (!function_exists('jp_get_related_public_jobs')) {
+    /**
+     * Fetch related public jobs by same company, location, or overlapping categories.
+     * Returns an array of rows similar to searchPublic() items.
+     */
+    function jp_get_related_public_jobs(int $jobId, int $limit = 12): array {
+        $database = new Database();
+        $conn = $database->conn;
+
+        // Get base info
+        $stmtBase = $conn->prepare("SELECT employer_id, location FROM JOBS WHERE id = ?");
+        if (!$stmtBase) return [];
+        $stmtBase->bind_param("i", $jobId);
+        $stmtBase->execute();
+        $base = $stmtBase->get_result()->fetch_assoc();
+        if (!$base) return [];
+        $employerId = (int)($base['employer_id'] ?? 0);
+        $location   = (string)($base['location'] ?? '');
+
+        $sql = "
+          SELECT
+            j.id,
+            j.title,
+            COALESCE(e.company_name,'') AS company,
+            j.location,
+            j.created_at AS posted_at,
+            j.deadline,
+            CASE
+              WHEN j.status='approved' AND j.deadline < NOW() THEN 'overdue'
+              WHEN j.status='approved' THEN 'recruiting'
+              ELSE j.status
+            END AS public_status
+          FROM JOBS j
+          LEFT JOIN EMPLOYERS e ON e.id = j.employer_id
+          WHERE j.id <> ?
+            AND j.status IN ('approved','recruiting','overdue')
+            AND (
+              j.employer_id = ?
+              OR (? <> '' AND j.location LIKE CONCAT('%', ?, '%'))
+              OR EXISTS (
+                SELECT 1 FROM JOB_CATEGORY_MAP m
+                WHERE m.job_id = j.id
+                  AND m.category_id IN (SELECT category_id FROM JOB_CATEGORY_MAP WHERE job_id = ?)
+              )
+            )
+          ORDER BY j.created_at DESC, j.id DESC
+          LIMIT ?
+        ";
+
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) return [];
+        $stmt->bind_param("iissii", $jobId, $employerId, $location, $location, $jobId, $limit);
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+        // Attach tags (categories)
+        $ids = array_map(fn($r)=> (int)$r['id'], $rows);
+        $tagsMap = [];
+        if (!empty($ids)) {
+            $in     = implode(",", array_fill(0, count($ids), "?"));
+            $inType = str_repeat("i", count($ids));
+            $sqlTag = "
+              SELECT m.job_id, c.category_name AS name
+              FROM JOB_CATEGORY_MAP m
+              JOIN JOB_CATEGORIES c ON c.id = m.category_id
+              WHERE m.job_id IN ($in)
+              ORDER BY c.category_name
+            ";
+            $stmtT = $conn->prepare($sqlTag);
+            if ($stmtT) {
+                $stmtT->bind_param($inType, ...$ids);
+                $stmtT->execute();
+                $rsT = $stmtT->get_result();
+                while ($r = $rsT->fetch_assoc()) $tagsMap[(int)$r['job_id']][] = $r['name'];
+            }
+        }
+        foreach ($rows as &$r) $r['tags'] = $tagsMap[(int)$r['id']] ?? [];
+        return $rows;
+    }
+}
