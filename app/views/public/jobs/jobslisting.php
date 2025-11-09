@@ -266,11 +266,48 @@ function renderPager(){
   const totalPages = Math.max(1, Math.ceil(lastTotal / perPage));
   const prevDisabled = page<=1;
   const nextDisabled = page>=totalPages;
+  
+  // Generate page numbers to display
+  let pageNumbers = [];
+  const maxVisible = 5; // Maximum page numbers to show
+  
+  if (totalPages <= maxVisible) {
+    // Show all pages if total is small
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(i);
+    }
+  } else {
+    // Show pages around current page
+    let start = Math.max(1, page - 2);
+    let end = Math.min(totalPages, page + 2);
+    
+    // Adjust if at the beginning or end
+    if (page <= 3) {
+      end = Math.min(maxVisible, totalPages);
+    } else if (page >= totalPages - 2) {
+      start = Math.max(1, totalPages - maxVisible + 1);
+    }
+    
+    for (let i = start; i <= end; i++) {
+      pageNumbers.push(i);
+    }
+  }
+  
+  // Build pagination HTML
+  let pagesHTML = pageNumbers.map(p => {
+    if (p === page) {
+      return `<span class="jobs-pagination-current">${p}</span>`;
+    } else {
+      return `<button class="jobs-pagination-btn" data-page="${p}">${p}</button>`;
+    }
+  }).join('');
+  
   pager.innerHTML = `
     <button class="jobs-pagination-btn" ${prevDisabled ? 'disabled' : ''} data-page="${page-1}">← Prev</button>
-    <span class="jobs-pagination-current">${page}</span>
+    ${pagesHTML}
     <button class="jobs-pagination-btn" ${nextDisabled ? 'disabled' : ''} data-page="${page+1}">Next →</button>
   `;
+  
   pager.querySelectorAll('button[data-page]').forEach(btn=>{
     if(!btn.disabled) {
       btn.addEventListener('click',e=>{

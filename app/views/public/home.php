@@ -4,32 +4,47 @@ include __DIR__ . '/../layouts/public_header.php';
 ?>
 
 <style>
-/* Background images without overlay */
+/* Y2K Retro Background - No overlays */
 .hero-bg { 
-  background-image: url('/Job_poster/public/images/bg/bg1.png'); 
-}
-.about-bg { 
-  background-image: url('/Job_poster/public/images/bg/bg2.png'); 
-}
-.benefits-bg { 
-  background-image: url('/Job_poster/public/images/bg/bg4.png'); 
-}
-.news-bg { 
-  background-image: url('/Job_poster/public/images/bg/bg6.png'); 
-}
-.feedback-bg { 
-  background-image: url('/Job_poster/public/images/bg/bg5.png'); 
-}
-
-.hero-bg, .about-bg, .benefits-bg, .news-bg, .feedback-bg {
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  background: linear-gradient(180deg, #0a4d5c 0%, #1a8a9d 50%, #2db8ac 100%);
   position: relative;
   overflow: hidden;
 }
 
-/* Floating animation for background elements */
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(45, 184, 172, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.about-bg { 
+  background: #f5f5f5;
+}
+
+.benefits-bg { 
+  background: linear-gradient(to bottom, #ffffff 0%, #e8f7f6 100%);
+}
+
+.news-bg { 
+  background: #ffffff;
+}
+
+.feedback-bg { 
+  background: linear-gradient(135deg, #f0fffe 0%, #e0f4f3 100%);
+}
+
+.policies-bg {
+  background: #fafafa;
+}
+
+/* Modern animations */
 @keyframes float {
   0%, 100% { transform: translateY(0px) translateX(0px); }
   33% { transform: translateY(-20px) translateX(10px); }
@@ -41,8 +56,37 @@ include __DIR__ . '/../layouts/public_header.php';
   to { opacity: 1; transform: translateY(0); } 
 }
 
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 .animate-fadeInUp { 
   animation: fadeInUp 0.8s ease-out forwards; 
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.8s ease-out forwards;
 }
 
 /* Smooth scroll */
@@ -57,134 +101,256 @@ header.-translate-y-full {
   opacity: 0.9;
 }
 
-/* Teal accent color */
+/* Y2K Retro Color Palette */
 :root {
   --primary-teal: #0688B4;
-  --primary-teal-dark: #056a8a;
-  --primary-teal-light: #0aa5d1;
+  --primary-cyan: #2db8ac;
+  --primary-dark: #0a4d5c;
+  --accent-lime: #b4ff39;
+  --accent-pink: #ff6b9d;
+  --accent-purple: #c77dff;
+  --accent-orange: #ff9e00;
+}
+
+/* Y2K Bold text effect */
+.y2k-text {
+  color: #0a4d5c;
+  text-shadow: 3px 3px 0px rgba(45, 184, 172, 0.3);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+/* Retro card styles */
+.retro-card {
+  background: white;
+  border: 3px solid #0a4d5c;
+  box-shadow: 8px 8px 0px rgba(10, 77, 92, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.retro-card:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 12px 12px 0px rgba(10, 77, 92, 0.2);
+}
+
+/* Y2K Badge */
+.y2k-badge {
+  background: linear-gradient(135deg, #b4ff39 0%, #2db8ac 100%);
+  color: #0a4d5c;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 8px 20px;
+  border: 2px solid #0a4d5c;
+  box-shadow: 3px 3px 0px #0a4d5c;
+}
+
+/* Button Y2K style */
+.btn-y2k {
+  position: relative;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 3px solid #0a4d5c;
+  box-shadow: 5px 5px 0px #0a4d5c;
+  transition: all 0.2s ease;
+}
+
+.btn-y2k:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0px #0a4d5c;
+}
+
+.btn-y2k:active {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0px #0a4d5c;
 }
 </style>
 
 <!-- HERO -->
-<section class="hero-bg relative min-h-screen flex flex-col items-center justify-center text-center bg-cover bg-center">
-  <div class="container mx-auto px-6 relative z-10">
-    <div class="mt-60 inline-flex flex-wrap justify-center gap-4 px-8 py-6 bg-white border-2 border-gray-200 shadow-lg animate-fadeInUp">
-      <!-- Main button -->
-      <a href="/Job_poster/public/jobs"
-         class="text-white px-10 py-3 font-semibold text-lg hover:opacity-90 transition-all shadow-md hover:shadow-lg"
-         style="background-color: #0688B4;">
-        Browse Jobs
-      </a>
+<section class="hero-bg relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden">
+  <!-- Y2K Geometric shapes -->
+  <div class="absolute inset-0 opacity-10 pointer-events-none">
+    <div class="absolute top-20 left-10 w-40 h-40 border-4 border-white" style="animation: float 8s ease-in-out infinite;"></div>
+    <div class="absolute bottom-32 right-20 w-32 h-32 bg-white/20" style="transform: rotate(45deg); animation: float 6s ease-in-out infinite 1s;"></div>
+    <div class="absolute top-1/3 right-1/4 w-24 h-24" style="clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); background: rgba(255,255,255,0.2); animation: float 7s ease-in-out infinite 2s;"></div>
+  </div>
 
-      <!-- Secondary buttons -->
-      <a href="#about" class="px-6 py-3 bg-gray-100 text-gray-800 text-lg font-medium hover:bg-gray-200 transition border border-gray-300">
+  <div class="container mx-auto px-6 relative z-10">
+    <!-- Main hero content -->
+    <div class="mb-12 animate-fadeInUp">
+      <h1 class="text-6xl md:text-8xl font-black text-white mb-6 leading-none tracking-tight">
+        FIND YOUR<br>
+        <span class="inline-block" style="background: linear-gradient(135deg, #b4ff39 0%, #2db8ac 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: none;">DREAM JOB</span>
+      </h1>
+      <p class="text-white text-xl md:text-2xl font-bold mb-12 max-w-3xl mx-auto uppercase tracking-wide">
+        Connect • Unlock • Build Your Career
+      </p>
+      
+      <!-- Primary CTA -->
+      <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
+        <a href="/Job_poster/public/jobs"
+           class="btn-y2k group text-white px-14 py-5 text-lg bg-gradient-to-r from-lime-400 to-cyan-400 hover:from-lime-300 hover:to-cyan-300">
+          <span class="flex items-center gap-3">
+            EXPLORE JOBS
+            <svg class="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+            </svg>
+          </span>
+        </a>
+        <a href="#about"
+           class="btn-y2k px-12 py-5 text-lg bg-white text-gray-900 hover:bg-gray-100">
+          LEARN MORE
+        </a>
+      </div>
+    </div>
+
+    <!-- Quick navigation pills -->
+    <div class="inline-flex flex-wrap justify-center gap-4 px-8 py-6 bg-white/10 backdrop-blur-sm border-3 border-white/30 animate-fadeInUp" style="animation-delay: 0.2s;">
+      <a href="#about" class="px-6 py-2 bg-white/90 hover:bg-white text-gray-900 font-bold text-sm uppercase tracking-wide transition-all duration-300">
         About
       </a>
-      <a href="#benefits" class="px-6 py-3 bg-gray-100 text-gray-800 text-lg font-medium hover:bg-gray-200 transition border border-gray-300">
+      <a href="#benefits" class="px-6 py-2 bg-white/90 hover:bg-white text-gray-900 font-bold text-sm uppercase tracking-wide transition-all duration-300">
         Benefits
       </a>
-      <a href="#promo" class="px-6 py-3 bg-gray-100 text-gray-800 text-lg font-medium hover:bg-gray-200 transition border border-gray-300">
+      <a href="#promo" class="px-6 py-2 bg-white/90 hover:bg-white text-gray-900 font-bold text-sm uppercase tracking-wide transition-all duration-300">
         Video
       </a>
-      <a href="#news" class="px-6 py-3 bg-gray-100 text-gray-800 text-lg font-medium hover:bg-gray-200 transition border border-gray-300">
+      <a href="#news" class="px-6 py-2 bg-white/90 hover:bg-white text-gray-900 font-bold text-sm uppercase tracking-wide transition-all duration-300">
         News
       </a>
-      <a href="#feedback" class="px-6 py-3 bg-gray-100 text-gray-800 text-lg font-medium hover:bg-gray-200 transition border border-gray-300">
-        Feedback
+      <a href="#feedback" class="px-6 py-2 bg-white/90 hover:bg-white text-gray-900 font-bold text-sm uppercase tracking-wide transition-all duration-300">
+        Reviews
       </a>
-      <a href="#policies" class="px-6 py-3 bg-gray-100 text-gray-800 text-lg font-medium hover:bg-gray-200 transition border border-gray-300">
+      <a href="#policies" class="px-6 py-2 bg-white/90 hover:bg-white text-gray-900 font-bold text-sm uppercase tracking-wide transition-all duration-300">
         Policies
       </a>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <svg class="w-10 h-10 text-white font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+      </svg>
     </div>
   </div>
 </section>
 
 <!-- ABOUT -->
-<section id="about" class="about-bg py-20 text-center relative">
-  <div class="container mx-auto px-6 max-w-5xl relative z-10 animate-fadeInUp space-y-10">
-    <div class="bg-white p-10 md:p-14 border-l-4 shadow-md hover:shadow-lg transition-shadow" style="border-color: #0688B4;">
-      <h2 class="text-3xl font-bold text-gray-900 mb-6">About Job Poster</h2>
-      <p class="text-gray-700 text-lg leading-relaxed">
+<section id="about" class="about-bg py-24 text-center relative">
+  <div class="container mx-auto px-6 max-w-6xl relative z-10">
+    <!-- Section header -->
+    <div class="mb-16 animate-fadeInUp">
+      <span class="y2k-badge inline-block mb-6">About Us</span>
+      <h2 class="text-5xl md:text-7xl font-black mb-6 uppercase tracking-tight y2k-text">
+        Connecting Talent<br>
+        With Opportunity
+      </h2>
+      <p class="text-gray-700 text-lg max-w-3xl mx-auto leading-relaxed font-medium">
         Job Poster is a modern platform connecting talented individuals with top companies.
         Our mission is to simplify job discovery, empower job seekers with insights,
         and help employers find their perfect match quickly and efficiently.
       </p>
     </div>
 
-    <div class="flex flex-wrap justify-center gap-8">
-      <div class="bg-white p-8 w-72 border border-gray-200 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
-        <div class="p-4 rounded-full mb-4 w-fit mx-auto" style="background-color: rgba(6, 136, 180, 0.1);">
-          <?= Icons::users('w-8 h-8') ?>
+    <!-- Feature cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Card 1 -->
+      <div class="retro-card p-8 group bg-white" style="animation: slideInLeft 0.8s ease-out;">
+        <div class="mb-6">
+          <div class="w-24 h-24 mx-auto flex items-center justify-center bg-gradient-to-br from-lime-400 to-cyan-400 border-3 border-gray-900">
+            <?= Icons::users('w-12 h-12 text-gray-900') ?>
+          </div>
         </div>
-        <h4 class="font-semibold text-gray-900 mb-2">For Job Seekers</h4>
-        <p class="text-gray-600 text-sm">Discover jobs, apply easily, and manage your career goals in one place.</p>
+        <h4 class="font-black text-2xl text-gray-900 mb-3 uppercase tracking-tight">For Job Seekers</h4>
+        <p class="text-gray-700 text-base leading-relaxed">Discover opportunities, apply with ease, and manage your career goals all in one powerful platform.</p>
       </div>
 
-      <div class="bg-white p-8 w-72 border border-gray-200 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
-        <div class="p-4 rounded-full mb-4 w-fit mx-auto" style="background-color: rgba(6, 136, 180, 0.1);">
-          <?= Icons::briefcase('w-8 h-8') ?>
+      <!-- Card 2 -->
+      <div class="retro-card p-8 group bg-white" style="animation: slideInLeft 0.8s ease-out 0.1s; animation-fill-mode: both;">
+        <div class="mb-6">
+          <div class="w-24 h-24 mx-auto flex items-center justify-center bg-gradient-to-br from-pink-400 to-purple-400 border-3 border-gray-900">
+            <?= Icons::briefcase('w-12 h-12 text-gray-900') ?>
+          </div>
         </div>
-        <h4 class="font-semibold text-gray-900 mb-2">For Employers</h4>
-        <p class="text-gray-600 text-sm">Post job openings, find skilled candidates, and build your dream team.</p>
+        <h4 class="font-black text-2xl text-gray-900 mb-3 uppercase tracking-tight">For Employers</h4>
+        <p class="text-gray-700 text-base leading-relaxed">Post openings, connect with skilled talent, and build your dream team faster than ever before.</p>
       </div>
 
-      <div class="bg-white p-8 w-72 border border-gray-200 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
-        <div class="p-4 rounded-full mb-4 w-fit mx-auto" style="background-color: rgba(6, 136, 180, 0.1);">
-          <?= Icons::bar_chart('w-8 h-8') ?>
+      <!-- Card 3 -->
+      <div class="retro-card p-8 group bg-white" style="animation: slideInLeft 0.8s ease-out 0.2s; animation-fill-mode: both;">
+        <div class="mb-6">
+          <div class="w-24 h-24 mx-auto flex items-center justify-center bg-gradient-to-br from-orange-400 to-pink-400 border-3 border-gray-900">
+            <?= Icons::bar_chart('w-12 h-12 text-gray-900') ?>
+          </div>
         </div>
-        <h4 class="font-semibold text-gray-900 mb-2">Smart Matching</h4>
-        <p class="text-gray-600 text-sm">Our system uses analytics to recommend the best matches for you.</p>
+        <h4 class="font-black text-2xl text-gray-900 mb-3 uppercase tracking-tight">Smart Matching</h4>
+        <p class="text-gray-700 text-base leading-relaxed">Powered by intelligent analytics to match the perfect candidates with the right opportunities.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- BENEFITS -->
-<section id="benefits" class="benefits-bg relative py-20">
-  <div class="container mx-auto px-6 text-center animate-fadeInUp relative z-10">
-    <div class="inline-block mx-auto mb-10 px-10 py-6 bg-white border-l-4 shadow-md" style="border-color: #0688B4;">
-      <h2 class="text-3xl font-bold text-gray-900">Why Choose Job Poster?</h2>
+<section id="benefits" class="benefits-bg relative py-24">
+  <div class="container mx-auto px-6 text-center relative z-10">
+    <!-- Section header -->
+    <div class="mb-16 animate-fadeInUp">
+      <span class="y2k-badge inline-block mb-6">Why Us</span>
+      <h2 class="text-5xl md:text-7xl font-black mb-6 uppercase tracking-tight y2k-text">
+        Why Choose<br>
+        Job Poster?
+      </h2>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-      <div class="bg-white p-10 border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all">
-        <div class="p-4 rounded-full w-fit mx-auto mb-4" style="background-color: rgba(6, 136, 180, 0.1);">
-          <?= Icons::zap('w-10 h-10') ?>
+    <!-- Benefits grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <!-- Benefit 1 -->
+      <div class="retro-card p-10 text-center group bg-gradient-to-br from-cyan-100 to-lime-100">
+        <div class="inline-flex items-center justify-center w-20 h-20 mb-6 bg-white border-3 border-gray-900">
+          <?= Icons::zap('w-10 h-10 text-gray-900') ?>
         </div>
-        <h4 class="font-semibold text-lg text-gray-900 mb-2">Fast & Simple</h4>
-        <p class="text-gray-700 text-sm leading-relaxed">Quickly apply and manage applications with a clean interface.</p>
+        <h4 class="font-black text-2xl text-gray-900 mb-4 uppercase">Fast & Simple</h4>
+        <p class="text-gray-700 leading-relaxed font-medium">Apply to jobs in seconds with our streamlined interface. No complicated forms, no hassle—just results.</p>
       </div>
 
-      <div class="bg-white p-10 border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all">
-        <div class="p-4 rounded-full w-fit mx-auto mb-4" style="background-color: rgba(6, 136, 180, 0.1);">
-          <?= Icons::shield_check('w-10 h-10') ?>
+      <!-- Benefit 2 -->
+      <div class="retro-card p-10 text-center group bg-gradient-to-br from-pink-100 to-purple-100">
+        <div class="inline-flex items-center justify-center w-20 h-20 mb-6 bg-white border-3 border-gray-900">
+          <?= Icons::shield_check('w-10 h-10 text-gray-900') ?>
         </div>
-        <h4 class="font-semibold text-lg text-gray-900 mb-2">Secure Platform</h4>
-        <p class="text-gray-700 text-sm leading-relaxed">Your personal data and activity are encrypted and stored safely.</p>
+        <h4 class="font-black text-2xl text-gray-900 mb-4 uppercase">Secure Platform</h4>
+        <p class="text-gray-700 leading-relaxed font-medium">Bank-level encryption protects your data. Your information is safe, secure, and never shared without permission.</p>
       </div>
 
-      <div class="bg-white p-10 border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all">
-        <div class="p-4 rounded-full w-fit mx-auto mb-4" style="background-color: rgba(6, 136, 180, 0.1);">
-          <?= Icons::award('w-10 h-10') ?>
+      <!-- Benefit 3 -->
+      <div class="retro-card p-10 text-center group bg-gradient-to-br from-orange-100 to-pink-100">
+        <div class="inline-flex items-center justify-center w-20 h-20 mb-6 bg-white border-3 border-gray-900">
+          <?= Icons::award('w-10 h-10 text-gray-900') ?>
         </div>
-        <h4 class="font-semibold text-lg text-gray-900 mb-2">Verified Employers</h4>
-        <p class="text-gray-700 text-sm leading-relaxed">Collaborate with trusted companies verified by our team.</p>
+        <h4 class="font-black text-2xl text-gray-900 mb-4 uppercase">Verified Employers</h4>
+        <p class="text-gray-700 leading-relaxed font-medium">Connect only with legitimate companies. Every employer is verified by our dedicated team.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- PROMO VIDEO -->
-<section id="promo" class="relative py-24 bg-gray-50">
-  <div class="container mx-auto px-6 text-center animate-fadeInUp">
-    <div class="inline-block mx-auto mb-10 px-10 py-6 bg-white border-l-4 shadow-md" style="border-color: #0688B4;">
-      <h2 class="text-3xl font-bold text-gray-900">Watch Our Introduction Video</h2>
-      <p class="text-gray-600 mt-3">Learn how Job Poster helps you find jobs and grow your career in minutes.</p>
+<section id="promo" class="relative py-24 bg-white">
+  <div class="container mx-auto px-6 text-center">
+    <!-- Section header -->
+    <div class="mb-16 animate-fadeInUp">
+      <span class="y2k-badge inline-block mb-6">Watch & Learn</span>
+      <h2 class="text-5xl md:text-7xl font-black mb-6 uppercase tracking-tight y2k-text">
+        See Job Poster<br>
+        In Action
+      </h2>
+      <p class="text-gray-700 text-lg max-w-3xl mx-auto font-medium">Discover how our platform revolutionizes job hunting in just a few minutes.</p>
     </div>
 
     <!-- Video container -->
-    <div class="relative max-w-5xl mx-auto overflow-hidden border-2 border-gray-200 bg-white shadow-lg hover:shadow-xl transition-shadow">
-      <div class="aspect-w-16 aspect-h-9">
+    <div class="retro-card max-w-5xl mx-auto bg-white p-6">
+      <div class="aspect-w-16 aspect-h-9 overflow-hidden border-3 border-gray-900">
         <iframe class="w-full h-[520px]" src="https://www.youtube.com/embed/your_video_id_here"
                 title="Job Poster Intro Video" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
@@ -195,27 +361,40 @@ header.-translate-y-full {
 </section>
 
 <!-- NEWS -->
-<section id="news" class="news-bg relative py-20">
-  <div class="container mx-auto px-6 animate-fadeInUp relative z-10">
-    <div class="inline-block mx-auto mb-12 px-10 py-6 bg-white border-l-4 shadow-md text-center" style="border-color: #0688B4;">
-      <h2 class="text-3xl font-bold text-gray-900">Latest Job News & Insights</h2>
+<section id="news" class="news-bg relative py-24">
+  <div class="container mx-auto px-6 relative z-10">
+    <!-- Section header -->
+    <div class="mb-16 text-center animate-fadeInUp">
+      <span class="y2k-badge inline-block mb-6">Latest Updates</span>
+      <h2 class="text-5xl md:text-7xl font-black mb-6 uppercase tracking-tight y2k-text">
+        Job Market Insights<br>
+        & Career Tips
+      </h2>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- News grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
       <?php 
       $articles = [
         ['img'=>'1.png','title'=>'Top 5 In-demand Tech Skills in 2025','desc'=>'Stay ahead with the most sought-after skills in software development and AI.'],
         ['img'=>'2.png','title'=>'How to Build a Remote Career Successfully','desc'=>'Learn the habits and tools to thrive in the modern remote workspace.'],
         ['img'=>'3.png','title'=>'Navigating Job Market Trends in 2025','desc'=>'Insights into hiring shifts, automation, and emerging industries.']
       ];
-      foreach ($articles as $a): ?>
-      <article class="bg-white overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
-        <img src="/Job_poster/public/images/jobs/<?= htmlspecialchars($a['img']) ?>" 
-             class="w-full h-48 object-cover" alt="">
-        <div class="p-6 text-left border-l-2" style="border-color: #0688B4;">
-          <h4 class="font-semibold text-lg text-gray-900 mb-2"><?= htmlspecialchars($a['title']) ?></h4>
-          <p class="text-gray-700 text-sm mb-4"><?= htmlspecialchars($a['desc']) ?></p>
-          <a href="#" class="font-semibold hover:underline" style="color: #0688B4;">Read more →</a>
+      foreach ($articles as $i => $a): ?>
+      <article class="retro-card overflow-hidden group bg-white" style="animation: slideInLeft <?= 0.6 + ($i * 0.1) ?>s ease-out;">
+        <!-- Image -->
+        <div class="overflow-hidden border-b-3 border-gray-900">
+          <img src="/Job_poster/public/images/jobs/<?= htmlspecialchars($a['img']) ?>" 
+               class="w-full h-56 object-cover" alt="">
+        </div>
+        
+        <!-- Content -->
+        <div class="p-6">
+          <h4 class="font-black text-xl text-gray-900 mb-3 uppercase"><?= htmlspecialchars($a['title']) ?></h4>
+          <p class="text-gray-700 mb-5 leading-relaxed font-medium"><?= htmlspecialchars($a['desc']) ?></p>
+          <a href="#" class="btn-y2k inline-block px-6 py-2 text-sm bg-gradient-to-r from-lime-400 to-cyan-400">
+            READ MORE
+          </a>
         </div>
       </article>
       <?php endforeach; ?>
@@ -224,25 +403,48 @@ header.-translate-y-full {
 </section>
 
 <!-- FEEDBACK -->
-<section id="feedback" class="feedback-bg relative py-20">
-  <div class="container mx-auto px-6 text-center animate-fadeInUp relative z-10">
-    <div class="inline-block mx-auto mb-12 px-10 py-6 bg-white border-l-4 shadow-md" style="border-color: #0688B4;">
-      <h2 class="text-3xl font-bold text-gray-900">What Our Users Say</h2>
+<section id="feedback" class="feedback-bg relative py-24">
+  <div class="container mx-auto px-6 text-center relative z-10">
+    <!-- Section header -->
+    <div class="mb-16 animate-fadeInUp">
+      <span class="y2k-badge inline-block mb-6">Testimonials</span>
+      <h2 class="text-5xl md:text-7xl font-black mb-6 uppercase tracking-tight y2k-text">
+        Loved By Thousands<br>
+        Of Users
+      </h2>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- Testimonials grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
       <?php 
       $feedbacks = [
-        ['text'=>'“I found my dream job in less than a week! The process was smooth and easy.”','name'=>'Anna Nguyen','role'=>'Software Engineer'],
-        ['text'=>'“A clean design, useful filters, and verified companies. Highly recommended!”','name'=>'Minh Tran','role'=>'UI/UX Designer'],
-        ['text'=>'“Posting jobs and managing applicants has never been this efficient.”','name'=>'HR at CloudTech','role'=>'Recruitment Manager']
+        ['text'=>'I found my dream job in less than a week! The process was smooth and easy.','name'=>'Anna Nguyen','role'=>'Software Engineer'],
+        ['text'=>'A clean design, useful filters, and verified companies. Highly recommended!','name'=>'Minh Tran','role'=>'UI/UX Designer'],
+        ['text'=>'Posting jobs and managing applicants has never been this efficient.','name'=>'HR at CloudTech','role'=>'Recruitment Manager']
       ];
-      foreach ($feedbacks as $f): ?>
-      <div class="bg-white p-10 border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all">
-        <p class="text-gray-700 italic mb-4 leading-relaxed"><?= htmlspecialchars($f['text']) ?></p>
-        <div class="border-t border-gray-200 pt-4 mt-4">
-          <h4 class="font-semibold text-gray-900 mb-1"><?= htmlspecialchars($f['name']) ?></h4>
-          <p class="text-gray-500 text-sm"><?= htmlspecialchars($f['role']) ?></p>
+      $colors = ['from-lime-100 to-cyan-100', 'from-pink-100 to-purple-100', 'from-orange-100 to-yellow-100'];
+      foreach ($feedbacks as $i => $f): ?>
+      <div class="retro-card p-8 bg-gradient-to-br <?= $colors[$i] ?>" style="animation: slideInRight <?= 0.6 + ($i * 0.1) ?>s ease-out;">
+        <!-- Stars -->
+        <div class="flex gap-1 mb-5 justify-center">
+          <?php for($s = 0; $s < 5; $s++): ?>
+          <svg class="w-6 h-6 text-gray-900 fill-current" viewBox="0 0 20 20">
+            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+          </svg>
+          <?php endfor; ?>
+        </div>
+        
+        <p class="text-gray-900 text-lg mb-6 leading-relaxed font-bold">
+          "<?= htmlspecialchars($f['text']) ?>"
+        </p>
+        
+        <!-- User info -->
+        <div class="pt-6 border-t-3 border-gray-900">
+          <div class="w-16 h-16 mx-auto mb-3 bg-white border-3 border-gray-900 flex items-center justify-center text-gray-900 font-black text-2xl">
+            <?= strtoupper(substr($f['name'], 0, 1)) ?>
+          </div>
+          <h4 class="font-black text-gray-900 uppercase text-sm"><?= htmlspecialchars($f['name']) ?></h4>
+          <p class="text-gray-700 text-sm font-medium"><?= htmlspecialchars($f['role']) ?></p>
         </div>
       </div>
       <?php endforeach; ?>
@@ -251,75 +453,104 @@ header.-translate-y-full {
 </section>
 
 <!-- POLICIES -->
-<section id="policies" class="relative py-20 bg-gray-50">
-  <div class="container mx-auto px-6 animate-fadeInUp">
-    <div class="inline-block mx-auto mb-12 px-10 py-6 bg-white border-l-4 shadow-md text-center" style="border-color: #0688B4;">
-      <h2 class="text-3xl font-bold text-gray-900">Our Policies</h2>
-      <p class="text-gray-600 mt-3">Guidelines for employers and job seekers</p>
+<section id="policies" class="policies-bg relative py-24">
+  <div class="container mx-auto px-6">
+    <!-- Section header -->
+    <div class="mb-16 text-center animate-fadeInUp">
+      <span class="y2k-badge inline-block mb-6">Guidelines</span>
+      <h2 class="text-5xl md:text-7xl font-black mb-6 uppercase tracking-tight y2k-text">
+        Our Policies
+      </h2>
+      <p class="text-gray-700 text-lg max-w-2xl mx-auto font-medium">Clear guidelines to ensure a fair and professional experience for everyone</p>
     </div>
 
+    <!-- Policy cards -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
       <!-- For Employers -->
-      <div class="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-        <div class="p-6 border-b border-gray-200 border-l-4" style="border-left-color: #0688B4;">
-          <h3 class="text-2xl font-bold text-gray-900 mb-2">For Employers</h3>
-          <p class="text-gray-600 text-sm">Guidelines for posting jobs and hiring</p>
+      <div class="retro-card bg-gradient-to-br from-lime-100 to-cyan-100" style="animation: slideInLeft 0.8s ease-out;">
+        <div class="p-8 border-b-3 border-gray-900">
+          <div class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-white border-3 border-gray-900">
+            <?= Icons::briefcase('w-8 h-8 text-gray-900') ?>
+          </div>
+          <h3 class="text-3xl font-black text-gray-900 mb-2 uppercase">For Employers</h3>
+          <p class="text-gray-700 font-medium">Guidelines for posting jobs and hiring</p>
         </div>
-        <div class="p-6 space-y-4">
-          <div class="border-l-2 border-gray-300 pl-4">
-            <h4 class="font-semibold text-gray-900 mb-1">Job Posting Requirements</h4>
-            <p class="text-gray-700 text-sm">All job postings must include accurate job descriptions, clear requirements, and realistic salary ranges. Misleading information is strictly prohibited.</p>
+        <div class="p-8 space-y-5">
+          <div>
+            <h4 class="font-black text-gray-900 mb-2 uppercase text-sm">• Job Posting Requirements</h4>
+            <p class="text-gray-700 text-sm leading-relaxed">All job postings must include accurate job descriptions, clear requirements, and realistic salary ranges. Misleading information is strictly prohibited.</p>
           </div>
-          <div class="border-l-2 border-gray-300 pl-4">
-            <h4 class="font-semibold text-gray-900 mb-1">Non-Discrimination Policy</h4>
-            <p class="text-gray-700 text-sm">Employers must not discriminate based on age, gender, race, religion, or disability. All candidates should be evaluated fairly based on qualifications.</p>
+          <div>
+            <h4 class="font-black text-gray-900 mb-2 uppercase text-sm">• Non-Discrimination Policy</h4>
+            <p class="text-gray-700 text-sm leading-relaxed">Employers must not discriminate based on age, gender, race, religion, or disability. All candidates should be evaluated fairly based on qualifications.</p>
           </div>
-          <div class="border-l-2 border-gray-300 pl-4">
-            <h4 class="font-semibold text-gray-900 mb-1">Candidate Privacy</h4>
-            <p class="text-gray-700 text-sm">Respect applicant privacy. Personal information must be used solely for recruitment purposes and handled according to data protection regulations.</p>
+          <div>
+            <h4 class="font-black text-gray-900 mb-2 uppercase text-sm">• Candidate Privacy</h4>
+            <p class="text-gray-700 text-sm leading-relaxed">Respect applicant privacy. Personal information must be used solely for recruitment purposes and handled according to data protection regulations.</p>
           </div>
-          <div class="border-l-2 border-gray-300 pl-4">
-            <h4 class="font-semibold text-gray-900 mb-1">Timely Communication</h4>
-            <p class="text-gray-700 text-sm">Respond to applications within a reasonable timeframe and keep candidates informed about their application status.</p>
+          <div>
+            <h4 class="font-black text-gray-900 mb-2 uppercase text-sm">• Timely Communication</h4>
+            <p class="text-gray-700 text-sm leading-relaxed">Respond to applications within a reasonable timeframe and keep candidates informed about their application status.</p>
           </div>
         </div>
       </div>
 
       <!-- For Job Seekers -->
-      <div class="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-        <div class="p-6 border-b border-gray-200 border-l-4" style="border-left-color: #0688B4;">
-          <h3 class="text-2xl font-bold text-gray-900 mb-2">For Job Seekers</h3>
-          <p class="text-gray-600 text-sm">Guidelines for applying and using our platform</p>
+      <div class="retro-card bg-gradient-to-br from-pink-100 to-purple-100" style="animation: slideInRight 0.8s ease-out;">
+        <div class="p-8 border-b-3 border-gray-900">
+          <div class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-white border-3 border-gray-900">
+            <?= Icons::users('w-8 h-8 text-gray-900') ?>
+          </div>
+          <h3 class="text-3xl font-black text-gray-900 mb-2 uppercase">For Job Seekers</h3>
+          <p class="text-gray-700 font-medium">Guidelines for applying and using our platform</p>
         </div>
-        <div class="p-6 space-y-4">
-          <div class="border-l-2 border-gray-300 pl-4">
-            <h4 class="font-semibold text-gray-900 mb-1">Honest Applications</h4>
-            <p class="text-gray-700 text-sm">Provide accurate and truthful information in your profile and applications. Misrepresentation of skills or experience may result in account suspension.</p>
+        <div class="p-8 space-y-5">
+          <div>
+            <h4 class="font-black text-gray-900 mb-2 uppercase text-sm">• Honest Applications</h4>
+            <p class="text-gray-700 text-sm leading-relaxed">Provide accurate and truthful information in your profile and applications. Misrepresentation of skills or experience may result in account suspension.</p>
           </div>
-          <div class="border-l-2 border-gray-300 pl-4">
-            <h4 class="font-semibold text-gray-900 mb-1">Professional Conduct</h4>
-            <p class="text-gray-700 text-sm">Maintain professional communication with employers. Respond promptly to interview invitations and notify employers if you're no longer interested.</p>
+          <div>
+            <h4 class="font-black text-gray-900 mb-2 uppercase text-sm">• Professional Conduct</h4>
+            <p class="text-gray-700 text-sm leading-relaxed">Maintain professional communication with employers. Respond promptly to interview invitations and notify employers if you're no longer interested.</p>
           </div>
-          <div class="border-l-2 border-gray-300 pl-4">
-            <h4 class="font-semibold text-gray-900 mb-1">Account Security</h4>
-            <p class="text-gray-700 text-sm">Keep your login credentials secure. Do not share your account with others. Report any suspicious activity immediately.</p>
+          <div>
+            <h4 class="font-black text-gray-900 mb-2 uppercase text-sm">• Account Security</h4>
+            <p class="text-gray-700 text-sm leading-relaxed">Keep your login credentials secure. Do not share your account with others. Report any suspicious activity immediately.</p>
           </div>
-          <div class="border-l-2 border-gray-300 pl-4">
-            <h4 class="font-semibold text-gray-900 mb-1">Respect & Feedback</h4>
-            <p class="text-gray-700 text-sm">Treat all employers with respect. Provide constructive feedback about your experience to help us improve our platform.</p>
+          <div>
+            <h4 class="font-black text-gray-900 mb-2 uppercase text-sm">• Respect & Feedback</h4>
+            <p class="text-gray-700 text-sm leading-relaxed">Treat all employers with respect. Provide constructive feedback about your experience to help us improve our platform.</p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- General Terms -->
-    <div class="mt-10 max-w-4xl mx-auto bg-white border border-gray-200 p-8 shadow-sm">
-      <h3 class="text-xl font-bold text-gray-900 mb-4 border-b border-gray-200 pb-3">General Terms</h3>
-      <div class="space-y-3 text-gray-700 text-sm leading-relaxed">
-        <p><strong>Privacy:</strong> We protect your personal data according to international privacy standards. Your information will never be sold to third parties.</p>
-        <p><strong>Content Ownership:</strong> Users retain ownership of their content but grant Job Poster the right to display it on our platform.</p>
-        <p><strong>Prohibited Activities:</strong> Spam, fraudulent postings, harassment, or any illegal activities will result in immediate account termination.</p>
-        <p><strong>Platform Updates:</strong> We reserve the right to modify these policies. Users will be notified of significant changes via email.</p>
+    <div class="mt-16 max-w-5xl mx-auto">
+      <div class="retro-card p-10 bg-gradient-to-br from-orange-100 to-yellow-100">
+        <div class="flex items-center gap-3 mb-8 pb-6 border-b-3 border-gray-900">
+          <div class="w-14 h-14 flex items-center justify-center bg-white border-3 border-gray-900">
+            <svg class="w-7 h-7 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <h3 class="text-3xl font-black text-gray-900 uppercase">General Terms</h3>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
+          <div>
+            <p class="leading-relaxed font-medium"><strong class="text-gray-900 font-black uppercase text-sm">• Privacy:</strong> We protect your personal data according to international privacy standards. Your information will never be sold to third parties.</p>
+          </div>
+          <div>
+            <p class="leading-relaxed font-medium"><strong class="text-gray-900 font-black uppercase text-sm">• Content Ownership:</strong> Users retain ownership of their content but grant Job Poster the right to display it on our platform.</p>
+          </div>
+          <div>
+            <p class="leading-relaxed font-medium"><strong class="text-gray-900 font-black uppercase text-sm">• Prohibited Activities:</strong> Spam, fraudulent postings, harassment, or any illegal activities will result in immediate account termination.</p>
+          </div>
+          <div>
+            <p class="leading-relaxed font-medium"><strong class="text-gray-900 font-black uppercase text-sm">• Platform Updates:</strong> We reserve the right to modify these policies. Users will be notified of significant changes via email.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
