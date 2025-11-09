@@ -16,7 +16,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <form method="GET" action="/Job_poster/public/jobs-manage" class="space-y-4">
+            <form method="GET" action="/Job_poster/public/jobs-manage" id="jobsManageFilterForm" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                     <!-- Search -->
                     <div class="lg:col-span-2">
@@ -28,13 +28,14 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                             value="<?= htmlspecialchars($pagination['search'] ?? '') ?>"
                             placeholder="Search job title..."
                             class="form-input w-full"
+                            onkeyup="debounceJobsManageSearch()"
                         >
                     </div>
 
                     <!-- Category Filter -->
                     <div>
                         <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                        <select id="category" name="category" class="form-select">
+                        <select id="category" name="category" class="form-select" onchange="document.getElementById('jobsManageFilterForm').submit()">
                             <option value="">All Categories</option>
                             <?php foreach ($categories as $category): ?>
                                 <option value="<?= $category->getId() ?>" 
@@ -48,7 +49,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     <!-- Location Filter -->
                     <div>
                         <label for="location" class="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                        <select id="location" name="location" class="form-select">
+                        <select id="location" name="location" class="form-select" onchange="document.getElementById('jobsManageFilterForm').submit()">
                             <option value="">All Locations</option>
                             <?php foreach ($locations as $location): ?>
                                 <option value="<?= htmlspecialchars($location) ?>" 
@@ -62,7 +63,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     <!-- Status Filter -->
                     <div>
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                        <select id="status" name="status" class="form-select">
+                        <select id="status" name="status" class="form-select" onchange="document.getElementById('jobsManageFilterForm').submit()">
                             <option value="">All Statuses</option>
                             <option value="approved" <?= ($pagination['status_filter'] ?? '') == 'approved' ? 'selected' : '' ?>>Approved</option>
                             <option value="overdue" <?= ($pagination['status_filter'] ?? '') == 'overdue' ? 'selected' : '' ?>>Overdue</option>
@@ -74,19 +75,15 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 <div class="flex justify-between items-center">
                     <div>
                         <label for="per_page" class="block text-sm font-medium text-gray-700 mb-2">Per Page</label>
-                        <select id="per_page" name="per_page" class="form-select">
+                        <select id="per_page" name="per_page" class="form-select" onchange="document.getElementById('jobsManageFilterForm').submit()">
                             <option value="10" <?= ($pagination['per_page'] ?? 10) == 10 ? 'selected' : '' ?>>10</option>
                             <option value="25" <?= ($pagination['per_page'] ?? 10) == 25 ? 'selected' : '' ?>>25</option>
                             <option value="50" <?= ($pagination['per_page'] ?? 10) == 50 ? 'selected' : '' ?>>50</option>
                         </select>
                     </div>
                     <div class="flex gap-2">
-                        <button type="submit" class="btn-submit">
-                            <?= Icons::filter('btn-icon') ?>
-                            Apply Filters
-                        </button>
                         <a href="/Job_poster/public/jobs-manage" class="btn-cancel">
-                            Clear
+                            Clear Filters
                         </a>
                     </div>
                 </div>
@@ -213,86 +210,16 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
             </div>
 
             <!-- Pagination -->
-            <?php if ($pagination['total_pages'] > 1): ?>
-                <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
-                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <!-- Results info -->
-                        <div class="text-sm text-gray-700">
-                            Showing 
-                            <span class="font-medium"><?= min(($pagination['current_page'] - 1) * $pagination['per_page'] + 1, $pagination['total_records']) ?></span>
-                            to 
-                            <span class="font-medium"><?= min($pagination['current_page'] * $pagination['per_page'], $pagination['total_records']) ?></span>
-                            of 
-                            <span class="font-medium"><?= $pagination['total_records'] ?></span>
-                            jobs
-                        </div>
-
-                        <!-- Pagination buttons -->
-                        <div class="flex items-center gap-2">
-                            <?php
-                            $baseUrl = '/Job_poster/public/jobs-manage?';
-                            if (!empty($pagination['search'])) {
-                                $baseUrl .= 'search=' . urlencode($pagination['search']) . '&';
-                            }
-                            if (!empty($pagination['category_filter'])) {
-                                $baseUrl .= 'category=' . urlencode($pagination['category_filter']) . '&';
-                            }
-                            if (!empty($pagination['location_filter'])) {
-                                $baseUrl .= 'location=' . urlencode($pagination['location_filter']) . '&';
-                            }
-                            if (!empty($pagination['status_filter'])) {
-                                $baseUrl .= 'status=' . urlencode($pagination['status_filter']) . '&';
-                            }
-                            $baseUrl .= 'per_page=' . $pagination['per_page'] . '&';
-
-                            // Calculate page range to show
-                            $maxVisiblePages = 5;
-                            $startPage = max(1, $pagination['current_page'] - floor($maxVisiblePages / 2));
-                            $endPage = min($pagination['total_pages'], $startPage + $maxVisiblePages - 1);
-                            $startPage = max(1, $endPage - $maxVisiblePages + 1);
-                            ?>
-
-                            <!-- Previous button -->
-                            <?php if ($pagination['current_page'] > 1): ?>
-                                <a href="<?= $baseUrl ?>page=<?= $pagination['current_page'] - 1 ?>" 
-                                   class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                                    Previous
-                                </a>
-                            <?php else: ?>
-                                <span class="px-3 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-300 rounded-md cursor-not-allowed">
-                                    Previous
-                                </span>
-                            <?php endif; ?>
-
-                            <!-- Page numbers -->
-                            <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
-                                <?php if ($i == $pagination['current_page']): ?>
-                                    <span class="px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-md">
-                                        <?= $i ?>
-                                    </span>
-                                <?php else: ?>
-                                    <a href="<?= $baseUrl ?>page=<?= $i ?>" 
-                                       class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                                        <?= $i ?>
-                                    </a>
-                                <?php endif; ?>
-                            <?php endfor; ?>
-
-                            <!-- Next button -->
-                            <?php if ($pagination['current_page'] < $pagination['total_pages']): ?>
-                                <a href="<?= $baseUrl ?>page=<?= $pagination['current_page'] + 1 ?>" 
-                                   class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                                    Next
-                                </a>
-                            <?php else: ?>
-                                <span class="px-3 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-300 rounded-md cursor-not-allowed">
-                                    Next
-                                </span>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
+            <?php 
+            include __DIR__ . '/../../components/pagination.php';
+            renderPagination($pagination, '/Job_poster/public/jobs-manage', [
+                'search' => $pagination['search'] ?? '',
+                'category' => $pagination['category_filter'] ?? '',
+                'location' => $pagination['location_filter'] ?? '',
+                'status' => $pagination['status_filter'] ?? '',
+                'per_page' => $pagination['per_page'] ?? 10
+            ]);
+            ?>
             </div>
         <?php endif; ?>
     </div>
@@ -303,6 +230,29 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 const notyf = new Notyf({
     duration: 3000,
     position: { x: 'right', y: 'top' }
+});
+
+// Debounce search functionality
+let jobsManageSearchTimeout;
+function debounceJobsManageSearch() {
+    clearTimeout(jobsManageSearchTimeout);
+    jobsManageSearchTimeout = setTimeout(() => {
+        document.getElementById('jobsManageFilterForm').submit();
+    }, 500);
+}
+
+// Restore focus to search input after page reload
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchParam = urlParams.get('search');
+    
+    if (searchParam) {
+        const searchInput = document.getElementById('search');
+        if (searchInput) {
+            searchInput.focus();
+            searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+        }
+    }
 });
 
 function deleteJob(id, title) {
