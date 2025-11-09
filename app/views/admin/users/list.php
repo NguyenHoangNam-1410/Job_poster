@@ -20,7 +20,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <form method="GET" action="/Job_poster/public/users" class="flex flex-col sm:flex-row gap-4">
+            <form method="GET" action="/Job_poster/public/users" id="filterForm" class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search Users</label>
                     <input 
@@ -30,11 +30,12 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                         value="<?= htmlspecialchars($pagination['search'] ?? '') ?>"
                         placeholder="Search by username or email..."
                         class="form-input w-full"
+                        onkeyup="debounceSearch()"
                     >
                 </div>
                 <div class="sm:w-40">
                     <label for="role" class="block text-sm font-medium text-gray-700 mb-2">Role</label>
-                    <select id="role" name="role" class="form-select">
+                    <select id="role" name="role" class="form-select" onchange="document.getElementById('filterForm').submit()">
                         <option value="" <?= empty($pagination['role_filter']) ? 'selected' : '' ?>>All Roles</option>
                         <option value="Admin" <?= ($pagination['role_filter'] ?? '') == 'Admin' ? 'selected' : '' ?>>Admin</option>
                         <option value="Staff" <?= ($pagination['role_filter'] ?? '') == 'Staff' ? 'selected' : '' ?>>Staff</option>
@@ -44,17 +45,13 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 </div>
                 <div class="sm:w-32">
                     <label for="per_page" class="block text-sm font-medium text-gray-700 mb-2">Per Page</label>
-                    <select id="per_page" name="per_page" class="form-select">
+                    <select id="per_page" name="per_page" class="form-select" onchange="document.getElementById('filterForm').submit()">
                         <option value="10" <?= ($pagination['per_page'] ?? 10) == 10 ? 'selected' : '' ?>>10</option>
                         <option value="25" <?= ($pagination['per_page'] ?? 10) == 25 ? 'selected' : '' ?>>25</option>
                         <option value="50" <?= ($pagination['per_page'] ?? 10) == 50 ? 'selected' : '' ?>>50</option>
                     </select>
                 </div>
                 <div class="flex gap-2 items-end">
-                    <button type="submit" class="btn-submit">
-                        <?= Icons::filter('btn-icon') ?>
-                        Search
-                    </button>
                     <a href="/Job_poster/public/users" class="btn-cancel">
                         Clear
                     </a>
@@ -151,106 +148,44 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
             </div>
 
             <!-- Pagination -->
-            <?php if ($pagination['total_pages'] > 1): ?>
-                <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
-                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <!-- Results info -->
-                        <div class="text-sm text-gray-700">
-                            Showing 
-                            <span class="font-medium"><?= min(($pagination['current_page'] - 1) * $pagination['per_page'] + 1, $pagination['total_records']) ?></span>
-                            to 
-                            <span class="font-medium"><?= min($pagination['current_page'] * $pagination['per_page'], $pagination['total_records']) ?></span>
-                            of 
-                            <span class="font-medium"><?= $pagination['total_records'] ?></span>
-                            users
-                        </div>
-
-                        <!-- Pagination buttons -->
-                        <div class="flex items-center gap-2">
-                            <?php
-                            $baseUrl = '/Job_poster/public/users?';
-                            if (!empty($pagination['search'])) {
-                                $baseUrl .= 'search=' . urlencode($pagination['search']) . '&';
-                            }
-                            if (!empty($pagination['role_filter'])) {
-                                $baseUrl .= 'role=' . urlencode($pagination['role_filter']) . '&';
-                            }
-                            $baseUrl .= 'per_page=' . $pagination['per_page'] . '&';
-
-                            // Calculate page range to show
-                            $maxVisiblePages = 5;
-                            $startPage = max(1, $pagination['current_page'] - floor($maxVisiblePages / 2));
-                            $endPage = min($pagination['total_pages'], $startPage + $maxVisiblePages - 1);
-                            $startPage = max(1, $endPage - $maxVisiblePages + 1);
-                            ?>
-
-                            <!-- Previous button -->
-                            <?php if ($pagination['current_page'] > 1): ?>
-                                <a href="<?= $baseUrl ?>page=<?= $pagination['current_page'] - 1 ?>" 
-                                   class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                                    Previous
-                                </a>
-                            <?php else: ?>
-                                <span class="px-3 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-300 rounded-md cursor-not-allowed">
-                                    Previous
-                                </span>
-                            <?php endif; ?>
-
-                            <!-- First page if not in range -->
-                            <?php if ($startPage > 1): ?>
-                                <a href="<?= $baseUrl ?>page=1" 
-                                   class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                                    1
-                                </a>
-                                <?php if ($startPage > 2): ?>
-                                    <span class="px-2 py-2 text-gray-500">...</span>
-                                <?php endif; ?>
-                            <?php endif; ?>
-
-                            <!-- Page range -->
-                            <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
-                                <?php if ($i == $pagination['current_page']): ?>
-                                    <span class="px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-md">
-                                        <?= $i ?>
-                                    </span>
-                                <?php else: ?>
-                                    <a href="<?= $baseUrl ?>page=<?= $i ?>" 
-                                       class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                                        <?= $i ?>
-                                    </a>
-                                <?php endif; ?>
-                            <?php endfor; ?>
-
-                            <!-- Last page if not in range -->
-                            <?php if ($endPage < $pagination['total_pages']): ?>
-                                <?php if ($endPage < $pagination['total_pages'] - 1): ?>
-                                    <span class="px-2 py-2 text-gray-500">...</span>
-                                <?php endif; ?>
-                                <a href="<?= $baseUrl ?>page=<?= $pagination['total_pages'] ?>" 
-                                   class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                                    <?= $pagination['total_pages'] ?>
-                                </a>
-                            <?php endif; ?>
-
-                            <!-- Next button -->
-                            <?php if ($pagination['current_page'] < $pagination['total_pages']): ?>
-                                <a href="<?= $baseUrl ?>page=<?= $pagination['current_page'] + 1 ?>" 
-                                   class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                                    Next
-                                </a>
-                            <?php else: ?>
-                                <span class="px-3 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-300 rounded-md cursor-not-allowed">
-                                    Next
-                                </span>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
+            <?php 
+            require_once __DIR__ . '/../../components/pagination.php';
+            renderPagination(
+                $pagination, 
+                '/Job_poster/public/users',
+                [
+                    'search' => $pagination['search'] ?? '',
+                    'role' => $pagination['role_filter'] ?? '',
+                    'per_page' => $pagination['per_page']
+                ]
+            );
+            ?>
             </div>
         <?php endif; ?>
     </div>
 </div>
+
+<script>
+// Debounce function for search
+let searchTimeout;
+function debounceSearch() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        document.getElementById('filterForm').submit();
+    }, 500); // Wait 500ms after user stops typing
+}
+
+// Restore focus to search input after page load if there was a search
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search');
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('search') && searchInput.value) {
+        searchInput.focus();
+        // Set cursor to end of text
+        searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+    }
+});
+</script>
 
 <script src="/Job_poster/public/javascript/user.js"></script>
 
