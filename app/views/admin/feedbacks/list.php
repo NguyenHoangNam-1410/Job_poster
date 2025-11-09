@@ -22,14 +22,15 @@
 
         <!-- Filters Section -->
         <div class="bg-gray-50 p-4 rounded-lg mb-6">
-            <form method="GET" action="" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <form method="GET" action="" id="feedbackFilterForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Search by User Name -->
                 <div>
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search by User Name</label>
                     <input type="text" name="search" id="search" 
                            value="<?php echo htmlspecialchars($pagination['search'] ?? ''); ?>"
                            placeholder="Enter user name..."
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           onkeyup="debounceFeedbackSearch()">
                 </div>
 
                 <!-- Date From -->
@@ -37,7 +38,8 @@
                     <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">Date From</label>
                     <input type="date" name="date_from" id="date_from" 
                            value="<?php echo htmlspecialchars($pagination['date_from'] ?? ''); ?>"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           onchange="document.getElementById('feedbackFilterForm').submit()">
                 </div>
 
                 <!-- Date To -->
@@ -45,18 +47,19 @@
                     <label for="date_to" class="block text-sm font-medium text-gray-700 mb-1">Date To</label>
                     <input type="date" name="date_to" id="date_to" 
                            value="<?php echo htmlspecialchars($pagination['date_to'] ?? ''); ?>"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           onchange="document.getElementById('feedbackFilterForm').submit()">
                 </div>
 
                 <!-- Filter Buttons -->
                 <div class="flex items-end gap-2">
-                    <button type="submit" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">
-                        Filter
-                    </button>
                     <a href="?" class="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition duration-200 text-center">
                         Reset
                     </a>
                 </div>
+                
+                <!-- Hidden per_page field -->
+                <input type="hidden" name="per_page" value="<?php echo $pagination['per_page']; ?>">
             </form>
         </div>
 
@@ -135,41 +138,19 @@
         </div>
 
         <!-- Pagination -->
-        <?php if ($pagination['total_pages'] > 1): ?>
-            <div class="mt-6 flex justify-center">
-                <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                    <!-- Previous Button -->
-                    <?php if ($pagination['current_page'] > 1): ?>
-                        <a href="?page=<?php echo $pagination['current_page'] - 1; ?>&per_page=<?php echo $pagination['per_page']; ?>&search=<?php echo urlencode($pagination['search']); ?>&date_from=<?php echo urlencode($pagination['date_from']); ?>&date_to=<?php echo urlencode($pagination['date_to']); ?>" 
-                           class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                            Previous
-                        </a>
-                    <?php endif; ?>
-
-                    <!-- Page Numbers -->
-                    <?php
-                    $start_page = max(1, $pagination['current_page'] - 2);
-                    $end_page = min($pagination['total_pages'], $pagination['current_page'] + 2);
-                    
-                    for ($i = $start_page; $i <= $end_page; $i++):
-                    ?>
-                        <a href="?page=<?php echo $i; ?>&per_page=<?php echo $pagination['per_page']; ?>&search=<?php echo urlencode($pagination['search']); ?>&date_from=<?php echo urlencode($pagination['date_from']); ?>&date_to=<?php echo urlencode($pagination['date_to']); ?>" 
-                           class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium 
-                           <?php echo $i == $pagination['current_page'] ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'; ?>">
-                            <?php echo $i; ?>
-                        </a>
-                    <?php endfor; ?>
-
-                    <!-- Next Button -->
-                    <?php if ($pagination['current_page'] < $pagination['total_pages']): ?>
-                        <a href="?page=<?php echo $pagination['current_page'] + 1; ?>&per_page=<?php echo $pagination['per_page']; ?>&search=<?php echo urlencode($pagination['search']); ?>&date_from=<?php echo urlencode($pagination['date_from']); ?>&date_to=<?php echo urlencode($pagination['date_to']); ?>" 
-                           class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                            Next
-                        </a>
-                    <?php endif; ?>
-                </nav>
-            </div>
-        <?php endif; ?>
+        <?php 
+        require_once __DIR__ . '/../../components/pagination.php';
+        renderPagination(
+            $pagination, 
+            '',
+            [
+                'search' => $pagination['search'] ?? '',
+                'date_from' => $pagination['date_from'] ?? '',
+                'date_to' => $pagination['date_to'] ?? '',
+                'per_page' => $pagination['per_page']
+            ]
+        );
+        ?>
     </div>
 </div>
 
@@ -179,6 +160,15 @@ function changePerPage(value) {
     url.searchParams.set('per_page', value);
     url.searchParams.set('page', '1'); // Reset to first page
     window.location = url.toString();
+}
+
+// Debounce function for feedback search
+let feedbackSearchTimeout;
+function debounceFeedbackSearch() {
+    clearTimeout(feedbackSearchTimeout);
+    feedbackSearchTimeout = setTimeout(() => {
+        document.getElementById('feedbackFilterForm').submit();
+    }, 500); // Wait 500ms after user stops typing
 }
 </script>
 

@@ -100,4 +100,49 @@ class UserService {
         // Can edit if it's the same user OR if the target is not an admin
         return ($userId == $currentUserId) || ($user->getRole() !== 'Admin');
     }
+
+    public function updateProfile($userId, $data) {
+        // Validate name
+        if (empty(trim($data['name']))) {
+            throw new Exception("Name is required.");
+        }
+
+        // Validate email
+        if (empty(trim($data['email'])) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            throw new Exception("Valid email is required.");
+        }
+
+        // Check if email already exists (excluding current user)
+        if ($this->userDAO->emailExists($data['email'], $userId)) {
+            throw new Exception("Email already exists.");
+        }
+
+        // Handle avatar if provided
+        $avatar = $data['avatar'] ?? null;
+        
+        return $this->userDAO->updateProfile($userId, $data['name'], $data['email'], $avatar);
+    }
+
+    public function updatePassword($userId, $oldPassword, $newPassword, $confirmPassword) {
+        // Verify old password
+        if (!$this->userDAO->verifyPassword($userId, $oldPassword)) {
+            throw new Exception("Current password is incorrect.");
+        }
+
+        // Validate new password
+        if (strlen($newPassword) < 6) {
+            throw new Exception("New password must be at least 6 characters long.");
+        }
+
+        // Check if passwords match
+        if ($newPassword !== $confirmPassword) {
+            throw new Exception("New passwords do not match.");
+        }
+
+        return $this->userDAO->updatePassword($userId, $newPassword);
+    }
+
+    public function verifyPassword($userId, $password) {
+        return $this->userDAO->verifyPassword($userId, $password);
+    }
 }
