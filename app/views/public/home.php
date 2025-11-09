@@ -15,7 +15,7 @@ include __DIR__ . '/../layouts/public_header.php';
   background-image: url('/Job_poster/public/images/bg/bg4.png'); 
 }
 .news-bg { 
-  background-image: url('/Job_poster/public/images/bg/bg3.png'); 
+  background-image: url('/Job_poster/public/images/bg/bg6.png'); 
 }
 .feedback-bg { 
   background-image: url('/Job_poster/public/images/bg/bg5.png'); 
