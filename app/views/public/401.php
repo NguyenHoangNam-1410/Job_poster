@@ -5,8 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once __DIR__ . '/../../helpers/Auth.php';
 
 $reason = $_GET['reason'] ?? 'login';
-$isLoggedIn = Auth::isLoggedIn();
-$isGuest = Auth::isGuest();
+// $isLoggedIn = Auth::isLoggedIn();
+// $isGuest = Auth::isGuest();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +14,7 @@ $isGuest = Auth::isGuest();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>401 - Unauthorized</title>
-    <link href="/mywebsite/public/css/tailwind.min.css" rel="stylesheet">
+    <link href="/Job_poster/public/css/tailwind.min.css" rel="stylesheet">
     <style>
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
@@ -73,24 +73,19 @@ $isGuest = Auth::isGuest();
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <?php if ($reason === 'forbidden' && $isLoggedIn): ?>
                 <!-- Guest trying to access admin area - show home button -->
-                <a href="/mywebsite/public/" 
+                <a href="/Job_poster/public/" 
                    class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-lg hover:bg-red-700 transform hover:scale-105 transition-all duration-200">
                     <?= Icons::home('w-5 h-5 mr-2') ?>
                     Go to Store
                 </a>
-                <a href="/mywebsite/public/shop" 
-                   class="inline-flex items-center px-6 py-3 bg-white text-red-600 font-semibold rounded-lg shadow-lg hover:bg-gray-50 transform hover:scale-105 transition-all duration-200 border-2 border-red-600">
-                    <?= Icons::shoppingBag('w-5 h-5 mr-2') ?>
-                    Browse Products
-                </a>
             <?php else: ?>
                 <!-- Not logged in or session expired - show login -->
-                <a href="/mywebsite/public/login" 
+                <!-- <a href="/Job_poster/public/login" 
                    class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-lg hover:bg-red-700 transform hover:scale-105 transition-all duration-200">
                     <?= Icons::login('w-5 h-5 mr-2') ?>
                     Login
-                </a>
-                <a href="/mywebsite/public/" 
+                </a> -->
+                <a href="/Job_poster/public/" 
                    class="inline-flex items-center px-6 py-3 bg-white text-red-600 font-semibold rounded-lg shadow-lg hover:bg-gray-50 transform hover:scale-105 transition-all duration-200 border-2 border-red-600">
                     <?= Icons::home('w-5 h-5 mr-2') ?>
                     Go Home
@@ -101,9 +96,9 @@ $isGuest = Auth::isGuest();
         <!-- Additional Help -->
         <div class="mt-12 text-gray-500 text-sm">
             <?php if (!$isLoggedIn): ?>
-                <p>Don't have an account? <a href="/mywebsite/public/signup" class="text-red-600 hover:underline">Sign up here</a></p>
+                <p>Don't have an account? <a href="/Job_poster/public/signup" class="text-red-600 hover:underline">Sign up here</a></p>
             <?php elseif ($isGuest && $reason === 'forbidden'): ?>
-                <p>Need help finding something? <a href="/mywebsite/public/shop" class="text-red-600 hover:underline">Browse our products</a></p>
+                <p>Need help finding something? <a href="/Job_poster/public/shop" class="text-red-600 hover:underline">Browse our products</a></p>
             <?php endif; ?>
         </div>
     </div>

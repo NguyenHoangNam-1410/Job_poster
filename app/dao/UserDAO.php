@@ -186,6 +186,63 @@ class UserDAO {
         );
         return $stmt->execute();
     }
+
+    // Get user avatar
+    public function getAvatar($userId) {
+        $sql = "SELECT Avatar FROM USERS WHERE UID = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($row = $result->fetch_assoc()) {
+            return $row['Avatar'];
+        }
+        return null;
+    }
+
+    // Get password hash for verification
+    public function getPasswordHash($userId) {
+        $sql = "SELECT Password FROM USERS WHERE UID = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($row = $result->fetch_assoc()) {
+            return $row['Password'];
+        }
+        return null;
+    }
+
+    // Verify password
+    public function verifyPassword($userId, $password) {
+        $hash = $this->getPasswordHash($userId);
+        if ($hash === null) {
+            return false;
+        }
+        return password_verify($password, $hash);
+    }
+
+    // Update password
+    public function updatePassword($userId, $newPassword) {
+        $sql = "UPDATE USERS SET Password = ? WHERE UID = ?";
+        $stmt = $this->db->prepare($sql);
+        
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $stmt->bind_param("si", $hashedPassword, $userId);
+        
+        return $stmt->execute();
+    }
+
+    // Update profile (name, email, avatar only)
+    public function updateProfile($userId, $name, $email, $avatar) {
+        $sql = "UPDATE USERS SET Name = ?, Email = ?, Avatar = ? WHERE UID = ?";
+        $stmt = $this->db->prepare($sql);
+        
+        $stmt->bind_param("sssi", $name, $email, $avatar, $userId);
+        return $stmt->execute();
+    }
     
     // DELETE
     public function delete($id) {

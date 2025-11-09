@@ -182,6 +182,20 @@ elseif ($path === '/statistics') {
     $controller->index();
 } 
 
+// Profile Routes
+elseif ($path === '/profile') {
+    // Show profile edit form
+    require_once '../app/controllers/UserController.php';
+    $controller = new UserController();
+    $controller->profile();
+    
+} elseif ($path === '/profile/update' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Update profile
+    require_once '../app/controllers/UserController.php';
+    $controller = new UserController();
+    $controller->updateProfile();
+} 
+
 else {
     // Public routes
     switch ($path) {
