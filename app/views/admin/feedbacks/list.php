@@ -170,6 +170,16 @@ function debounceFeedbackSearch() {
         document.getElementById('feedbackFilterForm').submit();
     }, 500); // Wait 500ms after user stops typing
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search');
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('search') && searchInput.value) {
+        searchInput.focus();
+        // Set cursor to end of text
+        searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+    }
+});
 </script>
 
 <?php require_once __DIR__ . '/../../layouts/admin_footer.php'; ?>

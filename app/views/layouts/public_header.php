@@ -72,7 +72,7 @@
   <header class="gradient-bg text-white shadow-lg sticky top-0 z-50">
     <div class="container mx-auto px-4">
       <div class="flex justify-between items-center relative">
-        <!-- Logo + Title -->
+        <!-- Logo + Title (Left) -->
         <div class="flex items-center space-x-3">
           <a href="/Job_poster/public/" class="flex items-center space-x-2 hover:opacity-90 transition">
             <h1 class="text-2xl font-bold tracking-tight">Job Poster</h1>
@@ -80,31 +80,34 @@
           <p class="hidden sm:block text-sm opacity-80">Find your dream job</p>
         </div>
 
-        <!-- Navigation -->
-        <nav class="hidden md:flex space-x-6 text-sm font-medium">
-          <a href="/Job_poster/public/" class="hover:text-yellow-300 transition">Home</a>
-          <a href="/Job_poster/public/jobs" class="hover:text-yellow-300 transition">Jobs</a>
-          <a href="/Job_poster/public/employer/post-job" class="hover:text-yellow-300 transition">Employer</a>
-        </nav>
+        <!-- Navigation + Avatar (Right) -->
+        <div class="flex items-center space-x-6">
+          <!-- Navigation -->
+          <nav class="hidden md:flex space-x-6 text-sm font-medium">
+            <a href="/Job_poster/public/" class="hover:text-yellow-300 transition">Home</a>
+            <a href="/Job_poster/public/jobs" class="hover:text-yellow-300 transition">Jobs</a>
+            <a href="/Job_poster/public/employer/post-job" class="hover:text-yellow-300 transition">Employer</a>
+          </nav>
 
-        <!-- Avatar / Dropdown -->
-        <div class="relative">
-          <!-- Avatar mặc định -->
-          <div class="avatar-btn" id="avatarBtn" title="Login or Register">
-            <!-- SVG icon người -->
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                 stroke-width="1.5" stroke="white" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M4.5 19.5a8.25 8.25 0 0115 0" />
-            </svg>
-          </div>
+          <!-- Avatar / Dropdown -->
+          <div class="relative">
+            <!-- Avatar mặc định -->
+            <div class="avatar-btn" id="avatarBtn" title="Login or Register">
+              <!-- SVG icon người -->
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                   stroke-width="1.5" stroke="white" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M4.5 19.5a8.25 8.25 0 0115 0" />
+              </svg>
+            </div>
 
-          <!-- Menu khi click -->
-          <div id="userMenu" class="user-menu">
-            <a href="/Job_poster/public/login.php">🔑 Login</a>
-            <a href="/Job_poster/public/register.php">📝 Register</a>
+            <!-- Menu khi click -->
+            <div id="userMenu" class="user-menu">
+              <a href="/Job_poster/public/login.php">🔑 Login</a>
+              <a href="/Job_poster/public/register.php">📝 Register</a>
+            </div>
           </div>
         </div>
       </div>
