@@ -1,5 +1,6 @@
 <?php 
 $pageTitle = 'Homepage | Job Poster';
+$pageTitle = 'Homepage | Job Poster';
 include __DIR__ . '/../layouts/public_header.php';
 ?>
 
@@ -590,4 +591,5 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 <?php include __DIR__ . '/../layouts/public_footer.php'; ?>
+
 

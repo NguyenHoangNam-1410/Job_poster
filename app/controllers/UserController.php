@@ -148,4 +148,104 @@ class UserController {
             }
         }
     }
+
+    public function profile() {
+        $currentUserId = $this->getCurrentUserId();
+        $user = $this->userService->getUserById($currentUserId);
+        
+        if (!$user) {
+            header('Location: /Job_poster/public/401');
+            exit;
+        }
+
+        $error = $_GET['error'] ?? null;
+        $success = $_GET['success'] ?? null;
+        
+        require_once __DIR__ . '/../views/staff/profile/form.php';
+    }
+
+    public function updateProfile() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: /Job_poster/public/profile');
+            exit;
+        }
+
+        $currentUserId = $this->getCurrentUserId();
+        
+        try {
+            $data = [
+                'name' => trim($_POST['name'] ?? ''),
+                'email' => trim($_POST['email'] ?? ''),
+                'avatar' => null
+            ];
+
+            // Handle avatar upload
+            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+                $file = $_FILES['avatar'];
+                
+                // Validate file size (max 1MB)
+                if ($file['size'] > 1048576) {
+                    throw new Exception("Avatar image must be less than 1MB.");
+                }
+
+                // Validate file type
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $mimeType = finfo_file($finfo, $file['tmp_name']);
+                finfo_close($finfo);
+
+                if (!in_array($mimeType, $allowedTypes)) {
+                    throw new Exception("Invalid image format. Only JPEG, PNG, GIF, and WebP are allowed.");
+                }
+
+                // Create directory if not exists
+                $uploadDir = __DIR__ . '/../../public/image/avatar/' . $currentUserId . '/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                // Generate unique filename
+                $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+                $filename = 'avatar_' . time() . '.' . $extension;
+                $uploadPath = $uploadDir . $filename;
+
+                // Move uploaded file
+                if (!move_uploaded_file($file['tmp_name'], $uploadPath)) {
+                    throw new Exception("Failed to upload avatar image.");
+                }
+
+                // Set avatar path relative to public directory
+                $data['avatar'] = '/Job_poster/public/image/avatar/' . $currentUserId . '/' . $filename;
+            } else {
+                // Keep existing avatar if no new file uploaded
+                $currentUser = $this->userService->getUserById($currentUserId);
+                $data['avatar'] = $currentUser->getAvatar();
+            }
+
+            // Handle password change if provided
+            if (!empty($_POST['old_password']) || !empty($_POST['new_password']) || !empty($_POST['confirm_password'])) {
+                $oldPassword = $_POST['old_password'] ?? '';
+                $newPassword = $_POST['new_password'] ?? '';
+                $confirmPassword = $_POST['confirm_password'] ?? '';
+
+                if (empty($oldPassword)) {
+                    throw new Exception("Current password is required to change password.");
+                }
+
+                $this->userService->updatePassword($currentUserId, $oldPassword, $newPassword, $confirmPassword);
+            }
+
+            // Update profile
+            $this->userService->updateProfile($currentUserId, $data);
+
+            // Get the referrer or default to profile page
+            $referrer = $_POST['referrer'] ?? '/Job_poster/public/profile';
+            header('Location: ' . $referrer . '?success=' . urlencode('Profile updated successfully'));
+            exit;
+
+        } catch (Exception $e) {
+            header('Location: /Job_poster/public/profile?error=' . urlencode($e->getMessage()));
+            exit;
+        }
+    }
 }

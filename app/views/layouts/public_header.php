@@ -119,6 +119,7 @@
   </style>
 </head>
 
+
 <body class="bg-gray-50">
   <?php require_once __DIR__ . '/../../helpers/Icons.php'; ?>
 
