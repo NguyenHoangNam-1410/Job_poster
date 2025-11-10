@@ -96,37 +96,37 @@ if ($path === '/users') {
     $controller = new JobController();
     $controller->index();
     
-} elseif (preg_match('/^\/jobs\/edit\/(\d+)$/', $path, $matches)) {
+} elseif (preg_match('/^\/jobs-manage\/edit\/(\d+)$/', $path, $matches)) {
     // Show edit form
     require_once '../app/controllers/JobController.php';
     $controller = new JobController();
     $controller->edit($matches[1]);
     
-} elseif (preg_match('/^\/jobs\/update\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+} elseif (preg_match('/^\/jobs-manage\/update\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     // Update job
     require_once '../app/controllers/JobController.php';
     $controller = new JobController();
     $controller->update($matches[1]);
     
-} elseif (preg_match('/^\/jobs\/soft-delete\/(\d+)$/', $path, $matches)) {
+} elseif (preg_match('/^\/jobs-manage\/soft-delete\/(\d+)$/', $path, $matches)) {
     // Soft delete job
     require_once '../app/controllers/JobController.php';
     $controller = new JobController();
     $controller->softDelete($matches[1]);
     
-} elseif (preg_match('/^\/jobs\/hard-delete\/(\d+)$/', $path, $matches)) {
+} elseif (preg_match('/^\/jobs-manage\/hard-delete\/(\d+)$/', $path, $matches)) {
     // Hard delete job
     require_once '../app/controllers/JobController.php';
     $controller = new JobController();
     $controller->hardDelete($matches[1]);
     
-} elseif (preg_match('/^\/jobs\/restore\/(\d+)$/', $path, $matches)) {
+} elseif (preg_match('/^\/jobs-manage\/restore\/(\d+)$/', $path, $matches)) {
     // Restore soft deleted job
     require_once '../app/controllers/JobController.php';
     $controller = new JobController();
     $controller->restore($matches[1]);
     
-} elseif (preg_match('/^\/jobs\/change-status\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+} elseif (preg_match('/^\/jobs-manage\/change-status\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     // Change job status
     require_once '../app/controllers/JobController.php';
     $controller = new JobController();
