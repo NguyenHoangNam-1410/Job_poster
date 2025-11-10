@@ -93,6 +93,11 @@ include __DIR__ . '/../layouts/public_header.php';
   100% { background-position: 0% 50%; }
 }
 
+@keyframes scrollHorizontal {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
 .animate-fadeInUp { 
   animation: fadeInUp 0.8s ease-out forwards; 
 }
@@ -142,11 +147,64 @@ header.-translate-y-full {
   border: 3px solid #0a4d5c;
   box-shadow: 8px 8px 0px rgba(10, 77, 92, 0.15);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
 .retro-card:hover {
-  transform: translate(-4px, -4px);
-  box-shadow: 12px 12px 0px rgba(10, 77, 92, 0.2);
+  transform: translate(-4px, -4px) !important;
+  box-shadow: 12px 12px 0px rgba(10, 77, 92, 0.2) !important;
+}
+
+/* Ensure feature cards have hover effect */
+#about .retro-card {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#about .retro-card:hover {
+  transform: translate(-4px, -4px) !important;
+  box-shadow: 12px 12px 0px rgba(10, 77, 92, 0.2) !important;
+}
+
+/* News carousel styles */
+.news-carousel-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
+.news-carousel-track {
+  display: flex;
+  gap: 2rem;
+  animation: scrollHorizontal 40s linear infinite;
+  width: fit-content;
+  will-change: transform;
+}
+
+.news-carousel-track:hover {
+  animation-play-state: paused;
+}
+
+.news-card {
+  flex: 0 0 calc(33.333% - 1.33rem);
+  min-width: 320px;
+  max-width: 400px;
+}
+
+@media (max-width: 1024px) {
+  .news-card {
+    flex: 0 0 calc(50% - 1rem);
+    min-width: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .news-card {
+    flex: 0 0 calc(100% - 2rem);
+    min-width: 280px;
+    max-width: 100%;
+  }
 }
 
 /* Y2K Badge */
@@ -388,32 +446,38 @@ header.-translate-y-full {
       </h2>
     </div>
 
-    <!-- News grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-      <?php 
-      $articles = [
-        ['img'=>'1.png','title'=>'Top 5 In-demand Tech Skills in 2025','desc'=>'Stay ahead with the most sought-after skills in software development and AI.'],
-        ['img'=>'2.png','title'=>'How to Build a Remote Career Successfully','desc'=>'Learn the habits and tools to thrive in the modern remote workspace.'],
-        ['img'=>'3.png','title'=>'Navigating Job Market Trends in 2025','desc'=>'Insights into hiring shifts, automation, and emerging industries.']
-      ];
-      foreach ($articles as $i => $a): ?>
-      <article class="retro-card overflow-hidden group bg-white" style="animation: slideInLeft <?= 0.6 + ($i * 0.1) ?>s ease-out;">
-        <!-- Image -->
-        <div class="overflow-hidden border-b-3 border-gray-900">
-          <img src="/Job_poster/public/images/jobs/<?= htmlspecialchars($a['img']) ?>" 
-               class="w-full h-56 object-cover" alt="">
-        </div>
-        
-        <!-- Content -->
-        <div class="p-6">
-          <h4 class="font-black text-xl text-gray-900 mb-3 uppercase"><?= htmlspecialchars($a['title']) ?></h4>
-          <p class="text-gray-700 mb-5 leading-relaxed font-medium"><?= htmlspecialchars($a['desc']) ?></p>
-          <a href="#" class="btn-y2k inline-block px-6 py-2 text-sm bg-gradient-to-r from-lime-400 to-cyan-400">
-            READ MORE
-          </a>
-        </div>
-      </article>
-      <?php endforeach; ?>
+    <!-- News carousel -->
+    <div class="news-carousel-container max-w-6xl mx-auto">
+      <div class="news-carousel-track">
+        <?php 
+        $articles = [
+          ['img'=>'1.png','title'=>'Top 5 In-demand Tech Skills in 2025','desc'=>'Stay ahead with the most sought-after skills in software development and AI.'],
+          ['img'=>'2.png','title'=>'How to Build a Remote Career Successfully','desc'=>'Learn the habits and tools to thrive in the modern remote workspace.'],
+          ['img'=>'3.png','title'=>'Navigating Job Market Trends in 2025','desc'=>'Insights into hiring shifts, automation, and emerging industries.'],
+          ['img'=>'placeholder.jpg','title'=>'Mastering Interview Techniques in 2025','desc'=>'Discover proven strategies to ace your next job interview and stand out from the competition.'],
+          ['img'=>'placeholder.jpg','title'=>'Building Your Personal Brand Online','desc'=>'Learn how to create a compelling online presence that attracts top employers and opportunities.']
+        ];
+        // Duplicate articles for seamless loop
+        $articles = array_merge($articles, $articles);
+        foreach ($articles as $i => $a): ?>
+        <article class="news-card retro-card overflow-hidden group bg-white">
+          <!-- Image -->
+          <div class="overflow-hidden border-b-3 border-gray-900">
+            <img src="/Job_poster/public/images/jobs/<?= htmlspecialchars($a['img']) ?>" 
+                 class="w-full h-56 object-cover" alt="">
+          </div>
+          
+          <!-- Content -->
+          <div class="p-6">
+            <h4 class="font-black text-xl text-gray-900 mb-3 uppercase"><?= htmlspecialchars($a['title']) ?></h4>
+            <p class="text-gray-700 mb-5 leading-relaxed font-medium"><?= htmlspecialchars($a['desc']) ?></p>
+            <a href="#" class="btn-y2k inline-block px-6 py-2 text-sm bg-gradient-to-r from-lime-400 to-cyan-400">
+              READ MORE
+            </a>
+          </div>
+        </article>
+        <?php endforeach; ?>
+      </div>
     </div>
   </div>
 </section>
@@ -579,13 +643,85 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!header) return;
 
   let lastScrollY = window.scrollY;
+  let isUserScrolling = false;
+  let scrollTimeout;
+  let autoScrollInterval;
+  let currentSectionIndex = 0;
+
+  // Sections to auto-scroll through
+  const sections = ['#about', '#benefits', '#promo', '#news', '#feedback', '#policies'];
+  
+  // Function to scroll to a section
+  function scrollToSection(index) {
+    const sectionId = sections[index];
+    const section = document.querySelector(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  // Function to start auto-scrolling
+  function startAutoScroll() {
+    // Clear any existing interval
+    if (autoScrollInterval) {
+      clearInterval(autoScrollInterval);
+    }
+
+    // Auto-scroll every 15 seconds
+    autoScrollInterval = setInterval(() => {
+      if (!isUserScrolling) {
+        currentSectionIndex = (currentSectionIndex + 1) % sections.length;
+        scrollToSection(currentSectionIndex);
+      }
+    }, 15000);
+  }
+
+  // Handle user scroll
   window.addEventListener("scroll", () => {
+    // Hide/show header
     if (window.scrollY > lastScrollY && window.scrollY > 100) {
       header.classList.add("-translate-y-full");
     } else {
       header.classList.remove("-translate-y-full");
     }
     lastScrollY = window.scrollY;
+
+    // Mark that user is scrolling
+    isUserScrolling = true;
+    clearTimeout(scrollTimeout);
+
+    // Reset auto-scroll after 2 seconds of no scrolling
+    scrollTimeout = setTimeout(() => {
+      isUserScrolling = false;
+      // Find current section based on scroll position
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = document.querySelector(sections[i]);
+        if (section && section.offsetTop <= scrollPosition) {
+          currentSectionIndex = i;
+          break;
+        }
+      }
+    }, 2000);
+  });
+
+  // Start auto-scroll on page load
+  startAutoScroll();
+
+  // Pause auto-scroll on user interaction
+  document.addEventListener('mousedown', () => {
+    isUserScrolling = true;
+  });
+
+  document.addEventListener('keydown', () => {
+    isUserScrolling = true;
+  });
+
+  // Resume auto-scroll after user interaction stops
+  document.addEventListener('mouseup', () => {
+    setTimeout(() => {
+      isUserScrolling = false;
+    }, 2000);
   });
 });
 </script>
