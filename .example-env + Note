@@ -10,6 +10,12 @@ FACEBOOK_REDIRECT_URI=YOUR_FACEBOOK_REDIRECT
 
 ( Need to be https for facebook login to work)
 Also need composer:
+
+# If already have composer.json with the needed dependenciess,
+# Just install it
+composer install
+
+# If no composer.json, need to init it:
 composer init
 composer require phpmailer/phpmailer
 composer require vlucas/phpdotenv
