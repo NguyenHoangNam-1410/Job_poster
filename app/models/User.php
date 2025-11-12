@@ -9,9 +9,10 @@ class User {
     private $is_active;
     private $created_at;
     private $updated_at;
+    private $auth_provider;
     
     // Constructor
-    public function __construct($id = null, $name = null, $email = null, $role = 'Guest', $password = null, $avatar = null, $is_active = 1) {
+    public function __construct($id = null, $name = null, $email = null, $role = 'Guest', $password = null, $avatar = null, $is_active = 1, $auth_provider = null) {
         $this->id = $id;
         $this->name = $name;
         $this->email = $email;
@@ -19,6 +20,7 @@ class User {
         $this->password = $password;
         $this->avatar = $avatar;
         $this->is_active = $is_active;
+        $this->auth_provider = $auth_provider;
     }
     
     // Getters
@@ -30,6 +32,7 @@ class User {
     public function getRole() { return $this->role; }
     public function getAvatar() { return $this->avatar; }
     public function getIsActive() { return $this->is_active; }
+    public function getAuthProvider() { return $this->auth_provider; }
     public function getCreatedAt() { return $this->created_at; }
     public function getUpdatedAt() { return $this->updated_at; }
     
@@ -42,4 +45,5 @@ class User {
     public function setRole($role) { $this->role = $role; }
     public function setAvatar($avatar) { $this->avatar = $avatar; }
     public function setIsActive($is_active) { $this->is_active = $is_active; }
+    public function setAuthProvider($auth_provider) { $this->auth_provider = $auth_provider; }
 }

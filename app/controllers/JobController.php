@@ -9,8 +9,7 @@ class JobController {
     }
 
     private function getCurrentUserId() {
-        // TODO: Replace with actual session-based user ID when authentication is implemented
-        return $_SESSION['user_id'] ?? 1;
+        return $_SESSION['user']['id'] ?? null;
     }
 
     public function index() {

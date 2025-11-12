@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../dao/UserDAO.php';
-
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 class UserService {
     private $userDAO;
 
@@ -20,6 +21,143 @@ class UserService {
         return $this->userDAO->getById($id);
     }
 
+    public function getUserByEmail($email) {
+        return $this->userDAO->getByEmail($email);
+    }
+
+    public function getAuthProvider($email) {
+        return $this->userDAO->getAuthProvider($email);
+    }
+
+    public function createUserGoogle($email, $name, $avatar = null) {
+        return $this->userDAO->createUserGoogle($email, $name, $avatar);
+    }
+
+    public function createUserFacebook($email, $name, $avatar = null) {
+        return $this->userDAO->createUserFacebook($email, $name, $avatar);
+    }
+
+    // get facebook access token
+    public function getFacebookAccessToken($code) {
+        $url = "https://graph.facebook.com/oauth/access_token?" . http_build_query([
+            "client_id" => $_ENV['FACEBOOK_CLIENT_ID'],
+            "redirect_uri" => $_ENV['FACEBOOK_REDIRECT_URI'],
+            "client_secret" => $_ENV['FACEBOOK_CLIENT_SECRET'],
+            "code" => $code
+        ]);
+
+        $response = json_decode(file_get_contents($url), true);
+        return $response['access_token'];
+    }
+
+    // get facebook user
+    public function getFacebookUser($accessToken) {
+        $url = "https://graph.facebook.com/me?fields=id,name,email,picture&access_token=" . $accessToken;
+        return json_decode(file_get_contents($url), true);
+    }
+
+    public function verifyPasswordLogin($email, $password) {
+        $hashedPassword = $this->userDAO->getHashedPassword($email);
+        if($hashedPassword){
+            return password_verify($password, $hashedPassword) || $hashedPassword == $password; //for testing purposes
+        }
+        return false;
+    }
+
+    public function verifyOTP($otp) {
+        if(isset($_SESSION['otp']) && isset($_SESSION['otp-email']) 
+            && isset($_SESSION['otp-expire'])
+            && time() < $_SESSION['otp-expire']
+            && strval($_SESSION['otp']) === strval($otp)) {
+
+            $_SESSION['reset-email'] = $_SESSION['otp-email'];
+            $_SESSION['reset-expire'] =  time() + 900; // 15 minutes from now
+            unset($_SESSION['otp']);
+            unset($_SESSION['otp-email']);
+            unset($_SESSION['otp-expire']);
+
+            return true;
+        }
+        return false;
+    }
+
+    public function updatePasswordByEmail($email, $password) {
+        return $this->userDAO->updatePasswordByEmail($email, $password);
+    }
+
+    // Register user (employer and local only)
+    public function registerUser($data) {
+        // Check email
+        if ($this->userDAO->emailExists($data['email'])) {
+            throw new Exception("Email already exists.");
+        }
+
+        $user = new User(
+            null,
+            $data['fullname'],
+            $data['email'],
+            'Employer',
+            $data['password'],
+            null,
+            1,
+            'local'
+        );
+
+        return $this->userDAO->create($user);
+    }
+
+    public function getLocalUserByEmail($email) { 
+        return $this->userDAO->getLocalUserByEmail($email);
+    }
+
+    public function generateAndSendOTP($email) {
+        if(isset($_SESSION['otp-email'])) { // Check if OTP already generated, unset it
+            unset($_SESSION['otp']);
+            unset($_SESSION['otp-email']);
+            unset($_SESSION['otp-expire']);
+        }
+        #generate 5 digit OTP
+        $otp = random_int(10000, 99999);
+
+        //Store OTP and expiry in session for 15 minutes
+        $_SESSION['otp'] = $otp;
+        $_SESSION['otp-email'] = $email;
+        $_SESSION['otp-expire'] = time() + 900; // 15 minutes from now
+
+        // Load email template and replace placeholders
+        $template = file_get_contents(__DIR__ . '/../../public/resources/OTP.html');
+        $message = str_replace('{{otp}}', $otp, $template);
+        $message = str_replace('{{name}}', $this->userDAO->getByEmail($email)->getName(), $message);
+
+        
+        //send email using PHPMailer
+        $mail = new PHPMailer(true);
+        try {
+            //Server settings
+            $mail->isSMTP(); // Send using SMTP
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = $_ENV['SMTP_EMAIL'];
+            $mail->Password   = $_ENV['SMTP_PASSWORD'];
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = $_ENV['SMTP_PORT'];
+
+            //Recipients
+            $mail->setFrom('no-reply@worknest.com', 'WorkNest Support');
+            $mail->addAddress($email);
+
+            //Content
+            $mail->isHTML(true);
+            $mail->Subject = '[WorkNest] Your Password Reset OTP';
+            $mail->Body    = $message;
+
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+            return false;
+        }
+    }
     public function createUser($data, $currentUserId = null) {
         // Validate that only Admin or Staff roles can be created
         if (!in_array($data['role'], ['Admin', 'Staff'])) {

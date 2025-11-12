@@ -53,6 +53,8 @@
       </div>
     </footer>
 
+    <script src="/javascript/jquery.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <?php if (isset($additionalJS)): ?>
       <?php foreach ($additionalJS as $js): ?>
         <script src="<?= $js ?>"></script>

@@ -6,19 +6,19 @@ include __DIR__ . '/../layouts/public_header.php';
 <style>
 /* Background images without overlay */
 .hero-bg { 
-  background-image: url('/Job_poster/public/images/bg/bg1.png'); 
+  background-image: url('/images/bg/bg1.png'); 
 }
 .about-bg { 
-  background-image: url('/Job_poster/public/images/bg/bg2.png'); 
+  background-image: url('/images/bg/bg2.png'); 
 }
 .benefits-bg { 
-  background-image: url('/Job_poster/public/images/bg/bg4.png'); 
+  background-image: url('/images/bg/bg4.png'); 
 }
 .news-bg { 
-  background-image: url('/Job_poster/public/images/bg/bg6.png'); 
+  background-image: url('/images/bg/bg6.png'); 
 }
 .feedback-bg { 
-  background-image: url('/Job_poster/public/images/bg/bg5.png'); 
+  background-image: url('/images/bg/bg5.png'); 
 }
 
 .hero-bg, .about-bg, .benefits-bg, .news-bg, .feedback-bg {
@@ -210,7 +210,7 @@ header.-translate-y-full {
       ];
       foreach ($articles as $a): ?>
       <article class="bg-white overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
-        <img src="/Job_poster/public/images/jobs/<?= htmlspecialchars($a['img']) ?>" 
+        <img src="/images/jobs/<?= htmlspecialchars($a['img']) ?>" 
              class="w-full h-48 object-cover" alt="">
         <div class="p-6 text-left border-l-2" style="border-color: #0688B4;">
           <h4 class="font-semibold text-lg text-gray-900 mb-2"><?= htmlspecialchars($a['title']) ?></h4>
