@@ -65,9 +65,20 @@ $left = days_left($deadlineRaw);
   66% { transform: translateY(10px) translateX(-10px); }
 }
 
+@keyframes fadeInUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .bg-animated {
@@ -106,9 +117,15 @@ $left = days_left($deadlineRaw);
   z-index: 1;
 }
 
+/* Page load animations */
 .section-card {
-  animation: fadeIn 0.6s ease-out forwards;
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   opacity: 0;
+  transition: transform 0.3s ease;
+}
+
+.section-card:hover {
+  transform: translateY(-2px);
 }
 
 .section-card:nth-child(1) { animation-delay: 0.1s; }
@@ -117,6 +134,12 @@ $left = days_left($deadlineRaw);
 .section-card:nth-child(4) { animation-delay: 0.4s; }
 .section-card:nth-child(5) { animation-delay: 0.5s; }
 .section-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Sidebar animation */
+.sidebar-animate {
+  animation: fadeIn 0.8s ease-out 0.3s forwards;
+  opacity: 0;
+}
 
 /* Custom Scrollbar for Sidebar */
 #rel-list::-webkit-scrollbar {
@@ -240,9 +263,9 @@ $left = days_left($deadlineRaw);
         </div>
       </section>
 
-      <aside class="lg:col-span-1">
+      <aside class="lg:col-span-1 sidebar-animate">
         <!-- Relevant Jobs -->
-        <div class="section-card bg-white border border-gray-200 sticky top-6 shadow-sm hover:shadow-md transition-shadow duration-300" style="max-height: calc(100vh - 3rem); display: flex; flex-direction: column;">
+        <div class="bg-white border border-gray-200 sticky top-6 shadow-sm hover:shadow-md transition-shadow duration-300" style="max-height: calc(100vh - 3rem); display: flex; flex-direction: column;">
           <div class="p-6 pb-4 border-b border-gray-100">
             <div class="flex items-center justify-between">
               <h3 class="text-lg font-bold text-gray-900">Relevant Jobs</h3>

@@ -48,19 +48,70 @@ function status_badge_class($st){
   }
 }
 ?>
+<style>
+/* Fade-in animations for page elements */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* Staggered delays for elements */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+
+/* Lazy load animation for job cards */
+.job-card-wrapper {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.job-card-wrapper.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+
 <script>
 document.body.classList.add('jobs-listing-page');
 </script>
 <main>
   <!-- Hero Section with Large Typography -->
   <section class="jobs-hero">
-    <div class="jobs-hero-bg-text">JOBS</div>
-    <h1 class="jobs-hero-title">FIND YOUR<br>DREAM JOB</h1>
-    <p class="jobs-hero-subtitle">Discover opportunities that match your passion. Explore our curated collection of jobs from innovative companies.</p>
+    <div class="jobs-hero-bg-text animate-fade-in">JOBS</div>
+    <h1 class="jobs-hero-title animate-fade-in-up delay-100">FIND YOUR<br>DREAM JOB</h1>
+    <p class="jobs-hero-subtitle animate-fade-in-up delay-200">Discover opportunities that match your passion. Explore our curated collection of jobs from innovative companies.</p>
   </section>
 
   <!-- Artistic Search Section -->
-  <section class="jobs-search-section">
+  <section class="jobs-search-section animate-fade-in-up delay-300">
     <div class="jobs-search-container">
       <form action="<?= htmlspecialchars(BASE_PUBLIC . '/index.php') ?>" method="GET" class="w-full">
         <input type="hidden" name="r" value="/jobs">
@@ -217,6 +268,8 @@ async function loadJobs(){
       grid.innerHTML = `<div class="jobs-no-results"><h3 class="jobs-no-results-title">NO JOBS FOUND</h3><p class="jobs-no-results-text">Try adjusting your search or filters to find more opportunities.</p></div>`;
     } else {
       grid.innerHTML = (d.rows||[]).map(card).join('');
+      // Re-animate new cards
+      setTimeout(() => animateJobCards(), 50);
     }
     pageInfo.textContent = `Page ${page}`;
     renderPager();
@@ -266,11 +319,48 @@ function renderPager(){
   const totalPages = Math.max(1, Math.ceil(lastTotal / perPage));
   const prevDisabled = page<=1;
   const nextDisabled = page>=totalPages;
+  
+  // Generate page numbers to display
+  let pageNumbers = [];
+  const maxVisible = 5; // Maximum page numbers to show
+  
+  if (totalPages <= maxVisible) {
+    // Show all pages if total is small
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(i);
+    }
+  } else {
+    // Show pages around current page
+    let start = Math.max(1, page - 2);
+    let end = Math.min(totalPages, page + 2);
+    
+    // Adjust if at the beginning or end
+    if (page <= 3) {
+      end = Math.min(maxVisible, totalPages);
+    } else if (page >= totalPages - 2) {
+      start = Math.max(1, totalPages - maxVisible + 1);
+    }
+    
+    for (let i = start; i <= end; i++) {
+      pageNumbers.push(i);
+    }
+  }
+  
+  // Build pagination HTML
+  let pagesHTML = pageNumbers.map(p => {
+    if (p === page) {
+      return `<span class="jobs-pagination-current">${p}</span>`;
+    } else {
+      return `<button class="jobs-pagination-btn" data-page="${p}">${p}</button>`;
+    }
+  }).join('');
+  
   pager.innerHTML = `
     <button class="jobs-pagination-btn" ${prevDisabled ? 'disabled' : ''} data-page="${page-1}">← Prev</button>
-    <span class="jobs-pagination-current">${page}</span>
+    ${pagesHTML}
     <button class="jobs-pagination-btn" ${nextDisabled ? 'disabled' : ''} data-page="${page+1}">Next →</button>
   `;
+  
   pager.querySelectorAll('button[data-page]').forEach(btn=>{
     if(!btn.disabled) {
       btn.addEventListener('click',e=>{
@@ -334,9 +424,33 @@ function renderBadges(){
 
 function resetAndLoad(){ page=1; loadJobs(); }
 
+// Lazy load animation for job cards
+function animateJobCards() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('loaded');
+        }, index * 50); // Stagger animation
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  });
+
+  document.querySelectorAll('.job-card-wrapper').forEach(card => {
+    observer.observe(card);
+  });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   await loadFilters();
   await loadJobs();
+  
+  // Animate initial job cards
+  setTimeout(() => animateJobCards(), 100);
 
   [elCat, elLoc, elSt].forEach(el=>{
     el.addEventListener('change', ()=>{ resetAndLoad(); });

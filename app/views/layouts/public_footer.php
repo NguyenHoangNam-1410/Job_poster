@@ -16,8 +16,8 @@
           <ul class="space-y-2 text-sm">
             <li><a href="/Job_poster/public/" class="hover:text-blue-400 transition">Home</a></li>
             <li><a href="/Job_poster/public/jobs" class="hover:text-blue-400 transition">Jobs</a></li>
-            <li><a href="/Job_poster/public/#about" class="hover:text-blue-400 transition">About</a></li>
-            <li><a href="/Job_poster/public/#feedback" class="hover:text-blue-400 transition">Contact</a></li>
+            <li><a href="/Job_poster/public/about" class="hover:text-blue-400 transition">About</a></li>
+            <li><a href="/Job_poster/public/contact" class="hover:text-blue-400 transition">Contact</a></li>
           </ul>
         </div>
 
@@ -25,9 +25,9 @@
         <div>
           <h3 class="text-white font-semibold mb-3">Support</h3>
           <ul class="space-y-2 text-sm">
-            <li><a href="/Job_poster/public/#benefits" class="hover:text-blue-400 transition">Help Center</a></li>
-            <li><a href="/Job_poster/public/#policies" class="hover:text-blue-400 transition">Terms of Service</a></li>
-            <li><a href="/Job_poster/public/#policies" class="hover:text-blue-400 transition">Privacy Policy</a></li>
+            <li><a href="/Job_poster/public/help-center" class="hover:text-blue-400 transition">Help Center</a></li>
+            <li><a href="/Job_poster/public/terms-of-service" class="hover:text-blue-400 transition">Terms of Service</a></li>
+            <li><a href="/Job_poster/public/privacy-policy" class="hover:text-blue-400 transition">Privacy Policy</a></li>
           </ul>
         </div>
 
