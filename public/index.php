@@ -370,14 +370,33 @@ case '/ajax/jobs_related.php':
             include '../app/views/public/home.php';
             break;
 
-            case '/jobs':
-                include '../app/views/public/jobs/jobslisting.php';
-                break;
-    
-            case '/jobs/show':
-                include '../app/views/public/jobs/show.php';
-                break;
-    
+        case '/jobs':
+            include '../app/views/public/jobs/jobslisting.php';
+            break;
+
+        case '/jobs/show':
+            include '../app/views/public/jobs/show.php';
+            break;
+
+        case '/about':
+            include '../app/views/public/about.php';
+            break;
+
+        case '/contact':
+            include '../app/views/public/contact.php';
+            break;
+
+        case '/help-center':
+            include '../app/views/public/help-center.php';
+            break;
+
+        case '/terms-of-service':
+            include '../app/views/public/terms-of-service.php';
+            break;
+
+        case '/privacy-policy':
+            include '../app/views/public/privacy-policy.php';
+            break;
         
         default:
             http_response_code(404);
