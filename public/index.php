@@ -19,6 +19,14 @@ $path = parse_url($request, PHP_URL_PATH);
 // Remove the base path if Job_poster is in a subdirectory
 $path = str_replace(BASE_URL, '', $path);
 
+// Handle logout immediately (before access control checks)
+if ($path === '/logout') {
+    require_once '../app/controllers/AuthController.php';
+    $controller = new AuthController();
+    $controller->logout();
+    exit;
+}
+
 $found = false;
 $publicRoutes = ['/auth/login', '/auth/register',
                 '/auth/register/local', '/auth/login/facebook', '/auth/login/facebook/callback',
@@ -69,10 +77,6 @@ if ($path === '/auth/login/facebook') {
     require_once '../app/controllers/AuthController.php';
     $controller = new AuthController();
     $controller->facebookCallback();
-} elseif ($path === '/logout') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->logout();
 } elseif ($path === '/auth/login/google') {
     require_once '../app/controllers/AuthController.php';
     $controller = new AuthController();

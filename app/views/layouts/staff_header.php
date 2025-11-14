@@ -75,7 +75,7 @@ style.css" rel="stylesheet">
                 </div>
                 <div class="ml-3">
                     <p class="text-sm font-semibold"><?= $_SESSION['user']['name'] ?? 'Staff User' ?></p>
-                    <a href="/logout" class="text-xs opacity-75 hover:opacity-100">Log out</a>
+                    <a href="/Job_poster/public/logout" class="text-xs opacity-75 hover:opacity-100">Log out</a>
                 </div>
             </div>
         </div>

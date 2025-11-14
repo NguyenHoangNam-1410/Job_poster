@@ -87,9 +87,9 @@ class AuthController {
         session_unset();
         session_destroy();
         header("Cache-Control: no-cache, no-store, must-revalidate");
-        header("Location: /Job_poster/public/home");
+        header("Location: " . BASE_URL . "/");
         exit;
-}
+    }
 
     public function handleGoogleLogin() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -163,7 +163,7 @@ class AuthController {
                         header("Location: /Job_poster/public/admin/home");
                         break;
                     case 'Staff':
-                        header("Location: /staff/home");
+                        header("Location: /Job_poster/public/staff/home");
                         break;
                     case 'Employer':
                         header("Location: /Job_poster/public/employer/home");
