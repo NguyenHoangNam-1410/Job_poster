@@ -1,6 +1,6 @@
 <?php 
   $additionalCSS = [
-    "/css/auth/forgotPassword.css"
+    "/Job_poster/public/css/auth/forgotPassword.css"
   ];
 include __DIR__ . '/../layouts/public_header.php'; ?>
 <div class="container mx-auto py-12 px-4">
@@ -19,7 +19,7 @@ include __DIR__ . '/../layouts/public_header.php'; ?>
         </div>
         <?php unset($_SESSION['error-reset']); ?>
       <?php endif; ?>
-      <form method="POST" action="/auth/login/forgot-password/reset-password" class="space-y-4">
+      <form method="POST" action="/Job_poster/public/auth/login/forgot-password/reset-password" class="space-y-4">
         
         <div>
           <label for="password" class="block text-gray-700 font-medium mb-1">
@@ -47,19 +47,19 @@ include __DIR__ . '/../layouts/public_header.php'; ?>
         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md mb-2">
           Reset Password
         </button>
-        <a href="/auth/login" class="w-full block text-center bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 rounded-md">
+        <a href="/Job_poster/public/auth/login" class="w-full block text-center bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 rounded-md">
           Back to Login
         </a>
       </form>
 
       <p class="mt-6 text-center text-gray-600">
-        Don’t have an account? <a href="/register" class="text-blue-600 hover:underline">Register here</a>
+        Don’t have an account? <a href="/Job_poster/public/auth/register" class="text-blue-600 hover:underline">Register here</a>
       </p>
     </div>
   </div>
 </div>
 <?php
   $additionalJS = [
-    "/javascript/handleCredentials.js"
+    "/Job_poster/public/javascript/handleCredentials.js"
   ];
 include __DIR__ . '/../layouts/public_footer.php'; ?>

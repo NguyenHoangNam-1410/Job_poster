@@ -1,6 +1,6 @@
 <?php
 $pageTitle = "Job Details";
-$additionalCSS = ['/css/jobs-artistic.css'];
+$additionalCSS = ['/Job_poster/public/css/jobs-artistic.css'];
 $additionalJS  = [];
 require dirname(__DIR__, 2) . '/layouts/public_header.php';
 

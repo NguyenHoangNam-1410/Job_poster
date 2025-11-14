@@ -5,9 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $pageTitle ?? 'Admin Dashboard' ?></title>
-    <link href="/css/tailwind.min.css" rel="stylesheet">
-    <link href="/css/admin.css?v=<?= time() ?>" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet">
+    <link href="/Job_poster/public/css/
+tailwind.min.css" rel="stylesheet">
+    <link href="/Job_poster/public/css/
+admin.css?v=<?= time() ?>" rel="stylesheet">
+    <link href="/Job_poster/public/css/
+style.css" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100">

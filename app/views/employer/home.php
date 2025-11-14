@@ -27,11 +27,11 @@ require_once '../app/views/layouts/employer_header.php';
     <div class="bg-white rounded-xl shadow overflow-hidden mb-8">
       <div class="flex justify-between items-center px-6 py-4 border-b">
         <h2 class="text-lg font-semibold text-gray-800">My Company Profile</h2>
-        <a href="/employer/company" class="text-sm text-blue-600 hover:underline">Edit Profile</a>
+        <a href="/Job_poster/public/employer/company" class="text-sm text-blue-600 hover:underline">Edit Profile</a>
       </div>
       <div class="p-6">
         <div class="flex items-center space-x-6">
-          <img src="/uploads/company-logo.png" alt="Company Logo" class="w-16 h-16 rounded-lg object-cover bg-gray-200">
+          <img src="/Job_poster/public/uploads/company-logo.png" alt="Company Logo" class="w-16 h-16 rounded-lg object-cover bg-gray-200">
           <div>
             <h3 class="text-xl font-bold text-gray-800">TechNova Ltd</h3>
             <p class="text-gray-600 text-sm">Contact: employer@technova.com | (0123) 456 789</p>
@@ -45,7 +45,7 @@ require_once '../app/views/layouts/employer_header.php';
     <div class="bg-white rounded-xl shadow overflow-hidden">
       <div class="flex justify-between items-center px-6 py-4 border-b">
         <h2 class="text-lg font-semibold text-gray-800">Recent Job Posts</h2>
-        <a href="/employer/my-jobs" class="text-sm text-blue-600 hover:underline">Manage All</a>
+        <a href="/Job_poster/public/employer/my-jobs" class="text-sm text-blue-600 hover:underline">Manage All</a>
       </div>
       <table class="min-w-full text-sm">
         <thead class="bg-gray-50 border-b text-gray-600">

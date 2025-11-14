@@ -6,9 +6,9 @@
   <title><?= $pageTitle ?? 'WorkNest' ?></title>
   <link rel="icon" type="image/x-icon" href="images/favicon.png">
 
-  <link rel="stylesheet" href="/css/tailwind.min.css">
-  <link rel="stylesheet" href="/css/homepage.css">
-    <link href="/css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="/Job_poster/public/css/tailwind.min.css">
+  <link rel="stylesheet" href="/Job_poster/public/css/homepage.css">
+    <link href="/Job_poster/public/css/style.css" rel="stylesheet">
     <!--Tailwind V3 version -->
   <?php if (isset($additionalCSS)): ?>
     <?php foreach ($additionalCSS as $css): ?>
@@ -159,10 +159,26 @@
 
           <!-- Y2K Menu -->
           <div id="userMenu" class="y2k-menu">
-            <a href="/Job_poster/public/login.php">🔑 Login</a>
-            <a href="/Job_poster/public/register.php">📝 Register</a>
+            <a href="/Job_poster/public/auth/login">🔑 Login</a>
+            <a href="/Job_poster/public/auth/register">📝 Register</a>
           </div>
         </div>
       </div>
     </div>
   </header>
+
+  <script>
+    const avatarBtn = document.getElementById('avatarBtn');
+    const userMenu = document.getElementById('userMenu');
+
+    avatarBtn.addEventListener('click', () => {
+      userMenu.style.display = userMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Hide menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!avatarBtn.contains(e.target) && !userMenu.contains(e.target)) {
+        userMenu.style.display = 'none';
+      }
+    });
+  </script>

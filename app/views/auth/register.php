@@ -1,5 +1,5 @@
 <?php 
-  $additionalCSS = ["/css/auth/register.css"];
+  $additionalCSS = ["/Job_poster/public/css/auth/register.css"];
   include __DIR__ . '/../layouts/public_header.php';
 ?>
 
@@ -24,7 +24,7 @@
         <?php unset($_SESSION['register_error']); ?>
       <?php endif; ?>
 
-        <form method="POST" action="/auth/register/local">
+        <form method="POST" action="/Job_poster/public/auth/register/local">
           <div class="mb-3">
             <label for="name" class="form-label">Full Name<span class="text-red-500">*</span></label>
             <input type="text" class="form-control" id="name" name="name" required>
@@ -79,7 +79,7 @@
 
           <!-- Facebook Login -->
           <div class="flex justify-center my-3">
-            <a href="/auth/login/facebook"
+            <a href="/Job_poster/public/auth/login/facebook"
                class="flex items-center justify-center w-full max-w-xs bg-blue-700 hover:bg-blue-800 text-white font-medium py-2 rounded-full transition">
               <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.407.593 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.464.099 2.794.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.763v2.312h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.324-.593 1.324-1.326V1.326C24 .593 23.407 0 22.675 0z"/>
@@ -89,7 +89,7 @@
           </div>
 
           <p class="mt-6 text-center text-gray-700">
-            Already have an account? <a href="/auth/login" class="text-blue-600 hover:underline">Login here</a>
+            Already have an account? <a href="/Job_poster/public/auth/login" class="text-blue-600 hover:underline">Login here</a>
           </p>
         </form>
       </div>
@@ -98,6 +98,6 @@
 </div>
 
 <?php 
-  $additionalJS = ["/javascript/handleCredentials.js"];
+  $additionalJS = ["/Job_poster/public/javascript/handleCredentials.js"];
   include __DIR__ . '/../layouts/public_footer.php'; 
 ?>

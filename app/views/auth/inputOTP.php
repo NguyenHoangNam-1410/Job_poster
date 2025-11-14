@@ -1,7 +1,9 @@
 <?php 
   $additionalCSS = [
-    "/css/auth/inputOTP.css",
-    "/css/auth/forgotPassword.css"
+    "/Job_poster/public/css/
+auth/inputOTP.css",
+    "/Job_poster/public/css/
+auth/forgotPassword.css"
   ];
   include __DIR__ . '/../layouts/public_header.php'; 
 ?>

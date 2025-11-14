@@ -14,6 +14,10 @@ class UserDAO {
     public function create(User $user) {
         $sql = "INSERT INTO USERS (Name, Email, Password, Role, Avatar, is_active, auth_provider) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("UserDAO::create - Prepare failed: " . $this->db->error);
+            return false;
+        }
         
         $name = $user->getName();
         $email = $user->getEmail();
@@ -66,6 +70,10 @@ class UserDAO {
         }
 
         $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("UserDAO::getAll - Prepare failed: " . $this->db->error);
+            return [];
+        }
         
         if (!empty($params)) {
             $stmt->bind_param($types, ...$params);
@@ -111,6 +119,10 @@ class UserDAO {
         }
         
         $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("UserDAO::getTotalCount - Prepare failed: " . $this->db->error);
+            return 0;
+        }
         
         if (!empty($params)) {
             $stmt->bind_param($types, ...$params);
@@ -127,6 +139,10 @@ class UserDAO {
     public function getById($id) {
         $sql = "SELECT UID, Name, Email, Role, Avatar, is_active, created_at, updated_at, auth_provider FROM USERS WHERE UID = ?";
         $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("UserDAO::getById - Prepare failed: " . $this->db->error);
+            return null;
+        }
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -149,6 +165,10 @@ class UserDAO {
     public function getByEmail($email) {
         $sql = "SELECT UID, Name, Email, Role, Avatar, is_active, created_at, updated_at, auth_provider FROM USERS WHERE Email = ?";
         $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("UserDAO::getByEmail - Prepare failed: " . $this->db->error);
+            return null;
+        }
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -171,6 +191,10 @@ class UserDAO {
     public function getLocalUserByEmail($email) { 
         $sql = "SELECT UID, Name, Email, Role, Avatar, is_active, created_at, updated_at FROM USERS WHERE Email = ? AND auth_provider = 'local'";
         $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("UserDAO::getLocalUserByEmail - Prepare failed: " . $this->db->error);
+            return null;
+        }
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -190,14 +214,18 @@ class UserDAO {
     }
 
     public function getHashedPassword($email) {
-        $sql = "SELECT password FROM USERS WHERE Email = ?";
+        $sql = "SELECT Password FROM USERS WHERE Email = ?";
         $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("UserDAO::getHashedPassword - Prepare failed: " . $this->db->error);
+            return null;
+        }
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
         
         if ($row = $result->fetch_assoc()) {
-            return $row['password'];
+            return $row['Password'];
         }
         return null;
     }
@@ -205,6 +233,10 @@ class UserDAO {
     public function getAuthProvider($email) {
         $sql = "SELECT auth_provider FROM USERS WHERE Email = ?";
         $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("UserDAO::getAuthProvider - Prepare failed: " . $this->db->error);
+            return null;
+        }
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -227,6 +259,10 @@ class UserDAO {
         }
         
         $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("UserDAO::emailExists - Prepare failed: " . $this->db->error);
+            return false;
+        }
         $stmt->bind_param($types, ...$params);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -237,6 +273,10 @@ class UserDAO {
     public function createUserGoogle($email, $name, $avatar = null) {
         $sql = "INSERT INTO USERS (Email, Password, Role, Name, Avatar, auth_provider, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("UserDAO::createUserGoogle - Prepare failed: " . $this->db->error);
+            throw new Exception("Database prepare failed: " . $this->db->error);
+        }
 
         $password = password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT);
         $role = 'Employer';
@@ -255,6 +295,10 @@ class UserDAO {
     public function createUserFacebook($email, $name, $avatar = null) {
         $sql = "INSERT INTO USERS (Email, Password, Role, Name, Avatar, auth_provider, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("UserDAO::createUserFacebook - Prepare failed: " . $this->db->error);
+            throw new Exception("Database prepare failed: " . $this->db->error);
+        }
 
         $password = password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT);
         $role = 'Employer';
@@ -272,9 +316,13 @@ class UserDAO {
 
     // UPDATE PASSWORD BY EMAIL
     public function updatePasswordByEmail($email, $password) {
-        $sql = "UPDATE USERS SET password = ? WHERE Email = ?";
+        $sql = "UPDATE USERS SET Password = ? WHERE Email = ?";
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("UserDAO::updatePasswordByEmail - Prepare failed: " . $this->db->error);
+            return false;
+        }
         $stmt->bind_param("ss", $hashedPassword, $email);
         return $stmt->execute();
     }

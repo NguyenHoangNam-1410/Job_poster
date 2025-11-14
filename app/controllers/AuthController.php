@@ -25,15 +25,15 @@ class AuthController {
             if($this->userService->getUserByEmail($email)) {
                 if($this->userService->getAuthProvider($email) === 'google') {
                     $_SESSION['register_error'] = 'Email already exists with Google. Please login with Google.';
-                    header("Location: /auth/register");
+                    header("Location: " . BASE_URL . "/auth/register");
                     exit;
                 } elseif($this->userService->getAuthProvider($email) === 'facebook') {
                     $_SESSION['register_error'] = 'Email already exists with Facebook. Please login with Facebook.';
-                    header("Location: /auth/register");
+                    header("Location: " . BASE_URL . "/auth/register");
                     exit;
                 }
                 $_SESSION['register_error'] = 'Email already exists. Please use a different email or login.';
-                header("Location: /auth/register");
+                header("Location: " . BASE_URL . "/auth/register");
                 exit;
             }
             $rules = [
@@ -47,14 +47,14 @@ class AuthController {
             foreach ($rules as $rule) {
                 if (!preg_match($rule, $password)) {
                     $_SESSION['register_error'] = 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.';
-                    header("Location: /auth/register");
+                    header("Location: " . BASE_URL . "/auth/register");
                     exit;
                 }
             }
 
             if($password !== $confirmPassword) {
                 $_SESSION['register_error'] = 'Your confirmation password do not match.';
-                header("Location: /auth/register");
+                header("Location: " . BASE_URL . "/auth/register");
                 exit;
             }
 
@@ -66,7 +66,7 @@ class AuthController {
             ];
             if(!$this->userService->registerUser($data)) {
                 $_SESSION['register_error'] = 'Registration failed. Please try again.';
-                header("Location: /auth/register");
+                header("Location: " . BASE_URL . "/auth/register");
                 exit;
             }
             $user = $this->userService->getUserByEmail($email);
@@ -77,7 +77,7 @@ class AuthController {
                 'role' => $user->getRole(),
                 'auth_provider' => $user->getAuthProvider(),
             ];
-            header("Location: /");
+            header("Location: " . BASE_URL . "/");
             exit;
         }
     }
@@ -87,7 +87,7 @@ class AuthController {
         session_unset();
         session_destroy();
         header("Cache-Control: no-cache, no-store, must-revalidate");
-        header("Location: /public/home");
+        header("Location: /Job_poster/public/home");
         exit;
 }
 
@@ -109,13 +109,13 @@ class AuthController {
                 $user = $this->userService->getUserByEmail($email);
                 $currentUrl = $_SERVER['REQUEST_URI'];
                 if($user && $user->getAuthProvider() !== 'google') {
-                    if($currentUrl === "/auth/login") {
+                    if($currentUrl === "/Job_poster/public/auth/login") {
                         $_SESSION['login_error'] = 'Email already exists. Please use a different email or login.';
-                        header("Location: /auth/login");
+                        header("Location: " . BASE_URL . "/auth/login");
                         exit;
                     } else {
                         $_SESSION['register_error'] = 'Email already exists. Please use a different email or login.';
-                        header("Location: /auth/register");
+                        header("Location: " . BASE_URL . "/auth/register");
                         exit;
                     }
                 }
@@ -130,7 +130,7 @@ class AuthController {
                     'auth_provider' => $user->getAuthProvider(),
                     'avatar' => $user->getAvatar()
                 ];
-                header("Location: /");
+                header("Location: " . BASE_URL . "/");
                 exit;
                 
             } else {
@@ -160,22 +160,22 @@ class AuthController {
                 ];
                 switch ($user->getRole()) {
                     case 'Admin':
-                        header("Location: /admin/home");
+                        header("Location: /Job_poster/public/admin/home");
                         break;
                     case 'Staff':
                         header("Location: /staff/home");
                         break;
                     case 'Employer':
-                        header("Location: /employer/home");
+                        header("Location: /Job_poster/public/employer/home");
                         break;
                     default:
-                        header("Location: /public/home");
+                        header("Location: /Job_poster/public/home");
                 }
                 exit;
             } else {
                 $_SESSION['login_error'] = 'Invalid email or password.';
                 // Redirect back to login page
-                header("Location: /auth/login");
+                header("Location: " . BASE_URL . "/auth/login");
                 exit;
             }
         }
@@ -216,13 +216,13 @@ class AuthController {
         $user = $this->userService->getUserByEmail($email);
         $currentUrl = $_SERVER['REQUEST_URI'];
         if($user && $user->getAuthProvider() !== 'facebook') {
-            if($currentUrl === "/auth/login") {
+            if($currentUrl === "/Job_poster/public/auth/login") {
                 $_SESSION['login_error'] = 'Email already exists. Please use a different email or login.';
-                header("Location: /auth/login");
+                header("Location: " . BASE_URL . "/auth/login");
                 
             } else {
                 $_SESSION['register_error'] = 'Email already exists. Please use a different email or login.';
-                header("Location: /auth/register");
+                header("Location: " . BASE_URL . "/auth/register");
             }
         }
         
@@ -240,7 +240,7 @@ class AuthController {
             'avatar' => $user->getAvatar()
         ];
 
-        header("Location: /");
+        header("Location: " . BASE_URL . "/");
         exit;
     }
 
@@ -257,38 +257,38 @@ class AuthController {
             if($user) {
                 if($this->userService->getAuthProvider($email) === 'google') {
                     $error = 'This email is registered with Google. We cannot reset your password with Google.';
-                    if($currentUrl === "/auth/login/forgot-password/resetExpired") {
+                    if($currentUrl === "/Job_poster/public/auth/login/forgot-password/resetExpired") {
                         $_SESSION['error-expired'] = $error;
-                        header("Location: /auth/login/forgot-password/resetExpired");
+                        header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
                     } else{
                         $_SESSION['error-message'] = $error;
-                        header("Location: /auth/login/forgot-password");
+                        header("Location: " . BASE_URL . "/auth/login/forgot-password");
                     }
                     exit;
                 }
                 if($this->userService->getAuthProvider($email) === 'facebook') {
                     $error = 'This email is registered with Facebook. We cannot reset your password with Facebook.';
                     
-                    if($currentUrl === "/auth/login/forgot-password/resetExpired") {
+                    if($currentUrl === "/Job_poster/public/auth/login/forgot-password/resetExpired") {
                         $_SESSION['error-expired'] = $error;
-                        header("Location: /auth/login/forgot-password/resetExpired");
+                        header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
                     } else{
                         $_SESSION['error-message'] = $error;
-                        header("Location: /auth/login/forgot-password");
+                        header("Location: " . BASE_URL . "/auth/login/forgot-password");
                     }
                     exit;
                 }
                 $this->userService->generateAndSendOTP($email);
-                header("Location: /auth/login/forgot-password/input-otp");
+                header("Location: " . BASE_URL . "/auth/login/forgot-password/input-otp");
                 exit;
             } else {
                 $error = 'No email found for that account.';
-                if($currentUrl === "/auth/login/forgot-password/resetExpired") {
+                if($currentUrl === "/Job_poster/public/auth/login/forgot-password/resetExpired") {
                     $_SESSION['error-expired'] = $error;
-                    header("Location: /auth/login/forgot-password/resetExpired");
+                    header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
                 } else{
                     $_SESSION['error-message'] = $error;
-                    header("Location: /auth/login/forgot-password");
+                    header("Location: " . BASE_URL . "/auth/login/forgot-password");
                 }
                 exit;
             }
@@ -297,7 +297,7 @@ class AuthController {
     public function showVerifyOTPForm() {
         $email = $_SESSION['otp-email'] ?? null;
         if (!$email) {
-            header("Location: /auth/login/forgot-password/resetExpired");
+            header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
             exit;
         }
         require_once __DIR__ . '/../views/auth/inputOtp.php';
@@ -306,7 +306,7 @@ class AuthController {
     public function verifyPasswordResetOTP() {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!isset($_SESSION['otp-email'])) {
-                header("Location: /auth/login/forgot-password/resetExpired");
+                header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
                 exit;
             }
             $otpParts = [
@@ -318,28 +318,28 @@ class AuthController {
             ];
             $otp = implode('', $otpParts); // Combine parts to form full OTP
             if ($this->userService->verifyOTP($otp)) {
-                header("Location: /auth/login/forgot-password/reset-password-form");
+                header("Location: " . BASE_URL . "/auth/login/forgot-password/reset-password-form");
                 exit;
             } else {
                 $_SESSION['error-OTP'] = 'Invalid OTP. Please try again.';
-                header("Location: /auth/login/forgot-password/input-otp");
+                header("Location: " . BASE_URL . "/auth/login/forgot-password/input-otp");
                 exit;
             }
-            header("Location: /auth/login/forgot-password/reset-password-form");
+            header("Location: " . BASE_URL . "/auth/login/forgot-password/reset-password-form");
             exit;
         }
     }
     
     public function showResetPasswordForm() {
         if(!$_SESSION['reset-email']) {
-            header("Location: /auth/login/forgot-password/resetExpired");
+            header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
             exit;
         }
         $expiry = $_SESSION['reset-expire'] ?? '';
         if(time() > $expiry) {
             unset($_SESSION['reset-email']);
             unset($_SESSION['reset-expire']);
-            header("Location: /auth/login/forgot-password/resetExpired");
+            header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
             exit;
         }
         require_once __DIR__ . '/../views/auth/resetPassword.php';
@@ -353,18 +353,18 @@ class AuthController {
             if(time() > $expiry) {
                 unset($_SESSION['reset-email']);
                 unset($_SESSION['reset-expire']);
-                header("Location: /auth/login/forgot-password/resetExpired");
+                header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
                 exit;
             }
             if(!$email) {
-                header("Location: /auth/login/forgot-password/resetExpired");
+                header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
                 exit;
             }
             $newPassword = $_POST['password'] ?? '';
             $confirmPassword = $_POST['confirm_password'] ?? '';
             if($newPassword !== $confirmPassword) {
                 $_SESSION['error-reset'] = 'Your confirmed password do not match.';
-                header("Location: /auth/login/forgot-password/reset-password-form");
+                header("Location: " . BASE_URL . "/auth/login/forgot-password/reset-password-form");
                 exit;
             }
             $rules = [
@@ -377,20 +377,20 @@ class AuthController {
             foreach ($rules as $rule) {
                 if (!preg_match($rule, $newPassword)) {
                     $_SESSION['error-reset'] = 'Password must be at least 8 characters long and contain at least one number, one uppercase letter, one lowercase letter, and one special character.';
-                    header("Location: /auth/login/forgot-password/reset-password-form");
+                    header("Location: " . BASE_URL . "/auth/login/forgot-password/reset-password-form");
                     exit;
                 }
             }
             error_log("Resetting password for email: " . $email);
             if(!$this->userService->updatePasswordByEmail($email, $newPassword)) {
                 $_SESSION['error-reset'] = 'Something went wrong. Please try again.';
-                header("Location: /auth/login/forgot-password/reset-password-form");
+                header("Location: " . BASE_URL . "/auth/login/forgot-password/reset-password-form");
                 exit;
             };
             // Destroy session
             unset($_SESSION['reset-email']);
             unset($_SESSION['reset-expire']);
-            header("Location: /auth/login");
+            header("Location: " . BASE_URL . "/auth/login");
             exit;
         }
     }

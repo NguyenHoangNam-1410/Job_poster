@@ -8,7 +8,7 @@ class Database
     private $servername = "localhost";
     private $username = "root";
     private $db_name = "job_poster";
-    private $db_password = "root";
+    private $db_password = "";
 
     public function __construct()
     {

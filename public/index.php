@@ -7,6 +7,7 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..'); // points to project root
 $dotenv->load();
 
+define('BASE_URL', '/Job_poster/public');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 session_start();
@@ -16,7 +17,7 @@ $request = $_SERVER['REQUEST_URI'];
 $path = parse_url($request, PHP_URL_PATH);
 
 // Remove the base path if Job_poster is in a subdirectory
-$path = str_replace('/Job_poster/public', '', $path);
+$path = str_replace(BASE_URL, '', $path);
 
 $found = false;
 $publicRoutes = ['/auth/login', '/auth/register',
@@ -24,7 +25,7 @@ $publicRoutes = ['/auth/login', '/auth/register',
                 '/auth/login/google','/auth/login/forgot-password', '/auth/login/local', '/contact',
                 '/auth/login/forgot-password/send-otp', '/auth/login/forgot-password/input-otp',
                 '/auth/login/forgot-password/verify-otp', '/auth/login/forgot-password/reset-password-form',
-                '/auth/login/forgot-password/reset-expired', '/check-email', '/public/home', '/jobs', '/jobs/show',
+                '/auth/login/forgot-password/reset-expired', '/check-email', '/public/home', '/jobs', '/jobs/show/:id',
                 '/', '/auth/login/forgot-password/reset-password'];
 
 $isPublic = false;
@@ -333,13 +334,11 @@ elseif ($path === '/profile') {
 } 
 
 else {
-
-    
     // Public routes
 
-    if (preg_match('#^/jobs/show/(\d+)$#', $path, $m) || preg_match('#^/jobs/(\d+)$#', $path, $m)) {
+    if (preg_match('/^\/jobs\/show\/(\d+)$/', $path, $m) || preg_match('#^/jobs/(\d+)$#', $path, $m)) {
         require_once '../app/controllers/PublicJobController.php';
-        (new PublicJobController())->show((int)$m[1]);
+        (new PublicJobController())->show($m[1]);
         exit;
     }
 
