@@ -15,7 +15,7 @@ UI/UX COMPONENTS:
 3. Employer: 2 main views
 -Create edit their own company profile (name, logo, contact, website, 
 description)
--Job manage (the job belongs to the creater company)
+-Job manage (the job belongs to the their own company)
 -Each account belongs to one company
 -Report posting
 
@@ -30,7 +30,7 @@ description)
 
 6. Design
 -Header: Logo, title
--Navbar: Home, About Us
+-Navbar: Home, About
 -Footer: Contact, Policy, Copyright, Hiring (optional)
 
 -Admin navbar: Admin
@@ -65,10 +65,18 @@ o Application Deadline
 o Job Category (must belong to an existing category) 
 
 -Job category always form as dropdown list, ref to job category where admin create
--Only show aproved jobs to guest and employer
--Job is draft state only show privately to employer who created it
 -Admin can create new or delete other admin, but cant edit other admins. Can edit their own info
 -Admin can create, edit and delete staff, but cant create new guest, or new employer
 
+JOB STATUS BUSINESS LOGIC:
+-draft: Only employer who create the job can see, save as draft that they can edit later, when hit post, the state change to pending
+-pending: Visible to employer who created the job, admin, staff. Employer can edit all job infos and resubmit. Allow admin and staff checkout the job to approve or reject.
+-reject: Visible to employer who created the job, admin, staff. Admin and staff disagree the job post, so give reason and return it to employer, the employer can see why the job got discarded, edits the info and resubmits to change status back to pending
+-approve: Visible to all. Admin and staff agree the job so the job now go public. Employer can only change state of the job, no infos can be change, the state is either overdue or delete
+-overdue: Visible to all. The job might be overdue itself(auto change state handled), or the job got enough candidate so employer may want to close the job early. When overdue, the job can be set back to approve.
+-soft delete: Visible only to admin and staff. They can track suspicious activity. 
 
-
+DELETE LOGIC
+-draft: employer => hard delete
+-pending, approve, reject, overdue: employer => soft delete, admin and staff => hard delete
+-soft delete: => admin and staff => hard delete
