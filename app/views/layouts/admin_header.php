@@ -5,12 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $pageTitle ?? 'Admin Dashboard' ?></title>
-    <link href="/Job_poster/public/css/
-tailwind.min.css" rel="stylesheet">
-    <link href="/Job_poster/public/css/
-admin.css?v=<?= time() ?>" rel="stylesheet">
-    <link href="/Job_poster/public/css/
-style.css" rel="stylesheet">
+    <link href="/Job_poster/public/css/tailwind.min.css" rel="stylesheet">
+    <link href="/Job_poster/public/css/admin.css?v=<?= time() ?>" rel="stylesheet">
+    <link href="/Job_poster/public/css/style.css" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100">
@@ -132,19 +129,57 @@ style.css" rel="stylesheet">
                 <span class="menu-text">Feedback</span>
             </a>
         </nav>
-        <div class="sidebar-footer px-5 py-4 bg-black bg-opacity-20 border-t border-white border-opacity-10">
-            <div class="flex items-center">
-                <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
-                    <img src="<?= $_SESSION['user']['avatar'] ?? '/images/profile.png' ?>" 
-                         alt="Admin Avatar" 
-                         class="w-full h-full rounded-full">
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm font-semibold"><?= $_SESSION['user']['name'] ?? 'Admin User' ?></p>
-                    <a href="/Job_poster/public/logout" class="text-xs opacity-75 hover:opacity-100">Log out</a>
+    </aside>
+
+    <!-- Top Navigation Bar -->
+    <nav class="top-navbar">
+        <div class="navbar-container">
+            <!-- Left: Website Name -->
+            <div class="navbar-brand">
+                <a href="/Job_poster/public/" class="brand-link">
+                    Job Poster
+                </a>
+            </div>
+
+            <!-- Right: Navigation Links and User Profile -->
+            <div class="navbar-right">
+                <!-- Navigation Links -->
+                <a href="/Job_poster/public/" class="nav-link">
+                    <?= Icons::home() ?>
+                    <span>Home</span>
+                </a>
+                <a href="/Job_poster/public/about" class="nav-link">
+                    <?= Icons::info() ?>
+                    <span>About Us</span>
+                </a>
+
+                <!-- User Profile Dropdown -->
+                <div class="user-profile-container">
+                    <button class="user-profile-button" onclick="toggleUserDropdown()">
+                        <img src="<?= htmlspecialchars($userAvatar) ?>" 
+                             alt="Avatar" 
+                             class="user-avatar">
+                        <span class="user-name"><?= htmlspecialchars($userName) ?></span>
+                        <svg class="dropdown-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="/Job_poster/public/profile" class="dropdown-item">
+                            <?= Icons::settings() ?>
+                            <span>Edit Profile</span>
+                        </a>
+                        <a href="/Job_poster/public/logout" class="dropdown-item logout">
+                            <?= Icons::logout() ?>
+                            <span>Logout</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </aside>
+    </nav>
+
     <!-- Main Content -->
     <main class="main-content" id="mainContent">
