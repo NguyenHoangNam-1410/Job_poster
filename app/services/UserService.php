@@ -59,7 +59,14 @@ class UserService {
     public function verifyPasswordLogin($email, $password) {
         $hashedPassword = $this->userDAO->getHashedPassword($email);
         if($hashedPassword){
-            return password_verify($password, $hashedPassword) || $hashedPassword == $password; //for testing purposes
+            // Check if it's a bcrypt hash (starts with $2y$)
+            if (strpos($hashedPassword, '$2y$') === 0 || strpos($hashedPassword, '$2a$') === 0) {
+                // It's hashed, use password_verify
+                return password_verify($password, $hashedPassword);
+            } else {
+                // For testing: plain text comparison (REMOVE IN PRODUCTION!)
+                return $hashedPassword === $password;
+            }
         }
         return false;
     }
