@@ -9,9 +9,7 @@ class UserController {
     }
 
     private function getCurrentUserId() {
-        // TODO: Replace with actual session-based user ID when authentication is implemented
-        // For now, return 1 as placeholder admin user
-        return $_SESSION['user_id'] ?? 1;
+        return $_SESSION['user']['id'] ?? null;
     }
 
     public function index() {

@@ -476,4 +476,12 @@ class Icons
     {
         return self::shield_check($classes);
     }
+    public static function flag($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M5 5v14M5 5l7-2 7 2-7 2-7-2z"></path>
+        </svg>';
+    }
 }

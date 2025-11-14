@@ -1,6 +1,10 @@
 <?php $pageTitle = 'Job Detail - ' . $job->getTitle(); ?>
 <?php 
-include __DIR__ . '/../../layouts/admin_header.php';
+if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
+    require_once '../app/views/layouts/admin_header.php';
+} else{
+    require_once '../app/views/layouts/staff_header.php';
+}
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
@@ -257,4 +261,11 @@ function hideApproveConfirmation() {
 }
 </script>
 
-<?php include __DIR__ . '/../../layouts/admin_footer.php'; ?>
+<?php 
+if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
+    require_once '../app/views/layouts/admin_footer.php';
+} else{
+    require_once '../app/views/layouts/staff_footer.php';
+}
+?>
+
