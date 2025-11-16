@@ -80,7 +80,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     <thead>
                         <tr class="bg-gray-50">
                             <th class="table-header">ID</th>
-                            <th class="table-header">Username</th>
+                            <th class="table-header">User</th>
                             <th class="table-header">Email</th>
                             <th class="table-header">Role</th>
                             <th class="table-header">Actions</th>
@@ -93,7 +93,14 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                     <?= $user->getId() ?>
                                 </td>
                                 <td class="table-cell">
-                                    <?= htmlspecialchars($user->getUsername()) ?>
+                                    <div class="flex items-center gap-3">
+                                        <img 
+                                            src="<?= !empty($user->getAvatar()) ? htmlspecialchars($user->getAvatar()) : '/Job_poster/public/image/avatar/default.svg' ?>" 
+                                            alt="Avatar" 
+                                            class="w-10 h-10 rounded-full object-cover border border-gray-200"
+                                        >
+                                        <span><?= htmlspecialchars($user->getUsername()) ?></span>
+                                    </div>
                                 </td>
                                 <td class="table-cell">
                                     <?= htmlspecialchars($user->getEmail()) ?>

@@ -69,6 +69,13 @@ class UserController {
     public function edit($id) {
         try {
             $currentUserId = $this->getCurrentUserId();
+            
+            // Redirect to profile if user is editing themselves
+            if ($id == $currentUserId) {
+                header('Location: /Job_poster/public/profile');
+                exit;
+            }
+            
             $user = $this->userService->getUserById($id);
             
             if (!$user) {
@@ -95,6 +102,35 @@ class UserController {
             try {
                 $currentUserId = $this->getCurrentUserId();
                 $success = $this->userService->updateUser($id, $_POST, $currentUserId);
+                
+                // If updating an employer, also update company information
+                $user = $this->userService->getUserById($id);
+                if ($user && $user->getRole() === 'Employer' && isset($_POST['employer_id'])) {
+                    require_once __DIR__ . '/../dao/EmployerDAO.php';
+                    $employerDAO = new EmployderDAO();
+                    
+                    $employerData = [
+                        'company_name' => $_POST['company_name'] ?? '',
+                        'website' => $_POST['website'] ?? null,
+                        'contact_person' => $_POST['contact_person'] ?? null,
+                        'contact_phone' => $_POST['contact_phone'] ?? null,
+                        'contact_email' => $_POST['contact_email'] ?? null,
+                        'description' => $_POST['description'] ?? null,
+                        'logo' => null // Will be handled separately
+                    ];
+                    
+                    // Handle logo deletion
+                    if (isset($_POST['delete_logo']) && $_POST['delete_logo'] == '1') {
+                        $employerData['logo'] = '/Job_poster/public/image/avatar/default.svg';
+                    } else {
+                        // Keep existing logo
+                        $employer = $employerDAO->getByUserId($id);
+                        $employerData['logo'] = $employer ? $employer->getLogo() : null;
+                    }
+                    
+                    $employerDAO->update($_POST['employer_id'], $employerData);
+                }
+                
                 if ($success) {
                     header('Location: /Job_poster/public/users');
                     exit;
@@ -220,16 +256,20 @@ class UserController {
                 $data['avatar'] = $currentUser->getAvatar();
             }
 
-            // Handle password change if provided
-            if (!empty($_POST['old_password']) || !empty($_POST['new_password']) || !empty($_POST['confirm_password'])) {
-                $oldPassword = $_POST['old_password'] ?? '';
-                $newPassword = $_POST['new_password'] ?? '';
-                $confirmPassword = $_POST['confirm_password'] ?? '';
-
-                if (empty($oldPassword)) {
-                    throw new Exception("Current password is required to change password.");
+            // Handle password change only if all three fields are provided
+            $oldPassword = trim($_POST['old_password'] ?? '');
+            $newPassword = trim($_POST['new_password'] ?? '');
+            $confirmPassword = trim($_POST['confirm_password'] ?? '');
+            
+            $passwordFieldsFilled = array_filter([$oldPassword, $newPassword, $confirmPassword], fn($p) => !empty($p));
+            
+            if (count($passwordFieldsFilled) > 0) {
+                // If any field is filled, all three must be filled
+                if (count($passwordFieldsFilled) < 3) {
+                    throw new Exception("To change password, all three password fields must be filled.");
                 }
-
+                
+                // All three fields are provided, proceed with password change
                 $this->userService->updatePassword($currentUserId, $oldPassword, $newPassword, $confirmPassword);
             }
 

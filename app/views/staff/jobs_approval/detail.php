@@ -138,8 +138,8 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
             </div>
             <?php endif; ?>
 
-            <!-- Previous Review (if rejected) -->
-            <?php if (!empty($previousReview)): ?>
+            <!-- Previous Review (if not currently rejected - shows history) -->
+            <?php if (!empty($previousReview) && $job->getStatus() !== 'rejected'): ?>
             <div class="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
                 <h3 class="text-sm font-medium text-yellow-800 mb-2">Previous Review</h3>
                 <div class="text-sm text-yellow-900">
@@ -155,88 +155,145 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
             <?php endif; ?>
         </div>
 
-        <!-- Action Buttons -->
+        <!-- Action Buttons / Review Information -->
         <div class="bg-white rounded-lg shadow-md p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Review Actions</h3>
-            
-            <div class="flex gap-4">
-                <!-- Approve Button -->
-                <button 
-                    onclick="showApproveConfirmation()"
-                    class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md transition">
-                    <?= Icons::check('w-5 h-5 mr-2') ?>
-                    Approve Job
-                </button>
-
-                <!-- Reject Button -->
-                <button 
-                    onclick="showRejectForm()"
-                    class="inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                    Reject Job
-                </button>
-
-                <!-- Back Button -->
-                <a href="/Job_poster/public/approvals"
-                    class="inline-flex items-center px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-md transition">
-                    Back to List
-                </a>
-            </div>
-
-            <!-- Reject Form (Hidden by default) -->
-            <div id="rejectForm" class="hidden mt-6 p-4 bg-red-50 border border-red-200 rounded-md">
-                <h4 class="font-medium text-red-900 mb-3">Rejection Reason</h4>
-                <form id="rejectionForm" method="POST" action="/Job_poster/public/approvals/reject/<?= $job->getId() ?>">
-                    <textarea 
-                        name="reason" 
-                        rows="4" 
-                        required
-                        placeholder="Please provide a reason for rejecting this job posting..."
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                    ></textarea>
-                    <div class="mt-3 flex gap-2">
-                        <button 
-                            type="submit"
-                            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md">
-                            Confirm Rejection
-                        </button>
-                        <button 
-                            type="button"
-                            onclick="hideRejectForm()"
-                            class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium rounded-md">
-                            Cancel
-                        </button>
+            <?php if ($job->getStatus() === 'rejected'): ?>
+                <!-- Show Rejection Information -->
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Rejection Details</h3>
+                
+                <?php if (!empty($previousReview)): ?>
+                    <div class="p-4 bg-red-50 border border-red-200 rounded-md">
+                        <div class="space-y-3">
+                            <div class="flex items-start">
+                                <svg class="w-6 h-6 text-red-600 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-red-900 text-lg mb-3">This job posting has been rejected</h4>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <p class="text-sm font-medium text-red-800">Rejected By:</p>
+                                            <p class="text-red-900">
+                                                <?= !empty($previousReview['reviewer_name']) ? htmlspecialchars($previousReview['reviewer_name']) : 'Unknown' ?>
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-red-800">Rejection Date:</p>
+                                            <p class="text-red-900"><?= date('F d, Y \a\t H:i', strtotime($previousReview['created_at'])) ?></p>
+                                        </div>
+                                    </div>
+                                    
+                                    <?php if ($previousReview['reason']): ?>
+                                        <div>
+                                            <p class="text-sm font-medium text-red-800 mb-2">Rejection Reason:</p>
+                                            <div class="p-3 bg-white rounded border border-red-300 text-gray-900">
+                                                <?= nl2br(htmlspecialchars($previousReview['reason'])) ?>
+                                            </div>
+                                        </div>
+                                    <?php else: ?>
+                                        <p class="text-sm text-red-700 italic">No reason provided</p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </form>
-            </div>
-
-            <!-- Approve Form (Hidden by default) -->
-            <div id="approveConfirmation" class="hidden mt-6 p-4 bg-green-50 border border-green-200 rounded-md">
-                <h4 class="font-medium text-green-900 mb-3">Approval Reason/Notes</h4>
-                <form method="POST" action="/Job_poster/public/approvals/approve/<?= $job->getId() ?>">
-                    <textarea 
-                        name="reason" 
-                        rows="4" 
-                        placeholder="Optional: Add approval notes or comments..."
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    ></textarea>
-                    <div class="mt-3 flex gap-2">
-                        <button 
-                            type="submit"
-                            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md">
-                            Confirm Approval
-                        </button>
-                        <button 
-                            type="button"
-                            onclick="hideApproveConfirmation()"
-                            class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium rounded-md">
-                            Cancel
-                        </button>
+                <?php else: ?>
+                    <div class="p-4 bg-red-50 border border-red-200 rounded-md">
+                        <p class="text-red-900">This job has been rejected, but no review details are available.</p>
                     </div>
-                </form>
-            </div>
+                <?php endif; ?>
+                
+                <div class="mt-4">
+                    <a href="/Job_poster/public/approvals"
+                        class="inline-flex items-center px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-md transition">
+                        Back to List
+                    </a>
+                </div>
+                
+            <?php else: ?>
+                <!-- Show Action Buttons for Pending Jobs -->
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Review Actions</h3>
+                
+                <div class="flex gap-4">
+                    <!-- Approve Button -->
+                    <button 
+                        onclick="showApproveConfirmation()"
+                        class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md transition">
+                        <?= Icons::check('w-5 h-5 mr-2') ?>
+                        Approve Job
+                    </button>
+
+                    <!-- Reject Button -->
+                    <button 
+                        onclick="showRejectForm()"
+                        class="inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        Reject Job
+                    </button>
+
+                    <!-- Back Button -->
+                    <a href="/Job_poster/public/approvals"
+                        class="inline-flex items-center px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-md transition">
+                        Back to List
+                    </a>
+                </div>
+
+                <!-- Reject Form (Hidden by default) -->
+                <div id="rejectForm" class="hidden mt-6 p-4 bg-red-50 border border-red-200 rounded-md">
+                    <h4 class="font-medium text-red-900 mb-3">Rejection Reason</h4>
+                    <form id="rejectionForm" method="POST" action="/Job_poster/public/approvals/reject/<?= $job->getId() ?>">
+                        <textarea 
+                            name="reason" 
+                            rows="4" 
+                            required
+                            placeholder="Please provide a reason for rejecting this job posting..."
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        ></textarea>
+                        <div class="mt-3 flex gap-2">
+                            <button 
+                                type="submit"
+                                class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md">
+                                Confirm Rejection
+                            </button>
+                            <button 
+                                type="button"
+                                onclick="hideRejectForm()"
+                                class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium rounded-md">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Approve Form (Hidden by default) -->
+                <div id="approveConfirmation" class="hidden mt-6 p-4 bg-green-50 border border-green-200 rounded-md">
+                    <h4 class="font-medium text-green-900 mb-3">Approval Reason/Notes</h4>
+                    <form method="POST" action="/Job_poster/public/approvals/approve/<?= $job->getId() ?>">
+                        <textarea 
+                            name="reason" 
+                            rows="4" 
+                            placeholder="Optional: Add approval notes or comments..."
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        ></textarea>
+                        <div class="mt-3 flex gap-2">
+                            <button 
+                                type="submit"
+                                class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md">
+                                Confirm Approval
+                            </button>
+                            <button 
+                                type="button"
+                                onclick="hideApproveConfirmation()"
+                                class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium rounded-md">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

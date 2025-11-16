@@ -10,7 +10,7 @@ class FeedbackController {
 
     private function getCurrentUserId() {
         // TODO: Replace with actual session-based user ID when authentication is implemented
-        return $_SESSION['user_id'] ?? 1;
+        return $_SESSION['user']['id'];
     }
 
     public function index() {
@@ -46,7 +46,14 @@ class FeedbackController {
             'date_to' => $dateTo
         ];
 
-        require_once __DIR__ . '/../views/admin/feedbacks/list.php';
+        // Determine which layout to use based on user role
+        $userRole = $_SESSION['user']['role'] ?? 'Guest';
+        
+        if ($userRole === 'Staff') {
+            require_once __DIR__ . '/../views/staff/feedbacks/list.php';
+        } else {
+            require_once __DIR__ . '/../views/admin/feedbacks/list.php';
+        }
     }
 
     public function delete($id) {

@@ -25,9 +25,9 @@
     require_once __DIR__ . '/../../helpers/Icons.php';
     
     // Get current user's avatar from database
-    $currentUserId = $_SESSION['user_id'] ?? 1;
+    $currentUserId = $_SESSION['user']['id'] ?? null;
     $userAvatar = '/Job_poster/public/image/avatar/default.svg'; // Default
-    $userName = $_SESSION['user']['Name'] ?? 'Admin';
+    $userName = $_SESSION['user']['name'] ?? 'Admin';
     
     if ($currentUserId) {
         require_once __DIR__ . '/../../dao/UserDAO.php';
@@ -52,7 +52,7 @@
         <div class="sidebar-header">
             <div class="header-content-wrapper">
                 <div class="header-content">
-                    <a href="/Job_poster/public/" class="hover:opacity-80 transition">
+                    <a href="/Job_poster/public/statistics" class="hover:opacity-80 transition">
                         <h2 class="text-xl font-bold sidebar-title">Admin Panel</h2>
                     </a>
                     <p class="text-xs mt-1 opacity-75 sidebar-subtitle">System Management</p>
@@ -66,6 +66,15 @@
         </div>
 
         <nav class="py-4">
+            <!-- Statistics -->
+            <div class="menu-section">Dashboard</div>
+            <a href="/Job_poster/public/statistics"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/statistics') !== false ? 'active' : '' ?>"
+                data-tooltip="Statistics">
+                <?= Icons::statistic() ?>
+                <span class="menu-text">Dashboard</span>
+            </a>
+
             <!-- User Management -->
             <div class="menu-section">User Management</div>
             <a href="/Job_poster/public/users"
@@ -109,15 +118,6 @@
                 data-tooltip="History">
                 <?= Icons::history() ?>
                 <span class="menu-text">History</span>
-            </a>
-
-            <!-- Statistics -->
-            <div class="menu-section">Statistics</div>
-            <a href="/Job_poster/public/statistics"
-                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/statistics') !== false ? 'active' : '' ?>"
-                data-tooltip="Statistics">
-                <?= Icons::statistic() ?>
-                <span class="menu-text">Statistics</span>
             </a>
 
             <!-- Feedback -->

@@ -20,10 +20,10 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <form method="GET" action="/Job_poster/public/jobs-manage" id="jobsManageFilterForm" class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <form method="GET" action="/Job_poster/public/jobs-manage" id="jobsManageFilterForm">
+                <div class="flex flex-wrap gap-4 items-end">
                     <!-- Search -->
-                    <div class="lg:col-span-2">
+                    <div class="flex-1 min-w-[200px]">
                         <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search by Title</label>
                         <input 
                             type="text" 
@@ -37,7 +37,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     </div>
 
                     <!-- Category Filter -->
-                    <div>
+                    <div class="flex-1 min-w-[150px]">
                         <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
                         <select id="category" name="category" class="form-select" onchange="document.getElementById('jobsManageFilterForm').submit()">
                             <option value="">All Categories</option>
@@ -51,7 +51,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     </div>
 
                     <!-- Location Filter -->
-                    <div>
+                    <div class="flex-1 min-w-[150px]">
                         <label for="location" class="block text-sm font-medium text-gray-700 mb-2">Location</label>
                         <select id="location" name="location" class="form-select" onchange="document.getElementById('jobsManageFilterForm').submit()">
                             <option value="">All Locations</option>
@@ -65,7 +65,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     </div>
 
                     <!-- Status Filter -->
-                    <div>
+                    <div class="flex-1 min-w-[150px]">
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
                         <select id="status" name="status" class="form-select" onchange="document.getElementById('jobsManageFilterForm').submit()">
                             <option value="">All Statuses</option>
@@ -74,10 +74,9 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                             <option value="soft_deleted" <?= ($pagination['status_filter'] ?? '') == 'soft_deleted' ? 'selected' : '' ?>>Deleted</option>
                         </select>
                     </div>
-                </div>
 
-                <div class="flex justify-between items-center">
-                    <div>
+                    <!-- Per Page -->
+                    <div class="w-[120px]">
                         <label for="per_page" class="block text-sm font-medium text-gray-700 mb-2">Per Page</label>
                         <select id="per_page" name="per_page" class="form-select" onchange="document.getElementById('jobsManageFilterForm').submit()">
                             <option value="10" <?= ($pagination['per_page'] ?? 10) == 10 ? 'selected' : '' ?>>10</option>
@@ -85,7 +84,9 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                             <option value="50" <?= ($pagination['per_page'] ?? 10) == 50 ? 'selected' : '' ?>>50</option>
                         </select>
                     </div>
-                    <div class="flex gap-2">
+
+                    <!-- Clear Button -->
+                    <div>
                         <a href="/Job_poster/public/jobs-manage" class="btn-cancel">
                             Clear Filters
                         </a>
@@ -127,7 +128,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     <thead>
                         <tr class="bg-gray-50">
                             <th class="table-header">Title</th>
-                            <th class="table-header">Employer</th>
+                            <th class="table-header">Company</th>
                             <th class="table-header">Location</th>
                             <th class="table-header">Salary</th>
                             <th class="table-header">Deadline</th>
@@ -143,7 +144,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                     <?= htmlspecialchars($job->getTitle()) ?>
                                 </td>
                                 <td class="table-cell">
-                                    <?= htmlspecialchars($job->getEmployerName() ?? 'N/A') ?>
+                                    <?= htmlspecialchars($job->getCompanyName() ?? 'N/A') ?>
                                 </td>
                                 <td class="table-cell">
                                     <?= htmlspecialchars($job->getLocation() ?? 'N/A') ?>
@@ -157,7 +158,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                 </td>
                                 <td class="table-cell">
                                     <?php if ($job->getDeadline()): ?>
-                                        <?= date('Y-m-d', strtotime($job->getDeadline())) ?>
+                                        <?= date('d M, Y', strtotime($job->getDeadline())) ?>
                                     <?php else: ?>
                                         <span class="text-gray-400">N/A</span>
                                     <?php endif; ?>

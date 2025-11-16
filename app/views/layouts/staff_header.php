@@ -5,16 +5,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $pageTitle ?? 'Staff Dashboard' ?></title>
-    <link href="/Job_poster/public/css/
-tailwind.min.css" rel="stylesheet">
-    <link href="/Job_poster/public/css/
-admin.css" rel="stylesheet">
-    <link href="/Job_poster/public/css/
-style.css" rel="stylesheet">
+    <link href="/Job_poster/public/css/tailwind.min.css" rel="stylesheet">
+    <link href="/Job_poster/public/css/staff.css?v=<?= time() ?>" rel="stylesheet">
+    <link href="/Job_poster/public/css/style.css" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100">
-    <?php require_once __DIR__ . '/../../helpers/Icons.php'; ?>
+    <!-- Restore sidebar state immediately to prevent flicker -->
+    <script>
+        (function () {
+            const isMinimized = localStorage.getItem('sidebarMinimized') === 'true';
+            if (isMinimized) {
+                document.documentElement.classList.add('sidebar-minimized-state');
+            }
+        })();
+    </script>
+
+    <?php
+    require_once __DIR__ . '/../../helpers/Icons.php';
+
+    // Get current user's avatar from database
+    $currentUserId = $_SESSION['user']['id'] ?? null;
+    $userAvatar = '/Job_poster/public/image/avatar/default.svg'; // Default
+    $userName = $_SESSION['user']['name'] ?? 'Staff User';
+
+    if ($currentUserId) {
+        if (!class_exists('UserDAO')) {
+            require_once __DIR__ . '/../../dao/UserDAO.php';
+        }
+        $userDAO = new UserDAO();
+        $dbAvatar = $userDAO->getAvatar($currentUserId);
+        
+        if (!empty($dbAvatar)) {
+            $userAvatar = $dbAvatar;
+        }
+    }
+    ?>
 
     <!-- Mobile Toggle Button -->
     <button class="toggle-sidebar" onclick="toggleSidebar()">
@@ -27,59 +53,109 @@ style.css" rel="stylesheet">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <a href="/Job_poster/public/" class="flex items-center space-x-3 hover:opacity-80 transition">
-                <h2 class="text-xl font-bold">Staff Panel</h2>
-            </a>
-            <p class="text-xs mt-1 opacity-75">Support & Review</p>
+            <div class="header-content-wrapper">
+                <div class="header-content">
+                    <a href="/Job_poster/public/staff/home" class="hover:opacity-80 transition">
+                        <h2 class="text-xl font-bold sidebar-title">Staff Panel</h2>
+                    </a>
+                    <p class="text-xs mt-1 opacity-75 sidebar-subtitle">Support & Review</p>
+                </div>
+                <button class="sidebar-toggle-btn" onclick="toggleSidebarMinimize()" title="Toggle Sidebar">
+                    <svg class="toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
 
         <nav class="py-4">
             <!-- Dashboard Section -->
             <div class="menu-section">Dashboard</div>
-            <a href="/Job_poster/public/"
-                class="menu-item <?= rtrim($_SERVER['REQUEST_URI'], '/') === '/Job_poster/public' ? 'active' : '' ?>">
+            <a href="/Job_poster/public/staff/home"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/staff/home') !== false ? 'active' : '' ?>"
+                data-tooltip="Dashboard">
                 <?= Icons::home() ?>
-                Homepage
-            </a>
-
-            <!-- Job Request Management -->
-            <div class="menu-section">Job Requests</div>
-            <a href="/Job_poster/public/approvals"
-                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/approvals') !== false ? 'active' : '' ?>">
-                <?= Icons::checklist() ?>
-                Request Approval
-            </a>
-
-            <!-- Report Management -->
-            <div class="menu-section">Reports & Complaints</div>
-            <a href="/Job_poster/public/reports"
-                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/reports') !== false ? 'active' : '' ?>">
-                <?= Icons::flag() ?>
-                Review Reports
+                <span class="menu-text">Dashboard</span>
             </a>
 
             <!-- Job Management -->
             <div class="menu-section">Job Management</div>
             <a href="/Job_poster/public/jobs-manage"
-                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false ? 'active' : '' ?>">
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false ? 'active' : '' ?>"
+                data-tooltip="Jobs">
                 <?= Icons::briefcase() ?>
-                Jobs
+                <span class="menu-text">Jobs</span>
+            </a>
+
+            <!-- Request Posting -->
+            <div class="menu-section">Request Posting</div>
+            <a href="/Job_poster/public/approvals"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/approvals') !== false ? 'active' : '' ?>"
+                data-tooltip="Request Posting">
+                <?= Icons::checklist() ?>
+                <span class="menu-text">Request Posting</span>
+            </a>
+
+            <!-- Feedback -->
+            <div class="menu-section">Feedback</div>
+            <a href="/Job_poster/public/feedbacks"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/feedbacks') !== false ? 'active' : '' ?>"
+                data-tooltip="Feedback">
+                <?= Icons::comment() ?>
+                <span class="menu-text">Feedback</span>
             </a>
         </nav>
+    </aside>
 
-        <div
-            style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.1);">
-            <div class="flex items-center">
-                <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
-                    <img src="<?= $_SESSION['user']['avatar']?? '/images/profile.png'?>" alt="Staff Avatar" class="w-full h-full rounded-full">
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm font-semibold"><?= $_SESSION['user']['name'] ?? 'Staff User' ?></p>
-                    <a href="/Job_poster/public/logout" class="text-xs opacity-75 hover:opacity-100">Log out</a>
+    <!-- Top Navigation Bar -->
+    <nav class="top-navbar">
+        <div class="navbar-container">
+            <!-- Left: Website Name -->
+            <div class="navbar-brand">
+                <a href="/Job_poster/public/" class="brand-link">
+                    Job Poster
+                </a>
+            </div>
+
+            <!-- Right: Navigation Links and User Profile -->
+            <div class="navbar-right">
+                <!-- Navigation Links -->
+                <a href="/Job_poster/public/" class="nav-link">
+                    <?= Icons::home() ?>
+                    <span>Home</span>
+                </a>
+                <a href="/Job_poster/public/about" class="nav-link">
+                    <?= Icons::info() ?>
+                    <span>About Us</span>
+                </a>
+
+                <!-- User Profile Dropdown -->
+                <div class="user-profile-container">
+                    <button class="user-profile-button" onclick="toggleUserDropdown()">
+                        <img src="<?= htmlspecialchars($userAvatar) ?>" alt="Avatar" class="user-avatar">
+                        <span class="user-name"><?= htmlspecialchars($userName) ?></span>
+                        <svg class="dropdown-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="/Job_poster/public/profile" class="dropdown-item">
+                            <?= Icons::settings() ?>
+                            <span>Edit Profile</span>
+                        </a>
+                        <a href="/Job_poster/public/logout" class="dropdown-item logout">
+                            <?= Icons::logout() ?>
+                            <span>Logout</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </aside>
+    </nav>
 
     <!-- Main Content -->
     <main class="main-content" id="mainContent">

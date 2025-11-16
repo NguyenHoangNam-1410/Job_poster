@@ -160,7 +160,7 @@ class AuthController {
                 ];
                 switch ($user->getRole()) {
                     case 'Admin':
-                        header("Location: /Job_poster/public/admin/home");
+                        header("Location: /Job_poster/public/statistics");
                         break;
                     case 'Staff':
                         header("Location: /Job_poster/public/staff/home");

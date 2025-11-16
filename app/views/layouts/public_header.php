@@ -142,12 +142,25 @@
           <a href="/Job_poster/public/" class="y2k-nav-link">Home</a>
           <a href="/Job_poster/public/jobs" class="y2k-nav-link">Jobs</a>
           <a href="/Job_poster/public/employer/post-job" class="y2k-nav-link">Employer</a>
+          <?php if (isset($_SESSION['user'])): ?>
+            <?php 
+              $manageUrl = '/Job_poster/public/';
+              if ($_SESSION['user']['role'] === 'Admin') {
+                $manageUrl = '/Job_poster/public/statistics';
+              } elseif ($_SESSION['user']['role'] === 'Staff') {
+                $manageUrl = '/Job_poster/public/staff/home';
+              } elseif ($_SESSION['user']['role'] === 'Employer') {
+                $manageUrl = '/Job_poster/public/employer/home';
+              }
+            ?>
+            <a href="<?= $manageUrl ?>" class="y2k-nav-link">Manage</a>
+          <?php endif; ?>
         </nav>
 
         <!-- Avatar / Dropdown -->
         <div class="relative">
           <!-- Y2K Avatar -->
-          <div class="y2k-avatar" id="avatarBtn" title="Login or Register">
+          <div class="y2k-avatar" id="avatarBtn" title="<?= isset($_SESSION['user']) ? htmlspecialchars($_SESSION['user']['name'] ?? 'User') : 'Login or Register' ?>">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                  stroke-width="2.5" stroke="#0a4d5c" class="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -159,8 +172,13 @@
 
           <!-- Y2K Menu -->
           <div id="userMenu" class="y2k-menu">
-            <a href="/Job_poster/public/auth/login">🔑 Login</a>
-            <a href="/Job_poster/public/auth/register">📝 Register</a>
+            <?php if (isset($_SESSION['user'])): ?>
+              <a href="/Job_poster/public/profile">👤 Profile</a>
+              <a href="/Job_poster/public/logout">🚪 Logout</a>
+            <?php else: ?>
+              <a href="/Job_poster/public/auth/login">🔑 Login</a>
+              <a href="/Job_poster/public/auth/register">📝 Register</a>
+            <?php endif; ?>
           </div>
         </div>
       </div>

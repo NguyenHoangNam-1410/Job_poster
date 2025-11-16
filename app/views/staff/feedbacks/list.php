@@ -1,6 +1,6 @@
 <?php 
-$pageTitle = 'Employer Feedbacks';
-require_once __DIR__ . '/../../layouts/admin_header.php';
+$pageTitle = 'Feedbacks';
+require_once __DIR__ . '/../../layouts/staff_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
@@ -112,7 +112,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                         <?php foreach ($feedbacks as $feedback): ?>
                             <tr class="hover:bg-gray-50">
                                 <td class="table-cell table-cell-text">
-                                    #<?php echo htmlspecialchars($feedback->getUserId()); ?>
+                                    <?php echo htmlspecialchars($feedback->getUserId()); ?>
                                 </td>
                                 <td class="table-cell">
                                     <?php echo htmlspecialchars($feedback->getUserName()); ?>
