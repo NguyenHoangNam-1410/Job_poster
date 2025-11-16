@@ -5,7 +5,7 @@ require_once '../app/views/layouts/admin_header.php';
 <main class="flex min-h-screen bg-gray-100">
   <!-- Main Dashboard Content -->
   <section class="flex-1 p-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">Welcome, Admin 👋</h1>
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Welcome, Admin</h1>
 
     <!-- Top Stats Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">

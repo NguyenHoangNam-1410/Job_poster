@@ -6,8 +6,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 <div class="container mx-auto px-4 py-8">
     <!-- Header -->
     <div class="mb-8">
-        <h1 class="text-4xl font-bold text-gray-800 mb-2">Dashboard Statistics</h1>
-        <p class="text-gray-600">Overview of system metrics and performance</p>
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">Hi, <?= htmlspecialchars($_SESSION['user']['name'] ?? 'Admin'); ?></h1>
     </div>
 
     <?php if (isset($error)): ?>
@@ -18,7 +17,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 
     <?php if (isset($stats)): ?>
         <!-- User Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <!-- Employers Count -->
             <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
                 <div class="flex items-center justify-between">
@@ -57,108 +56,60 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     </div>
                 </div>
             </div>
+
+            <!-- Current Month Feedback -->
+            <div class="bg-gradient-to-br from-red-300 to-red-400 rounded-lg shadow-lg p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-red-100 text-sm font-medium uppercase">This Month Feedback</p>
+                        <p class="text-4xl font-bold mt-2"><?php echo number_format($stats['feedback_count']); ?></p>
+                    </div>
+                    <div class="bg-red-400 bg-opacity-30 rounded-full p-4">
+                        <?php echo Icons::comment('w-12 h-12'); ?>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Job Status Tracking -->
-        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Job Status Tracking</h2>
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                <!-- Pending -->
-                <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-yellow-700 text-xs font-semibold uppercase mb-1">Pending</p>
-                            <p class="text-3xl font-bold text-yellow-800"><?php echo number_format($stats['job_counts']['pending']); ?></p>
-                        </div>
-                        <div class="bg-yellow-200 rounded-full p-3">
-                            <?php echo Icons::clock('w-8 h-8 text-yellow-600'); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Approved -->
-                <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-green-700 text-xs font-semibold uppercase mb-1">Approved</p>
-                            <p class="text-3xl font-bold text-green-800"><?php echo number_format($stats['job_counts']['approved']); ?></p>
-                        </div>
-                        <div class="bg-green-200 rounded-full p-3">
-                            <?php echo Icons::checkCircle('w-8 h-8 text-green-600'); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Rejected -->
-                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-red-700 text-xs font-semibold uppercase mb-1">Rejected</p>
-                            <p class="text-3xl font-bold text-red-800"><?php echo number_format($stats['job_counts']['rejected']); ?></p>
-                        </div>
-                        <div class="bg-red-200 rounded-full p-3">
-                            <?php echo Icons::xCircle('w-8 h-8 text-red-600'); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Overdue -->
-                <div class="bg-pink-50 border-l-4 border-pink-500 p-4 rounded">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-pink-700 text-xs font-semibold uppercase mb-1">Overdue</p>
-                            <p class="text-3xl font-bold text-pink-800"><?php echo number_format($stats['job_counts']['overdue']); ?></p>
-                        </div>
-                        <div class="bg-pink-200 rounded-full p-3">
-                            <?php echo Icons::warning('w-8 h-8 text-pink-600'); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Soft Deleted -->
-                <div class="bg-gray-50 border-l-4 border-gray-500 p-4 rounded">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-700 text-xs font-semibold uppercase mb-1">Deleted</p>
-                            <p class="text-3xl font-bold text-gray-800"><?php echo number_format($stats['job_counts']['soft_deleted']); ?></p>
-                        </div>
-                        <div class="bg-gray-200 rounded-full p-3">
-                            <?php echo Icons::delete('w-8 h-8 text-gray-600'); ?>
+        <!-- Job Status and Trending Categories -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Job Status Distribution - Circle Chart -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Job Status Distribution</h2>
+                <div class="flex flex-col items-center">
+                    <canvas id="jobStatusChart" width="300" height="300"></canvas>
+                    <div class="mt-6 w-full">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div>
+                                <span class="text-sm text-gray-700">Pending: <?php echo number_format($stats['job_counts']['pending']); ?></span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
+                                <span class="text-sm text-gray-700">Approved: <?php echo number_format($stats['job_counts']['approved']); ?></span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
+                                <span class="text-sm text-gray-700">Rejected: <?php echo number_format($stats['job_counts']['rejected']); ?></span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 rounded-full bg-pink-500 mr-2"></div>
+                                <span class="text-sm text-gray-700">Overdue: <?php echo number_format($stats['job_counts']['overdue']); ?></span>
+                            </div>
+                            <div class="flex items-center col-span-2">
+                                <div class="w-4 h-4 rounded-full bg-gray-500 mr-2"></div>
+                                <span class="text-sm text-gray-700">Deleted: <?php echo number_format($stats['job_counts']['soft_deleted']); ?></span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Progress Bar -->
-            <div class="mt-6">
-                <div class="flex justify-between text-sm text-gray-600 mb-2">
-                    <span>Job Status Distribution</span>
-                    <span><?php echo number_format($stats['total_jobs']); ?> Total</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-4 flex overflow-hidden">
-                    <?php 
-                    $total = $stats['total_jobs'] > 0 ? $stats['total_jobs'] : 1;
-                    $pendingPercent = ($stats['job_counts']['pending'] / $total) * 100;
-                    $approvedPercent = ($stats['job_counts']['approved'] / $total) * 100;
-                    $rejectedPercent = ($stats['job_counts']['rejected'] / $total) * 100;
-                    $overduePercent = ($stats['job_counts']['overdue'] / $total) * 100;
-                    $deletedPercent = ($stats['job_counts']['soft_deleted'] / $total) * 100;
-                    ?>
-                    <?php if ($pendingPercent > 0): ?>
-                        <div class="bg-yellow-500 h-full" style="width: <?php echo $pendingPercent; ?>%" title="Pending: <?php echo number_format($pendingPercent, 1); ?>%"></div>
-                    <?php endif; ?>
-                    <?php if ($approvedPercent > 0): ?>
-                        <div class="bg-green-500 h-full" style="width: <?php echo $approvedPercent; ?>%" title="Approved: <?php echo number_format($approvedPercent, 1); ?>%"></div>
-                    <?php endif; ?>
-                    <?php if ($rejectedPercent > 0): ?>
-                        <div class="bg-red-500 h-full" style="width: <?php echo $rejectedPercent; ?>%" title="Rejected: <?php echo number_format($rejectedPercent, 1); ?>%"></div>
-                    <?php endif; ?>
-                    <?php if ($overduePercent > 0): ?>
-                        <div class="bg-pink-500 h-full" style="width: <?php echo $overduePercent; ?>%" title="Overdue: <?php echo number_format($overduePercent, 1); ?>%"></div>
-                    <?php endif; ?>
-                    <?php if ($deletedPercent > 0): ?>
-                        <div class="bg-gray-500 h-full" style="width: <?php echo $deletedPercent; ?>%" title="Deleted: <?php echo number_format($deletedPercent, 1); ?>%"></div>
-                    <?php endif; ?>
+            <!-- Top Trending Categories - Column Chart -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Top Trending Categories</h2>
+                <div class="flex flex-col items-center">
+                    <canvas id="trendingCategoriesChart" width="400" height="300"></canvas>
                 </div>
             </div>
         </div>
@@ -255,5 +206,149 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
         </div>
     <?php endif; ?>
 </div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Job Status Pie Chart
+    const jobStatusCtx = document.getElementById('jobStatusChart');
+    if (jobStatusCtx) {
+        new Chart(jobStatusCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Pending', 'Approved', 'Rejected', 'Overdue', 'Deleted'],
+                datasets: [{
+                    data: [
+                        <?php echo $stats['job_counts']['pending']; ?>,
+                        <?php echo $stats['job_counts']['approved']; ?>,
+                        <?php echo $stats['job_counts']['rejected']; ?>,
+                        <?php echo $stats['job_counts']['overdue']; ?>,
+                        <?php echo $stats['job_counts']['soft_deleted']; ?>
+                    ],
+                    backgroundColor: [
+                        '#EAB308', // yellow-500
+                        '#22C55E', // green-500
+                        '#EF4444', // red-500
+                        '#EC4899', // pink-500
+                        '#6B7280'  // gray-500
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return label + ': ' + value + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Trending Categories Bar Chart
+    const trendingCategoriesCtx = document.getElementById('trendingCategoriesChart');
+    if (trendingCategoriesCtx) {
+        new Chart(trendingCategoriesCtx, {
+            type: 'bar',
+            data: {
+                labels: [
+                    <?php 
+                    if (!empty($stats['trending_categories'])) {
+                        foreach ($stats['trending_categories'] as $cat) {
+                            echo "'" . addslashes($cat['name']) . "',";
+                        }
+                    }
+                    ?>
+                ],
+                datasets: [{
+                    label: 'Number of Jobs',
+                    data: [
+                        <?php 
+                        if (!empty($stats['trending_categories'])) {
+                            foreach ($stats['trending_categories'] as $cat) {
+                                echo $cat['job_count'] . ',';
+                            }
+                        }
+                        ?>
+                    ],
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.8)',  // blue
+                        'rgba(16, 185, 129, 0.8)',  // green
+                        'rgba(251, 146, 60, 0.8)',  // orange
+                        'rgba(139, 92, 246, 0.8)',  // purple
+                        'rgba(236, 72, 153, 0.8)'   // pink
+                    ],
+                    borderColor: [
+                        'rgb(59, 130, 246)',
+                        'rgb(16, 185, 129)',
+                        'rgb(251, 146, 60)',
+                        'rgb(139, 92, 246)',
+                        'rgb(236, 72, 153)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            font: {
+                                size: 12
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 11
+                            },
+                            maxRotation: 45,
+                            minRotation: 45
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Jobs: ' + context.parsed.y;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
 
 <?php require_once __DIR__ . '/../../layouts/admin_footer.php'; ?>

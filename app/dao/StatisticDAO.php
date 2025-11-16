@@ -141,4 +141,63 @@ class StatisticDAO {
         $stmt->close();
         return $employers;
     }
+
+    /**
+     * Get top trending categories by job count
+     */
+    public function getTopTrendingCategories($limit = 5) {
+        $sql = "SELECT c.id, c.category_name, COUNT(jc.job_id) as job_count
+                FROM JOB_CATEGORIES c
+                INNER JOIN JOB_CATEGORY_MAP jc ON c.id = jc.category_id
+                INNER JOIN JOBS j ON jc.job_id = j.id
+                WHERE j.status IN ('approved', 'overdue', 'pending')
+                GROUP BY c.id, c.category_name
+                ORDER BY job_count DESC
+                LIMIT ?";
+        
+        $stmt = $this->db->prepare($sql);
+        
+        if (!$stmt) {
+            throw new Exception("Prepare failed: " . $this->db->error);
+        }
+        
+        $stmt->bind_param("i", $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $categories = [];
+        while ($row = $result->fetch_assoc()) {
+            $categories[] = [
+                'id' => $row['id'],
+                'name' => $row['category_name'],
+                'job_count' => $row['job_count']
+            ];
+        }
+        
+        $stmt->close();
+        return $categories;
+    }
+
+    /**
+     * Get feedback count for current month
+     */
+    public function getCurrentMonthFeedbackCount() {
+        $sql = "SELECT COUNT(*) as count 
+                FROM FEEDBACK 
+                WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) 
+                AND YEAR(created_at) = YEAR(CURRENT_DATE())";
+        
+        $stmt = $this->db->prepare($sql);
+        
+        if (!$stmt) {
+            throw new Exception("Prepare failed: " . $this->db->error);
+        }
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+        
+        return $row['count'] ?? 0;
+    }
 }

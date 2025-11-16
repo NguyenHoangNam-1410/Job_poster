@@ -27,7 +27,7 @@
     // Get current user's avatar from database
     $currentUserId = $_SESSION['user_id'] ?? 1;
     $userAvatar = '/Job_poster/public/image/avatar/default.svg'; // Default
-    $userName = $_SESSION['user']['Name'] ?? 'Admin';
+    $userName = $_SESSION['user']['name'] ?? 'Admin';
     
     if ($currentUserId) {
         require_once __DIR__ . '/../../dao/UserDAO.php';
@@ -66,6 +66,15 @@
         </div>
 
         <nav class="py-4">
+            <!-- Statistics -->
+            <div class="menu-section">Dashboard</div>
+            <a href="/Job_poster/public/statistics"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/statistics') !== false ? 'active' : '' ?>"
+                data-tooltip="Statistics">
+                <?= Icons::statistic() ?>
+                <span class="menu-text">Dashboard</span>
+            </a>
+
             <!-- User Management -->
             <div class="menu-section">User Management</div>
             <a href="/Job_poster/public/users"
@@ -109,15 +118,6 @@
                 data-tooltip="History">
                 <?= Icons::history() ?>
                 <span class="menu-text">History</span>
-            </a>
-
-            <!-- Statistics -->
-            <div class="menu-section">Statistics</div>
-            <a href="/Job_poster/public/statistics"
-                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/statistics') !== false ? 'active' : '' ?>"
-                data-tooltip="Statistics">
-                <?= Icons::statistic() ?>
-                <span class="menu-text">Statistics</span>
             </a>
 
             <!-- Feedback -->

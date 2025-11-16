@@ -19,10 +19,10 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <form method="GET" action="/Job_poster/public/approvals" id="approvalsFilterForm" class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <form method="GET" action="/Job_poster/public/approvals" id="approvalsFilterForm">
+                <div class="flex flex-wrap gap-4 items-end">
                     <!-- Search -->
-                    <div class="lg:col-span-2">
+                    <div class="flex-1 min-w-[200px]">
                         <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search by Title</label>
                         <input 
                             type="text" 
@@ -36,7 +36,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     </div>
 
                     <!-- Status Filter -->
-                    <div>
+                    <div class="flex-1 min-w-[150px]">
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
                         <select id="status" name="status" class="form-select" onchange="document.getElementById('approvalsFilterForm').submit()">
                             <option value="">All Statuses</option>
@@ -46,7 +46,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     </div>
 
                     <!-- Per Page -->
-                    <div>
+                    <div class="w-[120px]">
                         <label for="per_page" class="block text-sm font-medium text-gray-700 mb-2">Per Page</label>
                         <select id="per_page" name="per_page" class="form-select" onchange="document.getElementById('approvalsFilterForm').submit()">
                             <option value="10" <?= ($pagination['per_page'] ?? 10) == 10 ? 'selected' : '' ?>>10</option>
@@ -54,12 +54,13 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                             <option value="50" <?= ($pagination['per_page'] ?? 10) == 50 ? 'selected' : '' ?>>50</option>
                         </select>
                     </div>
-                </div>
 
-                <div class="flex justify-end gap-2">
-                    <a href="/Job_poster/public/approvals" class="btn-cancel">
-                        Clear Filters
-                    </a>
+                    <!-- Clear Button -->
+                    <div>
+                        <a href="/Job_poster/public/approvals" class="btn-cancel">
+                            Clear Filters
+                        </a>
+                    </div>
                 </div>
             </form>
         </div>
