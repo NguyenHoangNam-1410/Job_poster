@@ -3,7 +3,14 @@ $pageTitle = 'Staff Action History';
 require_once __DIR__ . '/../../layouts/admin_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
+<?php 
+$pageTitle = 'Staff Action History';
+require_once __DIR__ . '/../../layouts/admin_header.php';
+require_once __DIR__ . '/../../../helpers/Icons.php';
+?>
 
+<div class="list-container">
+    <div class="list-content">
 <div class="list-container">
     <div class="list-content">
         <div class="mb-6">
@@ -13,7 +20,13 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
             <form method="GET" action="" id="staffActionFilterForm" class="flex flex-wrap gap-4 items-end">
+        <!-- Search and Filter Form -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <form method="GET" action="" id="staffActionFilterForm" class="flex flex-wrap gap-4 items-end">
                 <!-- User Role Filter -->
+                <div class="flex-1 min-w-[150px]">
+                    <label for="user_role" class="block text-sm font-medium text-gray-700 mb-2">User Role</label>
+                    <select name="user_role" id="user_role" class="form-select" onchange="document.getElementById('staffActionFilterForm').submit()">
                 <div class="flex-1 min-w-[150px]">
                     <label for="user_role" class="block text-sm font-medium text-gray-700 mb-2">User Role</label>
                     <select name="user_role" id="user_role" class="form-select" onchange="document.getElementById('staffActionFilterForm').submit()">
@@ -24,6 +37,9 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 </div>
 
                 <!-- Action Type Filter -->
+                <div class="flex-1 min-w-[150px]">
+                    <label for="action_type" class="block text-sm font-medium text-gray-700 mb-2">Action Type</label>
+                    <select name="action_type" id="action_type" class="form-select" onchange="document.getElementById('staffActionFilterForm').submit()">
                 <div class="flex-1 min-w-[150px]">
                     <label for="action_type" class="block text-sm font-medium text-gray-700 mb-2">Action Type</label>
                     <select name="action_type" id="action_type" class="form-select" onchange="document.getElementById('staffActionFilterForm').submit()">
@@ -40,8 +56,11 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 <!-- Date From -->
                 <div class="flex-1 min-w-[150px]">
                     <label for="date_from" class="block text-sm font-medium text-gray-700 mb-2">Date From</label>
+                <div class="flex-1 min-w-[150px]">
+                    <label for="date_from" class="block text-sm font-medium text-gray-700 mb-2">Date From</label>
                     <input type="date" name="date_from" id="date_from" 
                            value="<?php echo htmlspecialchars($pagination['date_from'] ?? ''); ?>"
+                           class="form-input"
                            class="form-input"
                            onchange="document.getElementById('staffActionFilterForm').submit()">
                 </div>
@@ -49,13 +68,19 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 <!-- Date To -->
                 <div class="flex-1 min-w-[150px]">
                     <label for="date_to" class="block text-sm font-medium text-gray-700 mb-2">Date To</label>
+                <div class="flex-1 min-w-[150px]">
+                    <label for="date_to" class="block text-sm font-medium text-gray-700 mb-2">Date To</label>
                     <input type="date" name="date_to" id="date_to" 
                            value="<?php echo htmlspecialchars($pagination['date_to'] ?? ''); ?>"
+                           class="form-input"
                            class="form-input"
                            onchange="document.getElementById('staffActionFilterForm').submit()">
                 </div>
 
                 <!-- Per Page Selector -->
+                <div class="w-[120px]">
+                    <label for="per_page" class="block text-sm font-medium text-gray-700 mb-2">Per Page</label>
+                    <select name="per_page" id="per_page" class="form-select" onchange="document.getElementById('staffActionFilterForm').submit()">
                 <div class="w-[120px]">
                     <label for="per_page" class="block text-sm font-medium text-gray-700 mb-2">Per Page</label>
                     <select name="per_page" id="per_page" class="form-select" onchange="document.getElementById('staffActionFilterForm').submit()">
@@ -70,9 +95,24 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                         Clear
                     </a>
                 </div>
+                
+                <div>
+                    <a href="?" class="btn-cancel">
+                        Clear
+                    </a>
+                </div>
             </form>
         </div>
 
+        <?php if (empty($actions)): ?>
+            <div class="list-table-wrapper">
+                <div id="empty-state" class="text-center py-12">
+                    <?= Icons::emptyState() ?>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">No actions found</h3>
+                    <p class="mt-1 text-sm text-gray-500">
+                        No staff actions match your filters.
+                    </p>
+                </div>
         <?php if (empty($actions)): ?>
             <div class="list-table-wrapper">
                 <div id="empty-state" class="text-center py-12">
@@ -107,11 +147,39 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
+        <?php else: ?>
+            <div class="list-table-wrapper">
+                <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="table-header">
+                                Name
+                            </th>
+                            <th class="table-header">
+                                Role
+                            </th>
+                            <th class="table-header">
+                                Job Title
+                            </th>
+                            <th class="table-header">
+                                Action Type
+                            </th>
+                            <th class="table-header">
+                                Action Date
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
                         <?php foreach ($actions as $action): ?>
+                            <tr class="hover:bg-gray-50">
+                                <td class="table-cell">
                             <tr class="hover:bg-gray-50">
                                 <td class="table-cell">
                                     <?php echo htmlspecialchars($action->getUserName()); ?>
                                 </td>
+                                <td class="table-cell">
+                                    <span class="px-2 py-1 rounded 
                                 <td class="table-cell">
                                     <span class="px-2 py-1 rounded 
                                         <?php echo $action->getUserRole() === 'Admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'; ?>">
@@ -119,8 +187,11 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                     </span>
                                 </td>
                                 <td class="table-cell">
+                                <td class="table-cell">
                                     <?php echo htmlspecialchars($action->getJobTitle()); ?>
                                 </td>
+                                <td class="table-cell">
+                                    <span class="px-2 py-1 rounded text-xs
                                 <td class="table-cell">
                                     <span class="px-2 py-1 rounded text-xs
                                         <?php 
@@ -141,11 +212,14 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                     </span>
                                 </td>
                                 <td class="table-cell">
+                                <td class="table-cell">
                                     <?php 
                                     $date = new DateTime($action->getActionDate());
                                     echo $date->format('d M, Y');
+                                    echo $date->format('d M, Y');
                                     ?>
                                     <span class="text-gray-500 text-xs block">
+                                        <?php echo $date->format('H:i'); ?>
                                         <?php echo $date->format('H:i'); ?>
                                     </span>
                                 </td>
@@ -154,7 +228,23 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     </tbody>
                 </table>
                 </div>
+                    </tbody>
+                </table>
+                </div>
 
+                <!-- Pagination -->
+                <?php 
+                require_once __DIR__ . '/../../components/pagination.php';
+                renderPagination($pagination, '', [
+                    'user_role' => $pagination['user_role_filter'] ?? '',
+                    'action_type' => $pagination['action_type_filter'] ?? '',
+                    'date_from' => $pagination['date_from'] ?? '',
+                    'date_to' => $pagination['date_to'] ?? '',
+                    'per_page' => $pagination['per_page'] ?? 10
+                ]);
+                ?>
+            </div>
+        <?php endif; ?>
                 <!-- Pagination -->
                 <?php 
                 require_once __DIR__ . '/../../components/pagination.php';

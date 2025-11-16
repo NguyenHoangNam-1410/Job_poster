@@ -53,6 +53,19 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
                                     Delete Avatar
                                 </button>
                             </div>
+                            <div class="flex gap-3 mb-2">
+                                <label for="avatar" class="btn-submit cursor-pointer inline-block">
+                                    Choose Image
+                                </label>
+                                <button 
+                                    type="button" 
+                                    id="deleteAvatarBtn"
+                                    class="btn-cancel"
+                                    <?= empty($user->getAvatar()) || $user->getAvatar() === '/Job_poster/public/image/avatar/default.svg' ? 'style="display:none;"' : '' ?>
+                                >
+                                    Delete Avatar
+                                </button>
+                            </div>
                             <input 
                                 type="file" 
                                 id="avatar" 
@@ -60,6 +73,7 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
                                 accept="image/jpeg,image/png,image/gif,image/webp"
                                 class="hidden"
                             >
+                            <input type="hidden" id="delete_avatar" name="delete_avatar" value="0">
                             <input type="hidden" id="delete_avatar" name="delete_avatar" value="0">
                             <p class="text-sm text-gray-500 mt-2">
                                 Maximum file size: 1MB<br>
@@ -125,6 +139,7 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
                 <div class="border-b pb-6">
                     <h2 class="text-lg font-semibold text-gray-800 mb-4">Change Password</h2>
                     <p class="text-sm text-gray-600 mb-4">All three fields must be filled to change password.</p>
+                    <p class="text-sm text-gray-600 mb-4">All three fields must be filled to change password.</p>
                     <div class="space-y-4">
                         <!-- Current Password -->
                         <div>
@@ -136,6 +151,10 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
                                 id="old_password" 
                                 name="old_password" 
                                 class="form-input w-full"
+                                autocomplete="new-password"
+                                readonly 
+                                onfocus="this.removeAttribute('readonly');"
+                                placeholder="Enter current password"
                                 autocomplete="new-password"
                                 readonly 
                                 onfocus="this.removeAttribute('readonly');"
@@ -158,7 +177,17 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
                                 onfocus="this.removeAttribute('readonly');"
                                 minlength="8"
                                 placeholder="Enter new password"
+                                readonly 
+                                onfocus="this.removeAttribute('readonly');"
+                                minlength="8"
+                                placeholder="Enter new password"
                             >
+                            <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                                <li>• At least 8 characters</li>
+                                <li>• Include a number</li>
+                                <li>• Include uppercase and lowercase letters</li>
+                                <li>• Include a special character</li>
+                            </ul>
                             <ul class="text-sm text-gray-600 mt-2 space-y-1">
                                 <li>• At least 8 characters</li>
                                 <li>• Include a number</li>
@@ -178,6 +207,10 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
                                 name="confirm_password" 
                                 class="form-input w-full"
                                 autocomplete="new-password"
+                                readonly 
+                                onfocus="this.removeAttribute('readonly');"
+                                minlength="8"
+                                placeholder="Confirm new password"
                                 readonly 
                                 onfocus="this.removeAttribute('readonly');"
                                 minlength="8"
@@ -223,17 +256,34 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
     document.getElementById('old_password').value = '';
     document.getElementById('new_password').value = '';
     document.getElementById('confirm_password').value = '';
+    const deleteAvatarBtn = document.getElementById('deleteAvatarBtn');
+    const deleteAvatarInput = document.getElementById('delete_avatar');
 
+    // Clear password fields on page load to prevent browser autofill
+    document.getElementById('old_password').value = '';
+    document.getElementById('new_password').value = '';
+    document.getElementById('confirm_password').value = '';
+
+    // Store initial form values (excluding password fields) after a slight delay
+    let initialName = '';
+    let initialEmail = '';
     // Store initial form values (excluding password fields) after a slight delay
     let initialName = '';
     let initialEmail = '';
     let formChanged = false;
     let originalAvatar = avatarPreview.src;
     let isSubmitting = false;
+    let isSubmitting = false;
 
     // Get the referrer from document.referrer or default
     const referrer = document.referrer || '/Job_poster/public/profile';
     referrerInput.value = referrer;
+
+    // Initialize values after DOM is fully loaded
+    setTimeout(function() {
+        initialName = document.getElementById('name').value;
+        initialEmail = document.getElementById('email').value;
+    }, 100);
 
     // Initialize values after DOM is fully loaded
     setTimeout(function() {
@@ -251,10 +301,31 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
         
         if (currentName !== initialName || currentEmail !== initialEmail) {
             hasChanges = true;
+        // Check if basic information changed
+        const currentName = document.getElementById('name').value;
+        const currentEmail = document.getElementById('email').value;
+        
+        if (currentName !== initialName || currentEmail !== initialEmail) {
+            hasChanges = true;
         }
 
         // Check if avatar file selected
+        // Check if avatar file selected
         if (avatarInput.files.length > 0) {
+            hasChanges = true;
+        }
+
+        // Check if avatar deletion requested
+        if (deleteAvatarInput.value === '1') {
+            hasChanges = true;
+        }
+
+        // Check if any password fields are filled
+        const oldPassword = document.getElementById('old_password').value;
+        const newPassword = document.getElementById('new_password').value;
+        const confirmPassword = document.getElementById('confirm_password').value;
+        
+        if (oldPassword.trim() || newPassword.trim() || confirmPassword.trim()) {
             hasChanges = true;
         }
 
@@ -310,6 +381,8 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
             const reader = new FileReader();
             reader.onload = function(e) {
                 avatarPreview.src = e.target.result;
+                deleteAvatarBtn.style.display = 'inline-block';
+                deleteAvatarInput.value = '0'; // Reset delete flag
                 deleteAvatarBtn.style.display = 'inline-block';
                 deleteAvatarInput.value = '0'; // Reset delete flag
             };
@@ -371,6 +444,12 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
         // If any password field is filled, all three must be filled
         if (passwordFieldsFilled > 0) {
             if (passwordFieldsFilled < 3) {
+        // Count how many password fields are filled
+        const passwordFieldsFilled = [oldPassword, newPassword, confirmPassword].filter(p => p.trim()).length;
+
+        // If any password field is filled, all three must be filled
+        if (passwordFieldsFilled > 0) {
+            if (passwordFieldsFilled < 3) {
                 e.preventDefault();
                 await window.confirmModal.show(
                     'To change password, all three password fields must be filled (Current Password, New Password, and Confirm New Password).',
@@ -379,6 +458,8 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
                 );
                 return false;
             }
+
+            // Validate new passwords match
 
             // Validate new passwords match
             if (newPassword !== confirmPassword) {
@@ -390,6 +471,10 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
                 );
                 return false;
             }
+            
+            // Validate password requirements
+            const validation = validatePassword(newPassword);
+            if (!validation.valid) {
             
             // Validate password requirements
             const validation = validatePassword(newPassword);
@@ -459,6 +544,14 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
 })();
 </script>
 
+<?php 
+// Load footer based on user role
+if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
+    include __DIR__ . '/../../layouts/admin_footer.php';
+} else {
+    include __DIR__ . '/../../layouts/staff_footer.php';
+}
+?>
 <?php 
 // Load footer based on user role
 if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
