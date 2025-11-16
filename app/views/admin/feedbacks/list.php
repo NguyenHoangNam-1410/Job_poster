@@ -7,8 +7,8 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 <div class="list-container">
     <div class="list-content">
         <div class="mb-6">
-            <h1 class="list-header">Employer Feedbacks</h1>
-            <p class="text-gray-600 mt-2">View and manage employer feedback submissions</p>
+            <h1 class="list-header">Feedbacks</h1>
+            <p class="text-gray-600 mt-2">View feedback submissions</p>
         </div>
 
         <!-- Success/Error Messages -->
