@@ -343,8 +343,12 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
     }
 
     // Handle delete avatar button
-    deleteAvatarBtn.addEventListener('click', function() {
-        const confirmed = confirm('Are you sure you want to delete your avatar? This will reset it to the default image.');
+    deleteAvatarBtn.addEventListener('click', async function() {
+        const confirmed = await window.confirmModal.show(
+            'Are you sure you want to delete your avatar? This will reset it to the default image.',
+            'Delete Avatar',
+            'Delete'
+        );
         if (confirmed) {
             deleteAvatarInput.value = '1';
             avatarPreview.src = '/Job_poster/public/image/avatar/default.svg';
@@ -356,7 +360,7 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
     });
 
     // Validate password fields
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
         const oldPassword = document.getElementById('old_password').value;
         const newPassword = document.getElementById('new_password').value;
         const confirmPassword = document.getElementById('confirm_password').value;
@@ -368,14 +372,22 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
         if (passwordFieldsFilled > 0) {
             if (passwordFieldsFilled < 3) {
                 e.preventDefault();
-                alert('To change password, all three password fields must be filled (Current Password, New Password, and Confirm New Password).');
+                await window.confirmModal.show(
+                    'To change password, all three password fields must be filled (Current Password, New Password, and Confirm New Password).',
+                    'Incomplete Password Fields',
+                    'OK'
+                );
                 return false;
             }
 
             // Validate new passwords match
             if (newPassword !== confirmPassword) {
                 e.preventDefault();
-                alert('New passwords do not match.');
+                await window.confirmModal.show(
+                    'New passwords do not match.',
+                    'Password Mismatch',
+                    'OK'
+                );
                 return false;
             }
             
@@ -388,20 +400,29 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
                 if (!validation.hasNumber) errorMsg += '• Include a number\n';
                 if (!validation.hasUpper || !validation.hasLower) errorMsg += '• Include uppercase and lowercase letters\n';
                 if (!validation.hasSpecial) errorMsg += '• Include a special character\n';
-                alert(errorMsg);
+                await window.confirmModal.show(
+                    errorMsg,
+                    'Invalid Password',
+                    'OK'
+                );
                 return false;
             }
         }
 
         // Show confirmation if there are changes
         if (formChanged) {
-            const confirmed = confirm('Are you sure you want to update your profile?');
+            e.preventDefault();
+            const confirmed = await window.confirmModal.show(
+                'Are you sure you want to update your profile?',
+                'Confirm Update',
+                'Update'
+            );
             if (!confirmed) {
-                e.preventDefault();
                 return false;
             }
             // Set flag to allow form submission without beforeunload prompt
             isSubmitting = true;
+            form.submit();
         } else {
             // Set flag even if no changes to prevent prompt
             isSubmitting = true;
@@ -409,9 +430,13 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
     });
 
     // Handle cancel button
-    cancelBtn.addEventListener('click', function() {
+    cancelBtn.addEventListener('click', async function() {
         if (formChanged) {
-            const confirmLeave = confirm('You have unsaved changes. Are you sure you want to leave?');
+            const confirmLeave = await window.confirmModal.show(
+                'You have unsaved changes. Are you sure you want to leave?',
+                'Unsaved Changes',
+                'Leave'
+            );
             if (confirmLeave) {
                 // Set flag to allow navigation
                 isSubmitting = true;

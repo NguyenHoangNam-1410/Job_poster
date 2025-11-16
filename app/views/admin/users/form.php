@@ -67,7 +67,9 @@ $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User'
                     </label>
                     <input type="text" name="username" required
                         value="<?= $isEditMode ? htmlspecialchars($user->getUsername()) : '' ?>"
-                        class="form-input" placeholder="Enter name">
+                        class="form-input" placeholder="Enter name"
+                        readonly 
+                        onfocus="this.removeAttribute('readonly');">
                 </div>
 
                 <!-- Email -->
@@ -251,8 +253,12 @@ $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User'
 
     // Handle delete avatar button
     if (deleteAvatarBtn) {
-        deleteAvatarBtn.addEventListener('click', function() {
-            const confirmed = confirm('Are you sure you want to delete this avatar? This will reset it to the default image.');
+        deleteAvatarBtn.addEventListener('click', async function() {
+            const confirmed = await window.confirmModal.show(
+                'Are you sure you want to delete this avatar? This will reset it to the default image.',
+                'Delete Avatar',
+                'Delete'
+            );
             if (confirmed) {
                 deleteAvatarInput.value = '1';
                 avatarPreview.src = '/Job_poster/public/image/avatar/default.svg';
@@ -263,8 +269,12 @@ $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User'
     
     // Handle delete logo button
     if (deleteLogoBtn) {
-        deleteLogoBtn.addEventListener('click', function() {
-            const confirmed = confirm('Are you sure you want to delete this company logo? This will reset it to the default image.');
+        deleteLogoBtn.addEventListener('click', async function() {
+            const confirmed = await window.confirmModal.show(
+                'Are you sure you want to delete this company logo? This will reset it to the default image.',
+                'Delete Company Logo',
+                'Delete'
+            );
             if (confirmed) {
                 deleteLogoInput.value = '1';
                 logoPreview.src = '/Job_poster/public/image/avatar/default.svg';
