@@ -51,17 +51,40 @@ class UserController {
 
     public function store() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+                      strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+            
             try {
                 $currentUserId = $this->getCurrentUserId();
                 $success = $this->userService->createUser($_POST, $currentUserId);
                 if ($success) {
-                    header('Location: /Job_poster/public/users');
-                    exit;
+                    if ($isAjax) {
+                        header('Content-Type: application/json');
+                        http_response_code(200);
+                        echo json_encode([
+                            'success' => true,
+                            'message' => 'User created successfully'
+                        ]);
+                        exit;
+                    } else {
+                        header('Location: /Job_poster/public/users');
+                        exit;
+                    }
                 }
             } catch (Exception $e) {
-                $error = $e->getMessage();
-                $user = null;
-                require_once __DIR__ . '/../views/admin/users/form.php';
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    http_response_code(400);
+                    echo json_encode([
+                        'success' => false,
+                        'message' => $e->getMessage()
+                    ]);
+                    exit;
+                } else {
+                    $error = $e->getMessage();
+                    $user = null;
+                    require_once __DIR__ . '/../views/admin/users/form.php';
+                }
             }
         }
     }
@@ -99,6 +122,9 @@ class UserController {
 
     public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+                      strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+            
             try {
                 $currentUserId = $this->getCurrentUserId();
                 $success = $this->userService->updateUser($id, $_POST, $currentUserId);
@@ -132,13 +158,33 @@ class UserController {
                 }
                 
                 if ($success) {
-                    header('Location: /Job_poster/public/users');
-                    exit;
+                    if ($isAjax) {
+                        header('Content-Type: application/json');
+                        http_response_code(200);
+                        echo json_encode([
+                            'success' => true,
+                            'message' => 'User updated successfully'
+                        ]);
+                        exit;
+                    } else {
+                        header('Location: /Job_poster/public/users');
+                        exit;
+                    }
                 }
             } catch (Exception $e) {
-                $error = $e->getMessage();
-                $user = $this->userService->getUserById($id);
-                require_once __DIR__ . '/../views/admin/users/form.php';
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    http_response_code(400);
+                    echo json_encode([
+                        'success' => false,
+                        'message' => $e->getMessage()
+                    ]);
+                    exit;
+                } else {
+                    $error = $e->getMessage();
+                    $user = $this->userService->getUserById($id);
+                    require_once __DIR__ . '/../views/admin/users/form.php';
+                }
             }
         }
     }

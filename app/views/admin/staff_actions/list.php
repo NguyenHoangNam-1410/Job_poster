@@ -8,7 +8,6 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
     <div class="list-content">
         <div class="mb-6">
             <h1 class="list-header">Staff Action History</h1>
-            <p class="text-gray-600 mt-2">Track all administrative actions performed on jobs</p>
         </div>
 
         <!-- Search and Filter Form -->

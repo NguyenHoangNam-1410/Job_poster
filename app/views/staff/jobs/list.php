@@ -14,7 +14,6 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
         <div class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="list-header">Job Management</h1>
-                <p class="text-gray-600 mt-2">Manage and review job postings (Approved, Overdue, and Deleted Jobs)</p>
             </div>
         </div>
 
@@ -194,8 +193,8 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                 </td>
                                 <td class="table-cell">
                                     <div class="flex gap-2">
-                                        <a href="/Job_poster/public/jobs-manage/edit/<?= $job->getId() ?>"
-                                            class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm">
+                                        <button onclick="window.formModal.loadForm('/Job_poster/public/jobs-manage/edit/<?= $job->getId() ?>?ajax=1', 'Edit Job #<?= $job->getId() ?>')"
+                                            class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm focus:outline-none">
                                             <?= Icons::edit('w-4 h-4 mr-1') ?>
                                             Edit
                                         </a>
@@ -260,8 +259,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function deleteJob(id, title) {
-    if (confirm(`⚠️ DELETE JOB\n\nAre you sure you want to delete "${title}"?\n\nThis action cannot be undone!`)) {
+async function deleteJob(id, title) {
+    const confirmed = await window.confirmModal.show(
+        `Are you sure you want to delete "${title}"?\n\nThis action cannot be undone!`,
+        'DELETE JOB',
+        'Delete'
+    );
+    
+    if (confirmed) {
         fetch(`/Job_poster/public/jobs-manage/hard-delete/${id}`, {
             method: 'GET',
             headers: { 'X-Requested-With': 'XMLHttpRequest' }

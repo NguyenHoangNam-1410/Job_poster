@@ -54,16 +54,39 @@ class JobCategoryController {
 
     public function store() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+                      strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+            
             try {
                 $success = $this->categoryService->createCategory($_POST);
                 if ($success) {
-                    header('Location: /Job_poster/public/job-categories');
-                    exit;
+                    if ($isAjax) {
+                        header('Content-Type: application/json');
+                        http_response_code(200);
+                        echo json_encode([
+                            'success' => true,
+                            'message' => 'Category created successfully'
+                        ]);
+                        exit;
+                    } else {
+                        header('Location: /Job_poster/public/job-categories');
+                        exit;
+                    }
                 }
             } catch (Exception $e) {
-                $error = $e->getMessage();
-                $category = null;
-                require_once __DIR__ . '/../views/admin/job_categories/form.php';
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    http_response_code(400);
+                    echo json_encode([
+                        'success' => false,
+                        'message' => $e->getMessage()
+                    ]);
+                    exit;
+                } else {
+                    $error = $e->getMessage();
+                    $category = null;
+                    require_once __DIR__ . '/../views/admin/job_categories/form.php';
+                }
             }
         }
     }
@@ -87,16 +110,39 @@ class JobCategoryController {
 
     public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+                      strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+            
             try {
                 $success = $this->categoryService->updateCategory($id, $_POST);
                 if ($success) {
-                    header('Location: /Job_poster/public/job-categories');
-                    exit;
+                    if ($isAjax) {
+                        header('Content-Type: application/json');
+                        http_response_code(200);
+                        echo json_encode([
+                            'success' => true,
+                            'message' => 'Category updated successfully'
+                        ]);
+                        exit;
+                    } else {
+                        header('Location: /Job_poster/public/job-categories');
+                        exit;
+                    }
                 }
             } catch (Exception $e) {
-                $error = $e->getMessage();
-                $category = $this->categoryService->getCategoryById($id);
-                require_once __DIR__ . '/../views/admin/job_categories/form.php';
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    http_response_code(400);
+                    echo json_encode([
+                        'success' => false,
+                        'message' => $e->getMessage()
+                    ]);
+                    exit;
+                } else {
+                    $error = $e->getMessage();
+                    $category = $this->categoryService->getCategoryById($id);
+                    require_once __DIR__ . '/../views/admin/job_categories/form.php';
+                }
             }
         }
     }

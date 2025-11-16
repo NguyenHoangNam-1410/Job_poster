@@ -12,8 +12,14 @@ function showToast(message, type = "success") {
 }
 
 // Delete user with AJAX
-function deleteUser(userId, username) {
-  if (!confirm(`Are you sure you want to delete user "${username}"?`)) {
+async function deleteUser(userId, username) {
+  const confirmed = await window.confirmModal.show(
+    `Are you sure you want to delete user "${username}"? This action cannot be undone.`,
+    "Delete User",
+    "Delete"
+  );
+
+  if (!confirmed) {
     return;
   }
 

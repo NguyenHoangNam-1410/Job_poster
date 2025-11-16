@@ -13,7 +13,6 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
         <div class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="list-header">Job Approval</h1>
-                <p class="text-gray-600 mt-2">Review and approve pending job postings</p>
             </div>
         </div>
 
