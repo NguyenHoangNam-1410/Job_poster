@@ -95,10 +95,10 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     <thead>
                         <tr class="bg-gray-50">
                             <th class="table-header">
-                                Employer ID
+                                ID
                             </th>
                             <th class="table-header">
-                                Employer Name
+                                Name
                             </th>
                             <th class="table-header">
                                 Feedbacks
@@ -125,10 +125,10 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                 <td class="table-cell">
                                     <?php 
                                     $date = new DateTime($feedback->getCreatedAt());
-                                    echo $date->format('M d, Y');
+                                    echo $date->format('d M, Y');
                                     ?>
                                     <span class="text-gray-500 text-xs block">
-                                        <?php echo $date->format('h:i A'); ?>
+                                        <?php echo $date->format('H:i'); ?>
                                     </span>
                                 </td>
                             </tr>

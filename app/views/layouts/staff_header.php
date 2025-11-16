@@ -25,14 +25,17 @@
     require_once __DIR__ . '/../../helpers/Icons.php';
 
     // Get current user's avatar from database
-    $currentUserId = $_SESSION['user_id'] ?? 1;
+    $currentUserId = $_SESSION['user']['id'] ?? null;
     $userAvatar = '/Job_poster/public/image/avatar/default.svg'; // Default
     $userName = $_SESSION['user']['name'] ?? 'Staff User';
 
     if ($currentUserId) {
-        require_once __DIR__ . '/../../dao/UserDAO.php';
+        if (!class_exists('UserDAO')) {
+            require_once __DIR__ . '/../../dao/UserDAO.php';
+        }
         $userDAO = new UserDAO();
         $dbAvatar = $userDAO->getAvatar($currentUserId);
+        
         if (!empty($dbAvatar)) {
             $userAvatar = $dbAvatar;
         }
@@ -52,7 +55,7 @@
         <div class="sidebar-header">
             <div class="header-content-wrapper">
                 <div class="header-content">
-                    <a href="/Job_poster/public/" class="hover:opacity-80 transition">
+                    <a href="/Job_poster/public/staff/home" class="hover:opacity-80 transition">
                         <h2 class="text-xl font-bold sidebar-title">Staff Panel</h2>
                     </a>
                     <p class="text-xs mt-1 opacity-75 sidebar-subtitle">Support & Review</p>

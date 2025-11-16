@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 <div class="container mx-auto px-4 py-8">
     <!-- Header -->
     <div class="mb-8">
-        <h1 class="text-4xl font-bold text-gray-800 mb-2">Hi, <?= htmlspecialchars($_SESSION['user']['name'] ?? 'Admin'); ?></h1>
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">Hi, <?= htmlspecialchars($_SESSION['user']['name'] ?? 'Admin'); ?>!</h1>
     </div>
 
     <?php if (isset($error)): ?>
@@ -77,7 +77,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
             <div class="bg-white rounded-lg shadow-lg p-6">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">Job Status Distribution</h2>
                 <div class="flex flex-col items-center">
-                    <canvas id="jobStatusChart" width="300" height="300"></canvas>
+                    <canvas id="jobStatusChart" width="200" height="200"></canvas>
                     <div class="mt-6 w-full">
                         <div class="grid grid-cols-2 gap-3">
                             <div class="flex items-center">

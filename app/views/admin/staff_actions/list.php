@@ -144,10 +144,10 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                 <td class="table-cell">
                                     <?php 
                                     $date = new DateTime($action->getActionDate());
-                                    echo $date->format('M d, Y');
+                                    echo $date->format('d M, Y');
                                     ?>
                                     <span class="text-gray-500 text-xs block">
-                                        <?php echo $date->format('h:i A'); ?>
+                                        <?php echo $date->format('H:i'); ?>
                                     </span>
                                 </td>
                             </tr>

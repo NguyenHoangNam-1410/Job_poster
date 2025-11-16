@@ -48,7 +48,9 @@ class JobDAO {
     public function getAll($search = '', $categoryFilter = '', $locationFilter = '', $statusFilter = '', $limit = null, $offset = 0) {
         $sql = "SELECT DISTINCT j.id, j.employer_id, j.posted_by, j.title, j.location, j.description, 
                 j.requirements, j.salary, j.deadline, j.status, j.created_at, j.updated_at,
-                e.company_name as employer_name,
+                e.company_name,
+                u.Name as employer_name,
+                u.Avatar as employer_avatar,
                 u.Name as posted_by_name
                 FROM JOBS j
                 LEFT JOIN EMPLOYERS e ON j.employer_id = e.id
@@ -182,7 +184,7 @@ class JobDAO {
     }
     
     public function getById($id) {
-        $sql = "SELECT j.*, e.company_name as employer_name, u.Name as posted_by_name
+        $sql = "SELECT j.*, e.company_name, u.Name as employer_name, u.Avatar as employer_avatar, u.Name as posted_by_name
                 FROM JOBS j
                 LEFT JOIN EMPLOYERS e ON j.employer_id = e.id
                 LEFT JOIN USERS u ON j.posted_by = u.UID
@@ -334,9 +336,16 @@ class JobDAO {
         $job->setCreatedAt($row['created_at']);
         $job->setUpdatedAt($row['updated_at']);
         
+        if (isset($row['company_name'])) {
+            $job->setCompanyName($row['company_name']);
+        }
+        
         if (isset($row['employer_name'])) {
-            $job->setCompanyName($row['employer_name']);
             $job->setEmployerName($row['employer_name']);
+        }
+        
+        if (isset($row['employer_avatar'])) {
+            $job->setEmployerAvatar($row['employer_avatar']);
         }
         
         if (isset($row['posted_by_name'])) {

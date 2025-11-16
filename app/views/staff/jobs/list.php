@@ -128,7 +128,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     <thead>
                         <tr class="bg-gray-50">
                             <th class="table-header">Title</th>
-                            <th class="table-header">Employer</th>
+                            <th class="table-header">Company</th>
                             <th class="table-header">Location</th>
                             <th class="table-header">Salary</th>
                             <th class="table-header">Deadline</th>
@@ -144,7 +144,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                     <?= htmlspecialchars($job->getTitle()) ?>
                                 </td>
                                 <td class="table-cell">
-                                    <?= htmlspecialchars($job->getEmployerName() ?? 'N/A') ?>
+                                    <?= htmlspecialchars($job->getCompanyName() ?? 'N/A') ?>
                                 </td>
                                 <td class="table-cell">
                                     <?= htmlspecialchars($job->getLocation() ?? 'N/A') ?>
@@ -158,7 +158,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                 </td>
                                 <td class="table-cell">
                                     <?php if ($job->getDeadline()): ?>
-                                        <?= date('Y-m-d', strtotime($job->getDeadline())) ?>
+                                        <?= date('d M, Y', strtotime($job->getDeadline())) ?>
                                     <?php else: ?>
                                         <span class="text-gray-400">N/A</span>
                                     <?php endif; ?>

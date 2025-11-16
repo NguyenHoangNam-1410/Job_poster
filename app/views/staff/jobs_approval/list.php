@@ -1,8 +1,8 @@
 <?php $pageTitle = 'Job Approval'; ?>
 <?php
-if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
+if (isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
     require_once '../app/views/layouts/admin_header.php';
-} else{
+} else {
     require_once '../app/views/layouts/staff_header.php';
 }
 require_once __DIR__ . '/../../../helpers/Icons.php';
@@ -24,21 +24,17 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     <!-- Search -->
                     <div class="flex-1 min-w-[200px]">
                         <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search by Title</label>
-                        <input 
-                            type="text" 
-                            id="search" 
-                            name="search" 
+                        <input type="text" id="search" name="search"
                             value="<?= htmlspecialchars($pagination['search'] ?? '') ?>"
-                            placeholder="Search job title..."
-                            class="form-input w-full"
-                            onkeyup="debounceApprovalsSearch()"
-                        >
+                            placeholder="Search job title..." class="form-input w-full"
+                            onkeyup="debounceApprovalsSearch()">
                     </div>
 
                     <!-- Status Filter -->
                     <div class="flex-1 min-w-[150px]">
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                        <select id="status" name="status" class="form-select" onchange="document.getElementById('approvalsFilterForm').submit()">
+                        <select id="status" name="status" class="form-select"
+                            onchange="document.getElementById('approvalsFilterForm').submit()">
                             <option value="">All Statuses</option>
                             <option value="pending" <?= ($pagination['status_filter'] ?? '') == 'pending' ? 'selected' : '' ?>>Pending</option>
                             <option value="rejected" <?= ($pagination['status_filter'] ?? '') == 'rejected' ? 'selected' : '' ?>>Rejected</option>
@@ -48,7 +44,8 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     <!-- Per Page -->
                     <div class="w-[120px]">
                         <label for="per_page" class="block text-sm font-medium text-gray-700 mb-2">Per Page</label>
-                        <select id="per_page" name="per_page" class="form-select" onchange="document.getElementById('approvalsFilterForm').submit()">
+                        <select id="per_page" name="per_page" class="form-select"
+                            onchange="document.getElementById('approvalsFilterForm').submit()">
                             <option value="10" <?= ($pagination['per_page'] ?? 10) == 10 ? 'selected' : '' ?>>10</option>
                             <option value="25" <?= ($pagination['per_page'] ?? 10) == 25 ? 'selected' : '' ?>>25</option>
                             <option value="50" <?= ($pagination['per_page'] ?? 10) == 50 ? 'selected' : '' ?>>50</option>
@@ -98,8 +95,8 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                         <thead>
                             <tr class="bg-gray-50">
                                 <th class="table-header">Title</th>
-                                <th class="table-header">Company Name</th>
-                                <th class="table-header">Employer Name</th>
+                                <th class="table-header">Company</th>
+                                <th class="table-header">Poster</th>
                                 <th class="table-header">Status</th>
                                 <th class="table-header">Created At</th>
                                 <th class="table-header">Updated At</th>
@@ -116,7 +113,14 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                         <?= htmlspecialchars($job->getCompanyName() ?? 'N/A') ?>
                                     </td>
                                     <td class="table-cell">
-                                        <?= htmlspecialchars($job->getEmployerName() ?? 'N/A') ?>
+                                        <div class="flex items-center gap-3">
+                                            <img 
+                                                src="<?= !empty($job->getEmployerAvatar()) ? htmlspecialchars($job->getEmployerAvatar()) : '/Job_poster/public/image/avatar/default.svg' ?>" 
+                                                alt="Avatar" 
+                                                class="w-10 h-10 rounded-full object-cover border border-gray-200"
+                                            >
+                                            <span><?= htmlspecialchars($job->getEmployerName() ?? 'N/A') ?></span>
+                                        </div>
                                     </td>
                                     <td class="table-cell">
                                         <span class="px-2 py-1 rounded text-sm <?= $job->getStatusColor() ?>">
@@ -124,10 +128,10 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                         </span>
                                     </td>
                                     <td class="table-cell">
-                                        <?= date('Y-m-d H:i', strtotime($job->getCreatedAt())) ?>
+                                        <?= date('d M, Y H:i', strtotime($job->getCreatedAt())) ?>
                                     </td>
                                     <td class="table-cell">
-                                        <?= date('Y-m-d H:i', strtotime($job->getUpdatedAt())) ?>
+                                        <?= date('d M, Y H:i', strtotime($job->getUpdatedAt())) ?>
                                     </td>
                                     <td class="table-cell">
                                         <a href="/Job_poster/public/approvals/detail/<?= $job->getId() ?>"
@@ -143,7 +147,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 </div>
 
                 <!-- Pagination -->
-                <?php 
+                <?php
                 include __DIR__ . '/../../components/pagination.php';
                 renderPagination($pagination, '/Job_poster/public/approvals', [
                     'search' => $pagination['search'] ?? '',
@@ -157,59 +161,59 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 </div>
 
 <script>
-// Debounce search functionality
-let approvalsSearchTimeout;
-function debounceApprovalsSearch() {
-    clearTimeout(approvalsSearchTimeout);
-    approvalsSearchTimeout = setTimeout(() => {
-        document.getElementById('approvalsFilterForm').submit();
-    }, 500);
-}
-
-// Restore focus to search input after page reload
-document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const searchParam = urlParams.get('search');
-    
-    if (searchParam) {
-        const searchInput = document.getElementById('search');
-        if (searchInput) {
-            searchInput.focus();
-            searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
-        }
+    // Debounce search functionality
+    let approvalsSearchTimeout;
+    function debounceApprovalsSearch() {
+        clearTimeout(approvalsSearchTimeout);
+        approvalsSearchTimeout = setTimeout(() => {
+            document.getElementById('approvalsFilterForm').submit();
+        }, 500);
     }
-});
+
+    // Restore focus to search input after page reload
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchParam = urlParams.get('search');
+
+        if (searchParam) {
+            const searchInput = document.getElementById('search');
+            if (searchInput) {
+                searchInput.focus();
+                searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+            }
+        }
+    });
 </script>
 
 <script>
-// Debounce search functionality
-let approvalsSearchTimeout;
-function debounceApprovalsSearch() {
-    clearTimeout(approvalsSearchTimeout);
-    approvalsSearchTimeout = setTimeout(() => {
-        document.getElementById('approvalsFilterForm').submit();
-    }, 500);
-}
-
-// Restore focus to search input after page reload
-document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const searchParam = urlParams.get('search');
-    
-    if (searchParam) {
-        const searchInput = document.getElementById('search');
-        if (searchInput) {
-            searchInput.focus();
-            searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
-        }
+    // Debounce search functionality
+    let approvalsSearchTimeout;
+    function debounceApprovalsSearch() {
+        clearTimeout(approvalsSearchTimeout);
+        approvalsSearchTimeout = setTimeout(() => {
+            document.getElementById('approvalsFilterForm').submit();
+        }, 500);
     }
-});
+
+    // Restore focus to search input after page reload
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchParam = urlParams.get('search');
+
+        if (searchParam) {
+            const searchInput = document.getElementById('search');
+            if (searchInput) {
+                searchInput.focus();
+                searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+            }
+        }
+    });
 </script>
 
-<?php 
-if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
+<?php
+if (isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
     require_once '../app/views/layouts/admin_footer.php';
-} else{
+} else {
     require_once '../app/views/layouts/staff_footer.php';
 }
 ?>

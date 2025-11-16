@@ -274,9 +274,23 @@ class UserService {
             throw new Exception("Current password is incorrect.");
         }
 
-        // Validate new password
-        if (strlen($newPassword) < 6) {
-            throw new Exception("New password must be at least 6 characters long.");
+        // Validate new password length
+        if (strlen($newPassword) < 8) {
+            throw new Exception("New password must be at least 8 characters long.");
+        }
+
+        // Validate password requirements
+        if (!preg_match('/\d/', $newPassword)) {
+            throw new Exception("Password must include at least one number.");
+        }
+        if (!preg_match('/[A-Z]/', $newPassword)) {
+            throw new Exception("Password must include at least one uppercase letter.");
+        }
+        if (!preg_match('/[a-z]/', $newPassword)) {
+            throw new Exception("Password must include at least one lowercase letter.");
+        }
+        if (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $newPassword)) {
+            throw new Exception("Password must include at least one special character.");
         }
 
         // Check if passwords match

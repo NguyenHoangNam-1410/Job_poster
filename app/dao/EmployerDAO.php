@@ -55,6 +55,57 @@ class EmployderDAO {
         return $row['total'];
     }
     
+    // Get employer by user ID
+    public function getByUserId($userId) {
+        $sql = "SELECT * FROM EMPLOYERS WHERE user_id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($row = $result->fetch_assoc()) {
+            return new Employer(
+                $row['id'],
+                $row['company_name'],
+                $row['website'],
+                $row['logo'],
+                $row['contact_phone'],
+                $row['contact_email'],
+                $row['contact_person'],
+                $row['description'],
+                $row['user_id']
+            );
+        }
+        return null;
+    }
+    
+    // Update employer information
+    public function update($id, $data) {
+        $sql = "UPDATE EMPLOYERS SET 
+                company_name = ?,
+                website = ?,
+                logo = ?,
+                contact_phone = ?,
+                contact_email = ?,
+                contact_person = ?,
+                description = ?
+                WHERE id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("sssssssi",
+            $data['company_name'],
+            $data['website'],
+            $data['logo'],
+            $data['contact_phone'],
+            $data['contact_email'],
+            $data['contact_person'],
+            $data['description'],
+            $id
+        );
+        
+        return $stmt->execute();
+    }
+    
     // DELETE
     public function delete($id) {
         try {

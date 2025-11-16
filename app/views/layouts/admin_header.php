@@ -25,7 +25,7 @@
     require_once __DIR__ . '/../../helpers/Icons.php';
     
     // Get current user's avatar from database
-    $currentUserId = $_SESSION['user_id'] ?? 1;
+    $currentUserId = $_SESSION['user']['id'] ?? null;
     $userAvatar = '/Job_poster/public/image/avatar/default.svg'; // Default
     $userName = $_SESSION['user']['name'] ?? 'Admin';
     
@@ -52,7 +52,7 @@
         <div class="sidebar-header">
             <div class="header-content-wrapper">
                 <div class="header-content">
-                    <a href="/Job_poster/public/" class="hover:opacity-80 transition">
+                    <a href="/Job_poster/public/statistics" class="hover:opacity-80 transition">
                         <h2 class="text-xl font-bold sidebar-title">Admin Panel</h2>
                     </a>
                     <p class="text-xs mt-1 opacity-75 sidebar-subtitle">System Management</p>

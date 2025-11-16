@@ -1,9 +1,13 @@
-<?php require_once __DIR__ . '/../../layouts/staff_header.php'; ?>
+<?php 
+$pageTitle = 'Feedbacks';
+require_once __DIR__ . '/../../layouts/staff_header.php';
+require_once __DIR__ . '/../../../helpers/Icons.php';
+?>
 
-<div class="container mx-auto px-4 py-8">
-    <div class="bg-white rounded-lg shadow-md p-6">
+<div class="list-container">
+    <div class="list-content">
         <div class="mb-6">
-            <h1 class="text-3xl font-bold text-gray-800">Feedbacks</h1>
+            <h1 class="list-header">Feedbacks</h1>
             <p class="text-gray-600 mt-2">View feedback submissions</p>
         </div>
 
@@ -20,137 +24,135 @@
             </div>
         <?php endif; ?>
 
-        <!-- Filters Section -->
-        <div class="bg-gray-50 p-4 rounded-lg mb-6">
-            <form method="GET" action="" id="feedbackFilterForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Search and Filter Form -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <form method="GET" action="" id="feedbackFilterForm" class="flex flex-wrap gap-4 items-end">
                 <!-- Search by User Name -->
-                <div>
-                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search by User Name</label>
+                <div class="flex-1 min-w-[200px]">
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search by User Name</label>
                     <input type="text" name="search" id="search" 
                            value="<?php echo htmlspecialchars($pagination['search'] ?? ''); ?>"
                            placeholder="Enter user name..."
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           class="form-input"
                            onkeyup="debounceFeedbackSearch()">
                 </div>
 
                 <!-- Date From -->
-                <div>
-                    <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">Date From</label>
+                <div class="flex-1 min-w-[150px]">
+                    <label for="date_from" class="block text-sm font-medium text-gray-700 mb-2">Date From</label>
                     <input type="date" name="date_from" id="date_from" 
                            value="<?php echo htmlspecialchars($pagination['date_from'] ?? ''); ?>"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           class="form-input"
                            onchange="document.getElementById('feedbackFilterForm').submit()">
                 </div>
 
                 <!-- Date To -->
-                <div>
-                    <label for="date_to" class="block text-sm font-medium text-gray-700 mb-1">Date To</label>
+                <div class="flex-1 min-w-[150px]">
+                    <label for="date_to" class="block text-sm font-medium text-gray-700 mb-2">Date To</label>
                     <input type="date" name="date_to" id="date_to" 
                            value="<?php echo htmlspecialchars($pagination['date_to'] ?? ''); ?>"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           class="form-input"
                            onchange="document.getElementById('feedbackFilterForm').submit()">
                 </div>
 
+                <!-- Per Page Selector -->
+                <div class="w-[120px]">
+                    <label for="per_page" class="block text-sm font-medium text-gray-700 mb-2">Per Page</label>
+                    <select name="per_page" id="per_page" class="form-select" onchange="changePerPage(this.value)">
+                        <option value="10" <?php echo $pagination['per_page'] == 10 ? 'selected' : ''; ?>>10</option>
+                        <option value="25" <?php echo $pagination['per_page'] == 25 ? 'selected' : ''; ?>>25</option>
+                        <option value="50" <?php echo $pagination['per_page'] == 50 ? 'selected' : ''; ?>>50</option>
+                    </select>
+                </div>
+
                 <!-- Filter Buttons -->
-                <div class="flex items-end gap-2">
-                    <a href="?" class="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition duration-200 text-center">
-                        Reset
+                <div>
+                    <a href="?" class="btn-cancel">
+                        Clear
                     </a>
                 </div>
-                
-                <!-- Hidden per_page field -->
-                <input type="hidden" name="per_page" value="<?php echo $pagination['per_page']; ?>">
             </form>
         </div>
 
-        <!-- Results Info & Pagination Controls -->
-        <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
-            <div class="text-gray-700">
-                Showing <?php echo count($feedbacks); ?> of <?php echo $pagination['total_records']; ?> feedbacks
+        <?php if (empty($feedbacks)): ?>
+            <div class="list-table-wrapper">
+                <div id="empty-state" class="text-center py-12">
+                    <?= Icons::emptyState() ?>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">No feedbacks found</h3>
+                    <p class="mt-1 text-sm text-gray-500">
+                        <?php if (!empty($pagination['search'])): ?>
+                            No feedbacks match your search. Try different keywords.
+                        <?php else: ?>
+                            No feedback submissions yet.
+                        <?php endif; ?>
+                    </p>
+                </div>
             </div>
-            
-            <!-- Per Page Selector -->
-            <div class="flex items-center gap-2">
-                <label for="per_page" class="text-sm text-gray-700">Per page:</label>
-                <select name="per_page" id="per_page" onchange="changePerPage(this.value)" 
-                        class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="10" <?php echo $pagination['per_page'] == 10 ? 'selected' : ''; ?>>10</option>
-                    <option value="25" <?php echo $pagination['per_page'] == 25 ? 'selected' : ''; ?>>25</option>
-                    <option value="50" <?php echo $pagination['per_page'] == 50 ? 'selected' : ''; ?>>50</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Feedbacks Table -->
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-white border border-gray-300">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                            ID
-                        </th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                            Name
-                        </th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                            Feedbacks
-                        </th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                            Date
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    <?php if (empty($feedbacks)): ?>
-                        <tr>
-                            <td colspan="4" class="px-4 py-8 text-center text-gray-500">
-                                No feedbacks found matching your filters.
-                            </td>
+        <?php else: ?>
+            <div class="list-table-wrapper">
+                <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="table-header">
+                                ID
+                            </th>
+                            <th class="table-header">
+                                Name
+                            </th>
+                            <th class="table-header">
+                                Feedbacks
+                            </th>
+                            <th class="table-header">
+                                Date
+                            </th>
                         </tr>
-                    <?php else: ?>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
                         <?php foreach ($feedbacks as $feedback): ?>
-                            <tr class="hover:bg-gray-50 transition duration-150">
-                                <td class="px-4 py-3 text-sm text-gray-900">
+                            <tr class="hover:bg-gray-50">
+                                <td class="table-cell table-cell-text">
                                     <?php echo htmlspecialchars($feedback->getUserId()); ?>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-900 font-medium">
+                                <td class="table-cell">
                                     <?php echo htmlspecialchars($feedback->getUserName()); ?>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-700">
+                                <td class="table-cell">
                                     <div class="max-w-2xl">
                                         <?php echo nl2br(htmlspecialchars($feedback->getComments())); ?>
                                     </div>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">
+                                <td class="table-cell">
                                     <?php 
                                     $date = new DateTime($feedback->getCreatedAt());
-                                    echo $date->format('M d, Y');
+                                    echo $date->format('d M, Y');
                                     ?>
                                     <span class="text-gray-500 text-xs block">
-                                        <?php echo $date->format('h:i A'); ?>
+                                        <?php echo $date->format('H:i'); ?>
                                     </span>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+                </div>
 
-        <!-- Pagination -->
-        <?php 
-        require_once __DIR__ . '/../../components/pagination.php';
-        renderPagination(
-            $pagination, 
-            '',
-            [
-                'search' => $pagination['search'] ?? '',
-                'date_from' => $pagination['date_from'] ?? '',
-                'date_to' => $pagination['date_to'] ?? '',
-                'per_page' => $pagination['per_page']
-            ]
-        );
-        ?>
+                <!-- Pagination -->
+                <?php 
+                require_once __DIR__ . '/../../components/pagination.php';
+                renderPagination(
+                    $pagination, 
+                    '',
+                    [
+                        'search' => $pagination['search'] ?? '',
+                        'date_from' => $pagination['date_from'] ?? '',
+                        'date_to' => $pagination['date_to'] ?? '',
+                        'per_page' => $pagination['per_page']
+                    ]
+                );
+                ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -182,4 +184,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php require_once __DIR__ . '/../../layouts/staff_footer.php'; ?>
+<?php require_once __DIR__ . '/../../layouts/admin_footer.php'; ?>
