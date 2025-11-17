@@ -54,13 +54,14 @@ if (!isset($_SESSION['user']) && !$isPublic) {
 }
 // If logged in and accessing public route
 elseif (isset($_SESSION['user']) && $isPublic) {
-    if($_SESSION['user']['role'] == 'Admin') {
+    $userRole = $_SESSION['user']['role'] ?? null;
+    if($userRole == 'Admin') {
         header("Location: /admin/home");
         exit;
-    } elseif($_SESSION['user']['role'] == 'Staff') {
+    } elseif($userRole == 'Staff') {
         header("Location: /staff/home");
         exit;
-    } elseif($_SESSION['user']['role'] == 'Employer') {
+    } elseif($userRole == 'Employer') {
         header("Location: /employer/home");
         exit;
     }

@@ -144,12 +144,13 @@
           <a href="/Job_poster/public/employer/post-job" class="y2k-nav-link">Employer</a>
           <?php if (isset($_SESSION['user'])): ?>
             <?php 
+              $userRole = $_SESSION['user']['role'] ?? null;
               $manageUrl = '/Job_poster/public/';
-              if ($_SESSION['user']['role'] === 'Admin') {
+              if ($userRole === 'Admin') {
                 $manageUrl = '/Job_poster/public/statistics';
-              } elseif ($_SESSION['user']['role'] === 'Staff') {
+              } elseif ($userRole === 'Staff') {
                 $manageUrl = '/Job_poster/public/staff/home';
-              } elseif ($_SESSION['user']['role'] === 'Employer') {
+              } elseif ($userRole === 'Employer') {
                 $manageUrl = '/Job_poster/public/employer/home';
               }
             ?>
