@@ -184,7 +184,7 @@ class JobDAO {
     }
     
     public function getById($id) {
-        $sql = "SELECT j.*, e.company_name, u.Name as employer_name, u.Avatar as employer_avatar, u.Name as posted_by_name
+        $sql = "SELECT j.*, e.company_name, e.contact_email, u.Name as employer_name, u.Avatar as employer_avatar, u.Name as posted_by_name
                 FROM JOBS j
                 LEFT JOIN EMPLOYERS e ON j.employer_id = e.id
                 LEFT JOIN USERS u ON j.posted_by = u.UID
@@ -198,6 +198,22 @@ class JobDAO {
             $job = $this->mapRowToJob($row);
             $job->setCategories($this->getJobCategories($id));
             return $job;
+        }
+        return null;
+    }
+    
+    public function getEmployerEmailByJobId($jobId) {
+        $sql = "SELECT e.contact_email 
+                FROM JOBS j
+                INNER JOIN EMPLOYERS e ON j.employer_id = e.id
+                WHERE j.id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("i", $jobId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($row = $result->fetch_assoc()) {
+            return $row['contact_email'] ?? null;
         }
         return null;
     }

@@ -34,7 +34,7 @@ $publicRoutes = ['/auth/login', '/auth/register',
                 '/auth/login/forgot-password/send-otp', '/auth/login/forgot-password/input-otp',
                 '/auth/login/forgot-password/verify-otp', '/auth/login/forgot-password/reset-password-form',
                 '/auth/login/forgot-password/reset-expired', '/check-email', '/public/home', '/jobs', '/jobs/show/:id',
-                '/', '/auth/login/forgot-password/reset-password'];
+                '/jobs/apply', '/', '/auth/login/forgot-password/reset-password'];
 
 $isPublic = false;
 // Check if the route is public
@@ -46,7 +46,7 @@ foreach ($publicRoutes as $route) {
 }
 // If not logged in and accessing private route
 if (!isset($_SESSION['user']) && !$isPublic) {
-    header("Location: /public/home");
+    header("Location: " . BASE_URL . "/public/home");
     exit;
 } elseif (isset($_SESSION['user']) && in_array($path, ['/auth/register','/auth/login'])) {
     header("Location: /");
@@ -346,6 +346,12 @@ else {
     if (preg_match('/^\/jobs\/show\/(\d+)$/', $path, $m) || preg_match('#^/jobs/(\d+)$#', $path, $m)) {
         require_once '../app/controllers/PublicJobController.php';
         (new PublicJobController())->show($m[1]);
+        exit;
+    }
+
+    if ($path === '/jobs/apply' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        require_once '../app/controllers/PublicJobController.php';
+        (new PublicJobController())->apply();
         exit;
     }
 

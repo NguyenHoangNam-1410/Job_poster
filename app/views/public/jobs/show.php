@@ -159,6 +159,130 @@ $left = days_left($deadlineRaw);
 #rel-list::-webkit-scrollbar-thumb:hover {
   background: #056a8a;
 }
+
+/* Apply Modal Scrollbar */
+#applyModal .overflow-y-auto::-webkit-scrollbar {
+  width: 8px;
+}
+
+#applyModal .overflow-y-auto::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 4px;
+}
+
+#applyModal .overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #0688B4;
+  border-radius: 4px;
+}
+
+#applyModal .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #056a8a;
+}
+
+/* Success Popup */
+#successPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  padding: 0;
+  z-index: 9999;
+  max-width: 400px;
+  width: 90%;
+  animation: popupSlideIn 0.3s ease-out;
+  border: 3px solid #10b981;
+}
+
+@keyframes popupSlideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+#successPopupOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.success-popup-content {
+  padding: 30px;
+  text-align: center;
+}
+
+.success-popup-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  background: #10b981;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: scaleIn 0.3s ease-out 0.1s both;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.success-popup-icon svg {
+  width: 36px;
+  height: 36px;
+  color: white;
+}
+
+.success-popup-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.success-popup-message {
+  font-size: 16px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.success-popup-button {
+  background: #0688B4;
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.success-popup-button:hover {
+  background: #056a8a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(6, 136, 180, 0.3);
+}
 </style>
 
 <main class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 text-left bg-animated">
@@ -257,9 +381,9 @@ $left = days_left($deadlineRaw);
               <p class="text-sm font-medium text-gray-700">Closed</p>
             </div>
           <?php endif; ?>
-          <a href="#" class="mt-5 w-full inline-flex justify-center text-white px-6 py-3 font-semibold hover:opacity-90 transition-all duration-300 shadow-md hover:shadow-lg" style="background-color: #0688B4;">
+          <button onclick="openApplyModal()" class="mt-5 w-full inline-flex justify-center text-white px-6 py-3 font-semibold hover:opacity-90 transition-all duration-300 shadow-md hover:shadow-lg" style="background-color: #0688B4;">
             Apply Now
-          </a>
+          </button>
         </div>
       </section>
 
@@ -353,7 +477,374 @@ function appearMotion(nodes){
     io.observe(n);
   });
 }
-document.addEventListener('DOMContentLoaded', loadRelated);
+// File input handler - declare variable first
+let fileInputSetup = false;
+
+function handleFileSelect(input) {
+  const file = input.files[0];
+  if (file) {
+    // Validate file type
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+      alert('Please upload a PDF file only.');
+      input.value = '';
+      const fileNameEl = document.getElementById('cvFileName');
+      if (fileNameEl) fileNameEl.textContent = 'No file chosen';
+      const uploadArea = document.getElementById('cvUploadArea');
+      if (uploadArea) uploadArea.classList.remove('border-green-400', 'bg-green-50');
+      return;
+    }
+    // Validate file size (100MB)
+    if (file.size > 100 * 1024 * 1024) {
+      alert('File size must be less than 100MB.');
+      input.value = '';
+      const fileNameEl = document.getElementById('cvFileName');
+      if (fileNameEl) fileNameEl.textContent = 'No file chosen';
+      const uploadArea = document.getElementById('cvUploadArea');
+      if (uploadArea) uploadArea.classList.remove('border-green-400', 'bg-green-50');
+      return;
+    }
+    // Success - show file name
+    const fileNameEl = document.getElementById('cvFileName');
+    if (fileNameEl) fileNameEl.textContent = file.name;
+    const uploadArea = document.getElementById('cvUploadArea');
+    if (uploadArea) uploadArea.classList.add('border-green-400', 'bg-green-50');
+  } else {
+    const fileNameEl = document.getElementById('cvFileName');
+    if (fileNameEl) fileNameEl.textContent = 'No file chosen';
+    const uploadArea = document.getElementById('cvUploadArea');
+    if (uploadArea) uploadArea.classList.remove('border-green-400', 'bg-green-50');
+  }
+}
+
+function setupFileInput() {
+  if (fileInputSetup) return;
+  
+  const cvFile = document.getElementById('cvFile');
+  const cvUploadArea = document.getElementById('cvUploadArea');
+  
+  if (!cvFile || !cvUploadArea) {
+    // Retry if elements not ready
+    setTimeout(setupFileInput, 100);
+    return;
+  }
+  
+  fileInputSetup = true;
+  
+  // Click on upload area to trigger file input
+  cvUploadArea.addEventListener('click', function(e) {
+    // Don't trigger if clicking on the file input itself
+    if (e.target === cvFile) return;
+    e.preventDefault();
+    e.stopPropagation();
+    cvFile.click();
+  });
+  
+  // Prevent default drag behaviors
+  cvUploadArea.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.classList.add('border-blue-500', 'bg-blue-50');
+  });
+  
+  cvUploadArea.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.classList.remove('border-blue-500', 'bg-blue-50');
+  });
+  
+  cvUploadArea.addEventListener('drop', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.classList.remove('border-blue-500', 'bg-blue-50');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      // Create a new FileList and assign it
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(files[0]);
+      cvFile.files = dataTransfer.files;
+      handleFileSelect(cvFile);
+    }
+  });
+  
+  // File input change handler
+  cvFile.addEventListener('change', function(e) {
+    handleFileSelect(e.target);
+  });
+}
+
+// Apply Modal Functions
+function openApplyModal() {
+  const modal = document.getElementById('applyModal');
+  if (!modal) return;
+  
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  
+  // Auto-fill form with user data if logged in (optional)
+  <?php if (isset($_SESSION['user'])): ?>
+  document.getElementById('fullName').value = '<?= addslashes($_SESSION['user']['name'] ?? '') ?>';
+  document.getElementById('email').value = '<?= addslashes($_SESSION['user']['email'] ?? '') ?>';
+  <?php endif; ?>
+  
+  // Setup file input when modal opens
+  fileInputSetup = false; // Reset to allow setup again
+  setTimeout(setupFileInput, 100);
+}
+
+function closeApplyModal() {
+  const modal = document.getElementById('applyModal');
+  if (!modal) return;
+  
+  modal.classList.add('hidden');
+  document.body.style.overflow = '';
+  
+  const form = document.getElementById('applyForm');
+  if (form) form.reset();
+  
+  const fileNameEl = document.getElementById('cvFileName');
+  if (fileNameEl) fileNameEl.textContent = 'No file chosen';
+  
+  const uploadArea = document.getElementById('cvUploadArea');
+  if (uploadArea) uploadArea.classList.remove('border-green-400', 'bg-green-50');
+  
+  const errorEl = document.getElementById('applyError');
+  if (errorEl) errorEl.classList.add('hidden');
+  
+  const successEl = document.getElementById('applySuccess');
+  if (successEl) successEl.classList.add('hidden');
+}
+
+// Success Popup Functions
+function showSuccessPopup(message) {
+  // Remove existing popup if any
+  const existingPopup = document.getElementById('successPopup');
+  const existingOverlay = document.getElementById('successPopupOverlay');
+  if (existingPopup) existingPopup.remove();
+  if (existingOverlay) existingOverlay.remove();
+  
+  // Create overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'successPopupOverlay';
+  document.body.appendChild(overlay);
+  
+  // Create popup
+  const popup = document.createElement('div');
+  popup.id = 'successPopup';
+  popup.innerHTML = `
+    <div class="success-popup-content">
+      <div class="success-popup-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <h3 class="success-popup-title">Success!</h3>
+      <p class="success-popup-message">${message}</p>
+      <button class="success-popup-button" onclick="closeSuccessPopup()">OK</button>
+    </div>
+  `;
+  document.body.appendChild(popup);
+  
+  // Auto close after 5 seconds
+  setTimeout(() => {
+    closeSuccessPopup();
+  }, 5000);
+  
+  // Close on overlay click
+  overlay.addEventListener('click', closeSuccessPopup);
+}
+
+function closeSuccessPopup() {
+  const popup = document.getElementById('successPopup');
+  const overlay = document.getElementById('successPopupOverlay');
+  
+  if (popup) {
+    popup.style.animation = 'popupSlideIn 0.3s ease-out reverse';
+    setTimeout(() => popup.remove(), 300);
+  }
+  if (overlay) {
+    overlay.style.animation = 'fadeIn 0.3s ease-out reverse';
+    setTimeout(() => overlay.remove(), 300);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  loadRelated();
+  
+  // Setup modal close handler
+  const modal = document.getElementById('applyModal');
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target.id === 'applyModal') {
+        closeApplyModal();
+      }
+    });
+  }
+  
+  // Setup form submission handler
+  const applyForm = document.getElementById('applyForm');
+  if (applyForm) {
+    applyForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      formData.append('job_id', jobId);
+      
+      const submitBtn = document.getElementById('submitBtn');
+      const errorEl = document.getElementById('applyError');
+      const successEl = document.getElementById('applySuccess');
+      
+      if (!submitBtn) return;
+      
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      
+      if (errorEl) errorEl.classList.add('hidden');
+      if (successEl) successEl.classList.add('hidden');
+      
+      try {
+        const response = await fetch(`${BASE}/jobs/apply`, {
+          method: 'POST',
+          body: formData
+        });
+        
+        // Check if response is ok
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // Try to parse JSON
+        let result;
+        try {
+          result = await response.json();
+        } catch (jsonError) {
+          const text = await response.text();
+          console.error('Response is not JSON:', text);
+          throw new Error('Invalid response from server');
+        }
+        
+        if (result.success) {
+          // Show success popup
+          showSuccessPopup('Application sent successfully! The employer will contact you soon.');
+          // Close modal after showing popup
+          setTimeout(() => {
+            closeApplyModal();
+          }, 500);
+        } else {
+          if (errorEl) {
+            errorEl.textContent = result.message || 'Failed to send application. Please try again.';
+            errorEl.classList.remove('hidden');
+          }
+        }
+      } catch (error) {
+        console.error('Apply error:', error);
+        if (errorEl) {
+          errorEl.textContent = error.message || 'An error occurred. Please try again.';
+          errorEl.classList.remove('hidden');
+        }
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+  }
+});
 </script>
+
+<!-- Apply Modal -->
+<div id="applyModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[95vh] flex flex-col">
+    <div class="flex-shrink-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center sticky top-0 z-10">
+      <h2 class="text-xl font-bold text-gray-900">Apply for this Position</h2>
+      <button onclick="closeApplyModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+    </div>
+    
+    <div class="flex-1 overflow-y-auto" style="max-height: calc(95vh - 80px);">
+      <form id="applyForm" class="p-4 sm:p-6 space-y-4">
+      <div id="applyError" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded"></div>
+      <div id="applySuccess" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded">
+        Application sent successfully! The employer will contact you soon.
+      </div>
+      
+      <div>
+        <label for="fullName" class="block text-sm font-medium text-gray-700 mb-2">
+          Full Name <span class="text-red-500">*</span>
+        </label>
+        <input type="text" id="fullName" name="full_name" required
+               value="<?= isset($_SESSION['user']['name']) ? h($_SESSION['user']['name']) : '' ?>"
+               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 <?= isset($_SESSION['user']['name']) ? 'bg-gray-50' : '' ?>"
+               <?= isset($_SESSION['user']['name']) ? 'readonly' : '' ?>>
+        <?php if (isset($_SESSION['user']['name'])): ?>
+        <p class="mt-1 text-xs text-gray-500">This information is from your account.</p>
+        <?php endif; ?>
+      </div>
+      
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+          Your Email <span class="text-red-500">*</span>
+        </label>
+        <input type="email" id="email" name="email" required
+               value="<?= isset($_SESSION['user']['email']) ? h($_SESSION['user']['email']) : '' ?>"
+               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 <?= isset($_SESSION['user']['email']) ? 'bg-gray-50' : '' ?>"
+               placeholder="your.email@example.com"
+               <?= isset($_SESSION['user']['email']) ? 'readonly' : '' ?>>
+        <p class="mt-1 text-xs text-gray-500">This email will be used to send your application to the employer.</p>
+      </div>
+      
+      <div>
+        <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+          Phone Number
+        </label>
+        <input type="tel" id="phone" name="phone"
+               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+               placeholder="+84 xxx xxx xxx">
+      </div>
+      
+      <div>
+        <label for="coverLetter" class="block text-sm font-medium text-gray-700 mb-2">
+          Cover Letter <span class="text-red-500">*</span>
+        </label>
+        <textarea id="coverLetter" name="cover_letter" rows="4" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Write a cover letter expressing your interest and suitability for this position..."></textarea>
+        <p class="mt-1 text-xs text-gray-500">A cover letter helps you express your aspirations and demonstrate your suitability for this position.</p>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Upload CV <span class="text-red-500">*</span>
+        </label>
+        <div id="cvUploadArea" class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition-colors cursor-pointer">
+          <input type="file" id="cvFile" name="cv" accept=".pdf" required class="hidden">
+          <div id="cvUploadContent">
+            <svg class="mx-auto h-10 w-10 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+              <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <p class="mt-2 text-sm text-gray-600">
+              <span class="font-medium text-blue-600 hover:text-blue-500">Click to upload</span> or drag and drop
+            </p>
+            <p class="mt-1 text-xs text-gray-500">PDF only (Max 100MB)</p>
+            <p id="cvFileName" class="mt-2 text-xs text-gray-500">No file chosen</p>
+          </div>
+        </div>
+        <p class="mt-1 text-xs text-gray-500">Please upload your CV in PDF format. Other formats are not recommended.</p>
+      </div>
+      
+      <div class="flex gap-3 pt-3 sticky bottom-0 bg-white border-t border-gray-200 -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 mt-4">
+        <button type="button" onclick="closeApplyModal()" 
+                class="flex-1 px-4 py-2.5 text-sm border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+          Cancel
+        </button>
+        <button type="submit" id="submitBtn"
+                class="flex-1 px-4 py-2.5 text-sm text-white rounded-lg font-medium hover:opacity-90 transition-all" 
+                style="background-color: #0688B4;">
+          Send Application
+        </button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <?php require dirname(__DIR__, 2) . '/layouts/public_footer.php'; ?>
