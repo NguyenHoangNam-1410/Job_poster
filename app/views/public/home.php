@@ -450,12 +450,53 @@ header.-translate-y-full {
     <div class="news-carousel-container max-w-6xl mx-auto">
       <div class="news-carousel-track">
         <?php 
+        // ============================================
+        // NEWS ARTICLES - ĐIỀN THÔNG TIN BÀI VIẾT Ở ĐÂY
+        // ============================================
+        // Format: ['img'=>'tên_file.jpg', 'title'=>'Tiêu đề', 'desc'=>'Mô tả ngắn', 'url'=>'https://link-thật.com']
+        // - img: Tên file ảnh trong thư mục /public/images/jobs/
+        // - title: Tiêu đề bài viết
+        // - desc: Mô tả ngắn (1-2 câu)
+        // - url: Link thật đến bài viết (có thể là link ngoài hoặc link trong website)
+        // ============================================
         $articles = [
-          ['img'=>'1.png','title'=>'Top 5 In-demand Tech Skills in 2025','desc'=>'Stay ahead with the most sought-after skills in software development and AI.'],
-          ['img'=>'2.png','title'=>'How to Build a Remote Career Successfully','desc'=>'Learn the habits and tools to thrive in the modern remote workspace.'],
-          ['img'=>'3.png','title'=>'Navigating Job Market Trends in 2025','desc'=>'Insights into hiring shifts, automation, and emerging industries.'],
-          ['img'=>'placeholder.jpg','title'=>'Mastering Interview Techniques in 2025','desc'=>'Discover proven strategies to ace your next job interview and stand out from the competition.'],
-          ['img'=>'placeholder.jpg','title'=>'Building Your Personal Brand Online','desc'=>'Learn how to create a compelling online presence that attracts top employers and opportunities.']
+          [
+            'img'=>'1.png',
+            'title'=>'Jobs Report: Hiring Flat for 2026 Grads',
+            'desc'=>'Employers are increasingly using skills-based hiring processes that value college internship and co-op experience over GPAs.',
+            'url'=>'https://www.insidehighered.com/news/students/careers/2025/11/17/jobs-report-hiring-flat-2026-grads'  // ← ĐIỀN LINK THẬT VÀO ĐÂY
+          ],
+          [
+            'img'=>'2.png',
+            'title'=>'How Artificial Intelligence Will Change the World',
+            'desc'=>'You would have been living under a rock if you did not know how artificial intelligence is set to affect jobs in 2026-2030.',
+            'url'=>'https://www.nexford.edu/insights/how-will-ai-affect-jobs'  // ← ĐIỀN LINK THẬT VÀO ĐÂY
+          ],
+          [
+            'img'=>'3.png',
+            'title'=>'Nearly 4 in 10 companies will replace workers with AI by 2026, survey shows',
+            'desc'=>'High-salary employees, those without AI skills, recently hired workers and entry-level employees face the highest risks for layoffs.',
+            'url'=>'https://www.hrdive.com/news/companies-will-replace-workers-with-ai-by-2026/760729/'  // ← ĐIỀN LINK THẬT VÀO ĐÂY
+          ],
+          [
+            'img'=>'5.png',
+            'title'=>'One third of companies in Germany to cut jobs in 2026',
+            'desc'=>'According to a report published by the German Economic Institute (IW), one in three companies operating in Germany plan to cut jobs in 2026. The outlook is particularly poor in manufacturing.',
+            'url'=>'https://www.iamexpat.de/career/employment-news/one-third-companies-germany-cut-jobs-2026'  // ← ĐIỀN LINK THẬT VÀO ĐÂY
+          ],
+          [
+            'img'=>'placeholder.jpg',
+            'title'=>'Top 8 Hiring Challenges of 2026 (And How Your Organization Can Prepare)',
+            'desc'=>'Learn how to create a compelling online presence that attracts top employers and opportunities.',
+            'url'=>'https://www.kellyservices.us/news-and-insights/top-hiring-challenges-2026'  // ← ĐIỀN LINK THẬT VÀO ĐÂY
+          ]
+          // Có thể thêm bài viết mới ở đây:
+          // [
+          //   'img'=>'tên_file.jpg',
+          //   'title'=>'Tiêu đề bài viết mới',
+          //   'desc'=>'Mô tả ngắn',
+          //   'url'=>'https://link-thật.com'
+          // ],
         ];
         // Duplicate articles for seamless loop
         $articles = array_merge($articles, $articles);
@@ -471,7 +512,9 @@ header.-translate-y-full {
           <div class="p-6">
             <h4 class="font-black text-xl text-gray-900 mb-3 uppercase"><?= htmlspecialchars($a['title']) ?></h4>
             <p class="text-gray-700 mb-5 leading-relaxed font-medium"><?= htmlspecialchars($a['desc']) ?></p>
-            <a href="#" class="btn-y2k inline-block px-6 py-2 text-sm bg-gradient-to-r from-lime-400 to-cyan-400">
+            <a href="<?= htmlspecialchars($a['url'] ?? '#') ?>" 
+               <?= (isset($a['url']) && strpos($a['url'], 'http') === 0) ? 'target="_blank" rel="noopener noreferrer"' : '' ?>
+               class="btn-y2k inline-block px-6 py-2 text-sm bg-gradient-to-r from-lime-400 to-cyan-400">
               READ MORE
             </a>
           </div>

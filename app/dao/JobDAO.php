@@ -383,23 +383,64 @@ class JobDAO {
    /* =========================================================
  * PUBLIC FILTERS + SEARCH (for /public/ajax/* endpoints)
  * =======================================================*/
-public function searchPublic($q, $categoryId, $location, $status, $page, $perPage) {
+public function searchPublic($q, $categoryIds, $locationIds, $statusIds, $page, $perPage) {
     $page    = max(1, (int)$page);
     $perPage = max(1, (int)$perPage);
     $off     = ($page - 1) * $perPage;
+
+    // Backward compatibility: if single int passed, convert to array
+    if (is_int($categoryIds)) {
+        $categoryIds = $categoryIds > 0 ? [$categoryIds] : [];
+    }
+    if (!is_array($categoryIds)) {
+        $categoryIds = [];
+    }
+    $categoryIds = array_filter(array_map('intval', $categoryIds), fn($id) => $id > 0);
+
+    // Handle locationIds: backward compatibility
+    if (is_string($locationIds)) {
+        $locationIds = $locationIds !== '' ? [$locationIds] : [];
+    }
+    if (!is_array($locationIds)) {
+        $locationIds = [];
+    }
+    $locationIds = array_filter(array_map('trim', $locationIds), fn($l) => $l !== '');
+
+    // Handle statusIds: backward compatibility
+    if (is_string($statusIds)) {
+        $statusIds = $statusIds !== '' ? [$statusIds] : [];
+    }
+    if (!is_array($statusIds)) {
+        $statusIds = [];
+    }
+    $statusIds = array_filter(array_map('trim', $statusIds), fn($s) => $s !== '');
 
     $where = [];
     $binds = [];
     $types = '';
 
-    if ($status === '' || $status === 'all') {
-        $where[] = "(JOBS.status IN ('approved','recruiting','overdue'))";
-    } elseif ($status === 'recruiting') {
-        $where[] = "((JOBS.status='approved' AND JOBS.deadline >= NOW()) OR JOBS.status='recruiting')";
-    } elseif ($status === 'overdue') {
-        $where[] = "((JOBS.status='approved' AND JOBS.deadline < NOW()) OR JOBS.status='overdue')";
+    // Handle multiple statuses: if any status selected, filter by them; otherwise show all public
+    if (!empty($statusIds)) {
+        $statusConditions = [];
+        foreach ($statusIds as $st) {
+            if ($st === 'recruiting') {
+                $statusConditions[] = "((JOBS.status='approved' AND JOBS.deadline >= NOW()) OR JOBS.status='recruiting')";
+            } elseif ($st === 'overdue') {
+                $statusConditions[] = "((JOBS.status='approved' AND JOBS.deadline < NOW()) OR JOBS.status='overdue')";
+            } elseif ($st === 'all') {
+                $statusConditions[] = "(JOBS.status IN ('approved','recruiting','overdue'))";
+            } else {
+                $statusConditions[] = "JOBS.status = ?";
+                $binds[] = $st;
+                $types .= 's';
+            }
+        }
+        if (!empty($statusConditions)) {
+            $where[] = "(" . implode(" OR ", $statusConditions) . ")";
+        }
     } else {
-        $where[] = "JOBS.status = 'approved'";
+        // Default: show all public jobs
+        $where[] = "(JOBS.status IN ('approved','recruiting','overdue'))";
     }
     
 
@@ -417,25 +458,51 @@ public function searchPublic($q, $categoryId, $location, $status, $page, $perPag
         $types  .= 'ssss';
     }
 
-    $catId = (int)$categoryId;
-    if ($catId > 0) {
-        $where[] = "EXISTS (SELECT 1 FROM JOB_CATEGORY_MAP m WHERE m.job_id = JOBS.id AND m.category_id = ?)";
-        $binds[] = $catId; $types .= 'i';
+    // Handle multiple categories: find jobs that have ALL selected categories
+    if (!empty($categoryIds)) {
+        $catCount = count($categoryIds);
+        $inPlaceholders = implode(',', array_fill(0, $catCount, '?'));
+        // Use subquery to find jobs that have ALL the selected categories
+        $categorySubquery = "(
+            SELECT job_id 
+            FROM JOB_CATEGORY_MAP 
+            WHERE category_id IN ($inPlaceholders)
+            GROUP BY job_id 
+            HAVING COUNT(DISTINCT category_id) = $catCount
+        )";
+        $where[] = "JOBS.id IN $categorySubquery";
+        foreach ($categoryIds as $catId) {
+            $binds[] = $catId;
+            $types .= 'i';
+        }
     }
 
-    if ($location !== '') {
-        $where[] = "JOBS.location LIKE CONCAT('%', ?, '%')";
-        $binds[] = $location; $types .= 's';
+    // Handle multiple locations: job must match ANY of the selected locations
+    if (!empty($locationIds)) {
+        $locConditions = [];
+        foreach ($locationIds as $loc) {
+            $locConditions[] = "JOBS.location LIKE CONCAT('%', ?, '%')";
+            $binds[] = $loc;
+            $types .= 's';
+        }
+        if (!empty($locConditions)) {
+            $where[] = "(" . implode(" OR ", $locConditions) . ")";
+        }
     }
 
     $whereSql = $where ? ("WHERE " . implode(" AND ", $where)) : "";
 
-    $sqlCnt = "SELECT COUNT(*) AS c FROM JOBS LEFT JOIN EMPLOYERS e ON e.id = JOBS.employer_id $whereSql";
+    // Count query
+    $sqlCnt = "SELECT COUNT(*) AS c 
+               FROM JOBS 
+               LEFT JOIN EMPLOYERS e ON e.id = JOBS.employer_id 
+               $whereSql";
     $stmtCnt = $this->conn->prepare($sqlCnt);
     if ($types !== '') $stmtCnt->bind_param($types, ...$binds);
     $stmtCnt->execute();
     $total = (int)($stmtCnt->get_result()->fetch_assoc()['c'] ?? 0);
 
+    // Main query
     $sql = "
       SELECT
         JOBS.id,
