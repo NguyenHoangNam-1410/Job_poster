@@ -52,12 +52,11 @@ function status_badge_class($st){
 
 <style>
 /* Force Choices.js to have white background and black border like Status filter */
-#categorySelect + .choices .choices__inner,
-#locationSelect + .choices .choices__inner {
-  background: white !important;
-  background-color: white !important;
-  border: 2px solid #1a1a1a !important;
-  border-radius: 0 !important;
+.choices.is-focused .choices__inner,
+.choices.is-open .choices__inner {
+  border-color: #0688B4 !important;
+  box-shadow: 3px 3px 0 rgba(6, 136, 180, 0.3) !important;
+  transform: translate(-1px, -1px) !important;
 }
 
 .choices__inner {
@@ -78,6 +77,50 @@ function status_badge_class($st){
 .choices__button {
   color: #1a1a1a !important;
   border-left-color: #1a1a1a !important;
+}
+
+/* Style for single-select Choices (Status) */
+#statusSelect + .choices .choices__inner {
+  cursor: pointer;
+}
+
+#statusSelect + .choices .choices__list--single {
+  padding: 0;
+}
+
+/* Ensure all Choices dropdowns have consistent styling */
+.choices__list--dropdown {
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+  border-top: none !important;
+}
+
+/* Add dropdown arrow like Status select */
+.choices[data-type*="select-multiple"] .choices__inner::after,
+.choices[data-type*="select-one"] .choices__inner::after {
+  content: '' !important;
+  position: absolute !important;
+  right: 1rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 0 !important;
+  height: 0 !important;
+  border-left: 5px solid transparent !important;
+  border-right: 5px solid transparent !important;
+  border-top: 6px solid #1a1a1a !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+}
+
+.choices[data-type*="select-multiple"].is-open .choices__inner::after,
+.choices[data-type*="select-one"].is-open .choices__inner::after {
+  border-top: none !important;
+  border-bottom: 6px solid #1a1a1a !important;
+}
+
+/* Make room for arrow */
+.choices__inner {
+  padding-right: 2.5rem !important;
 }
 </style>
 
@@ -483,7 +526,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       removeItemButton: true,
       searchEnabled: true,
       searchPlaceholderValue: 'Search categories...',
-      placeholderValue: 'Select categories',
+      placeholderValue: '',
       maxItemCount: 3,
       maxItemText: (maxItemCount) => `Only ${maxItemCount} categories allowed`,
       noResultsText: 'No categories found',
@@ -500,7 +543,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       removeItemButton: true,
       searchEnabled: true,
       searchPlaceholderValue: 'Search locations...',
-      placeholderValue: 'Select locations',
+      placeholderValue: '',
       maxItemCount: -1,
       noResultsText: 'No locations found',
     });
@@ -510,8 +553,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
   
-  // Status simple dropdown handler
+  // Initialize Choices.js for status (single select)
   if(elStatusSelect) {
+    statusChoices = new Choices(elStatusSelect, {
+      searchEnabled: false,
+      itemSelectText: '',
+      shouldSort: false,
+      placeholder: false,
+    });
+    
     elStatusSelect.addEventListener('change', () => {
       resetAndLoad();
     });
