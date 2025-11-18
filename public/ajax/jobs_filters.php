@@ -41,5 +41,5 @@ if ($rsLocs) {
 echo json_encode([
   'categories' => $cats,
   'locations'  => $locs,
-  'statuses'   => ['all','recruiting','overdue'],
+  'statuses'   => ['recruiting','overdue'],
 ], JSON_UNESCAPED_UNICODE);
