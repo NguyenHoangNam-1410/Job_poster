@@ -175,6 +175,18 @@ class FormModal {
         modalBody.innerHTML = '';
         modalBody.appendChild(formElement);
         
+        // Execute any script tags in the loaded content
+        const scripts = doc.querySelectorAll('script');
+        scripts.forEach(oldScript => {
+          const newScript = document.createElement('script');
+          if (oldScript.src) {
+            newScript.src = oldScript.src;
+          } else {
+            newScript.textContent = oldScript.textContent;
+          }
+          document.head.appendChild(newScript);
+        });
+        
         // Setup form submission handler
         this.setupFormSubmission(formElement);
       } else {

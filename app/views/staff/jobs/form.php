@@ -94,19 +94,19 @@ $jobCategoryIds = array_column($jobCategories, 'id');
                     <label class="form-label">
                         Job Categories
                     </label>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2 p-4 bg-gray-50 border border-gray-300 rounded-md max-h-48 overflow-y-auto">
+                    <select 
+                        name="categories[]" 
+                        id="jobCategories"
+                        multiple
+                        class="form-input w-full"
+                        style="visibility: hidden; height: 42px;">
                         <?php foreach ($categories as $category): ?>
-                            <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="checkbox" 
-                                       name="categories[]" 
-                                       value="<?= $category->getId() ?>"
-                                       <?= in_array($category->getId(), $jobCategoryIds) ? 'checked' : '' ?>
-                                       class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                <span class="text-sm text-gray-700"><?= htmlspecialchars($category->getCategoryName()) ?></span>
-                            </label>
+                            <option value="<?= $category->getId() ?>"
+                                    <?= in_array($category->getId(), $jobCategoryIds) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($category->getCategoryName()) ?>
+                            </option>
                         <?php endforeach; ?>
-                    </div>
-                    <p class="mt-1 text-sm text-gray-500">Select all categories that apply to this job</p>
+                    </select>
                 </div>
 
                 <!-- Description -->
@@ -153,6 +153,47 @@ $jobCategoryIds = array_column($jobCategories, 'id');
         </form>
     </div>
 </div>
+
+<script>
+(function() {
+    // Initialize Choices.js for categories multi-select
+    function initCategorySelect() {
+        const categorySelect = document.getElementById('jobCategories');
+        
+        if (!categorySelect) {
+            console.log('Category select not found');
+            return;
+        }
+        
+        console.log('Initializing Choices.js');
+        
+        const choices = new Choices(categorySelect, {
+            removeItemButton: true,
+            searchEnabled: true,
+            searchChoices: true,
+            searchPlaceholderValue: 'Search categories...',
+            placeholder: true,
+            placeholderValue: 'Select categories',
+            itemSelectText: 'Click to select',
+            noResultsText: 'No categories found',
+            noChoicesText: 'No categories available',
+            maxItemCount: -1
+        });
+        
+        // Show the enhanced select
+        categorySelect.style.visibility = 'visible';
+        
+        console.log('Choices.js initialized successfully');
+    }
+    
+    // Initialize when DOM is ready or immediately if already loaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCategorySelect);
+    } else {
+        setTimeout(initCategorySelect, 100);
+    }
+})();
+</script>
 
 <?php 
 if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {

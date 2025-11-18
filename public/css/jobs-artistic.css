@@ -171,6 +171,123 @@ body.jobs-listing-page {
   background: #f8f8f8;
 }
 
+/* Choices.js Custom Styling */
+.choices {
+  margin-bottom: 0;
+}
+
+.choices__inner {
+  padding: 0.875rem 1rem !important;
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+  background: white !important;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  min-height: 50px !important;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+}
+
+.choices__inner:focus,
+.choices.is-focused .choices__inner {
+  border-color: var(--primary-teal) !important;
+  box-shadow: 3px 3px 0 rgba(6, 136, 180, 0.3) !important;
+  transform: translate(-1px, -1px);
+}
+
+.choices__inner:hover {
+  background: #f8f8f8 !important;
+}
+
+.choices__list--dropdown {
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+  box-shadow: 6px 6px 0 rgba(6, 136, 180, 0.15) !important;
+  background: white !important;
+  margin-top: 4px;
+  z-index: 100;
+}
+
+.choices__list--dropdown .choices__item {
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.choices__list--dropdown .choices__item--selectable.is-highlighted {
+  background-color: var(--primary-teal) !important;
+  color: white !important;
+}
+
+.choices__list--multiple .choices__item {
+  background-color: var(--primary-teal) !important;
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+  padding: 0.4rem 0.75rem;
+  margin: 0.25rem 0.25rem 0.25rem 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white !important;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 2px 2px 0 rgba(6, 136, 180, 0.3);
+}
+
+.choices__list--multiple .choices__item.is-highlighted {
+  background-color: var(--primary-teal-dark) !important;
+  border-color: #1a1a1a !important;
+}
+
+.choices__button {
+  border-left: 1px solid rgba(255, 255, 255, 0.5) !important;
+  opacity: 1 !important;
+  padding: 0 8px;
+  font-weight: 900;
+}
+
+.choices__button:hover,
+.choices__button:focus {
+  opacity: 1 !important;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.choices__input {
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  background: transparent !important;
+  padding: 0.25rem 0 !important;
+}
+
+.choices__placeholder {
+  opacity: 0.5;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.choices[data-type*="select-multiple"] .choices__button,
+.choices[data-type*="text"] .choices__button {
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.choices__list--dropdown .choices__item--selectable::after {
+  display: none;
+}
+
 /* Vertical Text Labels - Artistic */
 .vertical-label {
   writing-mode: vertical-rl;

@@ -48,90 +48,7 @@ function status_badge_class($st){
   }
 }
 ?>
-<style>
-/* Fade-in animations for page elements */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.8s ease-out forwards;
-  opacity: 0;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
-  opacity: 0;
-}
-
-/* Staggered delays for elements */
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-.delay-400 { animation-delay: 0.4s; }
-
-/* Lazy load animation for job cards */
-.job-card-wrapper {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.job-card-wrapper.loaded {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Filter dropdown with search */
-.filter-dropdown-wrapper {
-  position: relative;
-}
-
-.filter-dropdown-list {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.375rem;
-  max-height: 200px;
-  overflow-y: auto;
-  z-index: 50;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  margin-top: 0.25rem;
-}
-
-.filter-dropdown-list .dropdown-item {
-  padding: 0.5rem 0.75rem;
-  cursor: pointer;
-  transition: background-color 0.15s;
-}
-
-.filter-dropdown-list .dropdown-item:hover {
-  background-color: #f3f4f6;
-}
-
-.filter-dropdown-list .dropdown-item.hidden {
-  display: none;
-}
-</style>
+<style href="/Job_poster/public/css/jobs-listing.css"></style>
 
 <script>
 document.body.classList.add('jobs-listing-page');
@@ -156,62 +73,36 @@ document.body.classList.add('jobs-listing-page');
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- Categories: Dropdown select that can be selected multiple times -->
+          <!-- Categories: Multiple select with Choices.js (limit 3) -->
           <div class="relative">
-            <label class="block text-sm font-medium mb-2" style="color: #4a4a4a;">Categories</label>
-            <div class="filter-dropdown-wrapper">
-              <input type="text" id="categorySearch" placeholder="Search category..." 
-                     class="jobs-filter-select" autocomplete="off" style="padding-right: 2.5rem;">
-              <select id="category" class="filter-dropdown-select" size="1" style="display: none;">
-                <option value="">-- Select category to add --</option>
-                <?php foreach ($categories as $c): ?>
-                  <option value="<?= htmlspecialchars($c['id']) ?>" data-cat-name="<?= htmlspecialchars($c['name']) ?>">
-                    <?= htmlspecialchars($c['name']) ?>
-                  </option>
-                <?php endforeach; ?>
-              </select>
-              <div id="categoryDropdown" class="filter-dropdown-list" style="display: none;"></div>
-            </div>
-            <div id="selectedCategories" class="hidden"></div>
+            <label class="block text-sm font-medium mb-2" style="color: #4a4a4a;">Categories (max 3)</label>
+            <select 
+              name="category_ids[]" 
+              id="categorySelect"
+              multiple
+              class="jobs-filter-select">
+            </select>
           </div>
 
-          <!-- Location: Dropdown with search -->
+          <!-- Location: Multiple select with Choices.js (OR logic) -->
           <div class="relative">
-            <label class="block text-sm font-medium mb-2" style="color: #4a4a4a;">Location</label>
-            <div class="filter-dropdown-wrapper">
-              <input type="text" id="locationSearch" placeholder="Search location..." 
-                     class="jobs-filter-select" autocomplete="off" style="padding-right: 2.5rem;">
-              <select id="location" class="filter-dropdown-select" size="1" style="display: none;">
-                <option value="">-- Select location to add --</option>
-                <?php foreach ($locations as $l): ?>
-                  <option value="<?= htmlspecialchars($l) ?>"><?= htmlspecialchars($l) ?></option>
-                <?php endforeach; ?>
-              </select>
-              <div id="locationDropdown" class="filter-dropdown-list" style="display: none;"></div>
-            </div>
-            <div id="selectedLocations" class="hidden"></div>
+            <label class="block text-sm font-medium mb-2" style="color: #4a4a4a;">Locations</label>
+            <select 
+              name="location_ids[]" 
+              id="locationSelect"
+              multiple
+              class="jobs-filter-select">
+            </select>
           </div>
 
-          <!-- Status: Dropdown with search -->
+          <!-- Status: Simple dropdown (only 2 options) -->
           <div class="relative">
             <label class="block text-sm font-medium mb-2" style="color: #4a4a4a;">Status</label>
-            <div class="filter-dropdown-wrapper">
-              <input type="text" id="statusSearch" placeholder="Search status..." 
-                     class="jobs-filter-select" autocomplete="off" style="padding-right: 2.5rem;">
-              <select id="status" class="filter-dropdown-select" size="1" style="display: none;">
-                <option value="">-- Select status to add --</option>
-                <?php
-                  $statuses = $statuses ?: ['all','recruiting','overdue'];
-                  foreach ($statuses as $s):
-                ?>
-                  <option value="<?= htmlspecialchars($s) ?>" data-status-label="<?= $s==='recruiting'?'Recruiting':($s==='overdue'?'Overdue':ucfirst(htmlspecialchars($s))) ?>">
-                    <?= $s==='recruiting'?'Recruiting':($s==='overdue'?'Overdue':ucfirst(htmlspecialchars($s))) ?>
-                  </option>
-                <?php endforeach; ?>
-              </select>
-              <div id="statusDropdown" class="filter-dropdown-list" style="display: none;"></div>
-            </div>
-            <div id="selectedStatuses" class="hidden"></div>
+            <select id="statusSelect" name="status" class="jobs-filter-select">
+              <option value="">All Statuses</option>
+              <option value="recruiting">Recruiting</option>
+              <option value="overdue">Overdue</option>
+            </select>
           </div>
         </div>
       </form>
@@ -289,19 +180,9 @@ document.body.classList.add('jobs-listing-page');
 <script>
 const BASE='<?= BASE_PUBLIC ?>';
 const elQ=document.getElementById('q');
-const elCat=document.getElementById('category');
-const elCatSearch=document.getElementById('categorySearch');
-const elCatDropdown=document.getElementById('categoryDropdown');
-const elLoc=document.getElementById('location');
-const elLocSearch=document.getElementById('locationSearch');
-const elLocDropdown=document.getElementById('locationDropdown');
-const elSt=document.getElementById('status');
-const elStSearch=document.getElementById('statusSearch');
-const elStDropdown=document.getElementById('statusDropdown');
-const selectedCategoriesContainer = document.getElementById('selectedCategories');
-let selectedCategories = []; // Array of {value, label} where value is id
-let selectedLocations = []; // Array of {value, label}
-let selectedStatuses = []; // Array of {value, label}
+const elCategorySelect=document.getElementById('categorySelect');
+const elLocationSelect=document.getElementById('locationSelect');
+const elStatusSelect=document.getElementById('statusSelect');
 const grid=document.getElementById('grid');
 const count=document.getElementById('count');
 const pager=document.getElementById('pager');
@@ -311,140 +192,27 @@ const activeBadges=document.getElementById('activeBadges');
 const activeCount=document.getElementById('activeCount');
 
 let page=1, perPage=12, lastTotal=0, typingTimer=0;
-
-// Initialize dropdown with search for a filter
-function initFilterDropdown(searchInput, selectElement, dropdownDiv, selectedArray, getLabelFn) {
-  let allOptions = [];
-  
-  // Store all options
-  Array.from(selectElement.options).forEach(opt => {
-    if(opt.value) {
-      allOptions.push({
-        value: opt.value,
-        label: getLabelFn(opt),
-        element: opt
-      });
-    }
-  });
-  
-  // Render dropdown list
-  function renderDropdown(filterText = '') {
-    const filtered = allOptions.filter(opt => 
-      opt.label.toLowerCase().includes(filterText.toLowerCase())
-    );
-    
-    dropdownDiv.innerHTML = filtered.map(opt => {
-      const isSelected = selectedArray.find(s => s.value === opt.value);
-      return `<div class="dropdown-item ${isSelected ? 'hidden' : ''}" 
-                   data-value="${escapeAttr(opt.value)}" 
-                   data-label="${escapeAttr(opt.label)}">
-                ${escapeHtml(opt.label)}
-              </div>`;
-    }).join('');
-    
-    // Add click handlers
-    dropdownDiv.querySelectorAll('.dropdown-item').forEach(item => {
-      item.addEventListener('click', () => {
-        const value = item.getAttribute('data-value');
-        const label = item.getAttribute('data-label');
-        
-        if(value && !selectedArray.find(s => s.value === value)) {
-          selectedArray.push({value: value, label: label});
-          searchInput.value = '';
-          dropdownDiv.style.display = 'none';
-          renderBadges();
-          resetAndLoad();
-        }
-      });
-    });
-  }
-  
-  // Search input handler
-  searchInput.addEventListener('focus', () => {
-    renderDropdown(searchInput.value);
-    dropdownDiv.style.display = 'block';
-  });
-  
-  searchInput.addEventListener('input', () => {
-    renderDropdown(searchInput.value);
-    dropdownDiv.style.display = searchInput.value.trim() !== '' ? 'block' : 'none';
-  });
-  
-  // Close dropdown when clicking outside
-  document.addEventListener('click', (e) => {
-    if (!searchInput.contains(e.target) && !dropdownDiv.contains(e.target)) {
-      dropdownDiv.style.display = 'none';
-    }
-  });
-  
-  // Initial render
-  renderDropdown();
-}
-
-async function loadFilters(){
-  try{
-    const r=await fetch(`${BASE}/ajax/jobs_filters.php`);
-    const d=await r.json() || {};
-    const cats = d.categories ?? d.cats ?? [];
-    const locs = d.locations  ?? d.locs ?? [];
-    const stts = d.statuses   ?? d.stts ?? ['all','recruiting','overdue'];
-    
-    // Render categories dropdown
-    elCat.innerHTML = '<option value="">-- Select category to add --</option>' + 
-      cats.map(c=>`<option value="${c.id}" data-cat-name="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
-    
-    // Render locations dropdown
-    elLoc.innerHTML = '<option value="">-- Select location to add --</option>' + 
-      locs.map(l=>`<option value="${escapeHtml(l)}">${escapeHtml(l)}</option>`).join('');
-    
-    // Render statuses dropdown
-    elSt.innerHTML = '<option value="">-- Select status to add --</option>' + 
-      stts.map(s=>`<option value="${s}" data-status-label="${capStatus(s)}">${capStatus(s)}</option>`).join('');
-    
-    // Initialize filter dropdowns with search
-    initFilterDropdown(
-      elCatSearch, 
-      elCat, 
-      elCatDropdown, 
-      selectedCategories,
-      (opt) => opt.getAttribute('data-cat-name') || opt.textContent
-    );
-    
-    initFilterDropdown(
-      elLocSearch, 
-      elLoc, 
-      elLocDropdown, 
-      selectedLocations,
-      (opt) => opt.textContent
-    );
-    
-    initFilterDropdown(
-      elStSearch, 
-      elSt, 
-      elStDropdown, 
-      selectedStatuses,
-      (opt) => opt.getAttribute('data-status-label') || capStatus(opt.value)
-    );
-  }catch(e){}
-}
+let categoryChoices, locationChoices;
 
 function makeURL(){
   const u=new URL(`${BASE}/ajax/jobs_list.php`, window.location.origin);
   if(elQ.value.trim()) u.searchParams.set('q', elQ.value.trim());
   
-  // Add all selected categories
+  // Add selected categories (AND logic)
+  const selectedCategories = categoryChoices ? categoryChoices.getValue(true) : [];
   if(selectedCategories.length > 0) {
-    selectedCategories.forEach(cat => u.searchParams.append('category_ids[]', cat.value));
+    selectedCategories.forEach(cat => u.searchParams.append('category_ids[]', cat));
   }
   
-  // Add all selected locations
+  // Add selected locations (OR logic)
+  const selectedLocations = locationChoices ? locationChoices.getValue(true) : [];
   if(selectedLocations.length > 0) {
-    selectedLocations.forEach(loc => u.searchParams.append('location_ids[]', loc.value));
+    selectedLocations.forEach(loc => u.searchParams.append('location_ids[]', loc));
   }
   
-  // Add all selected statuses
-  if(selectedStatuses.length > 0) {
-    selectedStatuses.forEach(st => u.searchParams.append('status_ids[]', st.value));
+  // Add status
+  if(elStatusSelect.value) {
+    u.searchParams.set('status', elStatusSelect.value);
   }
   
   u.searchParams.set('page', page);
@@ -462,13 +230,12 @@ async function loadJobs(){
       grid.innerHTML = `<div class="jobs-no-results"><h3 class="jobs-no-results-title">NO JOBS FOUND</h3><p class="jobs-no-results-text">Try adjusting your search or filters to find more opportunities.</p></div>`;
     } else {
       grid.innerHTML = (d.rows||[]).map(card).join('');
-      // Re-animate new cards
       setTimeout(() => animateJobCards(), 50);
     }
     pageInfo.textContent = `Page ${page}`;
     renderPager();
     renderBadges();
-  }catch(e){}
+  }catch(e){console.error(e);}
 }
 
 function card(job){
@@ -514,21 +281,17 @@ function renderPager(){
   const prevDisabled = page<=1;
   const nextDisabled = page>=totalPages;
   
-  // Generate page numbers to display
   let pageNumbers = [];
-  const maxVisible = 5; // Maximum page numbers to show
+  const maxVisible = 5;
   
   if (totalPages <= maxVisible) {
-    // Show all pages if total is small
     for (let i = 1; i <= totalPages; i++) {
       pageNumbers.push(i);
     }
   } else {
-    // Show pages around current page
     let start = Math.max(1, page - 2);
     let end = Math.min(totalPages, page + 2);
     
-    // Adjust if at the beginning or end
     if (page <= 3) {
       end = Math.min(maxVisible, totalPages);
     } else if (page >= totalPages - 2) {
@@ -540,7 +303,6 @@ function renderPager(){
     }
   }
   
-  // Build pagination HTML
   let pagesHTML = pageNumbers.map(p => {
     if (p === page) {
       return `<span class="jobs-pagination-current">${p}</span>`;
@@ -567,13 +329,6 @@ function renderPager(){
   });
 }
 
-function statusClass(st){
-  switch(st){
-    case 'recruiting': return 'bg-emerald-100 text-emerald-700 border-emerald-200';
-    case 'overdue':    return 'bg-rose-100 text-rose-700 border-rose-200';
-    default:           return 'bg-gray-100 text-gray-700 border-gray-200';
-  }
-}
 function capStatus(s){
   return s==='recruiting' ? 'Recruiting'
        : s==='overdue'    ? 'Overdue'
@@ -585,49 +340,54 @@ function escapeAttr(s){ return escapeHtml(s); }
 
 function renderBadges(){
   const items=[];
-  if(elQ.value.trim()){ items.push({k:'q', label:elQ.value.trim()}); }
+  if(elQ.value.trim()){ items.push({type:'search', label:elQ.value.trim()}); }
   
-  // Add badges for each selected category
-  selectedCategories.forEach(cat=>{
-    items.push({k:'category', label:cat.label, value:cat.value, type:'category'});
-  });
+  // Add category badges
+  if(categoryChoices) {
+    categoryChoices.getValue(true).forEach((val, idx) => {
+      const option = Array.from(elCategorySelect.options).find(opt => opt.value === val);
+      if(option) {
+        items.push({type:'category', value:val, label:option.textContent, index:idx});
+      }
+    });
+  }
   
-  // Add badges for each selected location
-  selectedLocations.forEach(loc=>{
-    items.push({k:'location', label:loc.label, value:loc.value, type:'location'});
-  });
+  // Add location badges
+  if(locationChoices) {
+    locationChoices.getValue(true).forEach((val, idx) => {
+      items.push({type:'location', value:val, label:val, index:idx});
+    });
+  }
   
-  // Add badges for each selected status
-  selectedStatuses.forEach(st=>{
-    items.push({k:'status', label:st.label, value:st.value, type:'status'});
-  });
+  // Add status badge
+  if(elStatusSelect.value) {
+    items.push({type:'status', value:elStatusSelect.value, label:capStatus(elStatusSelect.value)});
+  }
 
   activeBadges.innerHTML = items.map(it=>`
     <button type="button" class="jobs-filter-badge"
-            data-k="${it.k}" data-value="${escapeAttr(it.value)}" data-type="${it.type}">
+            data-type="${it.type}" data-value="${escapeAttr(it.value||'')}" data-index="${it.index||''}">
       <span>${escapeHtml(it.label)}</span>
       <span aria-hidden="true">✕</span>
     </button>
   `).join('');
 
-  activeBadges.querySelectorAll('button[data-k]').forEach(b=>{
+  activeBadges.querySelectorAll('button').forEach(b=>{
     b.addEventListener('click',()=>{
-      const k=b.getAttribute('data-k');
       const type=b.getAttribute('data-type');
       const value=b.getAttribute('data-value');
       
-      if(k==='q') elQ.value='';
-      if(type==='category') {
-        selectedCategories = selectedCategories.filter(c => c.value !== value);
+      if(type==='search') {
+        elQ.value='';
+      } else if(type==='category' && categoryChoices) {
+        categoryChoices.removeActiveItemsByValue(value);
+      } else if(type==='location' && locationChoices) {
+        locationChoices.removeActiveItemsByValue(value);
+      } else if(type==='status') {
+        elStatusSelect.value='';
       }
-      if(type==='location') {
-        selectedLocations = selectedLocations.filter(l => l.value !== value);
-      }
-      if(type==='status') {
-        selectedStatuses = selectedStatuses.filter(s => s.value !== value);
-      }
+      
       page=1;
-      renderBadges();
       loadJobs();
     });
   });
@@ -640,14 +400,13 @@ function renderBadges(){
 
 function resetAndLoad(){ page=1; loadJobs(); }
 
-// Lazy load animation for job cards
 function animateJobCards() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, index) => {
       if (entry.isIntersecting) {
         setTimeout(() => {
           entry.target.classList.add('loaded');
-        }, index * 50); // Stagger animation
+        }, index * 50);
         observer.unobserve(entry.target);
       }
     });
@@ -661,14 +420,75 @@ function animateJobCards() {
   });
 }
 
+async function loadFilters() {
+  try {
+    const r = await fetch(`${BASE}/ajax/jobs_filters.php`);
+    const d = await r.json() || {};
+    const cats = d.categories ?? d.cats ?? [];
+    const locs = d.locations ?? d.locs ?? [];
+    
+    // Populate categories
+    elCategorySelect.innerHTML = cats.map(c => 
+      `<option value="${c.id}">${escapeHtml(c.name)}</option>`
+    ).join('');
+    
+    // Populate locations
+    elLocationSelect.innerHTML = locs.map(l => 
+      `<option value="${escapeHtml(l)}">${escapeHtml(l)}</option>`
+    ).join('');
+    
+  } catch(e) {
+    console.error('Failed to load filters:', e);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
+  // Load filter data first
   await loadFilters();
+  
+  // Initialize Choices.js for categories (max 3)
+  if(elCategorySelect) {
+    categoryChoices = new Choices(elCategorySelect, {
+      removeItemButton: true,
+      searchEnabled: true,
+      searchPlaceholderValue: 'Search categories...',
+      placeholderValue: 'Select categories',
+      maxItemCount: 3,
+      maxItemText: (maxItemCount) => `Only ${maxItemCount} categories allowed`,
+      noResultsText: 'No categories found',
+    });
+    
+    elCategorySelect.addEventListener('change', () => {
+      resetAndLoad();
+    });
+  }
+  
+  // Initialize Choices.js for locations (unlimited, OR logic)
+  if(elLocationSelect) {
+    locationChoices = new Choices(elLocationSelect, {
+      removeItemButton: true,
+      searchEnabled: true,
+      searchPlaceholderValue: 'Search locations...',
+      placeholderValue: 'Select locations',
+      maxItemCount: -1,
+      noResultsText: 'No locations found',
+    });
+    
+    elLocationSelect.addEventListener('change', () => {
+      resetAndLoad();
+    });
+  }
+  
+  // Status simple dropdown handler
+  if(elStatusSelect) {
+    elStatusSelect.addEventListener('change', () => {
+      resetAndLoad();
+    });
+  }
+
   await loadJobs();
   
-  // Animate initial job cards
   setTimeout(() => animateJobCards(), 100);
-
-  // Location and status are now handled by search inputs, no need for change listeners
 
   elQ.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); resetAndLoad(); }});
   elQ.addEventListener('input', () => {
@@ -679,12 +499,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   clearAll.addEventListener('click', e => {
     e.preventDefault();
     elQ.value='';
-    selectedCategories = [];
-    selectedLocations = [];
-    selectedStatuses = [];
-    elCatSearch.value='';
-    elLocSearch.value='';
-    elStSearch.value='';
+    if(categoryChoices) categoryChoices.removeActiveItems();
+    if(locationChoices) locationChoices.removeActiveItems();
+    elStatusSelect.value='';
     renderBadges();
     resetAndLoad();
   });
