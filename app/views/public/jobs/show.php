@@ -483,9 +483,20 @@ let fileInputSetup = false;
 function handleFileSelect(input) {
   const file = input.files[0];
   if (file) {
-    // Validate file type
-    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-      alert('Please upload a PDF file only.');
+    // Validate file type (PDF and images)
+    const allowedTypes = [
+      'application/pdf',
+      'image/jpeg',
+      'image/jpg', 
+      'image/png',
+      'image/gif',
+      'image/webp'
+    ];
+    const fileExtension = file.name.toLowerCase().split('.').pop();
+    const allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'webp'];
+    
+    if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
+      alert('Please upload a PDF or image file (JPG, PNG, GIF, WebP).');
       input.value = '';
       const fileNameEl = document.getElementById('cvFileName');
       if (fileNameEl) fileNameEl.textContent = 'No file chosen';
@@ -493,9 +504,9 @@ function handleFileSelect(input) {
       if (uploadArea) uploadArea.classList.remove('border-green-400', 'bg-green-50');
       return;
     }
-    // Validate file size (100MB)
-    if (file.size > 100 * 1024 * 1024) {
-      alert('File size must be less than 100MB.');
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size must be less than 5MB.');
       input.value = '';
       const fileNameEl = document.getElementById('cvFileName');
       if (fileNameEl) fileNameEl.textContent = 'No file chosen';
@@ -816,7 +827,7 @@ document.addEventListener('DOMContentLoaded', function() {
           Upload CV <span class="text-red-500">*</span>
         </label>
         <div id="cvUploadArea" class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition-colors cursor-pointer">
-          <input type="file" id="cvFile" name="cv" accept=".pdf" required class="hidden">
+          <input type="file" id="cvFile" name="cv" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,image/*,application/pdf" required class="hidden">
           <div id="cvUploadContent">
             <svg class="mx-auto h-10 w-10 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
               <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -824,11 +835,11 @@ document.addEventListener('DOMContentLoaded', function() {
             <p class="mt-2 text-sm text-gray-600">
               <span class="font-medium text-blue-600 hover:text-blue-500">Click to upload</span> or drag and drop
             </p>
-            <p class="mt-1 text-xs text-gray-500">PDF only (Max 100MB)</p>
+            <p class="mt-1 text-xs text-gray-500">PDF or Image (JPG, PNG, GIF, WebP) - Max 5MB</p>
             <p id="cvFileName" class="mt-2 text-xs text-gray-500">No file chosen</p>
           </div>
         </div>
-        <p class="mt-1 text-xs text-gray-500">Please upload your CV in PDF format. Other formats are not recommended.</p>
+        <p class="mt-1 text-xs text-gray-500">Upload your CV in PDF or image format (JPG, PNG, GIF, WebP).</p>
       </div>
       
       <div class="flex gap-3 pt-3 sticky bottom-0 bg-white border-t border-gray-200 -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 mt-4">
