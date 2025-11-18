@@ -97,6 +97,40 @@ function status_badge_class($st){
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Filter dropdown with search */
+.filter-dropdown-wrapper {
+  position: relative;
+}
+
+.filter-dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 50;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin-top: 0.25rem;
+}
+
+.filter-dropdown-list .dropdown-item {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.filter-dropdown-list .dropdown-item:hover {
+  background-color: #f3f4f6;
+}
+
+.filter-dropdown-list .dropdown-item.hidden {
+  display: none;
+}
 </style>
 
 <script>
@@ -122,29 +156,63 @@ document.body.classList.add('jobs-listing-page');
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <select id="category" name="category" class="jobs-filter-select">
-            <option value="">All categories</option>
-            <?php foreach ($categories as $c): ?>
-              <option value="<?= htmlspecialchars($c['id']) ?>"><?= htmlspecialchars($c['name']) ?></option>
-            <?php endforeach; ?>
-          </select>
+          <!-- Categories: Dropdown select that can be selected multiple times -->
+          <div class="relative">
+            <label class="block text-sm font-medium mb-2" style="color: #4a4a4a;">Categories</label>
+            <div class="filter-dropdown-wrapper">
+              <input type="text" id="categorySearch" placeholder="Search category..." 
+                     class="jobs-filter-select" autocomplete="off" style="padding-right: 2.5rem;">
+              <select id="category" class="filter-dropdown-select" size="1" style="display: none;">
+                <option value="">-- Select category to add --</option>
+                <?php foreach ($categories as $c): ?>
+                  <option value="<?= htmlspecialchars($c['id']) ?>" data-cat-name="<?= htmlspecialchars($c['name']) ?>">
+                    <?= htmlspecialchars($c['name']) ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
+              <div id="categoryDropdown" class="filter-dropdown-list" style="display: none;"></div>
+            </div>
+            <div id="selectedCategories" class="hidden"></div>
+          </div>
 
-          <select id="location" name="location" class="jobs-filter-select">
-            <option value="">All locations</option>
-            <?php foreach ($locations as $l): ?>
-              <option value="<?= htmlspecialchars($l) ?>"><?= htmlspecialchars($l) ?></option>
-            <?php endforeach; ?>
-          </select>
+          <!-- Location: Dropdown with search -->
+          <div class="relative">
+            <label class="block text-sm font-medium mb-2" style="color: #4a4a4a;">Location</label>
+            <div class="filter-dropdown-wrapper">
+              <input type="text" id="locationSearch" placeholder="Search location..." 
+                     class="jobs-filter-select" autocomplete="off" style="padding-right: 2.5rem;">
+              <select id="location" class="filter-dropdown-select" size="1" style="display: none;">
+                <option value="">-- Select location to add --</option>
+                <?php foreach ($locations as $l): ?>
+                  <option value="<?= htmlspecialchars($l) ?>"><?= htmlspecialchars($l) ?></option>
+                <?php endforeach; ?>
+              </select>
+              <div id="locationDropdown" class="filter-dropdown-list" style="display: none;"></div>
+            </div>
+            <div id="selectedLocations" class="hidden"></div>
+          </div>
 
-          <select id="status" name="status" class="jobs-filter-select">
-            <option value="">All statuses</option>
-            <?php
-              $statuses = $statuses ?: ['all','recruiting','overdue'];
-              foreach ($statuses as $s):
-            ?>
-              <option value="<?= htmlspecialchars($s) ?>"><?= $s==='recruiting'?'Recruiting':($s==='overdue'?'Overdue':ucfirst(htmlspecialchars($s))) ?></option>
-            <?php endforeach; ?>
-          </select>
+          <!-- Status: Dropdown with search -->
+          <div class="relative">
+            <label class="block text-sm font-medium mb-2" style="color: #4a4a4a;">Status</label>
+            <div class="filter-dropdown-wrapper">
+              <input type="text" id="statusSearch" placeholder="Search status..." 
+                     class="jobs-filter-select" autocomplete="off" style="padding-right: 2.5rem;">
+              <select id="status" class="filter-dropdown-select" size="1" style="display: none;">
+                <option value="">-- Select status to add --</option>
+                <?php
+                  $statuses = $statuses ?: ['all','recruiting','overdue'];
+                  foreach ($statuses as $s):
+                ?>
+                  <option value="<?= htmlspecialchars($s) ?>" data-status-label="<?= $s==='recruiting'?'Recruiting':($s==='overdue'?'Overdue':ucfirst(htmlspecialchars($s))) ?>">
+                    <?= $s==='recruiting'?'Recruiting':($s==='overdue'?'Overdue':ucfirst(htmlspecialchars($s))) ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
+              <div id="statusDropdown" class="filter-dropdown-list" style="display: none;"></div>
+            </div>
+            <div id="selectedStatuses" class="hidden"></div>
+          </div>
         </div>
       </form>
 
@@ -222,8 +290,18 @@ document.body.classList.add('jobs-listing-page');
 const BASE='<?= BASE_PUBLIC ?>';
 const elQ=document.getElementById('q');
 const elCat=document.getElementById('category');
+const elCatSearch=document.getElementById('categorySearch');
+const elCatDropdown=document.getElementById('categoryDropdown');
 const elLoc=document.getElementById('location');
+const elLocSearch=document.getElementById('locationSearch');
+const elLocDropdown=document.getElementById('locationDropdown');
 const elSt=document.getElementById('status');
+const elStSearch=document.getElementById('statusSearch');
+const elStDropdown=document.getElementById('statusDropdown');
+const selectedCategoriesContainer = document.getElementById('selectedCategories');
+let selectedCategories = []; // Array of {value, label} where value is id
+let selectedLocations = []; // Array of {value, label}
+let selectedStatuses = []; // Array of {value, label}
 const grid=document.getElementById('grid');
 const count=document.getElementById('count');
 const pager=document.getElementById('pager');
@@ -234,6 +312,75 @@ const activeCount=document.getElementById('activeCount');
 
 let page=1, perPage=12, lastTotal=0, typingTimer=0;
 
+// Initialize dropdown with search for a filter
+function initFilterDropdown(searchInput, selectElement, dropdownDiv, selectedArray, getLabelFn) {
+  let allOptions = [];
+  
+  // Store all options
+  Array.from(selectElement.options).forEach(opt => {
+    if(opt.value) {
+      allOptions.push({
+        value: opt.value,
+        label: getLabelFn(opt),
+        element: opt
+      });
+    }
+  });
+  
+  // Render dropdown list
+  function renderDropdown(filterText = '') {
+    const filtered = allOptions.filter(opt => 
+      opt.label.toLowerCase().includes(filterText.toLowerCase())
+    );
+    
+    dropdownDiv.innerHTML = filtered.map(opt => {
+      const isSelected = selectedArray.find(s => s.value === opt.value);
+      return `<div class="dropdown-item ${isSelected ? 'hidden' : ''}" 
+                   data-value="${escapeAttr(opt.value)}" 
+                   data-label="${escapeAttr(opt.label)}">
+                ${escapeHtml(opt.label)}
+              </div>`;
+    }).join('');
+    
+    // Add click handlers
+    dropdownDiv.querySelectorAll('.dropdown-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const value = item.getAttribute('data-value');
+        const label = item.getAttribute('data-label');
+        
+        if(value && !selectedArray.find(s => s.value === value)) {
+          selectedArray.push({value: value, label: label});
+          searchInput.value = '';
+          dropdownDiv.style.display = 'none';
+          renderBadges();
+          resetAndLoad();
+        }
+      });
+    });
+  }
+  
+  // Search input handler
+  searchInput.addEventListener('focus', () => {
+    renderDropdown(searchInput.value);
+    dropdownDiv.style.display = 'block';
+  });
+  
+  searchInput.addEventListener('input', () => {
+    renderDropdown(searchInput.value);
+    dropdownDiv.style.display = searchInput.value.trim() !== '' ? 'block' : 'none';
+  });
+  
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!searchInput.contains(e.target) && !dropdownDiv.contains(e.target)) {
+      dropdownDiv.style.display = 'none';
+    }
+  });
+  
+  // Initial render
+  renderDropdown();
+}
+
 async function loadFilters(){
   try{
     const r=await fetch(`${BASE}/ajax/jobs_filters.php`);
@@ -241,18 +388,65 @@ async function loadFilters(){
     const cats = d.categories ?? d.cats ?? [];
     const locs = d.locations  ?? d.locs ?? [];
     const stts = d.statuses   ?? d.stts ?? ['all','recruiting','overdue'];
-    elCat.innerHTML = '<option value="">All categories</option>' + cats.map(c=>`<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
-    elLoc.innerHTML = '<option value="">All locations</option>' + locs.map(l=>`<option value="${escapeHtml(l)}">${escapeHtml(l)}</option>`).join('');
-    elSt.innerHTML  = '<option value="">All statuses</option>'   + stts.map(s=>`<option value="${s}">${capStatus(s)}</option>`).join('');
+    
+    // Render categories dropdown
+    elCat.innerHTML = '<option value="">-- Select category to add --</option>' + 
+      cats.map(c=>`<option value="${c.id}" data-cat-name="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
+    
+    // Render locations dropdown
+    elLoc.innerHTML = '<option value="">-- Select location to add --</option>' + 
+      locs.map(l=>`<option value="${escapeHtml(l)}">${escapeHtml(l)}</option>`).join('');
+    
+    // Render statuses dropdown
+    elSt.innerHTML = '<option value="">-- Select status to add --</option>' + 
+      stts.map(s=>`<option value="${s}" data-status-label="${capStatus(s)}">${capStatus(s)}</option>`).join('');
+    
+    // Initialize filter dropdowns with search
+    initFilterDropdown(
+      elCatSearch, 
+      elCat, 
+      elCatDropdown, 
+      selectedCategories,
+      (opt) => opt.getAttribute('data-cat-name') || opt.textContent
+    );
+    
+    initFilterDropdown(
+      elLocSearch, 
+      elLoc, 
+      elLocDropdown, 
+      selectedLocations,
+      (opt) => opt.textContent
+    );
+    
+    initFilterDropdown(
+      elStSearch, 
+      elSt, 
+      elStDropdown, 
+      selectedStatuses,
+      (opt) => opt.getAttribute('data-status-label') || capStatus(opt.value)
+    );
   }catch(e){}
 }
 
 function makeURL(){
   const u=new URL(`${BASE}/ajax/jobs_list.php`, window.location.origin);
   if(elQ.value.trim()) u.searchParams.set('q', elQ.value.trim());
-  if(elCat.value) u.searchParams.set('category_id', elCat.value);
-  if(elLoc.value) u.searchParams.set('location', elLoc.value);
-  if(elSt.value) u.searchParams.set('status', elSt.value);
+  
+  // Add all selected categories
+  if(selectedCategories.length > 0) {
+    selectedCategories.forEach(cat => u.searchParams.append('category_ids[]', cat.value));
+  }
+  
+  // Add all selected locations
+  if(selectedLocations.length > 0) {
+    selectedLocations.forEach(loc => u.searchParams.append('location_ids[]', loc.value));
+  }
+  
+  // Add all selected statuses
+  if(selectedStatuses.length > 0) {
+    selectedStatuses.forEach(st => u.searchParams.append('status_ids[]', st.value));
+  }
+  
   u.searchParams.set('page', page);
   u.searchParams.set('per_page', perPage);
   return u.toString();
@@ -392,13 +586,25 @@ function escapeAttr(s){ return escapeHtml(s); }
 function renderBadges(){
   const items=[];
   if(elQ.value.trim()){ items.push({k:'q', label:elQ.value.trim()}); }
-  if(elCat.value){ items.push({k:'category', label:elCat.options[elCat.selectedIndex].text}); }
-  if(elLoc.value){ items.push({k:'location', label:elLoc.options[elLoc.selectedIndex].text}); }
-  if(elSt.value){ items.push({k:'status', label:capStatus(elSt.value)}); }
+  
+  // Add badges for each selected category
+  selectedCategories.forEach(cat=>{
+    items.push({k:'category', label:cat.label, value:cat.value, type:'category'});
+  });
+  
+  // Add badges for each selected location
+  selectedLocations.forEach(loc=>{
+    items.push({k:'location', label:loc.label, value:loc.value, type:'location'});
+  });
+  
+  // Add badges for each selected status
+  selectedStatuses.forEach(st=>{
+    items.push({k:'status', label:st.label, value:st.value, type:'status'});
+  });
 
   activeBadges.innerHTML = items.map(it=>`
     <button type="button" class="jobs-filter-badge"
-            data-k="${it.k}">
+            data-k="${it.k}" data-value="${escapeAttr(it.value)}" data-type="${it.type}">
       <span>${escapeHtml(it.label)}</span>
       <span aria-hidden="true">✕</span>
     </button>
@@ -407,11 +613,21 @@ function renderBadges(){
   activeBadges.querySelectorAll('button[data-k]').forEach(b=>{
     b.addEventListener('click',()=>{
       const k=b.getAttribute('data-k');
+      const type=b.getAttribute('data-type');
+      const value=b.getAttribute('data-value');
+      
       if(k==='q') elQ.value='';
-      if(k==='category') elCat.value='';
-      if(k==='location') elLoc.value='';
-      if(k==='status') elSt.value='';
+      if(type==='category') {
+        selectedCategories = selectedCategories.filter(c => c.value !== value);
+      }
+      if(type==='location') {
+        selectedLocations = selectedLocations.filter(l => l.value !== value);
+      }
+      if(type==='status') {
+        selectedStatuses = selectedStatuses.filter(s => s.value !== value);
+      }
       page=1;
+      renderBadges();
       loadJobs();
     });
   });
@@ -452,9 +668,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Animate initial job cards
   setTimeout(() => animateJobCards(), 100);
 
-  [elCat, elLoc, elSt].forEach(el=>{
-    el.addEventListener('change', ()=>{ resetAndLoad(); });
-  });
+  // Location and status are now handled by search inputs, no need for change listeners
 
   elQ.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); resetAndLoad(); }});
   elQ.addEventListener('input', () => {
@@ -464,7 +678,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   clearAll.addEventListener('click', e => {
     e.preventDefault();
-    elQ.value=''; elCat.value=''; elLoc.value=''; elSt.value='';
+    elQ.value='';
+    selectedCategories = [];
+    selectedLocations = [];
+    selectedStatuses = [];
+    elCatSearch.value='';
+    elLocSearch.value='';
+    elStSearch.value='';
+    renderBadges();
     resetAndLoad();
   });
 });
