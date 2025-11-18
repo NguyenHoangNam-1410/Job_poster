@@ -1,5 +1,12 @@
 body {
     background-color: rgb(195, 221, 197);
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+html {
+    overscroll-behavior-y: none;
+    overflow-y: scroll;
 }
 
 h1 {
