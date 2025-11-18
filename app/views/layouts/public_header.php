@@ -56,6 +56,12 @@
       background: rgba(180, 255, 57, 0.1);
       transform: translateY(-2px);
     }
+    .y2k-nav-link.active {
+      text-decoration: underline;
+      text-decoration-thickness: 3px;
+      text-underline-offset: 4px;
+      text-decoration-color: #b4ff39;
+    }
 
     /* Y2K Avatar Button */
     .y2k-avatar {
@@ -139,9 +145,30 @@
 
         <!-- Navigation -->
         <nav class="hidden md:flex space-x-2">
-          <a href="/Job_poster/public/" class="y2k-nav-link">Home</a>
-          <a href="/Job_poster/public/jobs" class="y2k-nav-link">Jobs</a>
-          <a href="/Job_poster/public/employer/post-job" class="y2k-nav-link">Employer</a>
+          <?php
+            // Get current path for breadcrumb
+            $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+            $currentPath = rtrim($currentPath, '/');
+            
+            // Check which page is active
+            $isHome = ($currentPath === '/Job_poster/public' || $currentPath === '/Job_poster/public/' || $currentPath === '' || $currentPath === '/');
+            $isJobs = (strpos($currentPath, '/jobs') !== false && strpos($currentPath, '/employer') === false);
+            $isPostJob = (strpos($currentPath, '/employer/post-job') !== false);
+            $isManage = false;
+            if (isset($_SESSION['user'])) {
+              $userRole = $_SESSION['user']['role'] ?? null;
+              if ($userRole === 'Admin' && strpos($currentPath, '/statistics') !== false) {
+                $isManage = true;
+              } elseif ($userRole === 'Staff' && strpos($currentPath, '/staff/home') !== false) {
+                $isManage = true;
+              } elseif ($userRole === 'Employer' && strpos($currentPath, '/employer/home') !== false) {
+                $isManage = true;
+              }
+            }
+          ?>
+          <a href="/Job_poster/public/" class="y2k-nav-link <?= $isHome ? 'active' : '' ?>">Home</a>
+          <a href="/Job_poster/public/jobs" class="y2k-nav-link <?= $isJobs ? 'active' : '' ?>">Jobs</a>
+          <a href="/Job_poster/public/employer/post-job" class="y2k-nav-link <?= $isPostJob ? 'active' : '' ?>">Post New Job</a>
           <?php if (isset($_SESSION['user'])): ?>
             <?php 
               $userRole = $_SESSION['user']['role'] ?? null;
@@ -154,7 +181,7 @@
                 $manageUrl = '/Job_poster/public/employer/home';
               }
             ?>
-            <a href="<?= $manageUrl ?>" class="y2k-nav-link">Manage</a>
+            <a href="<?= $manageUrl ?>" class="y2k-nav-link <?= $isManage ? 'active' : '' ?>">Manage</a>
           <?php endif; ?>
         </nav>
 
