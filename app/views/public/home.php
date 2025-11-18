@@ -5,6 +5,135 @@ include __DIR__ . '/../layouts/public_header.php';
 ?>
 
 <style>
+/* ========================================
+   PRELOADER STYLES WITH VIDEO
+======================================== */
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(180deg, #0a4d5c 0%, #1a8a9d 50%, #2db8ac 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+#preloader-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  opacity: 0.3;
+}
+
+.preloader-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 2rem;
+}
+
+.preloader-logo {
+  font-size: 4rem;
+  font-weight: 900;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  text-shadow: 4px 4px 0px rgba(45, 184, 172, 0.4);
+  margin-bottom: 2rem;
+  line-height: 1;
+}
+
+.preloader-logo span {
+  display: inline-block;
+  background: linear-gradient(135deg, #b4ff39 0%, #2db8ac 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.preloader-tagline {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 3rem;
+  opacity: 0.9;
+}
+
+.preloader-bar-container {
+  width: 300px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 3px solid white;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.preloader-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #b4ff39 0%, #2db8ac 100%);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.preloader-percent {
+  color: white;
+  font-weight: 900;
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  letter-spacing: 0.1em;
+}
+
+.preloader-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.preloader-shape {
+  position: absolute;
+  opacity: 0.1;
+}
+
+.preloader-shape-1 {
+  top: 10%;
+  left: 10%;
+  width: 100px;
+  height: 100px;
+  border: 4px solid white;
+}
+
+.preloader-shape-2 {
+  bottom: 15%;
+  right: 15%;
+  width: 80px;
+  height: 80px;
+  background: white;
+  transform: rotate(45deg);
+}
+
+.preloader-shape-3 {
+  top: 30%;
+  right: 20%;
+  width: 60px;
+  height: 60px;
+  background: white;
+  border-radius: 50%;
+}
+
 /* Y2K Retro Background - No overlays */
 .hero-bg { 
   background: linear-gradient(180deg, #0a4d5c 0%, #1a8a9d 50%, #2db8ac 100%);
@@ -240,6 +369,38 @@ header.-translate-y-full {
   box-shadow: 3px 3px 0px #0a4d5c;
 }
 </style>
+
+<!-- ========================================
+     PRELOADER WITH VIDEO AND GSAP
+======================================== -->
+<div id="preloader">
+  <!-- Background Video -->
+  <video id="preloader-video" autoplay muted loop playsinline>
+    <source src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-futuristic-devices-44628-large.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Animated Shapes -->
+  <div class="preloader-shapes">
+    <div class="preloader-shape preloader-shape-1"></div>
+    <div class="preloader-shape preloader-shape-2"></div>
+    <div class="preloader-shape preloader-shape-3"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="preloader-content">
+    <div class="preloader-logo">
+      JOB <span>POSTER</span>
+    </div>
+    <div class="preloader-tagline">
+      Find Your Dream Job
+    </div>
+    <div class="preloader-bar-container">
+      <div class="preloader-bar" id="preloader-bar"></div>
+    </div>
+    <div class="preloader-percent" id="preloader-percent">0%</div>
+  </div>
+</div>
 
 <!-- HERO -->
 <section class="hero-bg relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden">
@@ -768,6 +929,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+
 
 <?php include __DIR__ . '/../layouts/public_footer.php'; ?>
 
