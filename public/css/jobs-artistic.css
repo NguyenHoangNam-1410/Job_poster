@@ -171,121 +171,242 @@ body.jobs-listing-page {
   background: #f8f8f8;
 }
 
-/* Choices.js Custom Styling */
-.choices {
-  margin-bottom: 0;
+/* Choices.js Custom Styling - Synchronized with Status Filter */
+/* High specificity to override CDN styles */
+.jobs-search-container .choices,
+.jobs-search-section .choices,
+main .choices,
+body .choices {
+  margin-bottom: 0 !important;
+  position: relative !important;
 }
 
+.jobs-search-container .choices__inner,
+.jobs-search-section .choices__inner,
+main .choices__inner,
+body .choices__inner,
 .choices__inner {
   padding: 0.875rem 1rem !important;
   border: 2px solid #1a1a1a !important;
   border-radius: 0 !important;
   background: white !important;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  min-height: 50px !important;
-  font-family: 'Courier New', monospace;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  display: flex;
-  align-items: center;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+  min-height: 48px !important;
+  height: auto !important;
+  font-family: 'Courier New', monospace !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 0.5rem !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
-.choices__inner:focus,
-.choices.is-focused .choices__inner {
+.jobs-search-container .choices__inner:focus,
+.jobs-search-container .choices.is-focused .choices__inner,
+.jobs-search-section .choices__inner:focus,
+.jobs-search-section .choices.is-focused .choices__inner,
+main .choices__inner:focus,
+main .choices.is-focused .choices__inner {
+  outline: none !important;
   border-color: var(--primary-teal) !important;
   box-shadow: 3px 3px 0 rgba(6, 136, 180, 0.3) !important;
-  transform: translate(-1px, -1px);
+  transform: translate(-1px, -1px) !important;
 }
 
-.choices__inner:hover {
+.jobs-search-container .choices__inner:hover,
+.jobs-search-section .choices__inner:hover,
+main .choices__inner:hover {
   background: #f8f8f8 !important;
 }
 
-.choices__list--dropdown {
+/* Make sure Choices.js container matches status filter exactly */
+.jobs-search-container .choices .choices__inner,
+.jobs-search-section .choices .choices__inner,
+main .choices .choices__inner {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+}
+
+.jobs-search-container .choices__list--dropdown,
+.jobs-search-section .choices__list--dropdown,
+main .choices__list--dropdown {
   border: 2px solid #1a1a1a !important;
   border-radius: 0 !important;
   box-shadow: 6px 6px 0 rgba(6, 136, 180, 0.15) !important;
   background: white !important;
-  margin-top: 4px;
-  z-index: 100;
+  margin-top: 4px !important;
+  z-index: 100 !important;
 }
 
-.choices__list--dropdown .choices__item {
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  font-family: 'Courier New', monospace;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: 1px solid #e5e5e5;
+.jobs-search-container .choices__list--dropdown .choices__item,
+.jobs-search-section .choices__list--dropdown .choices__item,
+main .choices__list--dropdown .choices__item {
+  padding: 0.75rem 1rem !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: #1a1a1a !important;
+  font-family: 'Courier New', monospace !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  border-bottom: 1px solid #e5e5e5 !important;
 }
 
-.choices__list--dropdown .choices__item--selectable.is-highlighted {
+.jobs-search-container .choices__list--dropdown .choices__item--selectable.is-highlighted,
+.jobs-search-section .choices__list--dropdown .choices__item--selectable.is-highlighted,
+main .choices__list--dropdown .choices__item--selectable.is-highlighted {
   background-color: var(--primary-teal) !important;
   color: white !important;
 }
 
+.jobs-search-container .choices__list--multiple .choices__item,
+.jobs-search-section .choices__list--multiple .choices__item,
+main .choices__list--multiple .choices__item,
+body .choices__list--multiple .choices__item,
 .choices__list--multiple .choices__item {
-  background-color: var(--primary-teal) !important;
+  background-color: transparent !important;
   border: 2px solid #1a1a1a !important;
   border-radius: 0 !important;
-  padding: 0.4rem 0.75rem;
-  margin: 0.25rem 0.25rem 0.25rem 0;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: white !important;
-  font-family: 'Courier New', monospace;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 2px 2px 0 rgba(6, 136, 180, 0.3);
+  padding: 0.3rem 0.6rem !important;
+  margin: 0 !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+  font-family: 'Courier New', monospace !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
 }
 
-.choices__list--multiple .choices__item.is-highlighted {
-  background-color: var(--primary-teal-dark) !important;
+.jobs-search-container .choices__list--multiple .choices__item.is-highlighted,
+.jobs-search-section .choices__list--multiple .choices__item.is-highlighted,
+main .choices__list--multiple .choices__item.is-highlighted {
+  background-color: #f8f8f8 !important;
   border-color: #1a1a1a !important;
 }
 
+.jobs-search-container .choices__button,
+.jobs-search-section .choices__button,
+main .choices__button,
+body .choices__button,
 .choices__button {
-  border-left: 1px solid rgba(255, 255, 255, 0.5) !important;
+  border-left: 2px solid #1a1a1a !important;
   opacity: 1 !important;
-  padding: 0 8px;
-  font-weight: 900;
+  padding: 0 6px 0 8px !important;
+  margin-left: 0.25rem !important;
+  font-weight: 900 !important;
+  color: #1a1a1a !important;
+  font-size: 0.9rem !important;
+  background: transparent !important;
+  width: auto !important;
+  height: auto !important;
+  line-height: 1 !important;
 }
 
-.choices__button:hover,
-.choices__button:focus {
-  opacity: 1 !important;
-  background-color: rgba(0, 0, 0, 0.1);
+.choices__button::after {
+  color: #1a1a1a !important;
+  border-left-color: #1a1a1a !important;
 }
 
-.choices__input {
-  font-family: 'Courier New', monospace;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #1a1a1a;
+.jobs-search-container .choices__button:hover,
+.jobs-search-container .choices__button:focus,
+.jobs-search-section .choices__button:hover,
+.jobs-search-section .choices__button:focus,
+main .choices__button:hover,
+main .choices__button:focus {
+  opacity: 1 !important;
+  background-color: rgba(0, 0, 0, 0.1) !important;
+  color: #1a1a1a !important;
+}
+
+.jobs-search-container .choices__input,
+.jobs-search-section .choices__input,
+main .choices__input {
+  font-family: 'Courier New', monospace !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
   background: transparent !important;
   padding: 0.25rem 0 !important;
+  border: none !important;
+  margin: 0 !important;
 }
 
-.choices__placeholder {
-  opacity: 0.5;
-  font-family: 'Courier New', monospace;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.jobs-search-container .choices__input:focus,
+.jobs-search-section .choices__input:focus,
+main .choices__input:focus {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
-.choices[data-type*="select-multiple"] .choices__button,
-.choices[data-type*="text"] .choices__button {
-  border-left: 1px solid rgba(255, 255, 255, 0.5);
+.jobs-search-container .choices__placeholder,
+.jobs-search-section .choices__placeholder,
+main .choices__placeholder {
+  opacity: 0.5 !important;
+  font-family: 'Courier New', monospace !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
 }
 
-.choices__list--dropdown .choices__item--selectable::after {
-  display: none;
+.jobs-search-container .choices[data-type*="select-multiple"] .choices__button,
+.jobs-search-container .choices[data-type*="text"] .choices__button,
+.jobs-search-section .choices[data-type*="select-multiple"] .choices__button,
+.jobs-search-section .choices[data-type*="text"] .choices__button,
+main .choices[data-type*="select-multiple"] .choices__button,
+main .choices[data-type*="text"] .choices__button {
+  border-left: 2px solid #1a1a1a !important;
+}
+
+.jobs-search-container .choices__list--dropdown .choices__item--selectable::after,
+.jobs-search-section .choices__list--dropdown .choices__item--selectable::after,
+main .choices__list--dropdown .choices__item--selectable::after {
+  display: none !important;
+}
+
+/* Dropdown arrow - match native select */
+.jobs-search-container .choices[data-type*="select-multiple"]::after,
+.jobs-search-container .choices[data-type*="select-one"]::after,
+.jobs-search-section .choices[data-type*="select-multiple"]::after,
+.jobs-search-section .choices[data-type*="select-one"]::after,
+main .choices[data-type*="select-multiple"]::after,
+main .choices[data-type*="select-one"]::after {
+  border-color: #1a1a1a transparent transparent transparent !important;
+  border-style: solid !important;
+  border-width: 5px 4px 0 4px !important;
+  content: '' !important;
+  height: 0 !important;
+  margin-top: -2.5px !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  right: 1rem !important;
+  top: 50% !important;
+  width: 0 !important;
+}
+
+.jobs-search-container .choices[data-type*="select-multiple"].is-open::after,
+.jobs-search-container .choices[data-type*="select-one"].is-open::after,
+.jobs-search-section .choices[data-type*="select-multiple"].is-open::after,
+.jobs-search-section .choices[data-type*="select-one"].is-open::after,
+main .choices[data-type*="select-multiple"].is-open::after,
+main .choices[data-type*="select-one"].is-open::after {
+  border-color: transparent transparent #1a1a1a transparent !important;
+  border-width: 0 4px 5px 4px !important;
+  margin-top: -2.5px !important;
 }
 
 /* Vertical Text Labels - Artistic */
@@ -1284,4 +1405,72 @@ body.jobs-listing-page {
 }
 
 /* Job Show Page - Original Style (removed custom styling) */
+
+/* Force Choices.js to match Status filter style - Highest priority */
+/* Override ALL Choices.js styles to match Status filter */
+#categorySelect + .choices .choices__inner,
+#locationSelect + .choices .choices__inner,
+select[multiple].jobs-filter-select + .choices .choices__inner,
+.jobs-search-container #categorySelect + .choices .choices__inner,
+.jobs-search-container #locationSelect + .choices .choices__inner,
+.jobs-search-section #categorySelect + .choices .choices__inner,
+.jobs-search-section #locationSelect + .choices .choices__inner {
+  padding: 0.875rem 1rem !important;
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+  background: white !important;
+  background-color: white !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+  min-height: 48px !important;
+  font-family: 'Courier New', monospace !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+#categorySelect + .choices .choices__list--multiple .choices__item,
+#locationSelect + .choices .choices__list--multiple .choices__item,
+select[multiple].jobs-filter-select + .choices .choices__list--multiple .choices__item,
+.jobs-search-container #categorySelect + .choices .choices__list--multiple .choices__item,
+.jobs-search-container #locationSelect + .choices .choices__list--multiple .choices__item {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+  color: #1a1a1a !important;
+  font-family: 'Courier New', monospace !important;
+  text-transform: uppercase !important;
+}
+
+#categorySelect + .choices .choices__button,
+#locationSelect + .choices .choices__button,
+select[multiple].jobs-filter-select + .choices .choices__button,
+.jobs-search-container #categorySelect + .choices .choices__button,
+.jobs-search-container #locationSelect + .choices .choices__button {
+  border-left: 2px solid #1a1a1a !important;
+  color: #1a1a1a !important;
+  opacity: 1 !important;
+}
+
+/* Ultimate override - target all choices elements */
+.choices__inner {
+  background: white !important;
+  background-color: white !important;
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+}
+
+.choices__list--multiple .choices__item {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+  color: #1a1a1a !important;
+}
+
+.choices__button {
+  color: #1a1a1a !important;
+  border-left-color: #1a1a1a !important;
+}
 

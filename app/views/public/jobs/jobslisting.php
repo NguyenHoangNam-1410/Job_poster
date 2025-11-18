@@ -50,6 +50,37 @@ function status_badge_class($st){
 ?>
 <style href="/Job_poster/public/css/jobs-listing.css"></style>
 
+<style>
+/* Force Choices.js to have white background and black border like Status filter */
+#categorySelect + .choices .choices__inner,
+#locationSelect + .choices .choices__inner {
+  background: white !important;
+  background-color: white !important;
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+}
+
+.choices__inner {
+  background: white !important;
+  background-color: white !important;
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+}
+
+.choices__list--multiple .choices__item {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+  color: #1a1a1a !important;
+}
+
+.choices__button {
+  color: #1a1a1a !important;
+  border-left-color: #1a1a1a !important;
+}
+</style>
+
 <script>
 document.body.classList.add('jobs-listing-page');
 </script>
