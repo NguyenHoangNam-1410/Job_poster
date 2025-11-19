@@ -424,8 +424,8 @@ header.-translate-y-full {
 
     <!-- Video container -->
     <div class="retro-card max-w-5xl mx-auto bg-white p-6">
-      <div class="aspect-w-16 aspect-h-9 overflow-hidden border-3 border-gray-900">
-        <iframe class="w-full h-[520px]" src="https://www.youtube.com/embed/your_video_id_here"
+      <div class="relative overflow-hidden border-3 border-gray-900" style="padding-bottom: 56.25%; height: 0;">
+        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/GOqARrckaR8"
                 title="Job Poster Intro Video" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
         </iframe>

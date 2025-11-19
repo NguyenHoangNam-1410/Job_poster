@@ -168,7 +168,7 @@
             }
           ?>
           <a href="/Job_poster/public/" class="y2k-nav-link <?= $isHome ? 'active' : '' ?>">Home</a>
-          <a href="/Job_poster/public/jobs" class="y2k-nav-link <?= $isJobs ? 'active' : '' ?>">Jobs</a>
+          <a href="/Job_poster/public/jobs" class="y2k-nav-link <?= $isJobs ? 'active' : '' ?>">Explore</a>
           <a href="/Job_poster/public/employer/post-job" class="y2k-nav-link <?= $isPostJob ? 'active' : '' ?>">Post New Job</a>
           <?php if (isset($_SESSION['user'])): ?>
             <?php 
