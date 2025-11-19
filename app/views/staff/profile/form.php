@@ -27,162 +27,170 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
                 <!-- Store referrer for redirect after update -->
                 <input type="hidden" name="referrer" id="referrer" value="">
 
-                <!-- Profile Picture Section -->
-                <div class="border-b pb-6">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Profile Picture</h2>
-                    <div class="flex items-center space-x-6">
-                        <div class="relative">
-                            <img 
-                                id="avatarPreview" 
-                                src="<?= !empty($user->getAvatar()) ? htmlspecialchars($user->getAvatar()) : '/Job_poster/public/image/avatar/default.svg' ?>" 
-                                alt="Avatar Preview" 
-                                class="w-24 h-24 rounded-full object-cover border-2 border-gray-300"
-                            >
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex gap-3 mb-2">
-                                <label for="avatar" class="btn-submit cursor-pointer inline-block">
-                                    Choose Image
-                                </label>
-                                <button 
-                                    type="button" 
-                                    id="deleteAvatarBtn"
-                                    class="btn-cancel"
-                                    <?= empty($user->getAvatar()) || $user->getAvatar() === '/Job_poster/public/image/avatar/default.svg' ? 'style="display:none;"' : '' ?>
-                                >
-                                    Delete Avatar
-                                </button>
+                <!-- Split Layout: Profile Info & Change Password -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Left: Profile Information -->
+                    <div class="space-y-6">
+                        <!-- Profile Picture Section -->
+                        <div class="border-b pb-6">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Profile Picture</h2>
+                            <div class="flex items-center space-x-6">
+                                <div class="relative">
+                                    <img 
+                                        id="avatarPreview" 
+                                        src="<?= !empty($user->getAvatar()) ? htmlspecialchars($user->getAvatar()) : '/Job_poster/public/image/avatar/default.svg' ?>" 
+                                        alt="Avatar Preview" 
+                                        class="w-24 h-24 rounded-full object-cover border-2 border-gray-300"
+                                    >
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex gap-3 mb-2">
+                                        <label for="avatar" class="btn-submit cursor-pointer inline-block">
+                                            Choose Image
+                                        </label>
+                                        <button 
+                                            type="button" 
+                                            id="deleteAvatarBtn"
+                                            class="btn-cancel"
+                                            <?= empty($user->getAvatar()) || $user->getAvatar() === '/Job_poster/public/image/avatar/default.svg' ? 'style="display:none;"' : '' ?>
+                                        >
+                                            Delete Avatar
+                                        </button>
+                                    </div>
+                                    <input 
+                                        type="file" 
+                                        id="avatar" 
+                                        name="avatar" 
+                                        accept="image/jpeg,image/png,image/gif,image/webp"
+                                        class="hidden"
+                                    >
+                                    <input type="hidden" id="delete_avatar" name="delete_avatar" value="0">
+                                    <p class="text-sm text-gray-500 mt-2">
+                                        Maximum file size: 1MB<br>
+                                        Supported formats: JPEG, PNG, GIF, WebP
+                                    </p>
+                                    <p id="fileInfo" class="text-sm text-blue-600 mt-1"></p>
+                                </div>
                             </div>
-                            <input 
-                                type="file" 
-                                id="avatar" 
-                                name="avatar" 
-                                accept="image/jpeg,image/png,image/gif,image/webp"
-                                class="hidden"
-                            >
-                            <input type="hidden" id="delete_avatar" name="delete_avatar" value="0">
-                            <p class="text-sm text-gray-500 mt-2">
-                                Maximum file size: 1MB<br>
-                                Supported formats: JPEG, PNG, GIF, WebP
-                            </p>
-                            <p id="fileInfo" class="text-sm text-blue-600 mt-1"></p>
+                        </div>
+
+                        <!-- Basic Information -->
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Basic Information</h2>
+                            <div class="space-y-4">
+                                <!-- Name -->
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Name <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="name" 
+                                        name="name" 
+                                        value="<?= htmlspecialchars($user->getName()) ?>"
+                                        class="form-input w-full"
+                                        required
+                                    >
+                                </div>
+
+                                <!-- Email -->
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Email <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        type="email" 
+                                        id="email" 
+                                        name="email" 
+                                        value="<?= htmlspecialchars($user->getEmail()) ?>"
+                                        class="form-input w-full"
+                                        required
+                                    >
+                                </div>
+
+                                <!-- Role (Read-only) -->
+                                <div>
+                                    <label for="role" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Role
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="role" 
+                                        value="<?= htmlspecialchars($user->getRole()) ?>"
+                                        class="form-input w-full bg-gray-100"
+                                        readonly
+                                        disabled
+                                    >
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Basic Information -->
-                <div class="border-b pb-6">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Basic Information</h2>
-                    <div class="space-y-4">
-                        <!-- Name -->
+                    <!-- Right: Change Password Section -->
+                    <div class="space-y-6">
                         <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                                Name <span class="text-red-500">*</span>
-                            </label>
-                            <input 
-                                type="text" 
-                                id="name" 
-                                name="name" 
-                                value="<?= htmlspecialchars($user->getName()) ?>"
-                                class="form-input w-full"
-                                required
-                            >
-                        </div>
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Change Password</h2>
+                            <p class="text-sm text-gray-600 mb-4">All three fields must be filled to change password.</p>
+                            <div class="space-y-4">
+                                <!-- Current Password -->
+                                <div>
+                                    <label for="old_password" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Current Password
+                                    </label>
+                                    <input 
+                                        type="password" 
+                                        id="old_password" 
+                                        name="old_password" 
+                                        class="form-input w-full"
+                                        autocomplete="new-password"
+                                        readonly 
+                                        onfocus="this.removeAttribute('readonly');"
+                                        placeholder="Enter current password"
+                                    >
+                                </div>
 
-                        <!-- Email -->
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                                Email <span class="text-red-500">*</span>
-                            </label>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                name="email" 
-                                value="<?= htmlspecialchars($user->getEmail()) ?>"
-                                class="form-input w-full"
-                                required
-                            >
-                        </div>
+                                <!-- New Password -->
+                                <div>
+                                    <label for="new_password" class="block text-sm font-medium text-gray-700 mb-2">
+                                        New Password
+                                    </label>
+                                    <input 
+                                        type="password" 
+                                        id="new_password" 
+                                        name="new_password" 
+                                        class="form-input w-full"
+                                        autocomplete="new-password"
+                                        readonly 
+                                        onfocus="this.removeAttribute('readonly');"
+                                        minlength="8"
+                                        placeholder="Enter new password"
+                                    >
+                                    <ul class="text-xs text-gray-600 mt-2 space-y-1">
+                                        <li>• At least 8 characters</li>
+                                        <li>• Include a number</li>
+                                        <li>• Include uppercase and lowercase letters</li>
+                                        <li>• Include a special character</li>
+                                    </ul>
+                                </div>
 
-                        <!-- Role (Read-only) -->
-                        <div>
-                            <label for="role" class="block text-sm font-medium text-gray-700 mb-2">
-                                Role
-                            </label>
-                            <input 
-                                type="text" 
-                                id="role" 
-                                value="<?= htmlspecialchars($user->getRole()) ?>"
-                                class="form-input w-full bg-gray-100"
-                                readonly
-                                disabled
-                            >
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Change Password Section -->
-                <div class="border-b pb-6">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Change Password</h2>
-                    <p class="text-sm text-gray-600 mb-4">All three fields must be filled to change password.</p>
-                    <div class="space-y-4">
-                        <!-- Current Password -->
-                        <div>
-                            <label for="old_password" class="block text-sm font-medium text-gray-700 mb-2">
-                                Current Password
-                            </label>
-                            <input 
-                                type="password" 
-                                id="old_password" 
-                                name="old_password" 
-                                class="form-input w-full"
-                                autocomplete="new-password"
-                                readonly 
-                                onfocus="this.removeAttribute('readonly');"
-                                placeholder="Enter current password"
-                            >
-                        </div>
-
-                        <!-- New Password -->
-                        <div>
-                            <label for="new_password" class="block text-sm font-medium text-gray-700 mb-2">
-                                New Password
-                            </label>
-                            <input 
-                                type="password" 
-                                id="new_password" 
-                                name="new_password" 
-                                class="form-input w-full"
-                                autocomplete="new-password"
-                                readonly 
-                                onfocus="this.removeAttribute('readonly');"
-                                minlength="8"
-                                placeholder="Enter new password"
-                            >
-                            <ul class="text-sm text-gray-600 mt-2 space-y-1">
-                                <li>• At least 8 characters</li>
-                                <li>• Include a number</li>
-                                <li>• Include uppercase and lowercase letters</li>
-                                <li>• Include a special character</li>
-                            </ul>
-                        </div>
-
-                        <!-- Confirm New Password -->
-                        <div>
-                            <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-2">
-                                Confirm New Password
-                            </label>
-                            <input 
-                                type="password" 
-                                id="confirm_password" 
-                                name="confirm_password" 
-                                class="form-input w-full"
-                                autocomplete="new-password"
-                                readonly 
-                                onfocus="this.removeAttribute('readonly');"
-                                minlength="8"
-                                placeholder="Confirm new password"
-                            >
+                                <!-- Confirm New Password -->
+                                <div>
+                                    <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Confirm New Password
+                                    </label>
+                                    <input 
+                                        type="password" 
+                                        id="confirm_password" 
+                                        name="confirm_password" 
+                                        class="form-input w-full"
+                                        autocomplete="new-password"
+                                        readonly 
+                                        onfocus="this.removeAttribute('readonly');"
+                                        minlength="8"
+                                        placeholder="Confirm new password"
+                                    >
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -463,6 +471,19 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
 // Load footer based on user role
 if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
     include __DIR__ . '/../../layouts/admin_footer.php';
+
+
+
+
+
+
+
+
+
+
+
+
+    
 } else {
     include __DIR__ . '/../../layouts/staff_footer.php';
 }

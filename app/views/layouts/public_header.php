@@ -8,7 +8,8 @@
 
   <link rel="stylesheet" href="/Job_poster/public/css/tailwind.min.css">
   <link rel="stylesheet" href="/Job_poster/public/css/homepage.css">
-    <link href="/Job_poster/public/css/style.css" rel="stylesheet">
+  <link href="/Job_poster/public/css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css">
     <!--Tailwind V3 version -->
   <?php if (isset($additionalCSS)): ?>
     <?php foreach ($additionalCSS as $css): ?>
@@ -167,7 +168,7 @@
             }
           ?>
           <a href="/Job_poster/public/" class="y2k-nav-link <?= $isHome ? 'active' : '' ?>">Home</a>
-          <a href="/Job_poster/public/jobs" class="y2k-nav-link <?= $isJobs ? 'active' : '' ?>">Jobs</a>
+          <a href="/Job_poster/public/jobs" class="y2k-nav-link <?= $isJobs ? 'active' : '' ?>">Explore</a>
           <a href="/Job_poster/public/employer/post-job" class="y2k-nav-link <?= $isPostJob ? 'active' : '' ?>">Post New Job</a>
           <?php if (isset($_SESSION['user'])): ?>
             <?php 
