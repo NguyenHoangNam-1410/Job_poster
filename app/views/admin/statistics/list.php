@@ -1,5 +1,5 @@
 <?php 
-require_once __DIR__ . '/../../layouts/admin_header.php';
+require_once __DIR__ . '/../../layouts/public_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
@@ -256,4 +256,4 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
     <?php endif; ?>
 </div>
 
-<?php require_once __DIR__ . '/../../layouts/admin_footer.php'; ?>
+<?php require_once __DIR__ . '/../../layouts/public_footer.php'; ?>

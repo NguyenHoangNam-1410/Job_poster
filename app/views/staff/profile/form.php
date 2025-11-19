@@ -1,5 +1,5 @@
 <?php $pageTitle = 'Edit Profile'; ?>
-<?php include __DIR__ . '/../../layouts/admin_header.php'; ?>
+<?php include __DIR__ . '/../../layouts/public_header.php'; ?>
 
 <div class="list-container">
     <div class="list-content max-w-3xl mx-auto">
@@ -344,4 +344,4 @@
 })();
 </script>
 
-<?php include __DIR__ . '/../../layouts/admin_footer.php'; ?>
+<?php include __DIR__ . '/../../layouts/public_footer.php'; ?>

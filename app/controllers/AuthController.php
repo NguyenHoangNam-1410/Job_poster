@@ -2,11 +2,14 @@
 require_once __DIR__ . '/../services/UserService.php';
 
 class AuthController {
-        private $userService;
+    private $userService;
     public function __construct() {
         $this->userService = new UserService();
     }
-    public function index(){
+    public function index() {
+        require_once __DIR__ . '/../views/public/home.php';
+    }
+    public function loginForm(){
         require_once __DIR__ . '/../views/auth/login.php';
         exit;
     }
@@ -158,19 +161,7 @@ class AuthController {
                     'auth_provider' => $user->getAuthProvider(),
                     'avatar' => $user->getAvatar()
                 ];
-                switch ($user->getRole()) {
-                    case 'Admin':
-                        header("Location: /Job_poster/public/admin/home");
-                        break;
-                    case 'Staff':
-                        header("Location: /Job_poster/public/staff/home");
-                        break;
-                    case 'Employer':
-                        header("Location: /Job_poster/public/employer/home");
-                        break;
-                    default:
-                        header("Location: /Job_poster/public/home");
-                }
+                header("Location: " . BASE_URL . "/");
                 exit;
             } else {
                 $_SESSION['login_error'] = 'Invalid email or password.';

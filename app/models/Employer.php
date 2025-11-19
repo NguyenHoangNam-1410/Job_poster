@@ -44,6 +44,7 @@ class Employer{
     public function getUserId() { return $this->user_id; }
 
     //Setters
+    public function setId($id) { $this->id = $id; }
     public function setCompanyName($company_name) { $this->company_name = $company_name; }
     public function setWebsite($website) { $this->website = $website; }
     public function setLogo($logo) { $this->logo = $logo; }

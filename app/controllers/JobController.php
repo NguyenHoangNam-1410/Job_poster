@@ -1,11 +1,14 @@
 <?php
 require_once __DIR__ . '/../services/JobService.php';
+require_once __DIR__ . '/../services/CompanyService.php';
 
 class JobController {
     private $jobService;
+    private $companyService;
     
     public function __construct() {
         $this->jobService = new JobService();
+        $this->companyService = new CompanyService();
     }
 
     private function getCurrentUserId() {
@@ -372,5 +375,247 @@ class JobController {
                 exit;
             }
         }
+    }
+
+    public function myJobs() {
+        $userId = $this->getCurrentUserId();
+        $employer = $this->companyService->getEmployerByUserId($userId);
+
+        if (!$employer) {
+            header('Location: /Job_poster/public/company-profile');
+            exit;
+        }
+
+        $employerId = $employer->getId();
+
+        // Filters
+        $search = $_GET['search'] ?? '';
+        $categoryFilter = $_GET['category'] ?? '';
+        $locationFilter = $_GET['location'] ?? '';
+        $statusFilter = $_GET['status'] ?? '';
+        $dateFrom = $_GET['date_from'] ?? '';
+        $dateTo = $_GET['date_to'] ?? '';
+        $per_page = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
+        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+        if (!in_array($per_page, [10, 25, 50])) $per_page = 10;
+        $offset = ($current_page - 1) * $per_page;
+
+        $allowedStatuses = ['draft', 'pending', 'approved', 'overdue', 'rejected', 'soft_deleted'];
+        if (!empty($statusFilter) && !in_array($statusFilter, $allowedStatuses)) {
+            $statusFilter = '';
+        }
+        // If no status filter is selected, default to show only allowed statuses
+        $statusesToQuery = !empty($statusFilter) ? $statusFilter : implode(',', $allowedStatuses);
+
+        $total_records = $this->jobService->getTotalCountByEmployer(
+            $employerId, $search, $categoryFilter, $locationFilter, $statusesToQuery, $dateFrom, $dateTo
+        );
+
+        $total_pages = ceil($total_records / $per_page);
+
+        $jobs = $this->jobService->getJobsByEmployer(
+            $employerId, $search, $categoryFilter, $locationFilter, $statusesToQuery, $dateFrom, $dateTo, $per_page, $offset
+        );
+
+        // Filters options
+        $categories = $this->jobService->getAllCategories();
+        $locations = $this->jobService->getUniqueLocationsByEmployerId($employerId);
+
+        $pagination = [
+            'current_page' => $current_page,
+            'per_page' => $per_page,
+            'total_records' => $total_records,
+            'total_pages' => $total_pages,
+            'search' => $search,
+            'category_filter' => $categoryFilter,
+            'location_filter' => $locationFilter,
+            'status_filter' => $statusFilter,
+            'date_from' => $dateFrom,
+            'date_to' => $dateTo
+        ];
+
+        require_once __DIR__ . '/../views/employer/jobs/list.php';
+    }
+    
+    public function myJobDetail($id){
+        try{
+            $job = $this->jobService->getJobById($id);
+            $jobReview = $this->jobService->getLatestReview($id)['reason'] ?? null;
+            
+            if (!$job) {
+                header('Location: /Job_poster/public/my-jobs?error=' . urlencode('Job not found'));
+                exit;
+            }
+
+            require_once __DIR__ . '/../views/employer/jobs/details.php';
+        } catch (Exception $e) {
+            header('Location: /Job_poster/public/my-jobs?error=' . urlencode($e->getMessage()));
+            exit;
+        }
+    }
+
+    public function myJobCreate(){
+        $employer = $this->companyService->getEmployerByUserId($this->getCurrentUserId());
+        if (!$employer || !$employer->getLogo() || !$employer->getCompanyName() || 
+           !$employer->getContactPerson() || !$employer->getContactEmail()
+           || !$employer->getContactPhone() || !$employer->getWebsite() || !$employer->getDescription()) {
+            // No company profile => direct to update company profile
+            $_SESSION['error_profile'] = "You need to complete your company profile before posting a job!";
+            header('Location: /Job_poster/public/company-profile');
+        }
+        $categories = $this->jobService->getAllCategories();
+        require_once __DIR__ . '/../views/employer/jobs/newJob.php';
+    }
+
+    public function myJobStore(){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $currentUserId = $this->getCurrentUserId();
+                $employer = $this->companyService->getEmployerByUserId($currentUserId);
+                if (!$employer) {
+                    throw new Exception("You need a company profile to post a job.");
+                }
+                $employerId = $employer->getId();
+
+                $status = ($_POST['action'] === 'post_job') ? 'pending' : 'draft';
+
+                $data = [
+                    'employer_id' => $employerId,
+                    'title' => $_POST['title'] ?? '',
+                    'location' => $_POST['location'] ?? null,
+                    'salary' => $_POST['salary'] ?? null,
+                    'deadline' => $_POST['deadline'] ?? null,
+                    'description' => $_POST['description'] ?? null,
+                    'requirements' => $_POST['requirements'] ?? null,
+                    'categories' => $_POST['categories'] ?? [],
+                    'status' => $status
+                ];
+
+                // Validate required fields if posting
+                if ($status === 'pending') {
+                    if (empty($data['title'])) throw new Exception("Job title is required.");
+                    if (empty($data['description'])) throw new Exception("Job description is required.");
+                    if (empty($data['requirements'])) throw new Exception("Job requirements are required.");
+                    if (empty($data['categories'])) throw new Exception("At least one job category must be selected.");
+                }
+
+                $jobId = $this->jobService->createJob($data, $currentUserId);
+
+                if ($jobId) {
+                    $message = ($status === 'pending') ? 'Job posted successfully' : 'Draft saved successfully';
+                    header('Location: /Job_poster/public/my-jobs?success=' . urlencode($message));
+                    exit;
+                } else {
+                    throw new Exception("Failed to create job.");
+                }
+            } catch (Exception $e) {
+                $error = $e->getMessage();
+                $categories = $this->jobService->getAllCategories();
+                require_once __DIR__ . '/../views/employer/jobs/newJob.php';
+            }
+        }
+    }
+
+    public function myJobEdit($id){
+        try{
+            $job = $this->jobService->getJobById($id);
+            $jobReview = $this->jobService->getLatestReview($id)['reason'] ?? null;
+            if (!$job) {
+                header('Location: /Job_poster/public/my-jobs?error=' . urlencode('Job not found'));
+                exit;
+            }
+
+            // Get categories for the form
+            $categories = $this->jobService->getAllCategories();
+            
+            require_once __DIR__ . '/../views/employer/jobs/form.php';
+        } catch (Exception $e) {
+            header('Location: /Job_poster/public/my-jobs?error=' . urlencode($e->getMessage()));
+            exit;
+        }
+    }
+
+    public function myJobUpdate($id){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $job = $this->jobService->getJobById($id);
+                if (!$job) {
+                    header("Location: /Job_poster/public/my-jobs?error=" . urlencode("Job not found"));
+                    exit;
+                }
+                // Collect form data
+                $data = [
+                    'title' => $_POST['title'] ?? $job->getTitle(),
+                    'location' => $_POST['location'] ?? $job->getLocation(),
+                    'salary' => $_POST['salary'] ?? $job->getSalary(),
+                    'deadline' => $_POST['deadline'] ?? $job->getDeadline(),
+                    'description' => $_POST['description'] ?? $job->getDescription(),
+                    'requirements' => $_POST['requirements'] ?? $job->getRequirements(),
+                    'categories' => $_POST['categories'] ?? $job->getCategories(),
+                    'status' => $_POST['status'] ?? $job->getStatus()
+                ];
+                $updatedJob = $this->jobService->updateJob($id, $data, $this->getCurrentUserId());
+                if(!$updatedJob) {
+                    throw new Exception("Failed to update job.");
+                }
+                header('Location: /Job_poster/public/my-jobs?success=' . urlencode('Job updated successfully'));
+                exit;
+            } catch (Exception $e) {
+                header('Location: /Job_poster/public/my-jobs?error=' . urlencode($e->getMessage()));
+                exit;
+            }
+        }
+    }
+
+    // Only soft delete for employer's own jobs if it's not a draft
+    public function myJobSoftDelete($id){
+        try{
+            $job = $this->jobService->getJobById($id);
+            
+            if (!$job) {
+                header('Location: /Job_poster/public/my-jobs?error=' . urlencode('Job not found'));
+                exit;
+            }
+
+            $status = ['approved', 'pending', 'rejected', 'overdue'];
+
+            if(!in_array($job->getStatus(), $status)){
+                throw new Exception("Only jobs in 'approved', 'pending', 'rejected', or 'overdue' status can be soft deleted.");
+            }
+            
+            $this->jobService->softDeleteJob($id);
+            header('Location: /Job_poster/public/my-jobs?success=' . urlencode('Job deleted successfully'));
+            exit;
+        } catch (Exception $e) {
+            header('Location: /Job_poster/public/my-jobs?error=' . urlencode($e->getMessage()));
+            exit;
+        }
+    }
+
+    // Only hard delete for employer's own jobs if it's a draft
+    public function myJobHardDelete($id){
+        try{
+            $job = $this->jobService->getJobById($id);
+            
+            if (!$job) {
+                header('Location: /Job_poster/public/my-jobs?error=' . urlencode('Job not found'));
+                exit;
+            }
+
+            if($job->getStatus() !== 'draft'){
+                throw new Exception("Only jobs in 'draft' status can be hard deleted.");
+            }
+            $this->jobService->hardDeleteJob($id);
+            header('Location: /Job_poster/public/my-jobs?success=' . urlencode('Job deleted successfully'));
+            exit;
+        } catch (Exception $e) {
+            header('Location: /Job_poster/public/my-jobs?error=' . urlencode($e->getMessage()));
+            exit;
+        }
+    }
+
+    public function createNewJob(){
+        require_once __DIR__ . '/../views/employer/jobs/form.php';
     }
 }

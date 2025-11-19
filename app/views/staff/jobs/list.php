@@ -1,12 +1,7 @@
 <?php $pageTitle = 'Job Management'; ?>
 <?php
-if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
-    require_once '../app/views/layouts/admin_header.php';
-} else{
-    require_once '../app/views/layouts/staff_header.php';
-}
+require_once __DIR__ . '/../../layouts/public_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
-
 ?>
 
 <div class="list-container">
@@ -133,6 +128,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                             <th class="table-header">Deadline</th>
                             <th class="table-header">Status</th>
                             <th class="table-header">Categories</th>
+                            <th class="table-header">Approved At</th>
                             <th class="table-header">Actions</th>
                         </tr>
                     </thead>
@@ -189,6 +185,13 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                         </div>
                                     <?php else: ?>
                                         <span class="text-gray-400 text-sm">No categories</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="table-cell">
+                                    <?php if ($job->getApprovedAt()): ?>
+                                        <?= date('Y-m-d', strtotime($job->getApprovedAt())) ?>
+                                    <?php else: ?>
+                                        <span class="text-gray-400">N/A</span>
                                     <?php endif; ?>
                                 </td>
                                 <td class="table-cell">
@@ -285,9 +288,5 @@ function deleteJob(id, title) {
 </script>
 
 <?php 
-if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
-    require_once '../app/views/layouts/admin_footer.php';
-} else{
-    require_once '../app/views/layouts/staff_footer.php';
-}
+include __DIR__ . '/../../layouts/public_footer.php';
 ?>

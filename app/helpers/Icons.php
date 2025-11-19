@@ -484,4 +484,55 @@ class Icons
                 d="M5 5v14M5 5l7-2 7 2-7 2-7-2z"></path>
         </svg>';
     }
+    public static function profile($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+        </svg>';
+    }
+
+    public static function save($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 3h-2a1 1 0 00-1 1v3H6a1 1 0 00-1 1v11a2 2 0 002 2h10a2 2 0 002-2V5.83a1 1 0 00-.29-.71l-2.83-2.83A1 1 0 0017 3z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M7 13h10M7 17h10M15 4v4" />
+        </svg>';
+    }
+
+    public static function send($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3.5 12l16-8-6 8 6 8-16-8z" />
+        </svg>';
+    }
+
+    public static function refresh($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4.5 4.5v5h5M19.5 19.5v-5h-5M5 19a8.5 8.5 0 0014-6.5M19 5a8.5 8.5 0 00-14 6.5" />
+        </svg>';
+    }
+
+    public static function exclamationCircle($classes = null)
+    {
+        $classes = $classes ?? self::$defaultClasses;
+
+        return '<svg class="' . $classes . '" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
+        </svg>';
+    }
+
 }

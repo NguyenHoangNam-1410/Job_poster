@@ -65,4 +65,12 @@ class FeedbackService {
 
         return $this->feedbackDAO->delete($id);
     }
+
+    public function getTotalCountForUser($userId, $search, $dateFrom, $dateTo) {
+        return $this->feedbackDAO->getTotalCountForUser($userId, $search, $dateFrom, $dateTo);
+    }
+
+    public function getFeedbacksByUser($userId, $search, $dateFrom, $dateTo, $per_page, $offset) {
+        return $this->feedbackDAO->getFeedbacksByUser($userId, $search, $dateFrom, $dateTo, $per_page, $offset);
+    }
 }

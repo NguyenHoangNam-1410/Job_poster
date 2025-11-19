@@ -1,9 +1,7 @@
 <?php 
 $pageTitle = 'Homepage | Job Poster';
-$pageTitle = 'Homepage | Job Poster';
 include __DIR__ . '/../layouts/public_header.php';
 ?>
-
 <style>
 /* Y2K Retro Background - No overlays */
 .hero-bg { 

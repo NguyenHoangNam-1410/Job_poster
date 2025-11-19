@@ -1,6 +1,6 @@
 <?php $pageTitle = 'Quản lý người dùng'; ?>
 <?php
-include __DIR__ . '/../../layouts/admin_header.php';
+include __DIR__ . '/../../layouts/public_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
@@ -189,4 +189,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script src="/Job_poster/public/javascript/user.js"></script>
 
-<?php include __DIR__ . '/../../layouts/admin_footer.php'; ?>
+<?php include __DIR__ . '/../../layouts/public_footer.php'; ?>

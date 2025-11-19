@@ -46,29 +46,20 @@ foreach ($publicRoutes as $route) {
 }
 // If not logged in and accessing private route
 if (!isset($_SESSION['user']) && !$isPublic) {
-    header("Location: /public/home");
+    http_response_code(404);
+    include '../app/views/public/404.php';
     exit;
-} elseif (isset($_SESSION['user']) && in_array($path, ['/auth/register','/auth/login'])) {
-    header("Location: /");
-    exit;
-}
-// If logged in and accessing public route
-elseif (isset($_SESSION['user']) && $isPublic) {
-    if($_SESSION['user']['role'] == 'Admin') {
-        header("Location: /admin/home");
-        exit;
-    } elseif($_SESSION['user']['role'] == 'Staff') {
-        header("Location: /staff/home");
-        exit;
-    } elseif($_SESSION['user']['role'] == 'Employer') {
-        header("Location: /employer/home");
+} 
+
+// If logged in and accessing public route (direct to home page)
+if (isset($_SESSION['user']) && $isPublic) {
+    if ($path !== '/public/home' && $path !== '/') {
+        header('Location: ' . BASE_URL . '/home');
         exit;
     }
 }
 
-
 // Route handling
-
 if ($path === '/auth/login/facebook') {
     require_once '../app/controllers/AuthController.php';
     $controller = new AuthController();
@@ -84,7 +75,7 @@ if ($path === '/auth/login/facebook') {
 } elseif($path === '/auth/login') {
     require_once '../app/controllers/AuthController.php';
     $controller = new AuthController();
-    $controller->index();
+    $controller->loginForm();
 } elseif ($path === '/auth/login/local') {
     require_once '../app/controllers/AuthController.php';
     $controller = new AuthController();
@@ -129,29 +120,6 @@ if ($path === '/auth/login/facebook') {
     require_once '../app/controllers/AuthController.php';
     $controller = new AuthController();
     $controller->checkEmail();
-}
-
-//Home route after logged in with roles
-if ($path === '/public/home') {
-    require_once '../app/controllers/HomeController.php';
-    $controller = new HomeController();
-    $controller->index();
-    exit;
-} elseif($path === '/admin/home' && $_SESSION['user']['role'] == 'Admin') {
-    require_once '../app/controllers/HomeController.php';
-    $controller = new HomeController();
-    $controller->adminIndex();
-    exit;
-} elseif($path === '/staff/home' && $_SESSION['user']['role'] == 'Staff') {
-    require_once '../app/controllers/HomeController.php';
-    $controller = new HomeController();
-    $controller->staffIndex();
-    exit;
-} elseif($path === '/employer/home' && $_SESSION['user']['role'] == 'Employer') {
-    require_once '../app/controllers/HomeController.php';
-    $controller = new HomeController();
-    $controller->employerIndex();
-    exit;
 }
 
 // User CRUD Routes
@@ -300,7 +268,7 @@ if ($path === '/users' && $_SESSION['user']['role'] == 'Admin') {
 
 
 // Staff Action Logs Routes (Admin)
-} elseif ($path === '/staff-actions') {
+} elseif ($path === '/staff-actions' && $_SESSION['user']['role'] == 'Admin') {
     // List staff actions
     require_once '../app/controllers/StaffActionController.php';
     $controller = new StaffActionController();
@@ -308,7 +276,7 @@ if ($path === '/users' && $_SESSION['user']['role'] == 'Admin') {
 } 
 
 // Staff Action Logs Routes (Admin)
-elseif ($path === '/feedbacks') {
+elseif ($path === '/feedbacks' && $_SESSION['user']['role'] == 'Admin') {
     // List feedbacks
     require_once '../app/controllers/FeedbackController.php';
     $controller = new FeedbackController();
@@ -316,14 +284,14 @@ elseif ($path === '/feedbacks') {
 } 
 
 // Statistics Routes (Admin)
-elseif ($path === '/statistics') {
+elseif ($path === '/statistics' && $_SESSION['user']['role'] == 'Admin') {
     // Show statistics dashboard
     require_once '../app/controllers/StatisticController.php';
     $controller = new StatisticController();
     $controller->index();
 } 
 
-// Profile Routes
+// Profile Routes (All users)
 elseif ($path === '/profile') {
     // Show profile edit form
     require_once '../app/controllers/UserController.php';
@@ -336,6 +304,104 @@ elseif ($path === '/profile') {
     $controller = new UserController();
     $controller->updateProfile();
 } 
+
+// Company Profile (Employer)
+elseif ($path === '/company-profile' && $_SESSION['user']['role'] == 'Employer') {
+    // Show company profile edit form
+    require_once '../app/controllers/CompanyController.php';
+    $controller = new CompanyController();
+    $controller->index();
+    
+} elseif ($path === '/company-profile/update' && $_SERVER['REQUEST_METHOD'] === 'POST' && $_SESSION['user']['role'] == 'Employer') {
+    // Update company profile
+    require_once '../app/controllers/CompanyController.php';
+    $controller = new CompanyController();
+    $controller->updateCompanyProfile();
+}
+
+// My Jobs Routes (Employer)
+elseif ($path === '/my-jobs' && $_SESSION['user']['role'] == 'Employer') {
+    // List my jobs
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->myJobs();
+} elseif(preg_match('/^\/my-jobs\/show\/(\d+)$/', $path, $matches) && $_SESSION['user']['role'] == 'Employer') {
+    // Show my job detail
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->myJobDetail($matches[1]);
+} elseif ($path === '/my-jobs/create' && $_SESSION['user']['role'] == 'Employer') {
+    // Show create new job form
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->myJobCreate();
+} elseif($path === '/my-jobs/store' && $_SERVER['REQUEST_METHOD'] === 'POST' && $_SESSION['user']['role'] == 'Employer') {
+    // Store new job
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->myJobStore();
+}
+elseif(preg_match('/^\/my-jobs\/edit\/(\d+)$/', $path, $matches) && $_SESSION['user']['role'] == 'Employer') {
+    // Show edit form for my job
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->myJobEdit($matches[1]);
+} elseif (preg_match('/^\/my-jobs\/update\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST' && $_SESSION['user']['role'] == 'Employer') {
+    // Update my job
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->myJobUpdate($matches[1]);
+} elseif(preg_match('/^\/my-jobs\/soft-delete\/(\d+)$/', $path, $matches) && $_SESSION['user']['role'] == 'Employer') {
+    // Soft delete my job
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->myJobSoftDelete($matches[1]);
+} elseif(preg_match('/^\/my-jobs\/hard-delete\/(\d+)$/', $path, $matches) && $_SESSION['user']['role'] == 'Employer') {
+    // Hard delete my job
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->myJobHardDelete($matches[1]);
+} elseif ($path === '/my-jobs/add' && $_SERVER['REQUEST_METHOD'] === 'POST' && $_SESSION['user']['role'] == 'Employer') {
+    // Create new job
+    require_once '../app/controllers/JobController.php';
+    $controller = new JobController();
+    $controller->createNewJob();
+}
+
+// My feedback Routes (Employer)
+elseif ($path === '/my-feedbacks' && $_SESSION['user']['role'] == 'Employer') {
+    // List my feedbacks
+    require_once '../app/controllers/FeedbackController.php';
+    $controller = new FeedbackController();
+    $controller->myFeedbacks();
+} elseif($path === '/my-feedbacks/create' && $_SESSION['user']['role'] == 'Employer') {
+    // Show create form for my feedback
+    require_once '../app/controllers/FeedbackController.php';
+    $controller = new FeedbackController();
+    $controller->createMyFeedback();
+} elseif($path === '/my-feedbacks/store' && $_SERVER['REQUEST_METHOD'] === 'POST' && $_SESSION['user']['role'] == 'Employer') {
+    // Store my feedback
+    require_once '../app/controllers/FeedbackController.php';
+    $controller = new FeedbackController();
+    $controller->storeMyFeedback();
+} 
+elseif (preg_match('/^\/my-feedbacks\/delete\/(\d+)$/', $path, $matches) && $_SESSION['user']['role'] == 'Employer') {
+    // Delete my feedback
+    require_once '../app/controllers/FeedbackController.php';
+    $controller = new FeedbackController();
+    $controller->deleteMyFeedback($matches[1]);
+} elseif (preg_match('/^\/my-feedbacks\/edit\/(\d+)$/', $path, $matches) && $_SESSION['user']['role'] == 'Employer') {
+    // Show edit form for my feedback
+    require_once '../app/controllers/FeedbackController.php';
+    $controller = new FeedbackController();
+    $controller->editMyFeedback($matches[1]);
+} elseif (preg_match('/^\/my-feedbacks\/update\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST' && $_SESSION['user']['role'] == 'Employer') {
+    // Update my feedback
+    require_once '../app/controllers/FeedbackController.php';
+    $controller = new FeedbackController();
+    $controller->updateMyFeedback($matches[1]);
+
+}
 
 else {
     // Public routes

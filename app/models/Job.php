@@ -12,6 +12,8 @@ class Job {
     private $status;
     private $created_at;
     private $updated_at;
+    private $approved_at;
+    private $rejected_at;
     
     // Additional fields for display
     private $employer_name;
@@ -57,6 +59,8 @@ class Job {
     public function getStatus() { return $this->status; }
     public function getCreatedAt() { return $this->created_at; }
     public function getUpdatedAt() { return $this->updated_at; }
+    public function getApprovedAt() { return $this->approved_at; }
+    public function getRejectedAt() { return $this->rejected_at; }
     public function getEmployerName() { return $this->employer_name; }
     public function getCompanyName() { return $this->company_name; }
     public function getPostedByName() { return $this->posted_by_name; }
@@ -75,6 +79,8 @@ class Job {
     public function setStatus($status) { $this->status = $status; }
     public function setCreatedAt($created_at) { $this->created_at = $created_at; }
     public function setUpdatedAt($updated_at) { $this->updated_at = $updated_at; }
+    public function setApprovedAt($approved_at) { $this->approved_at = $approved_at; }
+    public function setRejectedAt($rejected_at) { $this->rejected_at = $rejected_at; }
     public function setEmployerName($employer_name) { $this->employer_name = $employer_name; }
     public function setCompanyName($company_name) { $this->company_name = $company_name; }
     public function setPostedByName($posted_by_name) { $this->posted_by_name = $posted_by_name; }

@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../../layouts/admin_header.php'; ?>
+<?php require_once __DIR__ . '/../../layouts/public_header.php'; ?>
 
 <div class="container mx-auto px-4 py-8">
     <div class="bg-white rounded-lg shadow-md p-6">
@@ -169,4 +169,4 @@
     </div>
 </div>
 
-<?php require_once __DIR__ . '/../../layouts/admin_footer.php'; ?>
+<?php require_once __DIR__ . '/../../layouts/public_footer.php'; ?>

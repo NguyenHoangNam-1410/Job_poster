@@ -29,6 +29,10 @@ class JobService {
         return $this->jobDAO->getById($id);
     }
 
+    public function getJobsByEmployerId($employerId) {
+        return $this->jobDAO->getByEmployerId($employerId);
+    }
+
     // Get all categories for filter dropdown
     public function getAllCategories() {
         return $this->categoryDAO->getAll('', null, 0);
@@ -99,7 +103,6 @@ class JobService {
         $job->setRequirements($data['requirements'] ?? null);
         $job->setSalary($data['salary'] ?? null);
         $job->setDeadline($data['deadline'] ?? null);
-
         // Update status if provided
         if (isset($data['status']) && $data['status'] !== $oldStatus) {
             $job->setStatus($data['status']);
@@ -274,5 +277,25 @@ class JobService {
     // Get latest review for a job
     public function getLatestReview($jobId) {
         return $this->jobDAO->getLatestReview($jobId);
+    }
+
+    public function getTotalCountByEmployer(
+        $employerId, $search, $categoryFilter, $locationFilter, $statusesToQuery, $dateFrom, $dateTo
+    ) {
+        return $this->jobDAO->getTotalCountByEmployer(
+            $employerId, $search, $categoryFilter, $locationFilter, $statusesToQuery, $dateFrom, $dateTo
+        );
+    }
+
+    public function getJobsByEmployer(
+        $employerId, $search, $categoryFilter, $locationFilter, $statusesToQuery, $dateFrom, $dateTo
+    ) {
+        return $this->jobDAO->getJobsByEmployer(
+            $employerId, $search, $categoryFilter, $locationFilter, $statusesToQuery, $dateFrom, $dateTo
+        );
+    }
+
+    public function getUniqueLocationsByEmployerId($employerId) {
+        return $this->jobDAO->getUniqueLocationsByEmployer($employerId);
     }
 }

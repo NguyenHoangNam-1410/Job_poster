@@ -47,7 +47,7 @@ class JobDAO {
     
     public function getAll($search = '', $categoryFilter = '', $locationFilter = '', $statusFilter = '', $limit = null, $offset = 0) {
         $sql = "SELECT DISTINCT j.id, j.employer_id, j.posted_by, j.title, j.location, j.description, 
-                j.requirements, j.salary, j.deadline, j.status, j.created_at, j.updated_at,
+                j.requirements, j.salary, j.deadline, j.status, j.created_at, j.updated_at, j.approved_at, j.rejected_at,
                 e.company_name as employer_name,
                 u.Name as posted_by_name
                 FROM JOBS j
@@ -287,9 +287,24 @@ class JobDAO {
     }
     
     public function changeStatus($id, $newStatus) {
-        $sql = "UPDATE JOBS SET status = ? WHERE id = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("si", $newStatus, $id);
+        if ($newStatus === 'approved') {
+            $approvedAt = date('Y-m-d H:i:s');
+            $sql = "UPDATE JOBS SET status = ?, approved_at = ? WHERE id = ?";
+            $stmt = $this->db->prepare($sql);
+            $time = $approvedAt;
+            $stmt->bind_param("ssi", $newStatus, $time, $id);
+        } elseif ($newStatus === 'rejected') {
+            $rejectedAt = date('Y-m-d H:i:s');
+            $sql = "UPDATE JOBS SET status = ?, rejected_at = ? WHERE id = ?";
+            $stmt = $this->db->prepare($sql);
+            $time = $rejectedAt; 
+            $stmt->bind_param("ssi", $newStatus, $time, $id);
+        } else {
+            $sql = "UPDATE JOBS SET status = ? WHERE id = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bind_param("si", $newStatus, $id);
+        }
+
         return $stmt->execute();
     }
     
@@ -333,6 +348,8 @@ class JobDAO {
         
         $job->setCreatedAt($row['created_at']);
         $job->setUpdatedAt($row['updated_at']);
+        $job->setApprovedAt($row['approved_at'] ?? null);
+        $job->setRejectedAt($row['rejected_at'] ?? null);
         
         if (isset($row['employer_name'])) {
             $job->setCompanyName($row['employer_name']);
@@ -370,6 +387,193 @@ class JobDAO {
         }
         return null;
     }
+
+    public function getByEmployerId($employerId) {
+        $sql = "SELECT * FROM JOBS WHERE employer_id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("i", $employerId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $jobs = [];
+        while ($row = $result->fetch_assoc()) {
+            $jobs[] = $this->mapRowToJob($row);
+        }
+        return $jobs;
+    }
+
+    public function getTotalCountByEmployer(
+        $employerId, $search, $categoryFilter, $locationFilter, $statusesToQuery, $dateFrom, $dateTo
+    ) {
+        // Convert comma-separated string to array
+        if (!empty($statusesToQuery) && is_string($statusesToQuery)) {
+            $statusesToQuery = explode(',', $statusesToQuery);
+        }
+
+        $sql = "SELECT COUNT(DISTINCT j.id) as total 
+                FROM JOBS j
+                LEFT JOIN JOB_CATEGORY_MAP jcm ON j.id = jcm.job_id
+                WHERE j.employer_id = ?";
+        
+        $params = [$employerId];
+        $types = 'i';
+        
+        if (!empty($search)) {
+            $sql .= " AND j.title LIKE ?";
+            $searchTerm = "%{$search}%";
+            $params[] = $searchTerm;
+            $types .= 's';
+        }
+        
+        if (!empty($categoryFilter)) {
+            $sql .= " AND jcm.category_id = ?";
+            $params[] = $categoryFilter;
+            $types .= 'i';
+        }
+        
+        if (!empty($locationFilter)) {
+            $sql .= " AND j.location LIKE ?";
+            $locationTerm = "%{$locationFilter}%";
+            $params[] = $locationTerm;
+            $types .= 's';
+        }
+        
+        if (!empty($statusesToQuery)) {
+            $placeholders = implode(',', array_fill(0, count($statusesToQuery), '?'));
+            $sql .= " AND j.status IN ($placeholders)";
+            foreach ($statusesToQuery as $status) {
+                $params[] = trim($status);
+                $types .= 's';
+            }
+        }
+        
+        if (!empty($dateFrom)) {
+            $sql .= " AND j.deadline >= ?";
+            $params[] = $dateFrom;
+            $types .= 's';
+        }
+        
+        if (!empty($dateTo)) {
+            $sql .= " AND j.deadline <= ?";
+            $params[] = $dateTo;
+            $types .= 's';
+        }
+        
+        $stmt = $this->db->prepare($sql);
+        
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        
+        return $row['total'];
+    }
+
+    public function getJobsByEmployer($employerId, $search, $categoryFilter, $locationFilter, $statusesToQuery, $dateFrom, $dateTo, $limit = null, $offset = 0) {
+        // Convert comma-separated string to array
+        if (!empty($statusesToQuery) && is_string($statusesToQuery)) {
+            $statusesToQuery = explode(',', $statusesToQuery);
+        }
+        $sql = "SELECT j.* 
+                FROM JOBS j
+                WHERE j.employer_id = ?";
+        
+        $params = [$employerId];
+        $types = 'i';
+        
+        if (!empty($search)) {
+            $sql .= " AND j.title LIKE ?";
+            $searchTerm = "%{$search}%";
+            $params[] = $searchTerm;
+            $types .= 's';
+        }
+        
+        if (!empty($categoryFilter)) {
+            $sql .= " AND EXISTS (
+                SELECT 1 FROM JOB_CATEGORY_MAP jcm
+                WHERE jcm.job_id = j.id AND jcm.category_id = ?
+            )";
+            $params[] = $categoryFilter;
+            $types .= 'i';
+        }
+        
+        if (!empty($locationFilter)) {
+            $sql .= " AND j.location LIKE ?";
+            $locationTerm = "%{$locationFilter}%";
+            $params[] = $locationTerm;
+            $types .= 's';
+        }
+        if (!empty($statusesToQuery)) {
+            $placeholders = implode(',', array_fill(0, count($statusesToQuery), '?'));
+            $sql .= " AND j.status IN ($placeholders)";
+            foreach ($statusesToQuery as $status) {
+                $params[] = trim($status);
+                $types .= 's';
+            }
+        }
+        if (!empty($dateFrom)) {
+            $sql .= " AND j.deadline >= ?";
+            $params[] = $dateFrom;
+            $types .= 's';
+        }
+        if (!empty($dateTo)) {
+            $sql .= " AND j.deadline <= ?";
+            $params[] = $dateTo;
+            $types .= 's';
+        }
+        
+        if (!empty($limit)) {
+            $sql .= " LIMIT ?";
+            $params[] = $limit;
+            $types .= 'i';
+        }
+        
+        if (!empty($offset)) {
+            $sql .= " OFFSET ?";
+            $params[] = $offset;
+            $types .= 'i';
+        }
+        
+        $stmt = $this->db->prepare($sql);
+        
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $jobs = [];
+        while ($row = $result->fetch_assoc()) {
+            $job = $this->mapRowToJob($row);
+            $job->setCategories($this->getJobCategories($job->getId()));
+            $jobs[] = $job;
+        }
+        return $jobs;
+    }
+
+    public function getUniqueLocationsByEmployer($employerId) {
+        $sql = "SELECT DISTINCT location 
+                FROM JOBS 
+                WHERE employer_id = ? 
+                  AND location IS NOT NULL 
+                  AND location != '' 
+                ORDER BY location ASC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("i", $employerId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $locations = [];
+        while ($row = $result->fetch_assoc()) {
+            $locations[] = $row['location'];
+        }
+        return $locations;
+    }
+
 
    /* =========================================================
  * PUBLIC FILTERS + SEARCH (for /public/ajax/* endpoints)

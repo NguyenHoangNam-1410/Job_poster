@@ -214,6 +214,7 @@ class UserController {
 
                 // Set avatar path relative to public directory
                 $data['avatar'] = '/Job_poster/public/image/avatar/' . $currentUserId . '/' . $filename;
+                $_SESSION['avatar'] = $data['avatar'];
             } else {
                 // Keep existing avatar if no new file uploaded
                 $currentUser = $this->userService->getUserById($currentUserId);

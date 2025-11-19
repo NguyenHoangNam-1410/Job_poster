@@ -1,6 +1,6 @@
 <?php $pageTitle = isset($category) ? 'Update Job Category' : 'Create New Job Category'; ?>
 <?php 
-include __DIR__ . '/../../layouts/admin_header.php';
+include __DIR__ . '/../../layouts/public_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
@@ -71,4 +71,4 @@ $pageHeading = $isEditMode ? "Update Category #{$category->getId()}" : 'Create N
     </div>
 </div>
 
-<?php include __DIR__ . '/../../layouts/admin_footer.php'; ?>
+<?php include __DIR__ . '/../../layouts/public_footer.php'; ?>

@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../models/Employer.php';
 
-class EmployderDAO {
+class EmployerDAO {
     private $db;
     
     public function __construct() {
@@ -12,7 +12,7 @@ class EmployderDAO {
     
     // CREATE
     public function create(Employer $employer) {
-        $sql = "INSERT INTO EMPLOYERS (user_id, company_name, website, logo, contact_phone, contact_email, contact_person) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO EMPLOYERS (user_id, company_name, website, logo, contact_phone, contact_email, contact_person, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         
         $userId = $employer->getUserId();
@@ -22,8 +22,9 @@ class EmployderDAO {
         $contactPhone = $employer->getContactPhone();
         $contactEmail = $employer->getContactEmail();
         $contactPerson = $employer->getContactPerson();
+        $description = $employer->getDescription();
 
-        $stmt->bind_param("issssss", $userId, $companyName, $website, $logo, $contactPhone, $contactEmail, $contactPerson);
+        $stmt->bind_param("isssssss", $userId, $companyName, $website, $logo, $contactPhone, $contactEmail, $contactPerson, $description);
         
         return $stmt->execute();
         
@@ -78,4 +79,52 @@ class EmployderDAO {
             throw $e;
         }
     }
+
+    // Get employer by user id
+    public function getEmployerByUserId($user_id){   
+        $sql = "SELECT * FROM EMPLOYERS WHERE user_id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        if (!$row) return null;
+
+        $employer = new Employer();
+        $employer->setId($row['id']);
+        $employer->setCompanyName($row['company_name']);
+        $employer->setContactPerson($row['contact_person']);
+        $employer->setContactEmail($row['contact_email']);
+        $employer->setContactPhone($row['contact_phone']);
+        $employer->setWebsite($row['website']);
+        $employer->setDescription($row['description']);
+        $employer->setLogo($row['logo']);
+        $employer->setUserId($row['user_id']);
+
+        return $employer;
+
+    }
+
+    public function updateCompanyProfile(Employer $employer) {
+        $sql = "UPDATE EMPLOYERS 
+                SET company_name = ?, contact_person = ?, contact_email = ?, 
+                    contact_phone = ?, website = ?, description = ?, logo = ? 
+                WHERE user_id = ?";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param(
+            "sssssssi",
+            $employer->getCompanyName(),
+            $employer->getContactPerson(),
+            $employer->getContactEmail(),
+            $employer->getContactPhone(),
+            $employer->getWebsite(),
+            $employer->getDescription(),
+            $employer->getLogo(),
+            $employer->getUserId()
+        );
+
+        return $stmt->execute();
+    }
+    
 }

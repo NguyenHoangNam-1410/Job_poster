@@ -9,8 +9,7 @@ class FeedbackController {
     }
 
     private function getCurrentUserId() {
-        // TODO: Replace with actual session-based user ID when authentication is implemented
-        return $_SESSION['user_id'] ?? 1;
+        return $_SESSION['user']['id'] ?? null;
     }
 
     public function index() {
@@ -86,6 +85,78 @@ class FeedbackController {
             } else {
                 header('Location: /Job_poster/public/feedbacks?error=' . urlencode($e->getMessage()));
                 exit;
+            }
+        }
+    }
+
+    public function myFeedbacks() {
+        $currentUserId = $this->getCurrentUserId();
+        if (!$currentUserId) {
+            header('Location: /Job_poster/public/login');
+            exit;
+        }
+
+        // Get filter parameters
+        $search = $_GET['search'] ?? '';
+        $dateFrom = $_GET['date_from'] ?? '';
+        $dateTo = $_GET['date_to'] ?? '';
+        $per_page = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
+        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+        // Validate per_page
+        if (!in_array($per_page, [10, 25, 50])) {
+            $per_page = 10;
+        }
+
+        $offset = ($current_page - 1) * $per_page;
+
+        // Get total records and calculate pages
+        $total_records = $this->feedbackService->getTotalCountForUser($currentUserId, $search, $dateFrom, $dateTo);
+        $total_pages = ceil($total_records / $per_page);
+
+        // Get feedbacks
+        $feedbacks = $this->feedbackService->getFeedbacksByUser($currentUserId, $search, $dateFrom, $dateTo, $per_page, $offset);
+
+        // Prepare pagination data
+        $pagination = [
+            'current_page' => $current_page,
+            'per_page' => $per_page,
+            'total_records' => $total_records,
+            'total_pages' => $total_pages,
+            'search' => $search,
+            'date_from' => $dateFrom,
+            'date_to' => $dateTo
+        ];
+
+        require_once __DIR__ . '/../views/employer/my_feedbacks/list.php';
+    }
+
+    public function createMyFeedback() {
+        require_once __DIR__ . '/../views/employer/my_feedbacks/form.php';
+    }
+
+    public function storeMyFeedback() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $currentUserId = $this->getCurrentUserId();
+                if (!$currentUserId) {
+                    throw new Exception("User not logged in.");
+                }
+
+  
+                $comments = $_POST['comments'] ?? '' ;
+
+                $success = $this->feedbackService->createFeedback($currentUserId, $comments);
+
+                if ($success) {
+                    header('Location: /Job_poster/public/my-feedbacks?success=' . urlencode('Feedback added successfully'));
+                    exit;         
+                } else {
+                    throw new Exception("Failed to create feedback.");
+                }
+            } catch (Exception $e) {
+                $error = $e->getMessage();
+                require_once __DIR__ . '/../views/employer/my_feedbacks/form.php';
             }
         }
     }

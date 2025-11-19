@@ -1,10 +1,6 @@
 <?php $pageTitle = 'Edit Job'; ?>
 <?php 
-if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
-    require_once '../app/views/layouts/admin_header.php';
-} else{
-    require_once '../app/views/layouts/staff_header.php';
-}
+require_once __DIR__ . '/../../layouts/public_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
@@ -155,9 +151,5 @@ $jobCategoryIds = array_column($jobCategories, 'id');
 </div>
 
 <?php 
-if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
-    require_once '../app/views/layouts/admin_footer.php';
-} else{
-    require_once '../app/views/layouts/staff_footer.php';
-}
+include __DIR__ . '/../../layouts/public_footer.php';
 ?>
