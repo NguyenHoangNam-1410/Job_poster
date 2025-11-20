@@ -135,6 +135,8 @@ if (route('#^/auth/login/forgot-password/reset-expired$#', fn() => controller('A
 if (route('#^/public/home$#', fn() => controller('HomeController', 'index'))) exit;
 if (route('#^/admin/home$#', fn() => controller('HomeController', 'adminIndex'), ['GET'], ['Admin'])) exit;
 if (route('#^/staff/home$#', fn() => controller('HomeController', 'staffIndex'), ['GET'], ['Staff'])) exit;
+if (route('#^/employer/home$#', fn() => controller('HomeController', 'employerIndex'), ['GET'], ['Employer'])) exit;
+
 // if (route('#^/employer/home$#', fn() => controller('HomeController', 'employerIndex'), ['GET'], ['Employer'])) exit;
 
 // ============================================================================

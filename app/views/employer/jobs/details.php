@@ -1,26 +1,34 @@
-<?php $pageTitle = 'Job Details'; ?>
-<?php 
-require_once __DIR__ . '/../../layouts/public_header.php';
-require_once __DIR__ . '/../../../helpers/Icons.php';
-?>
-
 <?php
+// Check if this is an AJAX request (modal view)
+$isModal = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
+
+if (!$isModal) {
+    $pageTitle = 'Job Details';
+    require_once __DIR__ . '/../../layouts/public_header.php';
+}
+require_once __DIR__ . '/../../../helpers/Icons.php';
+
 $pageHeading = "{$job->getTitle()}";
 $jobCategories = $job->getCategories();
 $jobCategoryIds = array_column($jobCategories, 'id');
 ?>
 
-<div class="form-background">
-    <div class="form-container">
-        <div class="form-header">
-            <h1 class="form-title"><?= $pageHeading ?></h1>
-            <a href="/Job_poster/public/my-jobs" 
-            class="inline-flex items-center bg-blue-100 text-blue-800 font-semibold text-lg px-4 py-2 rounded-lg hover:bg-blue-200 hover:text-blue-900 transition-all duration-200">
-                <?= Icons::arrowLeft('w-5 h-5 mr-2') ?> Return to List
-            </a>
-        </div>
+<?php if (!$isModal): ?>
+    <div class="form-background">
+        <div class="form-container">
+            <div class="form-header">
+                <h1 class="form-title"><?= $pageHeading ?></h1>
+                <a href="/Job_poster/public/my-jobs"
+                    class="inline-flex items-center bg-blue-100 text-blue-800 font-semibold text-lg px-4 py-2 rounded-lg hover:bg-blue-200 hover:text-blue-900 transition-all duration-200">
+                    <?= Icons::arrowLeft('w-5 h-5 mr-2') ?> Return to List
+                </a>
+            </div>
+        <?php else: ?>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6"><?= $pageHeading ?></h2>
+        <?php endif; ?>
 
-        <div class="space-y-6">
+        <!-- Wrap in a form element for modal compatibility -->
+        <form class="space-y-6">
             <div class="form-grid">
                 <!-- Location -->
                 <div>
@@ -105,7 +113,8 @@ $jobCategoryIds = array_column($jobCategories, 'id');
                     <label class="form-label">Job Categories</label>
                     <div class="flex flex-wrap gap-2">
                         <?php foreach ($jobCategories as $category): ?>
-                            <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                            <span
+                                class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
                                 <?= htmlspecialchars($category['name'] ?? 'No Name') ?>
                             </span>
                         <?php endforeach; ?>
@@ -133,23 +142,46 @@ $jobCategoryIds = array_column($jobCategories, 'id');
                     <p class="form-info-text">
                         <strong>Employer:</strong> <?= htmlspecialchars($job->getEmployerName() ?? 'N/A') ?><br>
                         <strong>Posted By:</strong> <?= htmlspecialchars($job->getPostedByName() ?? 'N/A') ?><br>
-                        <strong>Created:</strong> <?= $job->getCreatedAt() ? date('Y-m-d H:i', strtotime($job->getCreatedAt())) : 'N/A' ?><br>
-                        <strong>Last Updated:</strong> <?= $job->getUpdatedAt() ? date('Y-m-d H:i', strtotime($job->getUpdatedAt())) : 'N/A' ?>
+                        <strong>Created:</strong>
+                        <?= $job->getCreatedAt() ? date('Y-m-d H:i', strtotime($job->getCreatedAt())) : 'N/A' ?><br>
+                        <strong>Last Updated:</strong>
+                        <?= $job->getUpdatedAt() ? date('Y-m-d H:i', strtotime($job->getUpdatedAt())) : 'N/A' ?>
                     </p>
                 </div>
             </div>
 
+            <?php if (!$isModal): ?>
             <div class="form-actions">
-                <a href="/Job_poster/public/my-jobs/edit/<?= $job->getId() ?>" class="btn-submit">
+                <button type="button" onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/edit/<?= $job->getId() ?>', 'Edit Job')"
+                    class="btn-submit">
                     <?= Icons::edit('btn-icon') ?> Edit Job
-                </a>
+                </button>
                 <a href="/Job_poster/public/my-jobs"
                 class="inline-flex items-center gap-2 px-5 py-3 font-semibold text-white bg-gradient-to-r from-gray-700 to-gray-900 rounded-lg shadow-lg hover:from-gray-800 hover:to-black transition-all duration-200">
                     <?= Icons::arrowLeft('w-5 h-5') ?> Return to List
                 </a>
             </div>
-        </div>
+            <?php endif; ?>
+        </form>
+<?php if (!$isModal): ?>
     </div>
 </div>
 
 <?php include __DIR__ . '/../../layouts/public_footer.php'; ?>
+<?php endif; ?>
+
+<?php if ($isModal): ?>
+<!-- Modal Footer Buttons -->
+<div class="flex justify-end gap-3 mt-6">
+    <button type="button" 
+            onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/edit/<?= $job->getId() ?>', 'Edit Job')"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+        <?= Icons::edit('w-4 h-4') ?> Edit Job
+    </button>
+    <button type="button" 
+            onclick="window.formModal.close()"
+            class="px-5 py-2.5 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition">
+        Close
+    </button>
+</div>
+<?php endif; ?>

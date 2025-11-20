@@ -1,9 +1,15 @@
 <?php 
-$pageTitle = 'Post New Job'; 
-require_once __DIR__ . '/../../layouts/public_header.php';
+// Check if this is an AJAX request (modal view)
+$isModal = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
+
+if (!$isModal) {
+    $pageTitle = 'Post New Job';
+    require_once __DIR__ . '/../../layouts/public_header.php';
+}
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
+<?php if (!$isModal): ?>
 <div class="form-background">
     <div class="form-container">
 
@@ -11,9 +17,10 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
     <div class="mb-6">
         <h1 class="text-4xl font-extrabold text-left">Post New Job</h1>
     </div>
+<?php endif; ?>
 
     <!-- FORM -->
-    <form method="POST" action="/Job_poster/public/my-jobs/store" id="jobForm" class="space-y-8" onsubmit="return confirmJobAction(event)">
+    <form method="POST" action="/Job_poster/public/my-jobs/store" id="jobForm" class="space-y-8">
         <div class="form-grid">
 
             <!-- TITLE -->
@@ -47,15 +54,19 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
             <!-- CATEGORIES -->
             <div class="md:col-span-2">
                 <label class="form-label">Job Categories <span class="required">*</span></label>
-                <div class="flex flex-wrap gap-2 p-3 border rounded-md bg-gray-50">
+                <select 
+                    name="categories[]" 
+                    id="jobCategoriesNew"
+                    multiple
+                    required
+                    class="form-input w-full"
+                    style="visibility: hidden; height: 42px;">
                     <?php foreach ($categories as $category): ?>
-                    <label class="inline-flex items-center gap-2">
-                        <input type="checkbox" name="categories[]" value="<?= $category->getId() ?>"
-                            class="rounded text-blue-600 border-gray-300">
-                        <span class="text-sm"><?= htmlspecialchars($category->getCategoryName()) ?></span>
-                    </label>
+                        <option value="<?= $category->getId() ?>">
+                            <?= htmlspecialchars($category->getCategoryName()) ?>
+                        </option>
                     <?php endforeach; ?>
-                </div>
+                </select>
             </div>
 
             <!-- DESCRIPTION -->
@@ -89,18 +100,76 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
             </button>
 
             <!-- Cancel -->
+            <?php if (!$isModal): ?>
             <a href="/Job_poster/public/my-jobs" id="cancelBtn"
             class="px-4 py-2 rounded-lg font-semibold bg-gray-300 hover:bg-gray-400 transition">
             Cancel
             </a>
+            <?php else: ?>
+            <button type="button" onclick="window.formModal.close()" id="cancelBtn"
+            class="px-4 py-2 rounded-lg font-semibold bg-gray-300 hover:bg-gray-400 transition">
+            Cancel
+            </button>
+            <?php endif; ?>
         </div>
 
     </form>
+<?php if (!$isModal): ?>
     </div>
 </div>
+<?php endif; ?>
+
+<script>
+(function() {
+    // Initialize Choices.js for categories multi-select
+    function initCategorySelect() {
+        const categorySelect = document.getElementById('jobCategoriesNew');
+        
+        if (!categorySelect) {
+            console.log('Category select not found');
+            return;
+        }
+        
+        // Check if Choices is available
+        if (typeof Choices === 'undefined') {
+            console.error('Choices.js is not loaded');
+            categorySelect.style.visibility = 'visible';
+            return;
+        }
+        
+        console.log('Initializing Choices.js with', categorySelect.options.length, 'options');
+        
+        const choices = new Choices(categorySelect, {
+            removeItemButton: true,
+            searchEnabled: true,
+            searchChoices: true,
+            searchPlaceholderValue: 'Search categories...',
+            placeholder: true,
+            placeholderValue: 'Select categories',
+            itemSelectText: 'Click to select',
+            noResultsText: 'No categories found',
+            noChoicesText: 'No categories available',
+            maxItemCount: -1
+        });
+        
+        // Show the enhanced select
+        categorySelect.style.visibility = 'visible';
+    }
+    
+    // Initialize when DOM is ready or immediately if already loaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCategorySelect);
+    } else {
+        setTimeout(initCategorySelect, 100);
+    }
+})();
+</script>
+
+<?php if (!$isModal): ?>
 <?php
 $additionalJS = [
     '/Job_poster/public/javascript/employer_jobs.js'
 ];
 include __DIR__ . '/../../layouts/public_footer.php'; 
 ?>
+<?php endif; ?>

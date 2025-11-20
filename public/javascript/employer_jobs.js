@@ -40,10 +40,7 @@ if(form){
                 return;
             }
 
-            if (!confirm("Are you sure you want to save these changes?")) {
-                event.preventDefault();
-                return;
-            }
+            // Removed browser confirm - using custom notification instead
         }
     });
 
@@ -171,11 +168,12 @@ if (statusBtn) {
 }
 
 if(form){
-    // Cancel warning
+    // Cancel warning - removed browser confirm
     cancelBtn.addEventListener('click', (e) => {
         if (!warningBox.classList.contains('hidden')) {
-            if (!confirm("You have unsaved changes. Are you sure you want to leave?")) {
-                e.preventDefault();
+            // Just show notification, don't block
+            if (window.notyf) {
+                window.notyf.error('You have unsaved changes!');
             }
         }
     });
@@ -188,12 +186,25 @@ if(form){
 }
 
 
-// Delete confirmation
-function confirmDelete(type) {
+// Delete confirmation using custom modal
+async function handleDeleteJob(type, jobId) {
     let message = "Are you sure you want to delete this job?\n\n";
-    if (type === 'soft') message += "This will be a SOFT DELETE. Admin and Staff can still see it.";
-    else message += "This will be a HARD DELETE. The job will be permanently removed.";
-    return confirm(message);
+    if (type === 'soft') {
+        message += "This will be a SOFT DELETE. Admin and Staff can still see it.";
+    } else {
+        message += "This will be a HARD DELETE. The job will be permanently removed.";
+    }
+    
+    const confirmed = await window.confirmModal.show(
+        'Delete Job',
+        message,
+        'Delete',
+        'Cancel'
+    );
+    
+    if (confirmed) {
+        window.location.href = `/Job_poster/public/my-jobs/${type}-delete/${jobId}?type=${type}`;
+    }
 }
 
 // Debounce search functionality

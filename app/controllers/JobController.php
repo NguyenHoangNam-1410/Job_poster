@@ -485,9 +485,22 @@ class JobController {
            || !$employer->getContactPhone() || !$employer->getWebsite() || !$employer->getDescription()) {
             // No company profile => direct to update company profile
             $_SESSION['error_profile'] = "You need to complete your company profile before posting a job!";
+            $_SESSION['job_posting_flow'] = true; // Mark that we're in job posting flow
+            
+            // Check if this is an AJAX request (modal)
+            if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+                // Load company profile form in modal instead
+                header('Location: /Job_poster/public/company-profile');
+                exit;
+            }
+            
             header('Location: /Job_poster/public/company-profile');
+            exit;
         }
+        
+        // Always load categories before loading the view
         $categories = $this->jobService->getAllCategories();
+        
         require_once __DIR__ . '/../views/employer/jobs/newJob.php';
     }
 

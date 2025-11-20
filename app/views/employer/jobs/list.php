@@ -1,6 +1,6 @@
 <?php $pageHeading = 'My Posted Jobs'; ?>
 <?php
-require_once __DIR__ . '/../../layouts/public_header.php';
+require_once __DIR__ . '/../../layouts/auth_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 
 $perPage    = (int)($pagination['per_page'] ?? 10);
@@ -14,17 +14,17 @@ $totalPages = $total_pages;
         <div class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="list-header">My Posted Jobs</h1>
-                <p class="text-gray-600 mt-2">View and manage your posted jobs</p>
             </div>
-            <a href="/Job_poster/public/my-jobs/create"
-               class="px-6 py-3 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700">
-                <?= Icons::add('w-5 h-5 inline-block mr-2') ?> Post New Job
-            </a>
+            <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/create', 'Post New Job')"
+                class="btn-submit">
+                <?= Icons::add('btn-icon') ?>
+                Post New Job
+            </button>
         </div>
 
-        <!-- Filters -->
+        <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <form method="GET" action="" id="myJobsFilterForm" class="space-y-4">
+            <form method="GET" action="" id="myJobsFilterForm" class="flex flex-col gap-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                     <!-- Search -->
                     <div class="lg:col-span-2">
@@ -98,10 +98,18 @@ $totalPages = $total_pages;
 
         <!-- Jobs Table -->
         <?php if (empty($jobs)): ?>
-            <div id="empty-state" class="text-center py-12">
-                <?= Icons::emptyState() ?>
-                <h3 class="mt-2 text-sm font-medium text-gray-900">No jobs found</h3>
-                <p class="mt-1 text-sm text-gray-500">Try changing your filter criteria or post a new job.</p>
+            <div class="list-table-wrapper">
+                <div id="empty-state" class="text-center py-12">
+                    <?= Icons::emptyState() ?>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">No jobs found</h3>
+                    <p class="mt-1 text-sm text-gray-500">
+                        <?php if (!empty($pagination['search'])): ?>
+                            No jobs match your search. Try different keywords.
+                        <?php else: ?>
+                            Post your first job to get started!
+                        <?php endif; ?>
+                    </p>
+                </div>
             </div>
         <?php else: ?>
             <div class="list-table-wrapper">
@@ -151,15 +159,15 @@ $totalPages = $total_pages;
                                     </td>
                                     <td class="table-cell">
                                         <div class="flex gap-2">
-                                            <a href="/Job_poster/public/my-jobs/show/<?= $job->getId() ?>" class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm">
+                                            <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $job->getId() ?>', 'Job Details')" class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm">
                                                 <?= Icons::view('w-4 h-4 mr-1') ?> View
-                                            </a>
+                                            </button>
                                             <?php $deleteType = in_array($job->getStatus(), ['draft']) ? 'hard' : 'soft'; ?>
-                                            <a href="/Job_poster/public/my-jobs/<?= $deleteType ?>-delete/<?= $job->getId() ?>"
-                                               onclick="return confirmDelete('<?= $deleteType ?>')"
+                                            <button type="button"
+                                               onclick="handleDeleteJob('<?= $deleteType ?>', '<?= $job->getId() ?>')"
                                                class="inline-flex items-center text-red-600 hover:text-red-900 text-sm">
                                                 <?= Icons::delete('w-4 h-4 mr-1') ?> Delete
-                                            </a>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -189,5 +197,5 @@ $totalPages = $total_pages;
 
 <?php
 $additionalJS = ['/Job_poster/public/javascript/employer_jobs.js'];
-include __DIR__ . '/../../layouts/public_footer.php';
+include __DIR__ . '/../../layouts/auth_footer.php';
 ?>

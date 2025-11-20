@@ -1,5 +1,12 @@
-<?php $pageTitle = 'Edit Company Profile'; ?>
-<?php include __DIR__ . '/../../layouts/public_header.php'; ?>
+<?php
+// Check if this is an AJAX request (modal view)
+$isModal = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+        || (!empty($_SERVER['HTTP_X_REQUESTED_WITH']));
+
+if (!$isModal) {
+    $pageTitle = 'Edit Company Profile';
+    include __DIR__ . '/../../layouts/auth_header.php';
+?>
 
 <div class="list-container">
     <div class="list-content max-w-3xl mx-auto">
@@ -7,7 +14,9 @@
             <h1 class="list-header">Edit Company Profile</h1>
             <p class="text-gray-600 mt-2">Update your company information</p>
         </div>
+<?php } ?>
 
+<?php if (!$isModal): ?>
         <?php if (isset($_SESSION['error_profile'])): ?>
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
                 <span class="block sm:inline"><?= htmlspecialchars($_SESSION['error_profile']) ?></span>
@@ -25,10 +34,14 @@
                 <span class="block sm:inline"><?= htmlspecialchars($success) ?></span>
             </div>
         <?php endif; ?>
+<?php endif; ?>
 
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <form id="companyForm" method="POST" action="/Job_poster/public/company-profile/update" enctype="multipart/form-data" class="space-y-6">
-                <input type="hidden" name="referrer" id="referrer" value="">
+        <div class="<?= !$isModal ? 'bg-white rounded-lg shadow-md p-6' : '' ?>">
+            <form id="companyForm" method="POST" action="/Job_poster/public/company-profile/update<?= $isModal ? '?ajax=1' : '' ?>" enctype="multipart/form-data" class="space-y-6">
+                <input type="hidden" name="referrer" id="referrer" value="<?= isset($_SESSION['job_posting_flow']) ? 'job-posting' : '' ?>">
+                <?php if ($isModal): ?>
+                <input type="hidden" name="ajax" value="1">
+                <?php endif; ?>
 
                 <!-- Company Logo -->
                 <div class="border-b pb-6">
@@ -162,6 +175,7 @@
 
                 <!-- Action Buttons -->
                 <div class="flex justify-end gap-3 pt-4">
+                    <?php if (!$isModal): ?>
                     <button 
                         type="button" 
                         id="cancelBtn"
@@ -169,6 +183,15 @@
                     >
                         Cancel
                     </button>
+                    <?php else: ?>
+                    <button 
+                        type="button" 
+                        onclick="window.formModal.close()"
+                        class="btn-cancel"
+                    >
+                        Cancel
+                    </button>
+                    <?php endif; ?>
                     <button 
                         type="submit" 
                         class="btn-submit"
@@ -178,16 +201,18 @@
                 </div>
             </form>
         </div>
+<?php if (!$isModal): ?>
     </div>
 </div>
+<?php endif; ?>
 
 <script>
 (function() {
     const form = document.getElementById('companyForm');
+    const isModal = <?= $isModal ? 'true' : 'false' ?>;
     const logoInput = document.getElementById('logo');
     const logoPreview = document.getElementById('logoPreview');
     const fileInfo = document.getElementById('fileInfo');
-    const cancelBtn = document.getElementById('cancelBtn');
     const referrerInput = document.getElementById('referrer');
 
     let initialFormData = new FormData(form);
@@ -195,8 +220,10 @@
     let originalLogo = logoPreview.src;
     let isSubmitting = false;
 
-    const referrer = document.referrer || '/Job_poster/public/employer/company';
-    referrerInput.value = referrer;
+    if (!isModal && referrerInput) {
+        const referrer = document.referrer || '/Job_poster/public/employer/company';
+        referrerInput.value = referrer;
+    }
 
     function checkFormChanges() {
         const currentFormData = new FormData(form);
@@ -255,28 +282,27 @@
         checkFormChanges();
     });
 
-    form.addEventListener('submit', function(e) {
-        if (formChanged) {
-            const confirmed = confirm('Are you sure you want to update your company profile?');
-            if (!confirmed) {
-                e.preventDefault();
-                return false;
-            }
-        }
-        isSubmitting = true;
-    });
+    // Don't add submit listener in modal mode - form-modal.js handles it
+    if (!isModal) {
+        form.addEventListener('submit', function(e) {
+            isSubmitting = true;
+        });
+    }
 
-    cancelBtn.addEventListener('click', function() {
-        if (formChanged) {
-            const confirmLeave = confirm('You have unsaved changes. Are you sure you want to leave?');
-            if (confirmLeave) {
+    if (!isModal) {
+        const cancelBtn = document.getElementById('cancelBtn');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', function() {
+                const referrer = document.referrer || '/Job_poster/public/employer/company';
+                if (formChanged && window.notyf) {
+                    window.notyf.error('You have unsaved changes!');
+                    // No blocking - just inform user
+                }
                 isSubmitting = true;
                 window.location.href = referrer;
-            }
-        } else {
-            window.location.href = referrer;
+            });
         }
-    });
+    }
 
     window.addEventListener('beforeunload', function(e) {
         if (formChanged && !isSubmitting) {
@@ -288,4 +314,6 @@
 })();
 </script>
 
-<?php include __DIR__ . '/../../layouts/public_footer.php'; ?>
+<?php if (!$isModal): ?>
+<?php include __DIR__ . '/../../layouts/auth_footer.php'; ?>
+<?php endif; ?>

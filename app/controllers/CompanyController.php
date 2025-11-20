@@ -118,12 +118,51 @@ class CompanyController {
                 
                 $success = $this->companyService->updateCompanyProfile($currentEmployer, $data);
                 if ($success) {
+                    // Check if this is an AJAX request (modal) - check multiple ways
+                    $headers = function_exists('getallheaders') ? getallheaders() : [];
+                    $isAjax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+                           || (isset($headers['X-Requested-With']) && strtolower($headers['X-Requested-With']) === 'xmlhttprequest')
+                           || isset($_GET['ajax'])
+                           || isset($_POST['ajax']);
+                    
+                    if ($isAjax) {
+                        header('Content-Type: application/json');
+                        echo json_encode([
+                            'success' => true,
+                            'message' => 'Company profile updated successfully',
+                            'redirect' => '/Job_poster/public/my-jobs/create'
+                        ]);
+                        exit;
+                    }
+                    
+                    // Check if we came from job posting flow
+                    if (isset($_POST['referrer']) && $_POST['referrer'] === 'job-posting') {
+                        header('Location: /Job_poster/public/my-jobs/create?success=' . urlencode('Company profile updated! You can now post a job.'));
+                        exit;
+                    }
+                    
                     header('Location: /Job_poster/public/company-profile?success=' . urlencode('Company updated successfully'));
                     exit;
                 } else {
                     throw new Exception("Failed to update company profile.");
                 }
             } catch (Exception $e) {
+                // Check if this is an AJAX request (modal) - check multiple ways
+                $headers = function_exists('getallheaders') ? getallheaders() : [];
+                $isAjax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+                       || (isset($headers['X-Requested-With']) && strtolower($headers['X-Requested-With']) === 'xmlhttprequest')
+                       || isset($_GET['ajax'])
+                       || isset($_POST['ajax']);
+                
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => false,
+                        'message' => $e->getMessage()
+                    ]);
+                    exit;
+                }
+                
                 $error = $e->getMessage();
                 $company = $this->companyService->getEmployerByUserId($_SESSION['user']['id']);
                 require_once __DIR__ . '/../views/employer/my_company/profile.php';

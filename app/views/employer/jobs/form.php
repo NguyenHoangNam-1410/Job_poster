@@ -181,18 +181,21 @@ if ($role === 'Employer') {
             <!-- CATEGORIES -->
             <div class="md:col-span-2">
                 <label class="form-label">Job Categories</label>
-                <div class="flex flex-wrap gap-2 p-3 border rounded-md bg-gray-50">
+                <select 
+                    name="categories[]" 
+                    id="jobCategories"
+                    multiple
+                    data-field-name="Categories"
+                    <?= $readonlyAttr ?>
+                    class="form-input w-full"
+                    style="visibility: hidden; height: 42px;">
                     <?php foreach ($categories as $category): ?>
-                    <label class="inline-flex items-center gap-2 <?= $canEditInfo ? 'cursor-pointer' : 'cursor-not-allowed' ?>">
-                        <input type="checkbox" name="categories[]" value="<?= $category->getId() ?>"
-                            data-field-name="Categories"
-                            <?= $readonlyAttr ?>
-                            class="rounded text-blue-600 border-gray-300"
-                            <?= in_array($category->getId(), $jobCategoryIds) ? 'checked' : '' ?>>
-                        <span class="text-sm"><?= htmlspecialchars($category->getCategoryName()) ?></span>
-                    </label>
+                        <option value="<?= $category->getId() ?>"
+                                <?= in_array($category->getId(), $jobCategoryIds) ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($category->getCategoryName()) ?>
+                        </option>
                     <?php endforeach; ?>
-                </div>
+                </select>
             </div>
 
             <!-- DESCRIPTION -->
@@ -221,12 +224,12 @@ if ($role === 'Employer') {
                 <span>Save Changes</span>
             </button>
             <?php if ($showDelete): ?>
-                <a href="/Job_poster/public/my-jobs/<?= $deleteType ?>-delete/<?= $job->getId() ?>?type=<?= $deleteType ?>"
-                    onclick="return confirmDelete('<?= $deleteType ?>');"
+                <button type="button"
+                    onclick="handleDeleteJob('<?= $deleteType ?>', '<?= $job->getId() ?>')"
                     class="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg font-semibold shadow-md hover:scale-105 hover:bg-red-700 active:scale-95 transition-all duration-200">
                     <?= Icons::delete('w-5 h-5 inline-block align-middle') ?>
                     <span>Delete Job</span>
-                </a>
+                </button>
             <?php endif; ?>
             <!-- CANCEL -->
             <a href="/Job_poster/public/my-jobs/details/<?= $job->getId() ?>" id="cancelBtn"
@@ -243,4 +246,39 @@ if ($role === 'Employer') {
 $additionalJS = [
     '/Job_poster/public/javascript/employer_jobs.js'
 ];
-include __DIR__ . '/../../layouts/public_footer.php'; ?>
+?>
+
+<script>
+(function() {
+    // Initialize Choices.js for categories multi-select
+    function initCategorySelect() {
+        const categorySelect = document.getElementById('jobCategories');
+        
+        if (!categorySelect) return;
+        
+        const choices = new Choices(categorySelect, {
+            removeItemButton: true,
+            searchEnabled: true,
+            searchChoices: true,
+            searchPlaceholderValue: 'Search categories...',
+            placeholder: true,
+            placeholderValue: 'Select categories',
+            itemSelectText: 'Click to select',
+            noResultsText: 'No categories found',
+            noChoicesText: 'No categories available',
+            maxItemCount: -1
+        });
+        
+        categorySelect.style.visibility = 'visible';
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCategorySelect);
+    } else {
+        setTimeout(initCategorySelect, 100);
+    }
+})();
+</script>
+
+<?php
+include __DIR__ . '/../../layouts/auth_footer.php';

@@ -227,21 +227,38 @@ class FormModal {
           }
         });
 
-        const data = await response.json();
+        // Get response text first to check if it's JSON
+        const responseText = await response.text();
+        let data;
+        
+        try {
+          data = JSON.parse(responseText);
+        } catch (e) {
+          // Response is not JSON, likely HTML error page
+          console.error('Server returned non-JSON response:', responseText.substring(0, 200));
+          throw new Error('Server error: Invalid response format');
+        }
 
         if (data.success) {
+          // Close modal first
+          this.close();
+          
           // Show success notification
           if (window.notyf) {
             window.notyf.success(data.message || 'Saved successfully!');
           }
           
-          // Close modal
-          this.close();
-          
-          // Reload page after a short delay
-          setTimeout(() => {
-            window.location.reload();
-          }, 500);
+          // Check if there's a redirect URL (e.g., from company profile to job posting)
+          if (data.redirect) {
+            setTimeout(() => {
+              window.formModal.loadForm(data.redirect, 'Post New Job');
+            }, 800);
+          } else {
+            // Reload page after a short delay
+            setTimeout(() => {
+              window.location.reload();
+            }, 500);
+          }
         } else {
           // Show error message in modal
           const errorDiv = document.createElement('div');
@@ -257,10 +274,10 @@ class FormModal {
       } catch (error) {
         console.error('Error submitting form:', error);
         
-        // Show error message
+        // Show error message with more detail
         const errorDiv = document.createElement('div');
         errorDiv.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4';
-        errorDiv.textContent = 'An error occurred. Please try again.';
+        errorDiv.innerHTML = `<strong>Error:</strong> ${error.message || 'An error occurred. Please try again.'}`;
         
         form.insertBefore(errorDiv, form.firstChild);
         

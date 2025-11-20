@@ -163,16 +163,27 @@ class EmployerDAO {
                 WHERE user_id = ?";
 
         $stmt = $this->db->prepare($sql);
+        
+        // Store values in variables for bind_param
+        $companyName = $employer->getCompanyName();
+        $contactPerson = $employer->getContactPerson();
+        $contactEmail = $employer->getContactEmail();
+        $contactPhone = $employer->getContactPhone();
+        $website = $employer->getWebsite();
+        $description = $employer->getDescription();
+        $logo = $employer->getLogo();
+        $userId = $employer->getUserId();
+        
         $stmt->bind_param(
             "sssssssi",
-            $employer->getCompanyName(),
-            $employer->getContactPerson(),
-            $employer->getContactEmail(),
-            $employer->getContactPhone(),
-            $employer->getWebsite(),
-            $employer->getDescription(),
-            $employer->getLogo(),
-            $employer->getUserId()
+            $companyName,
+            $contactPerson,
+            $contactEmail,
+            $contactPhone,
+            $website,
+            $description,
+            $logo,
+            $userId
         );
 
         return $stmt->execute();
