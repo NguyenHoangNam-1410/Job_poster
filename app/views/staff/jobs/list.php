@@ -1,6 +1,6 @@
 <?php $pageTitle = 'Job Management'; ?>
 <?php
-require_once __DIR__ . '/../../layouts/public_header.php';
+require_once __DIR__ . '/../../layouts/auth_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
@@ -388,5 +388,5 @@ async function deleteJob(id, title) {
 </script>
 
 <?php 
-include __DIR__ . '/../../layouts/public_footer.php';
+include __DIR__ . '/../../layouts/auth_footer.php';
 ?>

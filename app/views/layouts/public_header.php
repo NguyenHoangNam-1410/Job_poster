@@ -8,9 +8,6 @@
 
   <link rel="stylesheet" href="/Job_poster/public/css/tailwind.min.css">
   <link rel="stylesheet" href="/Job_poster/public/css/homepage.css">
-  <link href="/Job_poster/public/css/style.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css">
-    <!--Tailwind V3 version -->
   <link rel="stylesheet" href="/Job_poster/public/css/style.css">
 
   <?php if (isset($additionalCSS)): ?>
@@ -71,17 +68,6 @@
       background: rgba(0,0,0,0.3);
       z-index: 40;
     }
-    .y2k-nav-link.active {
-      text-decoration: underline;
-      text-decoration-thickness: 3px;
-      text-underline-offset: 4px;
-      text-decoration-color: #b4ff39;
-    }
-
-    /* Y2K Avatar Button */
-    .y2k-avatar {
-      width: 44px;
-      height: 44px;
     .sidebar {
       position: fixed;
       top: 0;
@@ -173,18 +159,6 @@
         <?php endif; ?>
       </nav>
 
-        <!-- Avatar / Dropdown -->
-        <div class="relative">
-          <!-- Y2K Avatar -->
-          <div class="y2k-avatar" id="avatarBtn" title="<?= isset($_SESSION['user']) ? htmlspecialchars($_SESSION['user']['name'] ?? 'User') : 'Login or Register' ?>">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                 stroke-width="2.5" stroke="#0a4d5c" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M4.5 19.5a8.25 8.25 0 0115 0" />
-            </svg>
-          </div>
 
       <button class="toggle-sidebar md:hidden text-black" onclick="toggleSidebar()">
         <?= Icons::menu('w-6 h-6') ?>
@@ -201,17 +175,138 @@
         <h2 class="text-xl font-bold">Menu</h2>
       </div>
 
-          <!-- Y2K Menu -->
-          <div id="userMenu" class="y2k-menu">
-            <?php if (isset($_SESSION['user'])): ?>
-              <a href="/Job_poster/public/profile">👤 Profile</a>
-              <a href="/Job_poster/public/logout">🚪 Logout</a>
-            <?php else: ?>
-              <a href="/Job_poster/public/auth/login">🔑 Login</a>
-              <a href="/Job_poster/public/auth/register">📝 Register</a>
-            <?php endif; ?>
-          </div>
-        </div>
+      <nav>
+        <?php if (!isset($_SESSION['user'])): ?>
+          <a href="/Job_poster/public/" class="menu-item">Home</a>
+          <a href="/Job_poster/public/jobs" class="menu-item">Jobs</a>
+          <a href="/Job_poster/public/auth/login" class="menu-item">Login</a>
+          <a href="/Job_poster/public/auth/register" class="menu-item">Register</a>
+        <?php else: ?>
+          <a href="/Job_poster/public/"
+            class="menu-item <?= $_SERVER['REQUEST_URI'] === '/Job_poster/public/' ? 'active' : '' ?>"
+            data-tooltip="Home">
+            <?= Icons::home() ?>
+            <span class="menu-text">Home</span>
+          </a>
+          <?php if ($_SESSION['user']['role'] == 'Employer'): ?>
+            <div class="menu-section">Company Management</div>
+            <a href="/Job_poster/public/company-profile"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/company-profile') !== false ? 'active' : '' ?>"
+                data-tooltip="Company Profile">
+                <?= Icons::profile() ?>
+                <span class="menu-text">My Company Profile</span>
+            </a>
+            <div class="menu-section">Job Management</div>
+            <a href="/Job_poster/public/my-jobs"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/my-jobs') !== false ? 'active' : '' ?>"
+                data-tooltip="Jobs">
+                <?= Icons::briefcase() ?>
+                <span class="menu-text">My Jobs</span>
+            </a>
+            <div class="menu-section">Feedback Management</div>
+            <a href="/Job_poster/public/my-feedbacks"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/my-feedbacks') !== false ? 'active' : '' ?>"
+                data-tooltip="Feedback">
+                <?= Icons::comment() ?>
+                <span class="menu-text">My Feedbacks</span>
+            </a>
+          <?php elseif ($_SESSION['user']['role'] == 'Admin'): ?>
+            <div class="menu-section">User Management</div>
+            <a href="/Job_poster/public/users"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/users') !== false ? 'active' : '' ?>"
+                data-tooltip="Users">
+                <?= Icons::users() ?>
+                <span class="menu-text">Users</span>
+            </a>
+
+            <!-- Category Management -->
+            <div class="menu-section">Category Management</div>
+            <a href="/Job_poster/public/job-categories"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/job-categories') !== false ? 'active' : '' ?>"
+                data-tooltip="Categories">
+                <?= Icons::tag() ?>
+                <span class="menu-text">Categories</span>
+            </a>
+
+            <!-- Job Management -->
+            <div class="menu-section">Job Management</div>
+            <a href="/Job_poster/public/jobs-manage"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false ? 'active' : '' ?>"
+                data-tooltip="Jobs">
+                <?= Icons::briefcase() ?>
+                <span class="menu-text">Jobs</span>
+            </a>
+
+            <!-- Request Posting -->
+            <div class="menu-section">Request Posting</div>
+            <a href="/Job_poster/public/approvals"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/approvals') !== false ? 'active' : '' ?>"
+                data-tooltip="Request Posting">
+                <?= Icons::checklist() ?>
+                <span class="menu-text">Request Posting</span>
+            </a>
+
+            <!-- History -->
+            <div class="menu-section">History</div>
+            <a href="/Job_poster/public/staff-actions"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/staff-actions') !== false ? 'active' : '' ?>"
+                data-tooltip="History">
+                <?= Icons::history() ?>
+                <span class="menu-text">History</span>
+            </a>
+
+            <!-- Statistics -->
+            <div class="menu-section">Statistics</div>
+            <a href="/Job_poster/public/statistics"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/statistics') !== false ? 'active' : '' ?>"
+                data-tooltip="Statistics">
+                <?= Icons::statistic() ?>
+                <span class="menu-text">Statistics</span>
+            </a>
+
+            <!-- Feedback -->
+            <div class="menu-section">Feedback</div>
+            <a href="/Job_poster/public/feedbacks"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/feedbacks') !== false ? 'active' : '' ?>"
+                data-tooltip="Feedback">
+                <?= Icons::comment() ?>
+                <span class="menu-text">Feedback</span>
+            </a>
+            
+          <!-- Staff Views -->
+          <?php elseif ($_SESSION['user']['role'] == 'Staff'): ?>
+            <div class="menu-section">Job Requests</div>
+            <a href="/Job_poster/public/approvals"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/approvals') !== false ? 'active' : '' ?>">
+                <?= Icons::checklist() ?>
+                Request Approval
+            </a>
+            <div class="menu-section">Reports & Complaints</div>
+            <a href="/Job_poster/public/reports"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/reports') !== false ? 'active' : '' ?>">
+                <?= Icons::flag() ?>
+                Review Reports
+            </a>
+            <div class="menu-section">Job Management</div>
+            <a href="/Job_poster/public/jobs-manage"
+                class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/jobs-manage') !== false ? 'active' : '' ?>">
+                <?= Icons::briefcase() ?>
+                Jobs 
+            </a>
+          <?php endif; ?>
+        <?php endif; ?>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+        <img src="<?= $_SESSION['user']['avatar'] ?? 'image/avatar/default.svg' ?>" alt="User" class="w-full h-full rounded-full">
+      </div>
+      <div>
+        <p class="text-sm font-semibold"><?= $_SESSION['user']['name'] ?? 'Guest' ?></p>
+        <?php if (isset($_SESSION['user'])): ?>
+          <a href="/Job_poster/public/logout" class="text-xs opacity-75 hover:opacity-100">Log out<?= Icons::logout() ?></a>
+        <?php endif; ?>
       </div>
     </div>
   </aside>

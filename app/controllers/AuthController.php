@@ -161,11 +161,24 @@ class AuthController {
                     'auth_provider' => $user->getAuthProvider(),
                     'avatar' => $user->getAvatar()
                 ];
-                header("Location: " . BASE_URL . "/");
+                
+                // Redirect based on role
+                switch ($user->getRole()) {
+                    case 'Admin':
+                        header("Location: " . BASE_URL . "/statistics");
+                        break;
+                    case 'Staff':
+                        header("Location: " . BASE_URL . "/staff/home");
+                        break;
+                    case 'Employer':
+                        header("Location: " . BASE_URL . "/employer/home");
+                        break;
+                    default:
+                        header("Location: " . BASE_URL . "/");
+                }
                 exit;
             } else {
                 $_SESSION['login_error'] = 'Invalid email or password.';
-                // Redirect back to login page
                 header("Location: " . BASE_URL . "/auth/login");
                 exit;
             }

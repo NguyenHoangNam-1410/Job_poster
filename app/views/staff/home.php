@@ -1,5 +1,5 @@
 <?php 
-require_once '../app/views/layouts/staff_header.php';
+require_once '../app/views/layouts/auth_header.php';
 ?>
 
 <div class="list-container">
@@ -181,5 +181,5 @@ require_once '../app/views/layouts/staff_header.php';
 </div>
 
 <?php 
-require_once '../app/views/layouts/staff_footer.php';
+require_once '../app/views/layouts/auth_footer.php';
 ?>

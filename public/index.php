@@ -108,124 +108,129 @@ function view($viewPath) {
 // ============================================================================
 
 // Login routes
-route('#^/auth/login$#', fn() => controller('AuthController', 'loginForm'));
-route('#^/auth/login/local$#', fn() => controller('AuthController', 'handleLocalLogin'), ['POST']);
-route('#^/auth/login/facebook$#', fn() => controller('AuthController', 'handleFacebookLogin'));
-route('#^/auth/login/facebook/callback$#', fn() => controller('AuthController', 'facebookCallback'));
-route('#^/auth/login/google$#', fn() => controller('AuthController', 'handleGoogleLogin'));
+if (route('#^/auth/login$#', fn() => controller('AuthController', 'loginForm'))) exit;
+if (route('#^/auth/login/local$#', fn() => controller('AuthController', 'handleLocalLogin'), ['POST'])) exit;
+if (route('#^/auth/login/facebook$#', fn() => controller('AuthController', 'handleFacebookLogin'))) exit;
+if (route('#^/auth/login/facebook/callback$#', fn() => controller('AuthController', 'facebookCallback'))) exit;
+if (route('#^/auth/login/google$#', fn() => controller('AuthController', 'handleGoogleLogin'))) exit;
 
 // Registration routes
-route('#^/auth/register$#', fn() => controller('AuthController', 'showRegisterForm'));
-route('#^/auth/register/local$#', fn() => controller('AuthController', 'handleLocalRegister'), ['POST']);
-route('#^/check-email$#', fn() => controller('AuthController', 'checkEmail'));
+if (route('#^/auth/register$#', fn() => controller('AuthController', 'showRegisterForm'))) exit;
+if (route('#^/auth/register/local$#', fn() => controller('AuthController', 'handleLocalRegister'), ['POST'])) exit;
+if (route('#^/check-email$#', fn() => controller('AuthController', 'checkEmail'))) exit;
 
 // Password reset routes
-route('#^/auth/login/forgot-password$#', fn() => controller('AuthController', 'showForgotPasswordForm'));
-route('#^/auth/login/forgot-password/send-otp$#', fn() => controller('AuthController', 'sendPasswordResetOTP'), ['POST']);
-route('#^/auth/login/forgot-password/input-otp$#', fn() => controller('AuthController', 'showVerifyOTPForm'));
-route('#^/auth/login/forgot-password/verify-otp$#', fn() => controller('AuthController', 'verifyPasswordResetOTP'), ['POST']);
-route('#^/auth/login/forgot-password/reset-password-form$#', fn() => controller('AuthController', 'showResetPasswordForm'));
-route('#^/auth/login/forgot-password/reset-password$#', fn() => controller('AuthController', 'resetPassword'), ['POST']);
-route('#^/auth/login/forgot-password/reset-expired$#', fn() => controller('AuthController', 'showExpiredTokenOrOTPPage'));
+if (route('#^/auth/login/forgot-password$#', fn() => controller('AuthController', 'showForgotPasswordForm'))) exit;
+if (route('#^/auth/login/forgot-password/send-otp$#', fn() => controller('AuthController', 'sendPasswordResetOTP'), ['POST'])) exit;
+if (route('#^/auth/login/forgot-password/input-otp$#', fn() => controller('AuthController', 'showVerifyOTPForm'))) exit;
+if (route('#^/auth/login/forgot-password/verify-otp$#', fn() => controller('AuthController', 'verifyPasswordResetOTP'), ['POST'])) exit;
+if (route('#^/auth/login/forgot-password/reset-password-form$#', fn() => controller('AuthController', 'showResetPasswordForm'))) exit;
+if (route('#^/auth/login/forgot-password/reset-password$#', fn() => controller('AuthController', 'resetPassword'), ['POST'])) exit;
+if (route('#^/auth/login/forgot-password/reset-expired$#', fn() => controller('AuthController', 'showExpiredTokenOrOTPPage'))) exit;
 
 // ============================================================================
 // HOME ROUTES (Role-based)
 // ============================================================================
 
-route('#^/public/home$#', fn() => controller('HomeController', 'index'));
-route('#^/admin/home$#', fn() => controller('HomeController', 'adminIndex'), ['GET'], ['Admin']);
-route('#^/staff/home$#', fn() => controller('HomeController', 'staffIndex'), ['GET'], ['Staff']);
-route('#^/employer/home$#', fn() => controller('HomeController', 'employerIndex'), ['GET'], ['Employer']);
+if (route('#^/public/home$#', fn() => controller('HomeController', 'index'))) exit;
+if (route('#^/admin/home$#', fn() => controller('HomeController', 'adminIndex'), ['GET'], ['Admin'])) exit;
+if (route('#^/staff/home$#', fn() => controller('HomeController', 'staffIndex'), ['GET'], ['Staff'])) exit;
+// if (route('#^/employer/home$#', fn() => controller('HomeController', 'employerIndex'), ['GET'], ['Employer'])) exit;
 
 // ============================================================================
 // USER MANAGEMENT ROUTES (Admin Only)
 // ============================================================================
 
-route('#^/users$#', fn() => controller('UserController', 'index'), ['GET'], ['Admin']);
-route('#^/users/create$#', fn() => controller('UserController', 'create'), ['GET'], ['Admin']);
-route('#^/users/store$#', fn() => controller('UserController', 'store'), ['POST'], ['Admin']);
-route('#^/users/edit/(\d+)$#', fn($id) => controller('UserController', 'edit', $id), ['GET'], ['Admin']);
-route('#^/users/update/(\d+)$#', fn($id) => controller('UserController', 'update', $id), ['POST'], ['Admin']);
-route('#^/users/delete/(\d+)$#', fn($id) => controller('UserController', 'destroy', $id), ['GET', 'POST'], ['Admin']);
+if (route('#^/users$#', fn() => controller('UserController', 'index'), ['GET'], ['Admin'])) exit;
+if (route('#^/users/create$#', fn() => controller('UserController', 'create'), ['GET'], ['Admin'])) exit;
+if (route('#^/users/store$#', fn() => controller('UserController', 'store'), ['POST'], ['Admin'])) exit;
+if (route('#^/users/edit/(\d+)$#', fn($id) => controller('UserController', 'edit', $id), ['GET'], ['Admin'])) exit;
+if (route('#^/users/update/(\d+)$#', fn($id) => controller('UserController', 'update', $id), ['POST'], ['Admin'])) exit;
+if (route('#^/users/delete/(\d+)$#', fn($id) => controller('UserController', 'destroy', $id), ['GET', 'POST'], ['Admin'])) exit;
 
 // ============================================================================
 // JOB CATEGORY MANAGEMENT ROUTES (Admin Only)
 // ============================================================================
 
-route('#^/job-categories$#', fn() => controller('JobCategoryController', 'index'), ['GET'], ['Admin']);
-route('#^/job-categories/create$#', fn() => controller('JobCategoryController', 'create'), ['GET'], ['Admin']);
-route('#^/job-categories/store$#', fn() => controller('JobCategoryController', 'store'), ['POST'], ['Admin']);
-route('#^/job-categories/edit/(\d+)$#', fn($id) => controller('JobCategoryController', 'edit', $id), ['GET'], ['Admin']);
-route('#^/job-categories/update/(\d+)$#', fn($id) => controller('JobCategoryController', 'update', $id), ['POST'], ['Admin']);
-route('#^/job-categories/delete/(\d+)$#', fn($id) => controller('JobCategoryController', 'destroy', $id), ['GET', 'POST'], ['Admin']);
+if (route('#^/job-categories$#', fn() => controller('JobCategoryController', 'index'), ['GET'], ['Admin'])) exit;
+if (route('#^/job-categories/create$#', fn() => controller('JobCategoryController', 'create'), ['GET'], ['Admin'])) exit;
+if (route('#^/job-categories/store$#', fn() => controller('JobCategoryController', 'store'), ['POST'], ['Admin'])) exit;
+if (route('#^/job-categories/edit/(\d+)$#', fn($id) => controller('JobCategoryController', 'edit', $id), ['GET'], ['Admin'])) exit;
+if (route('#^/job-categories/update/(\d+)$#', fn($id) => controller('JobCategoryController', 'update', $id), ['POST'], ['Admin'])) exit;
+if (route('#^/job-categories/delete/(\d+)$#', fn($id) => controller('JobCategoryController', 'destroy', $id), ['GET', 'POST'], ['Admin'])) exit;
 
 // ============================================================================
 // JOB MANAGEMENT ROUTES (Admin & Staff)
 // ============================================================================
 
-route('#^/jobs-manage$#', fn() => controller('JobController', 'index'), ['GET'], ['Admin', 'Staff']);
-route('#^/jobs-manage/edit/(\d+)$#', fn($id) => controller('JobController', 'edit', $id), ['GET'], ['Admin', 'Staff']);
-route('#^/jobs-manage/update/(\d+)$#', fn($id) => controller('JobController', 'update', $id), ['POST'], ['Admin', 'Staff']);
-route('#^/jobs-manage/soft-delete/(\d+)$#', fn($id) => controller('JobController', 'softDelete', $id), ['GET', 'POST'], ['Admin', 'Staff']);
-route('#^/jobs-manage/hard-delete/(\d+)$#', fn($id) => controller('JobController', 'hardDelete', $id), ['GET', 'POST'], ['Admin', 'Staff']);
-route('#^/jobs-manage/restore/(\d+)$#', fn($id) => controller('JobController', 'restore', $id), ['GET', 'POST'], ['Admin', 'Staff']);
-route('#^/jobs-manage/change-status/(\d+)$#', fn($id) => controller('JobController', 'changeStatus', $id), ['POST'], ['Admin', 'Staff']);
+if (route('#^/jobs-manage$#', fn() => controller('JobController', 'index'), ['GET'], ['Admin', 'Staff'])) exit;
+if (route('#^/jobs-manage/edit/(\d+)$#', fn($id) => controller('JobController', 'edit', $id), ['GET'], ['Admin', 'Staff'])) exit;
+if (route('#^/jobs-manage/update/(\d+)$#', fn($id) => controller('JobController', 'update', $id), ['POST'], ['Admin', 'Staff'])) exit;
+if (route('#^/jobs-manage/soft-delete/(\d+)$#', fn($id) => controller('JobController', 'softDelete', $id), ['GET', 'POST'], ['Admin', 'Staff'])) exit;
+if (route('#^/jobs-manage/hard-delete/(\d+)$#', fn($id) => controller('JobController', 'hardDelete', $id), ['GET', 'POST'], ['Admin', 'Staff'])) exit;
+if (route('#^/jobs-manage/restore/(\d+)$#', fn($id) => controller('JobController', 'restore', $id), ['GET', 'POST'], ['Admin', 'Staff'])) exit;
+if (route('#^/jobs-manage/change-status/(\d+)$#', fn($id) => controller('JobController', 'changeStatus', $id), ['POST'], ['Admin', 'Staff'])) exit;
 
 // ============================================================================
 // JOB APPROVAL ROUTES (Admin & Staff)
 // ============================================================================
 
-route('#^/approvals$#', fn() => controller('JobController', 'approvalIndex'), ['GET'], ['Admin', 'Staff']);
-route('#^/approvals/detail/(\d+)$#', fn($id) => controller('JobController', 'approvalDetail', $id), ['GET'], ['Admin', 'Staff']);
-route('#^/approvals/approve/(\d+)$#', fn($id) => controller('JobController', 'approveJob', $id), ['POST'], ['Admin', 'Staff']);
-route('#^/approvals/reject/(\d+)$#', fn($id) => controller('JobController', 'rejectJob', $id), ['POST'], ['Admin', 'Staff']);
+if (route('#^/approvals$#', fn() => controller('JobController', 'approvalIndex'), ['GET'], ['Admin', 'Staff'])) exit;
+if (route('#^/approvals/detail/(\d+)$#', fn($id) => controller('JobController', 'approvalDetail', $id), ['GET'], ['Admin', 'Staff'])) exit;
+if (route('#^/approvals/approve/(\d+)$#', fn($id) => controller('JobController', 'approveJob', $id), ['POST'], ['Admin', 'Staff'])) exit;
+if (route('#^/approvals/reject/(\d+)$#', fn($id) => controller('JobController', 'rejectJob', $id), ['POST'], ['Admin', 'Staff'])) exit;
+
+
+// ============================================================================
+// FEEDBACK MANAGEMENT ROUTES (Admin & Staff)
+// ============================================================================
+if (route('#^/feedbacks$#', fn() => controller('FeedbackController', 'index'), ['GET'], ['Admin','Staff'])) exit;
 
 // ============================================================================
 // ADMIN-ONLY ROUTES
 // ============================================================================
 
-route('#^/staff-actions$#', fn() => controller('StaffActionController', 'index'), ['GET'], ['Admin']);
-route('#^/feedbacks$#', fn() => controller('FeedbackController', 'index'), ['GET'], ['Admin']);
-route('#^/statistics$#', fn() => controller('StatisticController', 'index'), ['GET'], ['Admin']);
+if (route('#^/staff-actions$#', fn() => controller('StaffActionController', 'index'), ['GET'], ['Admin'])) exit;
+if (route('#^/statistics$#', fn() => controller('StatisticController', 'index'), ['GET'], ['Admin'])) exit;
 
 // ============================================================================
 // PROFILE ROUTES (All authenticated users)
 // ============================================================================
 
-route('#^/profile$#', fn() => controller('UserController', 'profile'), ['GET'], ['Admin', 'Staff', 'Employer']);
-route('#^/profile/update$#', fn() => controller('UserController', 'updateProfile'), ['POST'], ['Admin', 'Staff', 'Employer']); 
+if (route('#^/profile$#', fn() => controller('UserController', 'profile'), ['GET'], ['Admin', 'Staff', 'Employer'])) exit;
+if (route('#^/profile/update$#', fn() => controller('UserController', 'updateProfile'), ['POST'], ['Admin', 'Staff', 'Employer'])) exit; 
 
 // ============================================================================
 // COMPANY PROFILE ROUTES (Employer Only)
 // ============================================================================
 
-route('#^/company-profile$#', fn() => controller('CompanyController', 'index'), ['GET'], ['Employer']);
-route('#^/company-profile/update$#', fn() => controller('CompanyController', 'updateCompanyProfile'), ['POST'], ['Employer']);
+if (route('#^/company-profile$#', fn() => controller('CompanyController', 'index'), ['GET'], ['Employer'])) exit;
+if (route('#^/company-profile/update$#', fn() => controller('CompanyController', 'updateCompanyProfile'), ['POST'], ['Employer'])) exit;
 
 // ============================================================================
 // MY JOBS ROUTES (Employer Only)
 // ============================================================================
 
-route('#^/my-jobs$#', fn() => controller('JobController', 'myJobs'), ['GET'], ['Employer']);
-route('#^/my-jobs/show/(\d+)$#', fn($id) => controller('JobController', 'myJobDetail', $id), ['GET'], ['Employer']);
-route('#^/my-jobs/create$#', fn() => controller('JobController', 'myJobCreate'), ['GET'], ['Employer']);
-route('#^/my-jobs/store$#', fn() => controller('JobController', 'myJobStore'), ['POST'], ['Employer']);
-route('#^/my-jobs/add$#', fn() => controller('JobController', 'createNewJob'), ['POST'], ['Employer']);
-route('#^/my-jobs/edit/(\d+)$#', fn($id) => controller('JobController', 'myJobEdit', $id), ['GET'], ['Employer']);
-route('#^/my-jobs/update/(\d+)$#', fn($id) => controller('JobController', 'myJobUpdate', $id), ['POST'], ['Employer']);
-route('#^/my-jobs/soft-delete/(\d+)$#', fn($id) => controller('JobController', 'myJobSoftDelete', $id), ['GET', 'POST'], ['Employer']);
-route('#^/my-jobs/hard-delete/(\d+)$#', fn($id) => controller('JobController', 'myJobHardDelete', $id), ['GET', 'POST'], ['Employer']);
+if (route('#^/my-jobs$#', fn() => controller('JobController', 'myJobs'), ['GET'], ['Employer'])) exit;
+if (route('#^/my-jobs/show/(\d+)$#', fn($id) => controller('JobController', 'myJobDetail', $id), ['GET'], ['Employer'])) exit;
+if (route('#^/my-jobs/create$#', fn() => controller('JobController', 'myJobCreate'), ['GET'], ['Employer'])) exit;
+if (route('#^/my-jobs/store$#', fn() => controller('JobController', 'myJobStore'), ['POST'], ['Employer'])) exit;
+if (route('#^/my-jobs/add$#', fn() => controller('JobController', 'createNewJob'), ['POST'], ['Employer'])) exit;
+if (route('#^/my-jobs/edit/(\d+)$#', fn($id) => controller('JobController', 'myJobEdit', $id), ['GET'], ['Employer'])) exit;
+if (route('#^/my-jobs/update/(\d+)$#', fn($id) => controller('JobController', 'myJobUpdate', $id), ['POST'], ['Employer'])) exit;
+if (route('#^/my-jobs/soft-delete/(\d+)$#', fn($id) => controller('JobController', 'myJobSoftDelete', $id), ['GET', 'POST'], ['Employer'])) exit;
+if (route('#^/my-jobs/hard-delete/(\d+)$#', fn($id) => controller('JobController', 'myJobHardDelete', $id), ['GET', 'POST'], ['Employer'])) exit;
 
 // ============================================================================
 // MY FEEDBACKS ROUTES (Employer Only)
 // ============================================================================
 
-route('#^/my-feedbacks$#', fn() => controller('FeedbackController', 'myFeedbacks'), ['GET'], ['Employer']);
-route('#^/my-feedbacks/create$#', fn() => controller('FeedbackController', 'createMyFeedback'), ['GET'], ['Employer']);
-route('#^/my-feedbacks/store$#', fn() => controller('FeedbackController', 'storeMyFeedback'), ['POST'], ['Employer']);
-route('#^/my-feedbacks/edit/(\d+)$#', fn($id) => controller('FeedbackController', 'edit', $id), ['GET'], ['Employer']);
-route('#^/my-feedbacks/update/(\d+)$#', fn($id) => controller('FeedbackController', 'update', $id), ['POST'], ['Employer']);
-route('#^/my-feedbacks/delete/(\d+)$#', fn($id) => controller('FeedbackController', 'destroy', $id), ['GET', 'POST'], ['Employer']);
+if (route('#^/my-feedbacks$#', fn() => controller('FeedbackController', 'myFeedbacks'), ['GET'], ['Employer'])) exit;
+if (route('#^/my-feedbacks/create$#', fn() => controller('FeedbackController', 'createMyFeedback'), ['GET'], ['Employer'])) exit;
+if (route('#^/my-feedbacks/store$#', fn() => controller('FeedbackController', 'storeMyFeedback'), ['POST'], ['Employer'])) exit;
+if (route('#^/my-feedbacks/edit/(\d+)$#', fn($id) => controller('FeedbackController', 'edit', $id), ['GET'], ['Employer'])) exit;
+if (route('#^/my-feedbacks/update/(\d+)$#', fn($id) => controller('FeedbackController', 'update', $id), ['POST'], ['Employer'])) exit;
+if (route('#^/my-feedbacks/delete/(\d+)$#', fn($id) => controller('FeedbackController', 'destroy', $id), ['GET', 'POST'], ['Employer'])) exit;
 
 // ============================================================================
 // PUBLIC JOB ROUTES

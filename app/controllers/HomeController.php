@@ -5,4 +5,19 @@ class HomeController {
         require_once '../app/views/public/home.php';
         exit;
     }
+
+    public function adminIndex(){
+        require_once '../app/views/statistics.php';
+        exit;
+    }
+
+    public function staffIndex(){
+        require_once '../app/views/staff/home.php';
+        exit;
+    }
+
+    public function employerIndex(){
+        require_once '../app/views/employer/home.php';
+        exit;
+    }
 }

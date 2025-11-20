@@ -1,5 +1,5 @@
 <?php 
-require_once __DIR__ . '/../../layouts/public_header.php';
+require_once __DIR__ . '/../../layouts/auth_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 

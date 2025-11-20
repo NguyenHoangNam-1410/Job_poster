@@ -1,6 +1,6 @@
 <?php 
 $pageTitle = 'Feedbacks';
-require_once __DIR__ . '/../../layouts/staff_header.php';
+require_once __DIR__ . '/../../layouts/auth_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
@@ -183,4 +183,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php require_once __DIR__ . '/../../layouts/admin_footer.php'; ?>
+<?php require_once __DIR__ . '/../../layouts/auth_footer.php'; ?>

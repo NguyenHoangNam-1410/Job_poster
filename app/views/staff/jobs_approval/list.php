@@ -1,10 +1,6 @@
 <?php $pageTitle = 'Job Approval'; ?>
 <?php
-if (isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
-    require_once '../app/views/layouts/admin_header.php';
-} else {
-    require_once '../app/views/layouts/staff_header.php';
-}
+require_once '../app/views/layouts/auth_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
@@ -113,11 +109,8 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                     </td>
                                     <td class="table-cell">
                                         <div class="flex items-center gap-3">
-                                            <img 
-                                                src="<?= !empty($job->getEmployerAvatar()) ? htmlspecialchars($job->getEmployerAvatar()) : '/Job_poster/public/image/avatar/default.svg' ?>" 
-                                                alt="Avatar" 
-                                                class="w-10 h-10 rounded-full object-cover border border-gray-200"
-                                            >
+                                            <img src="<?= !empty($job->getEmployerAvatar()) ? htmlspecialchars($job->getEmployerAvatar()) : '/Job_poster/public/image/avatar/default.svg' ?>"
+                                                alt="Avatar" class="w-10 h-10 rounded-full object-cover border border-gray-200">
                                             <span><?= htmlspecialchars($job->getEmployerName() ?? 'N/A') ?></span>
                                         </div>
                                     </td>
@@ -210,9 +203,5 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 </script>
 
 <?php
-if (isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
-    require_once '../app/views/layouts/admin_footer.php';
-} else {
-    require_once '../app/views/layouts/staff_footer.php';
-}
+require_once '../app/views/layouts/auth_footer.php';
 ?>
