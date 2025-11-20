@@ -51,6 +51,20 @@ class StatisticsService {
     }
 
     /**
+     * Get top trending categories
+     */
+    public function getTopTrendingCategories($limit = 5) {
+        return $this->statisticDAO->getTopTrendingCategories($limit);
+    }
+
+    /**
+     * Get current month feedback count
+     */
+    public function getCurrentMonthFeedbackCount() {
+        return $this->statisticDAO->getCurrentMonthFeedbackCount();
+    }
+
+    /**
      * Get all statistics at once
      */
     public function getAllStatistics() {
@@ -58,10 +72,12 @@ class StatisticsService {
             'employer_count' => $this->getUserCountByRole('Employer'),
             'staff_count' => $this->getUserCountByRole('Staff'),
             'admin_count' => $this->getUserCountByRole('Admin'),
+            'feedback_count' => $this->getCurrentMonthFeedbackCount(),
             'job_counts' => $this->getJobCountsByStatus(),
             'total_jobs' => $this->getTotalJobsCount(),
             'top_staff' => $this->getTopStaffByWorkload(3),
-            'top_employers' => $this->getTopEmployersByJobs(3)
+            'top_employers' => $this->getTopEmployersByJobs(3),
+            'trending_categories' => $this->getTopTrendingCategories(5)
         ];
     }
 }

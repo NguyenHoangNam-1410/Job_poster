@@ -48,54 +48,79 @@ function status_badge_class($st){
   }
 }
 ?>
+<style href="/Job_poster/public/css/jobs-listing.css"></style>
+
 <style>
-/* Fade-in animations for page elements */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Force Choices.js to have white background and black border like Status filter */
+.choices.is-focused .choices__inner,
+.choices.is-open .choices__inner {
+  border-color: #0688B4 !important;
+  box-shadow: 3px 3px 0 rgba(6, 136, 180, 0.3) !important;
+  transform: translate(-1px, -1px) !important;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.choices__inner {
+  background: white !important;
+  background-color: white !important;
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.8s ease-out forwards;
-  opacity: 0;
+.choices__list--multiple .choices__item {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+  color: #1a1a1a !important;
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
-  opacity: 0;
+.choices__button {
+  color: #1a1a1a !important;
+  border-left-color: #1a1a1a !important;
 }
 
-/* Staggered delays for elements */
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-.delay-400 { animation-delay: 0.4s; }
-
-/* Lazy load animation for job cards */
-.job-card-wrapper {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+/* Style for single-select Choices (Status) */
+#statusSelect + .choices .choices__inner {
+  cursor: pointer;
 }
 
-.job-card-wrapper.loaded {
-  opacity: 1;
-  transform: translateY(0);
+#statusSelect + .choices .choices__list--single {
+  padding: 0;
+}
+
+/* Ensure all Choices dropdowns have consistent styling */
+.choices__list--dropdown {
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+  border-top: none !important;
+}
+
+/* Add dropdown arrow like Status select */
+.choices[data-type*="select-multiple"] .choices__inner::after,
+.choices[data-type*="select-one"] .choices__inner::after {
+  content: '' !important;
+  position: absolute !important;
+  right: 1rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 0 !important;
+  height: 0 !important;
+  border-left: 5px solid transparent !important;
+  border-right: 5px solid transparent !important;
+  border-top: 6px solid #1a1a1a !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+}
+
+.choices[data-type*="select-multiple"].is-open .choices__inner::after,
+.choices[data-type*="select-one"].is-open .choices__inner::after {
+  border-top: none !important;
+  border-bottom: 6px solid #1a1a1a !important;
+}
+
+/* Make room for arrow */
+.choices__inner {
+  padding-right: 2.5rem !important;
 }
 </style>
 
@@ -122,29 +147,37 @@ document.body.classList.add('jobs-listing-page');
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <select id="category" name="category" class="jobs-filter-select">
-            <option value="">All categories</option>
-            <?php foreach ($categories as $c): ?>
-              <option value="<?= htmlspecialchars($c['id']) ?>"><?= htmlspecialchars($c['name']) ?></option>
-            <?php endforeach; ?>
-          </select>
+          <!-- Categories: Multiple select with Choices.js (limit 3) -->
+          <div class="relative">
+            <label class="block text-sm font-medium mb-2" style="color: #4a4a4a;">Categories (max 3)</label>
+            <select 
+              name="category_ids[]" 
+              id="categorySelect"
+              multiple
+              class="jobs-filter-select">
+            </select>
+          </div>
 
-          <select id="location" name="location" class="jobs-filter-select">
-            <option value="">All locations</option>
-            <?php foreach ($locations as $l): ?>
-              <option value="<?= htmlspecialchars($l) ?>"><?= htmlspecialchars($l) ?></option>
-            <?php endforeach; ?>
-          </select>
+          <!-- Location: Multiple select with Choices.js (OR logic) -->
+          <div class="relative">
+            <label class="block text-sm font-medium mb-2" style="color: #4a4a4a;">Locations</label>
+            <select 
+              name="location_ids[]" 
+              id="locationSelect"
+              multiple
+              class="jobs-filter-select">
+            </select>
+          </div>
 
-          <select id="status" name="status" class="jobs-filter-select">
-            <option value="">All statuses</option>
-            <?php
-              $statuses = $statuses ?: ['all','recruiting','overdue'];
-              foreach ($statuses as $s):
-            ?>
-              <option value="<?= htmlspecialchars($s) ?>"><?= $s==='recruiting'?'Recruiting':($s==='overdue'?'Overdue':ucfirst(htmlspecialchars($s))) ?></option>
-            <?php endforeach; ?>
-          </select>
+          <!-- Status: Simple dropdown (only 2 options) -->
+          <div class="relative">
+            <label class="block text-sm font-medium mb-2" style="color: #4a4a4a;">Status</label>
+            <select id="statusSelect" name="status" class="jobs-filter-select">
+              <option value="">All Statuses</option>
+              <option value="recruiting">Recruiting</option>
+              <option value="overdue">Overdue</option>
+            </select>
+          </div>
         </div>
       </form>
 
@@ -221,9 +254,9 @@ document.body.classList.add('jobs-listing-page');
 <script>
 const BASE='<?= BASE_PUBLIC ?>';
 const elQ=document.getElementById('q');
-const elCat=document.getElementById('category');
-const elLoc=document.getElementById('location');
-const elSt=document.getElementById('status');
+const elCategorySelect=document.getElementById('categorySelect');
+const elLocationSelect=document.getElementById('locationSelect');
+const elStatusSelect=document.getElementById('statusSelect');
 const grid=document.getElementById('grid');
 const count=document.getElementById('count');
 const pager=document.getElementById('pager');
@@ -233,26 +266,29 @@ const activeBadges=document.getElementById('activeBadges');
 const activeCount=document.getElementById('activeCount');
 
 let page=1, perPage=12, lastTotal=0, typingTimer=0;
-
-async function loadFilters(){
-  try{
-    const r=await fetch(`${BASE}/ajax/jobs_filters.php`);
-    const d=await r.json() || {};
-    const cats = d.categories ?? d.cats ?? [];
-    const locs = d.locations  ?? d.locs ?? [];
-    const stts = d.statuses   ?? d.stts ?? ['all','recruiting','overdue'];
-    elCat.innerHTML = '<option value="">All categories</option>' + cats.map(c=>`<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
-    elLoc.innerHTML = '<option value="">All locations</option>' + locs.map(l=>`<option value="${escapeHtml(l)}">${escapeHtml(l)}</option>`).join('');
-    elSt.innerHTML  = '<option value="">All statuses</option>'   + stts.map(s=>`<option value="${s}">${capStatus(s)}</option>`).join('');
-  }catch(e){}
-}
+let categoryChoices, locationChoices;
 
 function makeURL(){
   const u=new URL(`${BASE}/ajax/jobs_list.php`, window.location.origin);
   if(elQ.value.trim()) u.searchParams.set('q', elQ.value.trim());
-  if(elCat.value) u.searchParams.set('category_id', elCat.value);
-  if(elLoc.value) u.searchParams.set('location', elLoc.value);
-  if(elSt.value) u.searchParams.set('status', elSt.value);
+  
+  // Add selected categories (AND logic)
+  const selectedCategories = categoryChoices ? categoryChoices.getValue(true) : [];
+  if(selectedCategories.length > 0) {
+    selectedCategories.forEach(cat => u.searchParams.append('category_ids[]', cat));
+  }
+  
+  // Add selected locations (OR logic)
+  const selectedLocations = locationChoices ? locationChoices.getValue(true) : [];
+  if(selectedLocations.length > 0) {
+    selectedLocations.forEach(loc => u.searchParams.append('location_ids[]', loc));
+  }
+  
+  // Add status
+  if(elStatusSelect.value) {
+    u.searchParams.set('status', elStatusSelect.value);
+  }
+  
   u.searchParams.set('page', page);
   u.searchParams.set('per_page', perPage);
   return u.toString();
@@ -268,13 +304,12 @@ async function loadJobs(){
       grid.innerHTML = `<div class="jobs-no-results"><h3 class="jobs-no-results-title">NO JOBS FOUND</h3><p class="jobs-no-results-text">Try adjusting your search or filters to find more opportunities.</p></div>`;
     } else {
       grid.innerHTML = (d.rows||[]).map(card).join('');
-      // Re-animate new cards
       setTimeout(() => animateJobCards(), 50);
     }
     pageInfo.textContent = `Page ${page}`;
     renderPager();
     renderBadges();
-  }catch(e){}
+  }catch(e){console.error(e);}
 }
 
 function card(job){
@@ -320,21 +355,17 @@ function renderPager(){
   const prevDisabled = page<=1;
   const nextDisabled = page>=totalPages;
   
-  // Generate page numbers to display
   let pageNumbers = [];
-  const maxVisible = 5; // Maximum page numbers to show
+  const maxVisible = 5;
   
   if (totalPages <= maxVisible) {
-    // Show all pages if total is small
     for (let i = 1; i <= totalPages; i++) {
       pageNumbers.push(i);
     }
   } else {
-    // Show pages around current page
     let start = Math.max(1, page - 2);
     let end = Math.min(totalPages, page + 2);
     
-    // Adjust if at the beginning or end
     if (page <= 3) {
       end = Math.min(maxVisible, totalPages);
     } else if (page >= totalPages - 2) {
@@ -346,7 +377,6 @@ function renderPager(){
     }
   }
   
-  // Build pagination HTML
   let pagesHTML = pageNumbers.map(p => {
     if (p === page) {
       return `<span class="jobs-pagination-current">${p}</span>`;
@@ -373,13 +403,6 @@ function renderPager(){
   });
 }
 
-function statusClass(st){
-  switch(st){
-    case 'recruiting': return 'bg-emerald-100 text-emerald-700 border-emerald-200';
-    case 'overdue':    return 'bg-rose-100 text-rose-700 border-rose-200';
-    default:           return 'bg-gray-100 text-gray-700 border-gray-200';
-  }
-}
 function capStatus(s){
   return s==='recruiting' ? 'Recruiting'
        : s==='overdue'    ? 'Overdue'
@@ -391,26 +414,53 @@ function escapeAttr(s){ return escapeHtml(s); }
 
 function renderBadges(){
   const items=[];
-  if(elQ.value.trim()){ items.push({k:'q', label:elQ.value.trim()}); }
-  if(elCat.value){ items.push({k:'category', label:elCat.options[elCat.selectedIndex].text}); }
-  if(elLoc.value){ items.push({k:'location', label:elLoc.options[elLoc.selectedIndex].text}); }
-  if(elSt.value){ items.push({k:'status', label:capStatus(elSt.value)}); }
+  if(elQ.value.trim()){ items.push({type:'search', label:elQ.value.trim()}); }
+  
+  // Add category badges
+  if(categoryChoices) {
+    categoryChoices.getValue(true).forEach((val, idx) => {
+      const option = Array.from(elCategorySelect.options).find(opt => opt.value === val);
+      if(option) {
+        items.push({type:'category', value:val, label:option.textContent, index:idx});
+      }
+    });
+  }
+  
+  // Add location badges
+  if(locationChoices) {
+    locationChoices.getValue(true).forEach((val, idx) => {
+      items.push({type:'location', value:val, label:val, index:idx});
+    });
+  }
+  
+  // Add status badge
+  if(elStatusSelect.value) {
+    items.push({type:'status', value:elStatusSelect.value, label:capStatus(elStatusSelect.value)});
+  }
 
   activeBadges.innerHTML = items.map(it=>`
     <button type="button" class="jobs-filter-badge"
-            data-k="${it.k}">
+            data-type="${it.type}" data-value="${escapeAttr(it.value||'')}" data-index="${it.index||''}">
       <span>${escapeHtml(it.label)}</span>
       <span aria-hidden="true">✕</span>
     </button>
   `).join('');
 
-  activeBadges.querySelectorAll('button[data-k]').forEach(b=>{
+  activeBadges.querySelectorAll('button').forEach(b=>{
     b.addEventListener('click',()=>{
-      const k=b.getAttribute('data-k');
-      if(k==='q') elQ.value='';
-      if(k==='category') elCat.value='';
-      if(k==='location') elLoc.value='';
-      if(k==='status') elSt.value='';
+      const type=b.getAttribute('data-type');
+      const value=b.getAttribute('data-value');
+      
+      if(type==='search') {
+        elQ.value='';
+      } else if(type==='category' && categoryChoices) {
+        categoryChoices.removeActiveItemsByValue(value);
+      } else if(type==='location' && locationChoices) {
+        locationChoices.removeActiveItemsByValue(value);
+      } else if(type==='status') {
+        elStatusSelect.value='';
+      }
+      
       page=1;
       loadJobs();
     });
@@ -424,14 +474,13 @@ function renderBadges(){
 
 function resetAndLoad(){ page=1; loadJobs(); }
 
-// Lazy load animation for job cards
 function animateJobCards() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, index) => {
       if (entry.isIntersecting) {
         setTimeout(() => {
           entry.target.classList.add('loaded');
-        }, index * 50); // Stagger animation
+        }, index * 50);
         observer.unobserve(entry.target);
       }
     });
@@ -445,16 +494,82 @@ function animateJobCards() {
   });
 }
 
+async function loadFilters() {
+  try {
+    const r = await fetch(`${BASE}/ajax/jobs_filters.php`);
+    const d = await r.json() || {};
+    const cats = d.categories ?? d.cats ?? [];
+    const locs = d.locations ?? d.locs ?? [];
+    
+    // Populate categories
+    elCategorySelect.innerHTML = cats.map(c => 
+      `<option value="${c.id}">${escapeHtml(c.name)}</option>`
+    ).join('');
+    
+    // Populate locations
+    elLocationSelect.innerHTML = locs.map(l => 
+      `<option value="${escapeHtml(l)}">${escapeHtml(l)}</option>`
+    ).join('');
+    
+  } catch(e) {
+    console.error('Failed to load filters:', e);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
+  // Load filter data first
   await loadFilters();
+  
+  // Initialize Choices.js for categories (max 3)
+  if(elCategorySelect) {
+    categoryChoices = new Choices(elCategorySelect, {
+      removeItemButton: true,
+      searchEnabled: true,
+      searchPlaceholderValue: 'Search categories...',
+      placeholderValue: '',
+      maxItemCount: 3,
+      maxItemText: (maxItemCount) => `Only ${maxItemCount} categories allowed`,
+      noResultsText: 'No categories found',
+    });
+    
+    elCategorySelect.addEventListener('change', () => {
+      resetAndLoad();
+    });
+  }
+  
+  // Initialize Choices.js for locations (unlimited, OR logic)
+  if(elLocationSelect) {
+    locationChoices = new Choices(elLocationSelect, {
+      removeItemButton: true,
+      searchEnabled: true,
+      searchPlaceholderValue: 'Search locations...',
+      placeholderValue: '',
+      maxItemCount: -1,
+      noResultsText: 'No locations found',
+    });
+    
+    elLocationSelect.addEventListener('change', () => {
+      resetAndLoad();
+    });
+  }
+  
+  // Initialize Choices.js for status (single select)
+  if(elStatusSelect) {
+    statusChoices = new Choices(elStatusSelect, {
+      searchEnabled: false,
+      itemSelectText: '',
+      shouldSort: false,
+      placeholder: false,
+    });
+    
+    elStatusSelect.addEventListener('change', () => {
+      resetAndLoad();
+    });
+  }
+
   await loadJobs();
   
-  // Animate initial job cards
   setTimeout(() => animateJobCards(), 100);
-
-  [elCat, elLoc, elSt].forEach(el=>{
-    el.addEventListener('change', ()=>{ resetAndLoad(); });
-  });
 
   elQ.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); resetAndLoad(); }});
   elQ.addEventListener('input', () => {
@@ -464,7 +579,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   clearAll.addEventListener('click', e => {
     e.preventDefault();
-    elQ.value=''; elCat.value=''; elLoc.value=''; elSt.value='';
+    elQ.value='';
+    if(categoryChoices) categoryChoices.removeActiveItems();
+    if(locationChoices) locationChoices.removeActiveItems();
+    elStatusSelect.value='';
+    renderBadges();
     resetAndLoad();
   });
 });

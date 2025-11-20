@@ -9,13 +9,12 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
         <div class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="list-header">Job Categories</h1>
-                <p class="text-gray-600 mt-2">Manage job categories for job filtering and organization</p>
             </div>
-            <a href="/Job_poster/public/job-categories/create"
+            <button onclick="window.formModal.loadForm('/Job_poster/public/job-categories/create?ajax=1', 'Create New Category')"
                 class="btn-submit">
                 <?= Icons::add('btn-icon') ?>
                 Add Category
-            </a>
+            </button>
         </div>
 
         <!-- Search and Filter Form -->
@@ -105,11 +104,11 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                     <?php endif; ?>
                                 </td>
                                 <td class="table-cell">
-                                    <a href="/Job_poster/public/job-categories/edit/<?= $category->getId() ?>"
-                                        class="inline-flex items-center text-blue-600 hover:text-blue-900 mr-3">
+                                    <button onclick="window.formModal.loadForm('/Job_poster/public/job-categories/edit/<?= $category->getId() ?>?ajax=1', 'Edit Category #<?= $category->getId() ?>')"
+                                        class="inline-flex items-center text-blue-600 hover:text-blue-900 mr-3 focus:outline-none">
                                         <?= Icons::edit('w-5 h-5 mr-1') ?>
                                         Edit
-                                    </a>
+                                    </button>
                                     
                                     <?php if ($canDelete): ?>
                                         <button
@@ -175,8 +174,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function deleteCategory(id, name) {
-    if (confirm(`Are you sure you want to delete the category "${name}"?`)) {
+async function deleteCategory(id, name) {
+    const confirmed = await window.confirmModal.show(
+        `Are you sure you want to delete the category "${name}"?`,
+        'Delete Category',
+        'Delete'
+    );
+    
+    if (confirmed) {
         fetch(`/Job_poster/public/job-categories/delete/${id}`, {
             method: 'GET',
             headers: {

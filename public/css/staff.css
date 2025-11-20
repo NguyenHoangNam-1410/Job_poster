@@ -4,7 +4,7 @@
     top: 0;
     bottom: 0;
     width: 250px;
-    background: linear-gradient(135deg, #090220 0%, #080357 100%);
+    background: linear-gradient(135deg, #100014 0%, #460353 100%);
     color: white;
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 800;
@@ -406,7 +406,7 @@ body:has(.sidebar.minimized) .top-navbar {
 .navbar-brand .brand-link {
     text-decoration: none;
     color: inherit;
-    background: linear-gradient(135deg, #020b33 0%, #9e52e9 100%);
+    background: linear-gradient(135deg, #25011b 0%, #9301a7 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

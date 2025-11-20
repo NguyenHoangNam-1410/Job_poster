@@ -9,13 +9,12 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
         <div class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="list-header">User</h1>
-                <p class="text-gray-600 mt-2">Manage system users and their roles</p>
             </div>
-            <a href="/Job_poster/public/users/create"
+            <button onclick="window.formModal.loadForm('/Job_poster/public/users/create?ajax=1', 'Create New User')"
                 class="btn-submit">
                 <?= Icons::add('btn-icon') ?>
                 Add User
-            </a>
+            </button>
         </div>
 
         <!-- Search and Filter Form -->
@@ -80,7 +79,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     <thead>
                         <tr class="bg-gray-50">
                             <th class="table-header">ID</th>
-                            <th class="table-header">Username</th>
+                            <th class="table-header">User</th>
                             <th class="table-header">Email</th>
                             <th class="table-header">Role</th>
                             <th class="table-header">Actions</th>
@@ -93,7 +92,14 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                     <?= $user->getId() ?>
                                 </td>
                                 <td class="table-cell">
-                                    <?= htmlspecialchars($user->getUsername()) ?>
+                                    <div class="flex items-center gap-3">
+                                        <img 
+                                            src="<?= !empty($user->getAvatar()) ? htmlspecialchars($user->getAvatar()) : '/Job_poster/public/image/avatar/default.svg' ?>" 
+                                            alt="Avatar" 
+                                            class="w-10 h-10 rounded-full object-cover border border-gray-200"
+                                        >
+                                        <span><?= htmlspecialchars($user->getUsername()) ?></span>
+                                    </div>
                                 </td>
                                 <td class="table-cell">
                                     <?= htmlspecialchars($user->getEmail()) ?>
@@ -115,11 +121,11 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                     $canDelete = ($user->getId() != $currentUserId);
                                     ?>
                                     <?php if ($canEdit): ?>
-                                        <a href="/Job_poster/public/users/edit/<?= $user->getId() ?>"
-                                            class="inline-flex items-center text-blue-600 hover:text-blue-900 mr-3">
+                                        <button onclick="window.formModal.loadForm('/Job_poster/public/users/edit/<?= $user->getId() ?>?ajax=1', 'Edit User #<?= $user->getId() ?>')"
+                                            class="inline-flex items-center text-blue-600 hover:text-blue-900 mr-3 focus:outline-none">
                                             <?= Icons::edit('w-5 h-5 mr-1') ?>
                                             Edit
-                                        </a>
+                                        </button>
                                     <?php else: ?>
                                         <span class="inline-flex items-center text-gray-400 mr-3 cursor-not-allowed" title="Cannot edit other administrators">
                                             <?= Icons::edit('w-5 h-5 mr-1') ?>

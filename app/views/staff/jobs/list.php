@@ -9,16 +9,15 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
         <div class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="list-header">Job Management</h1>
-                <p class="text-gray-600 mt-2">Manage and review job postings (Approved, Overdue, and Deleted Jobs)</p>
             </div>
         </div>
 
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <form method="GET" action="/Job_poster/public/jobs-manage" id="jobsManageFilterForm" class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <form method="GET" action="/Job_poster/public/jobs-manage" id="jobsManageFilterForm">
+                <div class="flex flex-wrap gap-4 items-end">
                     <!-- Search -->
-                    <div class="lg:col-span-2">
+                    <div class="flex-1 min-w-[200px]">
                         <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search by Title</label>
                         <input 
                             type="text" 
@@ -32,35 +31,52 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     </div>
 
                     <!-- Category Filter -->
-                    <div>
+                    <div class="flex-1 min-w-[150px] relative">
                         <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                        <select id="category" name="category" class="form-select" onchange="document.getElementById('jobsManageFilterForm').submit()">
-                            <option value="">All Categories</option>
+                        <input 
+                            type="text"
+                            id="categorySearch" 
+                            placeholder="Search category..."
+                            class="form-input w-full"
+                            autocomplete="off"
+                        >
+                        <input type="hidden" id="category" name="category" value="<?= htmlspecialchars($pagination['category_filter'] ?? '') ?>">
+                        <div id="categoryDropdown" class="hidden absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto">
+                            <div class="cursor-pointer px-4 py-2 hover:bg-gray-100" data-value="" data-name="All Categories">All Categories</div>
                             <?php foreach ($categories as $category): ?>
-                                <option value="<?= $category->getId() ?>" 
-                                    <?= ($pagination['category_filter'] ?? '') == $category->getId() ? 'selected' : '' ?>>
+                                <div class="cursor-pointer px-4 py-2 hover:bg-gray-100" 
+                                     data-value="<?= $category->getId() ?>"
+                                     data-name="<?= htmlspecialchars($category->getCategoryName()) ?>">
                                     <?= htmlspecialchars($category->getCategoryName()) ?>
-                                </option>
+                                </div>
                             <?php endforeach; ?>
-                        </select>
+                        </div>
                     </div>
 
                     <!-- Location Filter -->
-                    <div>
+                    <div class="flex-1 min-w-[150px] relative">
                         <label for="location" class="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                        <select id="location" name="location" class="form-select" onchange="document.getElementById('jobsManageFilterForm').submit()">
-                            <option value="">All Locations</option>
+                        <input 
+                            type="text"
+                            id="locationSearch" 
+                            placeholder="Search location..."
+                            class="form-input w-full"
+                            autocomplete="off"
+                        >
+                        <input type="hidden" id="location" name="location" value="<?= htmlspecialchars($pagination['location_filter'] ?? '') ?>">
+                        <div id="locationDropdown" class="hidden absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto">
+                            <div class="cursor-pointer px-4 py-2 hover:bg-gray-100" data-value="">All Locations</div>
                             <?php foreach ($locations as $location): ?>
-                                <option value="<?= htmlspecialchars($location) ?>" 
-                                    <?= ($pagination['location_filter'] ?? '') == $location ? 'selected' : '' ?>>
+                                <div class="cursor-pointer px-4 py-2 hover:bg-gray-100" 
+                                     data-value="<?= htmlspecialchars($location) ?>">
                                     <?= htmlspecialchars($location) ?>
-                                </option>
+                                </div>
                             <?php endforeach; ?>
-                        </select>
+                        </div>
                     </div>
 
                     <!-- Status Filter -->
-                    <div>
+                    <div class="flex-1 min-w-[150px]">
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
                         <select id="status" name="status" class="form-select" onchange="document.getElementById('jobsManageFilterForm').submit()">
                             <option value="">All Statuses</option>
@@ -69,10 +85,9 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                             <option value="soft_deleted" <?= ($pagination['status_filter'] ?? '') == 'soft_deleted' ? 'selected' : '' ?>>Deleted</option>
                         </select>
                     </div>
-                </div>
 
-                <div class="flex justify-between items-center">
-                    <div>
+                    <!-- Per Page -->
+                    <div class="w-[120px]">
                         <label for="per_page" class="block text-sm font-medium text-gray-700 mb-2">Per Page</label>
                         <select id="per_page" name="per_page" class="form-select" onchange="document.getElementById('jobsManageFilterForm').submit()">
                             <option value="10" <?= ($pagination['per_page'] ?? 10) == 10 ? 'selected' : '' ?>>10</option>
@@ -80,7 +95,9 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                             <option value="50" <?= ($pagination['per_page'] ?? 10) == 50 ? 'selected' : '' ?>>50</option>
                         </select>
                     </div>
-                    <div class="flex gap-2">
+
+                    <!-- Clear Button -->
+                    <div>
                         <a href="/Job_poster/public/jobs-manage" class="btn-cancel">
                             Clear Filters
                         </a>
@@ -122,7 +139,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     <thead>
                         <tr class="bg-gray-50">
                             <th class="table-header">Title</th>
-                            <th class="table-header">Employer</th>
+                            <th class="table-header">Company</th>
                             <th class="table-header">Location</th>
                             <th class="table-header">Salary</th>
                             <th class="table-header">Deadline</th>
@@ -139,7 +156,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                     <?= htmlspecialchars($job->getTitle()) ?>
                                 </td>
                                 <td class="table-cell">
-                                    <?= htmlspecialchars($job->getEmployerName() ?? 'N/A') ?>
+                                    <?= htmlspecialchars($job->getCompanyName() ?? 'N/A') ?>
                                 </td>
                                 <td class="table-cell">
                                     <?= htmlspecialchars($job->getLocation() ?? 'N/A') ?>
@@ -153,7 +170,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                 </td>
                                 <td class="table-cell">
                                     <?php if ($job->getDeadline()): ?>
-                                        <?= date('Y-m-d', strtotime($job->getDeadline())) ?>
+                                        <?= date('d M, Y', strtotime($job->getDeadline())) ?>
                                     <?php else: ?>
                                         <span class="text-gray-400">N/A</span>
                                     <?php endif; ?>
@@ -196,8 +213,8 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                 </td>
                                 <td class="table-cell">
                                     <div class="flex gap-2">
-                                        <a href="/Job_poster/public/jobs-manage/edit/<?= $job->getId() ?>"
-                                            class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm">
+                                        <button onclick="window.formModal.loadForm('/Job_poster/public/jobs-manage/edit/<?= $job->getId() ?>?ajax=1', 'Edit Job #<?= $job->getId() ?>')"
+                                            class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm focus:outline-none">
                                             <?= Icons::edit('w-4 h-4 mr-1') ?>
                                             Edit
                                         </a>
@@ -260,10 +277,93 @@ document.addEventListener('DOMContentLoaded', function() {
             searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
         }
     }
+    
+    // Initialize custom dropdowns
+    initCustomDropdown('categorySearch', 'category', 'categoryDropdown');
+    initCustomDropdown('locationSearch', 'location', 'locationDropdown');
 });
 
-function deleteJob(id, title) {
-    if (confirm(`⚠️ DELETE JOB\n\nAre you sure you want to delete "${title}"?\n\nThis action cannot be undone!`)) {
+function initCustomDropdown(searchId, hiddenId, dropdownId) {
+    const searchInput = document.getElementById(searchId);
+    const hiddenInput = document.getElementById(hiddenId);
+    const dropdown = document.getElementById(dropdownId);
+    
+    if (!searchInput || !hiddenInput || !dropdown) return;
+    
+    const options = dropdown.querySelectorAll('[data-value]');
+    
+    // Set initial display value
+    const currentValue = hiddenInput.value;
+    if (currentValue) {
+        const selectedOption = Array.from(options).find(opt => opt.dataset.value === currentValue);
+        if (selectedOption) {
+            searchInput.value = selectedOption.dataset.name || selectedOption.textContent;
+        }
+    } else {
+        searchInput.value = '';
+    }
+    
+    // Show dropdown on focus
+    searchInput.addEventListener('focus', function() {
+        dropdown.classList.remove('hidden');
+        filterOptions();
+    });
+    
+    // Filter options on input
+    searchInput.addEventListener('input', filterOptions);
+    
+    function filterOptions() {
+        const searchTerm = searchInput.value.toLowerCase();
+        let visibleCount = 0;
+        
+        options.forEach(option => {
+            const text = option.textContent.toLowerCase();
+            if (text.includes(searchTerm)) {
+                option.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                option.classList.add('hidden');
+            }
+        });
+        
+        if (visibleCount === 0) {
+            dropdown.classList.add('hidden');
+        } else {
+            dropdown.classList.remove('hidden');
+        }
+    }
+    
+    // Select option
+    options.forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.dataset.value;
+            const name = this.dataset.name || this.textContent;
+            
+            hiddenInput.value = value;
+            searchInput.value = value ? name : '';
+            dropdown.classList.add('hidden');
+            
+            // Submit form
+            document.getElementById('jobsManageFilterForm').submit();
+        });
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+}
+
+async function deleteJob(id, title) {
+    const confirmed = await window.confirmModal.show(
+        `Are you sure you want to delete "${title}"?\n\nThis action cannot be undone!`,
+        'DELETE JOB',
+        'Delete'
+    );
+    
+    if (confirmed) {
         fetch(`/Job_poster/public/jobs-manage/hard-delete/${id}`, {
             method: 'GET',
             headers: { 'X-Requested-With': 'XMLHttpRequest' }

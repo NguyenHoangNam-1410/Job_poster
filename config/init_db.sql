@@ -1,31 +1,31 @@
 USE job_poster;
 
 -- Users
-INSERT INTO USERS (Email, Password, Role, Name, Avatar, is_active)
-VALUES
-('alice@example.com', 'hashed_pw1', 'Staff', 'Alice Nguyen', NULL, 1),
-('bob@example.com', 'hashed_pw2', 'Admin', 'Bob Tran', NULL, 1),
-('chris@example.com', 'hashed_pw3', 'Employer', 'Chris Le', NULL, 1),
-('diana@example.com', 'hashed_pw4', 'Employer', 'Diana Pham', NULL, 1),
-('edward@example.com', 'hashed_pw5', 'Employer', 'Edward Vu', NULL, 1),
-('fiona@example.com', 'hashed_pw6', 'Staff', 'Fiona Huynh', NULL, 1),
-('george@example.com', 'hashed_pw7', 'Admin', 'George Dao', NULL, 1),
-('hannah@example.com', 'hashed_pw8', 'Employer', 'Hannah Trinh', NULL, 1),
-('ivan@example.com', 'hashed_pw9', 'Employer', 'Ivan Bui', NULL, 1),
-('jasmine@example.com', 'hashed_pw10', 'Employer', 'Jasmine Ngo', NULL, 1),
-('kevin@example.com', 'hashed_pw11', 'Employer', 'Kevin Truong', NULL, 1),
-('linda@example.com', 'hashed_pw12', 'Employer', 'Linda Ho', NULL, 1),
-('michael@example.com', 'hashed_pw13', 'Employer', 'Michael Dang', NULL, 1),
-('natalie@example.com', 'hashed_pw14', 'Employer', 'Natalie Phan', NULL, 1),
-('oliver@example.com', 'hashed_pw15', 'Employer', 'Oliver Vo', NULL, 1),
-('phoebe@example.com', 'hashed_pw16', 'Employer', 'Phoebe Dinh', NULL, 1),
-('quentin@example.com', 'hashed_pw17', 'Employer', 'Quentin Lam', NULL, 1),
-('rachel@example.com', 'hashed_pw18', 'Employer', 'Rachel Le', NULL, 1),
-('sam@example.com', 'hashed_pw19', 'Employer', 'Sam Nguyen', NULL, 1),
-('tina@example.com', 'hashed_pw20', 'Employer', 'Tina Tran', NULL, 1),
-('unknown@example.com', 'hashed_pw21', 'Employer', 'Unknown User', NULL, 1),
-('nguyen@example.com', 'hashed_pw22', 'Employer', 'Nguyen Van A', NULL, 1);
-
+INSERT INTO `users` (`UID`, `Email`, `Password`, `Role`, `Name`, `Avatar`, `auth_provider`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'alice@example.com', 'hashed_pw1', 'Staff', 'Alice Nguyen', '/Job_poster/public/image/avatar/1/avatar_1763266714.png', 'local', 1, '2025-11-05 13:08:06', '2025-11-16 04:18:34'),
+(2, 'bob@example.com', 'hashed_pw2', 'Admin', 'Bob Tran', '/Job_poster/public/image/avatar/2/avatar_1763267198.png', 'local', 1, '2025-11-05 13:08:06', '2025-11-16 04:26:38'),
+(3, 'chris@example.com', 'hashed_pw3', 'Employer', 'Chris Le', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(4, 'diana@example.com', 'hashed_pw4', 'Employer', 'Diana Pham', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(5, 'edward@example.com', 'hashed_pw5', 'Employer', 'Edward Vu', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(6, 'fiona@example.com', 'hashed_pw6', 'Staff', 'Fiona Huynh', '/Job_poster/public/image/avatar/6/avatar_1763265481.jpg', 'local', 1, '2025-11-05 13:08:06', '2025-11-16 03:58:01'),
+(7, 'george@example.com', 'hashed_pw7', 'Admin', 'George Dao', '/Job_poster/public/image/avatar/7/avatar_1763268812.png', 'local', 1, '2025-11-05 13:08:06', '2025-11-16 04:53:32'),
+(8, 'hannah@example.com', 'hashed_pw8', 'Employer', 'Hannah Trinh', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(9, 'ivan@example.com', 'hashed_pw9', 'Employer', 'Ivan Bui', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(10, 'jasmine@example.com', 'hashed_pw10', 'Employer', 'Jasmine Ngo', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(11, 'kevin@example.com', 'hashed_pw11', 'Employer', 'Kevin Truong', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(12, 'linda@example.com', 'hashed_pw12', 'Employer', 'Linda Ho', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(13, 'michael@example.com', 'hashed_pw13', 'Employer', 'Michael Dang', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(14, 'natalie@example.com', 'hashed_pw14', 'Employer', 'Natalie Phan', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(15, 'oliver@example.com', 'hashed_pw15', 'Employer', 'Oliver Vo', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(16, 'phoebe@example.com', 'hashed_pw16', 'Employer', 'Phoebe Dinh', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(17, 'quentin@example.com', 'hashed_pw17', 'Employer', 'Quentin Lam', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(18, 'rachel@example.com', 'hashed_pw18', 'Employer', 'Rachel Le', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(19, 'sam@example.com', 'hashed_pw19', 'Employer', 'Sam Nguyen', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(20, 'tina@example.com', 'hashed_pw20', 'Employer', 'Tina Tran', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(21, 'unknown@example.com', 'hashed_pw21', 'Employer', 'Unknown User', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(22, 'nguyen@example.com', 'hashed_pw22', 'Employer', 'Nguyen Van A', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
+(23, 'test_1763129661@example.com', '$2y$10$WbttonZgG9WYXWqTp7LWaeI.uhxXpx1pU.cIraFrzqjEhiRXN8Flq', 'Employer', 'Test User', NULL, 'local', 1, '2025-11-14 14:14:21', '2025-11-14 14:14:21'),
+(24, 'silversoul66666@gmail.com', '$2y$10$FJwn.z8GWZOqwx.7A0DGZ.niTr2PrFPjO1j/D3GcXW3I1JuSYpExS', 'Employer', 'Nguyen Hoang Nam', NULL, 'local', 1, '2025-11-14 14:14:57', '2025-11-14 14:14:57');
 
 -- Employers
 INSERT INTO EMPLOYERS (user_id, company_name, website, logo, contact_phone, contact_email, contact_person, description)

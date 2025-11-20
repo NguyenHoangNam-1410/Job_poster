@@ -19,6 +19,7 @@ class Job {
     private $employer_name;
     private $company_name;
     private $posted_by_name;
+    private $employer_avatar;
     private $categories = [];
     
     // Constructor
@@ -64,6 +65,7 @@ class Job {
     public function getEmployerName() { return $this->employer_name; }
     public function getCompanyName() { return $this->company_name; }
     public function getPostedByName() { return $this->posted_by_name; }
+    public function getEmployerAvatar() { return $this->employer_avatar; }
     public function getCategories() { return $this->categories; }
     
     // Setters
@@ -84,6 +86,7 @@ class Job {
     public function setEmployerName($employer_name) { $this->employer_name = $employer_name; }
     public function setCompanyName($company_name) { $this->company_name = $company_name; }
     public function setPostedByName($posted_by_name) { $this->posted_by_name = $posted_by_name; }
+    public function setEmployerAvatar($employer_avatar) { $this->employer_avatar = $employer_avatar; }
     public function setCategories($categories) { $this->categories = $categories; }
     
     // Status check methods

@@ -54,6 +54,7 @@
     </footer>
 
     <script src="/Job_poster/public/javascript/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="/Job_poster/public/javascript/notyf.min.js"></script>
     <script src="/Job_poster/public/javascript/main.js"></script>
