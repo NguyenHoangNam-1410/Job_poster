@@ -17,7 +17,7 @@ $jobCategoryIds = array_column($jobCategories, 'id');
 $status = $job->getStatus(); 
 $role = $_SESSION['user']['role'] ?? 'Guest';
 
-// Only draft and rejected can be edited
+// Only draft and rejected can be edited (approved/overdue can only change status, not info)
 $canEditInfo = ($role === 'Employer' && in_array($status, ['draft', 'rejected']));
 $showDelete = false;
 $deleteType = '';
@@ -41,33 +41,19 @@ $readonlyAttr = $canEditInfo ? '' : 'disabled';
 
 $statusButton = null;
 if ($role === 'Employer') {
-    if ($status === 'draft') {
-        $statusButton = [
-            'action' => 'post_job',
-            'label' => 'Post Job',
-            'class' => 'bg-blue-600 hover:bg-blue-700 text-sm text-white px-3 py-1',
-            'icon' => Icons::send('w-4 h-4 inline-block align-middle')
-        ];
-    } elseif ($status === 'approved') {
+    if ($status === 'approved') {
         $statusButton = [
             'action' => 'mark_overdue',
-            'label' => 'Mark as Overdue',
-            'class' => 'bg-yellow-500 hover:bg-yellow-600 text-sm px-3 py-1',
+            'label' => 'Close',
+            'class' => 'bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold',
             'icon' => Icons::clock('w-4 h-4 inline-block align-middle')
         ];
     } elseif ($status === 'overdue') {
         $statusButton = [
             'action' => 'reapprove',
-            'label' => 'Re-approve',
-            'class' => 'bg-green-600 hover:bg-green-700 text-sm text-white px-3 py-1',
+            'label' => 'Open',
+            'class' => 'bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold',
             'icon' => Icons::check('w-4 h-4 inline-block align-middle')
-        ];
-    } elseif ($status === 'rejected') {
-        $statusButton = [
-            'action' => 'resubmit',
-            'label' => 'Resubmit for Approval',
-            'class' => 'bg-blue-600 hover:bg-blue-700 text-sm text-white px-3 py-1',
-            'icon' => Icons::refresh('w-4 h-4 inline-block align-middle')
         ];
     }
 }
@@ -88,14 +74,6 @@ if ($role === 'Employer') {
                 <span class="px-2.5 py-0.5 rounded-full text-sm font-medium <?= $job->getStatusColor() ?>" id="currentStatusLabel">
                     <?= ucfirst(str_replace('_', ' ', $status)) ?>
                 </span>
-                <?php if ($statusButton): ?>
-                <button type="button" id="statusChangeBtn"
-                    data-action="<?= $statusButton['action'] ?>"
-                    class="flex rounded-md items-center gap-1 <?= $statusButton['class'] ?>">
-                    <span><?= $statusButton['icon'] ?></span>
-                    <span><?= $statusButton['label'] ?></span>
-                </button>
-                <?php endif; ?>
             </div>
 
         </div>
@@ -118,6 +96,21 @@ if ($role === 'Employer') {
                 <h3 class="text-sm font-medium text-red-800">Submission Rejected</h3>
                 <p class="mt-1 text-sm text-red-700">
                     <strong>Reason:</strong> <?= htmlspecialchars($jobReview ?? 'No reason provided.') ?>
+                </p>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Approved Notice -->
+    <?php if ($status === 'approved' && !empty($jobReview)): ?>
+    <div class="mb-6 p-4 rounded-md bg-green-50 border border-green-200">
+        <div class="flex">
+            <div class="flex-shrink-0"><?= Icons::check('h-5 w-5 text-green-400') ?></div>
+            <div class="ml-3">
+                <h3 class="text-sm font-medium text-green-800">Job Approved</h3>
+                <p class="mt-1 text-sm text-green-700">
+                    <strong>Review Note:</strong> <?= htmlspecialchars($jobReview) ?>
                 </p>
             </div>
         </div>
@@ -228,28 +221,46 @@ if ($role === 'Employer') {
 
         <div class="flex justify-between items-center pt-6 border-t">
             <div class="flex gap-3">
-                <!-- Debug: Status=<?= $status ?>, Role=<?= $role ?>, CanEdit=<?= $canEditInfo ? 'true' : 'false' ?>, IsModal=<?= $isModal ? 'true' : 'false' ?> -->
-                <?php if ($canEditInfo || $isModal): ?>
-                    <!-- SAVE AS DRAFT -->
+                <?php if ($status === 'draft' && ($canEditInfo || $isModal)): ?>
+                    <!-- SAVE AS DRAFT (Only for draft status) -->
                     <button type="submit" name="action" value="save_draft" id="saveDraftBtn"
                         class="flex items-center gap-2 px-6 py-3 bg-gray-500 text-white rounded-lg font-semibold shadow-md hover:scale-105 hover:bg-gray-600 active:scale-95 transition-all duration-200">
                         <?= Icons::save('w-5 h-5 inline-block align-middle') ?>
                         <span>Save as Draft</span>
                     </button>
-                    <!-- POST JOB -->
+                    <!-- POST JOB (Only for draft status) -->
                     <button type="submit" name="action" value="post_job" id="postJobBtn"
                         class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold shadow-md hover:scale-105 hover:from-blue-600 hover:to-blue-700 active:scale-95 transition-all duration-200">
                         <?= Icons::send('w-5 h-5 inline-block align-middle') ?>
                         <span>Post Job</span>
                     </button>
+                <?php elseif ($status === 'rejected' && ($canEditInfo || $isModal)): ?>
+                    <!-- RESUBMIT (For rejected status) -->
+                    <button type="submit" name="action" value="post_job" id="postJobBtn"
+                        class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold shadow-md hover:scale-105 hover:from-blue-600 hover:to-blue-700 active:scale-95 transition-all duration-200">
+                        <?= Icons::refresh('w-5 h-5 inline-block align-middle') ?>
+                        <span>Resubmit</span>
+                    </button>
                 <?php endif; ?>
             </div>
             
-            <!-- CANCEL -->
-            <a href="/Job_poster/public/my-jobs" id="cancelBtn"
-                class="px-4 py-2 rounded-lg font-semibold bg-gray-300 hover:bg-gray-400 transition">
-                Cancel
-            </a>
+            <div class="flex gap-3">
+                <?php if ($statusButton): ?>
+                <!-- CLOSE/OPEN BUTTON -->
+                <button type="button" id="statusChangeBtn"
+                    data-action="<?= $statusButton['action'] ?>"
+                    class="flex items-center gap-2 <?= $statusButton['class'] ?>">
+                    <span><?= $statusButton['icon'] ?></span>
+                    <span><?= $statusButton['label'] ?></span>
+                </button>
+                <?php endif; ?>
+                
+                <!-- CANCEL -->
+                <a href="/Job_poster/public/my-jobs" id="cancelBtn"
+                    class="px-4 py-2 rounded-lg font-semibold bg-gray-300 hover:bg-gray-400 transition">
+                    Cancel
+                </a>
+            </div>
         </div>
 
     </form>
@@ -398,6 +409,66 @@ $additionalJS = [
             });
         }, 100); // Wait 100ms for DOM
     }
+})();
+
+// Handle status change button (Close Job / Open Job)
+(function() {
+    const statusBtn = document.getElementById('statusChangeBtn');
+    if (!statusBtn) return;
+
+    statusBtn.addEventListener('click', async function() {
+        const action = this.getAttribute('data-action');
+        const jobId = <?= $job->getId() ?>;
+        
+        let confirmMessage = '';
+        let successMessage = '';
+        
+        if (action === 'mark_overdue') {
+            confirmMessage = 'Are you sure you want to close this job? It will be marked as overdue.';
+            successMessage = 'Job closed successfully';
+        } else if (action === 'reapprove') {
+            confirmMessage = 'Are you sure you want to reopen this job? It will be marked as recruiting.';
+            successMessage = 'Job reopened successfully';
+        }
+        
+        const confirmed = await window.confirmModal.show('', confirmMessage, 'Confirm', 'Cancel');
+        if (!confirmed) return;
+        
+        // Show loading state
+        statusBtn.disabled = true;
+        const originalHTML = statusBtn.innerHTML;
+        statusBtn.innerHTML = '<svg class="animate-spin h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Processing...';
+        
+        try {
+            const response = await fetch(`/Job_poster/public/my-jobs/status/${jobId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ action: action })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                if (window.notyf) {
+                    window.notyf.success(data.message || successMessage);
+                }
+                setTimeout(() => window.location.reload(), 500);
+            } else {
+                throw new Error(data.message || 'Failed to update job status');
+            }
+        } catch (error) {
+            if (window.notyf) {
+                window.notyf.error(error.message || 'Failed to update job status. Please try again.');
+            } else {
+                alert(error.message || 'Failed to update job status. Please try again.');
+            }
+            statusBtn.disabled = false;
+            statusBtn.innerHTML = originalHTML;
+        }
+    });
 })();
 </script>
 

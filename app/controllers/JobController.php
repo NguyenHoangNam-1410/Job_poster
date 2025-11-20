@@ -632,6 +632,8 @@ class JobController {
                     $newStatus = 'pending'; // Submit for approval
                 } elseif ($action === 'save_draft') {
                     $newStatus = 'draft'; // Keep as draft
+                } elseif ($action === 'save_changes') {
+                    $newStatus = $job->getStatus(); // Keep current status (rejected, approved, overdue)
                 }
                 
                 // Collect form data
@@ -657,7 +659,7 @@ class JobController {
                        || isset($_GET['ajax'])
                        || isset($_POST['ajax']);
                 
-                $successMessage = ($action === 'post_job') ? 'Job posted successfully' : 'Job saved as draft';
+                $successMessage = ($action === 'post_job') ? 'Job posted successfully' : (($action === 'save_draft') ? 'Job saved as draft' : 'Job updated successfully');
                 
                 if ($isAjax) {
                     header('Content-Type: application/json');
@@ -736,5 +738,49 @@ class JobController {
 
     public function createNewJob(){
         require_once __DIR__ . '/../views/employer/jobs/form.php';
+    }
+
+    // Handle status-only changes (approved <-> overdue)
+    public function myJobStatusChange($id) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $job = $this->jobService->getJobById($id);
+                if (!$job) {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => false, 'message' => 'Job not found']);
+                    exit;
+                }
+
+                // Get JSON body
+                $input = file_get_contents('php://input');
+                $data = json_decode($input, true);
+                $action = $data['action'] ?? '';
+
+                $currentStatus = $job->getStatus();
+                $newStatus = '';
+                $message = '';
+
+                if ($action === 'mark_overdue' && $currentStatus === 'approved') {
+                    $newStatus = 'overdue';
+                    $message = 'Job closed successfully';
+                } elseif ($action === 'reapprove' && $currentStatus === 'overdue') {
+                    $newStatus = 'approved';
+                    $message = 'Job reopened successfully';
+                } else {
+                    throw new Exception('Invalid action or status combination');
+                }
+
+                // Update only the status
+                $this->jobService->updateJobStatus($id, $newStatus);
+
+                header('Content-Type: application/json');
+                echo json_encode(['success' => true, 'message' => $message]);
+                exit;
+            } catch (Exception $e) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+                exit;
+            }
+        }
     }
 }

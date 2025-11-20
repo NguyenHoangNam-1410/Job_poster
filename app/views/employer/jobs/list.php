@@ -159,13 +159,13 @@ $totalPages = $total_pages;
                                     </td>
                                     <td class="table-cell">
                                         <div class="flex gap-2">
-                                            <?php if ($job->getStatus() === 'draft' || $job->getStatus() === 'rejected'): ?>
-                                                <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/edit/<?= $job->getId() ?>', 'Edit Job')" class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm">
-                                                    <?= Icons::edit('w-4 h-4 mr-1') ?> Edit
-                                                </button>
-                                            <?php else: ?>
+                                            <?php if ($job->getStatus() === 'pending'): ?>
                                                 <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $job->getId() ?>', 'Job Details')" class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm">
                                                     <?= Icons::view('w-4 h-4 mr-1') ?> View
+                                                </button>
+                                            <?php else: ?>
+                                                <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/edit/<?= $job->getId() ?>', 'Edit Job')" class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm">
+                                                    <?= Icons::edit('w-4 h-4 mr-1') ?> Edit
                                                 </button>
                                             <?php endif; ?>
                                             <?php $deleteType = in_array($job->getStatus(), ['draft', 'pending']) ? 'hard' : 'soft'; ?>

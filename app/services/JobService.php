@@ -298,4 +298,9 @@ class JobService {
     public function getUniqueLocationsByEmployerId($employerId) {
         return $this->jobDAO->getUniqueLocationsByEmployer($employerId);
     }
+
+    // Update only job status (for employer status changes like approved <-> overdue)
+    public function updateJobStatus($id, $newStatus) {
+        return $this->jobDAO->changeStatus($id, $newStatus);
+    }
 }

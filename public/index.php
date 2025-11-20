@@ -220,6 +220,7 @@ if (route('#^/my-jobs/store$#', fn() => controller('JobController', 'myJobStore'
 if (route('#^/my-jobs/add$#', fn() => controller('JobController', 'createNewJob'), ['POST'], ['Employer'])) exit;
 if (route('#^/my-jobs/edit/(\d+)$#', fn($id) => controller('JobController', 'myJobEdit', $id), ['GET'], ['Employer'])) exit;
 if (route('#^/my-jobs/update/(\d+)$#', fn($id) => controller('JobController', 'myJobUpdate', $id), ['POST'], ['Employer'])) exit;
+if (route('#^/my-jobs/status/(\d+)$#', fn($id) => controller('JobController', 'myJobStatusChange', $id), ['POST'], ['Employer'])) exit;
 if (route('#^/my-jobs/soft-delete/(\d+)$#', fn($id) => controller('JobController', 'myJobSoftDelete', $id), ['GET', 'POST'], ['Employer'])) exit;
 if (route('#^/my-jobs/hard-delete/(\d+)$#', fn($id) => controller('JobController', 'myJobHardDelete', $id), ['GET', 'POST'], ['Employer'])) exit;
 

@@ -7,15 +7,15 @@ $jobDAO = new JobDAO();
 $employerId = $_SESSION['user']['id'];
 
 // Get most recent approved job
-$approvedJobs = $jobDAO->getJobsByEmployer($employerId, '', '', '', 'Approved', '', '', 1, 0);
+$approvedJobs = $jobDAO->getJobsByEmployer($employerId, '', '', '', 'approved', '', '', 1, 0);
 $recentApproved = !empty($approvedJobs) ? $approvedJobs[0] : null;
 
 // Get most recent rejected job
-$rejectedJobs = $jobDAO->getJobsByEmployer($employerId, '', '', '', 'Rejected', '', '', 1, 0);
+$rejectedJobs = $jobDAO->getJobsByEmployer($employerId, '', '', '', 'rejected', '', '', 1, 0);
 $recentRejected = !empty($rejectedJobs) ? $rejectedJobs[0] : null;
 
 // Get most recent pending job
-$pendingJobs = $jobDAO->getJobsByEmployer($employerId, '', '', '', 'Pending', '', '', 1, 0);
+$pendingJobs = $jobDAO->getJobsByEmployer($employerId, '', '', '', 'pending', '', '', 1, 0);
 $recentPending = !empty($pendingJobs) ? $pendingJobs[0] : null;
 
 $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
@@ -177,3 +177,20 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
 <?php
 require_once '../app/views/layouts/auth_footer.php';
 ?>
+
+<script>
+// DEBUG: Check rejected jobs data
+console.log('Rejected Jobs Count:', <?= count($rejectedJobs) ?>);
+console.log('Recent Rejected Job:', <?= $recentRejected ? "'" . $recentRejected->getId() . "'" : 'null' ?>);
+console.log('Recent Rejected is truthy?', <?= $recentRejected ? 'true' : 'false' ?>);
+<?php if ($recentRejected): ?>
+console.log('Rejected Job Details:', {
+    id: <?= $recentRejected->getId() ?>,
+    title: '<?= addslashes($recentRejected->getTitle()) ?>',
+    status: '<?= $recentRejected->getStatus() ?>'
+});
+<?php else: ?>
+console.log('No rejected job found - $recentRejected is falsy');
+<?php endif; ?>
+console.log('All debug logs complete');
+</script>
