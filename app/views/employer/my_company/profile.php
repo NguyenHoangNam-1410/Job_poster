@@ -12,7 +12,6 @@ if (!$isModal) {
     <div class="list-content max-w-3xl mx-auto">
         <div class="mb-6">
             <h1 class="list-header">Edit Company Profile</h1>
-            <p class="text-gray-600 mt-2">Update your company information</p>
         </div>
 <?php } ?>
 

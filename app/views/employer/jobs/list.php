@@ -159,10 +159,16 @@ $totalPages = $total_pages;
                                     </td>
                                     <td class="table-cell">
                                         <div class="flex gap-2">
-                                            <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $job->getId() ?>', 'Job Details')" class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm">
-                                                <?= Icons::view('w-4 h-4 mr-1') ?> View
-                                            </button>
-                                            <?php $deleteType = in_array($job->getStatus(), ['draft']) ? 'hard' : 'soft'; ?>
+                                            <?php if ($job->getStatus() === 'draft' || $job->getStatus() === 'rejected'): ?>
+                                                <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/edit/<?= $job->getId() ?>', 'Edit Job')" class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm">
+                                                    <?= Icons::edit('w-4 h-4 mr-1') ?> Edit
+                                                </button>
+                                            <?php else: ?>
+                                                <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $job->getId() ?>', 'Job Details')" class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm">
+                                                    <?= Icons::view('w-4 h-4 mr-1') ?> View
+                                                </button>
+                                            <?php endif; ?>
+                                            <?php $deleteType = in_array($job->getStatus(), ['draft', 'pending']) ? 'hard' : 'soft'; ?>
                                             <button type="button"
                                                onclick="handleDeleteJob('<?= $deleteType ?>', '<?= $job->getId() ?>')"
                                                class="inline-flex items-center text-red-600 hover:text-red-900 text-sm">
@@ -195,6 +201,28 @@ $totalPages = $total_pages;
     </div>
 </div>
 
+<script>
+    // Global functions that need to be accessible from HTML
+window.handleDeleteJob = async function(type, jobId) {
+    let message = "Are you sure you want to delete this job?\n\n";
+    if (type === 'soft') {
+        message += "";
+    } else {
+        message += "The job will be permanently removed.";
+    }
+    
+    const confirmed = await window.confirmModal.show(
+        '',
+        message,
+        'Delete',
+        'Cancel'
+    );
+    
+    if (confirmed) {
+        window.location.href = `/Job_poster/public/my-jobs/${type}-delete/${jobId}?type=${type}`;
+    }
+};
+</script>
 <?php
 $additionalJS = ['/Job_poster/public/javascript/employer_jobs.js'];
 include __DIR__ . '/../../layouts/auth_footer.php';

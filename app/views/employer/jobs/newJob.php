@@ -20,7 +20,10 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 <?php endif; ?>
 
     <!-- FORM -->
-    <form method="POST" action="/Job_poster/public/my-jobs/store" id="jobForm" class="space-y-8">
+    <form method="POST" action="/Job_poster/public/my-jobs/store<?= $isModal ? '?ajax=1' : '' ?>" id="jobForm" class="space-y-8">
+        <?php if ($isModal): ?>
+        <input type="hidden" name="ajax" value="1">
+        <?php endif; ?>
         <div class="form-grid">
 
             <!-- TITLE -->

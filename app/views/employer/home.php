@@ -60,7 +60,7 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                         </h3>
                     </div>
                     <?php if ($recentApproved): ?>
-                        <a href="/Job_poster/public/my-jobs/detail/<?= $recentApproved->getId() ?>" class="block p-6 hover:bg-gray-50 transition">
+                        <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $recentApproved->getId() ?>', 'Job Details')" class="block p-6 hover:bg-gray-50 transition text-left w-full">
                             <h4 class="font-bold text-xl text-gray-800 mb-2"><?= htmlspecialchars($recentApproved->getTitle()) ?></h4>
                             <p class="text-sm text-gray-600 mb-2">
                                 <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,7 +75,7 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                             <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
                                 Approved
                             </span>
-                        </a>
+                        </button>
                     <?php else: ?>
                         <div class="p-6 text-center text-gray-500">
                             <p class="mb-4">No approved jobs yet</p>
@@ -97,7 +97,7 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                         </h3>
                     </div>
                     <?php if ($recentRejected): ?>
-                        <a href="/Job_poster/public/my-jobs/detail/<?= $recentRejected->getId() ?>" class="block p-6 hover:bg-gray-50 transition">
+                        <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $recentRejected->getId() ?>', 'Job Details')" class="block p-6 hover:bg-gray-50 transition text-left w-full">
                             <h4 class="font-bold text-xl text-gray-800 mb-2"><?= htmlspecialchars($recentRejected->getTitle()) ?></h4>
                             <p class="text-sm text-gray-600 mb-2">
                                 <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,7 +112,7 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                             <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
                                 Rejected
                             </span>
-                        </a>
+                        </button>
                     <?php else: ?>
                         <div class="p-6 text-center text-gray-500">
                             <p class="mb-4">No rejected jobs</p>
@@ -134,7 +134,7 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                         </h3>
                     </div>
                     <?php if ($recentPending): ?>
-                        <a href="/Job_poster/public/my-jobs/detail/<?= $recentPending->getId() ?>" class="block p-6 hover:bg-gray-50 transition">
+                        <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $recentPending->getId() ?>', 'Job Details')" class="block p-6 hover:bg-gray-50 transition text-left w-full">
                             <h4 class="font-bold text-xl text-gray-800 mb-2"><?= htmlspecialchars($recentPending->getTitle()) ?></h4>
                             <p class="text-sm text-gray-600 mb-2">
                                 <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -149,7 +149,7 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                             <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                 Pending Review
                             </span>
-                        </a>
+                        </button>
                     <?php else: ?>
                         <div class="p-6 text-center text-gray-500">
                             <p class="mb-4">No pending jobs</p>

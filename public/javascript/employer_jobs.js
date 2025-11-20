@@ -1,3 +1,13 @@
+
+
+window.debounceMyJobsSearch = function() {
+    clearTimeout(window.searchTimeout);
+    window.searchTimeout = setTimeout(() => {
+        document.getElementById('myJobsFilterForm').submit();
+    }, 500);
+};
+
+// Form-specific variables (only used if form exists)
 let searchTimeout;
 let form = document.getElementById('jobForm');
 let initialValues = {};
@@ -183,34 +193,4 @@ if(form){
     if (deadlineInput) {
         deadlineInput.addEventListener('input', validateDeadline);
     }
-}
-
-
-// Delete confirmation using custom modal
-async function handleDeleteJob(type, jobId) {
-    let message = "Are you sure you want to delete this job?\n\n";
-    if (type === 'soft') {
-        message += "This will be a SOFT DELETE. Admin and Staff can still see it.";
-    } else {
-        message += "This will be a HARD DELETE. The job will be permanently removed.";
-    }
-    
-    const confirmed = await window.confirmModal.show(
-        'Delete Job',
-        message,
-        'Delete',
-        'Cancel'
-    );
-    
-    if (confirmed) {
-        window.location.href = `/Job_poster/public/my-jobs/${type}-delete/${jobId}?type=${type}`;
-    }
-}
-
-// Debounce search functionality
-function debounceMyJobsSearch() {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-        document.getElementById('myJobsFilterForm').submit();
-    }, 500);
 }

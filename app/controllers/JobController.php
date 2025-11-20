@@ -514,7 +514,7 @@ class JobController {
                 }
                 $employerId = $employer->getId();
 
-                $status = ($_POST['action'] === 'post_job') ? 'pending' : 'draft';
+                $status = (isset($_POST['action']) && $_POST['action'] === 'post_job') ? 'pending' : 'draft';
 
                 $data = [
                     'employer_id' => $employerId,
@@ -540,12 +540,45 @@ class JobController {
 
                 if ($jobId) {
                     $message = ($status === 'pending') ? 'Job posted successfully' : 'Draft saved successfully';
+                    
+                    // Check if this is an AJAX request (modal)
+                    $headers = function_exists('getallheaders') ? getallheaders() : [];
+                    $isAjax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+                           || (isset($headers['X-Requested-With']) && strtolower($headers['X-Requested-With']) === 'xmlhttprequest')
+                           || isset($_GET['ajax'])
+                           || isset($_POST['ajax']);
+                    
+                    if ($isAjax) {
+                        header('Content-Type: application/json');
+                        echo json_encode([
+                            'success' => true,
+                            'message' => $message
+                        ]);
+                        exit;
+                    }
+                    
                     header('Location: /Job_poster/public/my-jobs?success=' . urlencode($message));
                     exit;
                 } else {
                     throw new Exception("Failed to create job.");
                 }
             } catch (Exception $e) {
+                // Check if this is an AJAX request (modal)
+                $headers = function_exists('getallheaders') ? getallheaders() : [];
+                $isAjax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+                       || (isset($headers['X-Requested-With']) && strtolower($headers['X-Requested-With']) === 'xmlhttprequest')
+                       || isset($_GET['ajax'])
+                       || isset($_POST['ajax']);
+                
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => false,
+                        'message' => $e->getMessage()
+                    ]);
+                    exit;
+                }
+                
                 $error = $e->getMessage();
                 $categories = $this->jobService->getAllCategories();
                 require_once __DIR__ . '/../views/employer/jobs/newJob.php';
@@ -577,9 +610,30 @@ class JobController {
             try {
                 $job = $this->jobService->getJobById($id);
                 if (!$job) {
+                    $headers = function_exists('getallheaders') ? getallheaders() : [];
+                    $isAjax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+                           || (isset($headers['X-Requested-With']) && strtolower($headers['X-Requested-With']) === 'xmlhttprequest')
+                           || isset($_GET['ajax'])
+                           || isset($_POST['ajax']);
+                    
+                    if ($isAjax) {
+                        header('Content-Type: application/json');
+                        echo json_encode(['success' => false, 'message' => 'Job not found']);
+                        exit;
+                    }
                     header("Location: /Job_poster/public/my-jobs?error=" . urlencode("Job not found"));
                     exit;
                 }
+                // Determine status based on action
+                $action = $_POST['action'] ?? 'save_draft';
+                $newStatus = $job->getStatus(); // Keep current status by default
+                
+                if ($action === 'post_job') {
+                    $newStatus = 'pending'; // Submit for approval
+                } elseif ($action === 'save_draft') {
+                    $newStatus = 'draft'; // Keep as draft
+                }
+                
                 // Collect form data
                 $data = [
                     'title' => $_POST['title'] ?? $job->getTitle(),
@@ -589,15 +643,44 @@ class JobController {
                     'description' => $_POST['description'] ?? $job->getDescription(),
                     'requirements' => $_POST['requirements'] ?? $job->getRequirements(),
                     'categories' => $_POST['categories'] ?? $job->getCategories(),
-                    'status' => $_POST['status'] ?? $job->getStatus()
+                    'status' => $newStatus
                 ];
                 $updatedJob = $this->jobService->updateJob($id, $data, $this->getCurrentUserId());
                 if(!$updatedJob) {
                     throw new Exception("Failed to update job.");
                 }
-                header('Location: /Job_poster/public/my-jobs?success=' . urlencode('Job updated successfully'));
+                
+                // Check if this is an AJAX request
+                $headers = function_exists('getallheaders') ? getallheaders() : [];
+                $isAjax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+                       || (isset($headers['X-Requested-With']) && strtolower($headers['X-Requested-With']) === 'xmlhttprequest')
+                       || isset($_GET['ajax'])
+                       || isset($_POST['ajax']);
+                
+                $successMessage = ($action === 'post_job') ? 'Job posted successfully' : 'Job saved as draft';
+                
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => true, 'message' => $successMessage]);
+                    exit;
+                }
+                
+                header('Location: /Job_poster/public/my-jobs?success=' . urlencode($successMessage));
                 exit;
             } catch (Exception $e) {
+                // Check if this is an AJAX request
+                $headers = function_exists('getallheaders') ? getallheaders() : [];
+                $isAjax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+                       || (isset($headers['X-Requested-With']) && strtolower($headers['X-Requested-With']) === 'xmlhttprequest')
+                       || isset($_GET['ajax'])
+                       || isset($_POST['ajax']);
+                
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+                    exit;
+                }
+                
                 header('Location: /Job_poster/public/my-jobs?error=' . urlencode($e->getMessage()));
                 exit;
             }

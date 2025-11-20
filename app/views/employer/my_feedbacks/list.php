@@ -4,7 +4,7 @@
     <div class="list-content">
         <div class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="list-header">My Employer Feedbacks</h1>
+                <h1 class="list-header">My Feedbacks</h1>
             </div>
             <button onclick="window.formModal.loadForm('/Job_poster/public/my-feedbacks/create', 'Add New Feedback')"
                 class="btn-submit">

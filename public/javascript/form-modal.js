@@ -219,7 +219,9 @@ class FormModal {
 
       try {
         const formData = new FormData(form);
-        const response = await fetch(form.action, {
+        // Use getAttribute to avoid conflict with form elements named 'action'
+        const formAction = form.getAttribute('action');
+        const response = await fetch(formAction, {
           method: 'POST',
           body: formData,
           headers: {

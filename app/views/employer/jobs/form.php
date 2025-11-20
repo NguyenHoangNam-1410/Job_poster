@@ -1,6 +1,13 @@
 <?php 
-$pageTitle = 'Edit Job'; 
-require_once __DIR__ . '/../../layouts/public_header.php';
+$pageTitle = 'Edit Job';
+
+// Detect if this is being loaded in a modal
+$isModal = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+        || (!empty($_SERVER['HTTP_X_REQUESTED_WITH']));
+
+if (!$isModal) {
+    require_once __DIR__ . '/../../layouts/public_header.php';
+}
 require_once __DIR__ . '/../../../helpers/Icons.php';
 
 $pageHeading = "{$job->getTitle()}";
@@ -8,18 +15,19 @@ $jobCategories = $job->getCategories();
 $jobCategoryIds = array_column($jobCategories, 'id');
 
 $status = $job->getStatus(); 
-$role = $_SESSION['user']['role'];
+$role = $_SESSION['user']['role'] ?? 'Guest';
 
-$canEditInfo = ($role === 'Employer' && in_array($status, ['draft', 'pending', 'rejected']));
+// Only draft and rejected can be edited
+$canEditInfo = ($role === 'Employer' && in_array($status, ['draft', 'rejected']));
 $showDelete = false;
 $deleteType = '';
 
 // Employer delete logic
 if ($role === 'Employer') {
-    if ($status === 'draft') {
+    if (in_array($status, ['draft', 'pending'])) {
         $showDelete = true;
         $deleteType = 'hard';
-    } elseif (in_array($status, ['pending', 'approved', 'rejected', 'overdue'])) {
+    } elseif (in_array($status, ['approved', 'rejected', 'overdue'])) {
         $showDelete = true;
         $deleteType = 'soft';
     }
@@ -138,7 +146,10 @@ if ($role === 'Employer') {
     </div>
 
     <!-- FORM -->
-    <form method="POST" action="/Job_poster/public/my-jobs/update/<?= $job->getId() ?>" id="jobForm" class="space-y-8">
+    <form method="POST" action="/Job_poster/public/my-jobs/update/<?= $job->getId() ?><?= $isModal ? '?ajax=1' : '' ?>" id="jobForm" class="space-y-8">
+        <?php if ($isModal): ?>
+        <input type="hidden" name="ajax" value="1">
+        <?php endif; ?>
         <input type="hidden" name="status" id="newStatusInput" value="">
 
         <div class="form-grid">
@@ -216,23 +227,26 @@ if ($role === 'Employer') {
         </div>
 
         <div class="flex justify-between items-center pt-6 border-t">
-
-            <!-- SAVE BUTTON -->
-            <button type="submit" name="action" value="save_changes"
-                class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold shadow-md hover:scale-105 hover:from-blue-600 hover:to-blue-700 active:scale-95 transition-all duration-200">
-                <?= Icons::save('w-5 h-5 inline-block align-middle') ?>
-                <span>Save Changes</span>
-            </button>
-            <?php if ($showDelete): ?>
-                <button type="button"
-                    onclick="handleDeleteJob('<?= $deleteType ?>', '<?= $job->getId() ?>')"
-                    class="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg font-semibold shadow-md hover:scale-105 hover:bg-red-700 active:scale-95 transition-all duration-200">
-                    <?= Icons::delete('w-5 h-5 inline-block align-middle') ?>
-                    <span>Delete Job</span>
-                </button>
-            <?php endif; ?>
+            <div class="flex gap-3">
+                <!-- Debug: Status=<?= $status ?>, Role=<?= $role ?>, CanEdit=<?= $canEditInfo ? 'true' : 'false' ?>, IsModal=<?= $isModal ? 'true' : 'false' ?> -->
+                <?php if ($canEditInfo || $isModal): ?>
+                    <!-- SAVE AS DRAFT -->
+                    <button type="submit" name="action" value="save_draft" id="saveDraftBtn"
+                        class="flex items-center gap-2 px-6 py-3 bg-gray-500 text-white rounded-lg font-semibold shadow-md hover:scale-105 hover:bg-gray-600 active:scale-95 transition-all duration-200">
+                        <?= Icons::save('w-5 h-5 inline-block align-middle') ?>
+                        <span>Save as Draft</span>
+                    </button>
+                    <!-- POST JOB -->
+                    <button type="submit" name="action" value="post_job" id="postJobBtn"
+                        class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold shadow-md hover:scale-105 hover:from-blue-600 hover:to-blue-700 active:scale-95 transition-all duration-200">
+                        <?= Icons::send('w-5 h-5 inline-block align-middle') ?>
+                        <span>Post Job</span>
+                    </button>
+                <?php endif; ?>
+            </div>
+            
             <!-- CANCEL -->
-            <a href="/Job_poster/public/my-jobs/details/<?= $job->getId() ?>" id="cancelBtn"
+            <a href="/Job_poster/public/my-jobs" id="cancelBtn"
                 class="px-4 py-2 rounded-lg font-semibold bg-gray-300 hover:bg-gray-400 transition">
                 Cancel
             </a>
@@ -278,7 +292,116 @@ $additionalJS = [
         setTimeout(initCategorySelect, 100);
     }
 })();
+
+// Handle form submission - works for both modal and regular page
+(function() {
+    const form = document.getElementById('jobForm');
+    if (!form) return;
+    
+    // Check if we're in a modal
+    const hasAjaxInput = form.querySelector('input[name="ajax"]') !== null;
+    const hasModalOverlay = document.querySelector('.modal-overlay') !== null;
+    const hasModalContent = form.closest('.modal-content') !== null;
+    const hasModalBackdrop = document.querySelector('.modal-backdrop') !== null;
+    const formActionHasAjax = form.getAttribute('action').includes('ajax=1');
+    
+    const isInModal = hasAjaxInput || hasModalOverlay || hasModalContent || hasModalBackdrop || formActionHasAjax;
+    
+    // If in modal, attach click handlers directly to the buttons by ID
+    if (isInModal) {
+        // Wait a bit for DOM to be fully ready
+        setTimeout(() => {
+            const saveDraftBtn = document.getElementById('saveDraftBtn');
+            const postJobBtn = document.getElementById('postJobBtn');
+            
+            const buttons = [saveDraftBtn, postJobBtn].filter(btn => btn !== null);
+            if (buttons.length === 0) return;
+        
+            buttons.forEach(button => {
+                
+                button.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    
+                    const action = button.value;
+                
+                    // Validation for categories
+                    const categorySelect = document.getElementById('jobCategories');
+                    if (categorySelect) {
+                        const selectedOptions = Array.from(categorySelect.selectedOptions);
+                        if (selectedOptions.length === 0) {
+                            if (window.notyf) {
+                                window.notyf.error('Please select at least one job category.');
+                            } else {
+                                alert('Please select at least one job category.');
+                            }
+                            return;
+                        }
+                    }
+                    
+                    // Show loading state
+                    button.disabled = true;
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '<svg class="animate-spin h-5 w-5 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Processing...';
+                    
+                    try {
+                        const formData = new FormData(form);
+                        // Make sure to include the action from the button
+                        formData.set('action', action);
+                        const formAction = form.getAttribute('action');
+                        
+                        const response = await fetch(formAction, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+                        
+                        const responseText = await response.text();
+                        let data;
+                        
+                        try {
+                            data = JSON.parse(responseText);
+                        } catch (e) {
+                            throw new Error('Server error: Invalid response format');
+                        }
+                        
+                        if (data.success) {
+                            if (window.formModal) {
+                                window.formModal.close();
+                            }
+                            
+                            if (window.notyf) {
+                                window.notyf.success(data.message);
+                            }
+                            
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 500);
+                        } else {
+                            throw new Error(data.message || 'Failed to update job');
+                        }
+                    } catch (error) {
+                        if (window.notyf) {
+                            window.notyf.error(error.message || 'Failed to update job. Please try again.');
+                        } else {
+                            alert(error.message || 'Failed to update job. Please try again.');
+                        }
+                        
+                        // Restore button state
+                        button.disabled = false;
+                        button.innerHTML = originalText;
+                    }
+                }, true); // Use capture phase
+            });
+        }, 100); // Wait 100ms for DOM
+    }
+})();
 </script>
 
 <?php
-include __DIR__ . '/../../layouts/auth_footer.php';
+if (!$isModal) {
+    include __DIR__ . '/../../layouts/auth_footer.php';
+}
