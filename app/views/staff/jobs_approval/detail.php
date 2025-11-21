@@ -1,6 +1,6 @@
 <?php $pageTitle = 'Job Detail - ' . $job->getTitle(); ?>
 <?php
-require_once '../app/views/layouts/public_header.php';
+require_once '../app/views/layouts/auth_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
@@ -306,5 +306,5 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 </script>
 
 <?php
-include __DIR__ . '/../../layouts/public_footer.php';
+include __DIR__ . '/../../layouts/auth_footer.php';
 ?>
