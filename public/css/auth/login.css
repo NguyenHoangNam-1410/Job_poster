@@ -241,12 +241,58 @@ a:hover {
 /* Google Sign In */
 .g_id_signin {
   border-radius: 0 !important;
+  width: 300px !important;
+  max-width: 100% !important;
+  min-height: 48px !important;
+  height: 48px !important;
+  display: inline-block !important;
 }
 
 .g_id_signin:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
+  transform: translate(-1px, -1px);
+  box-shadow: 6px 6px 0 rgba(6, 136, 180, 0.3) !important;
+  transition: all 0.2s ease;
+}
+
+/* Override Google button inner styles */
+.g_id_signin iframe,
+.g_id_signin div {
+  border-radius: 0 !important;
+  min-height: 48px !important;
+  height: 48px !important;
+}
+
+.g_id_signin iframe {
+  width: 300px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+}
+
+/* Social Login Buttons - Unified Style */
+.social-login-btn {
+  width: 300px !important;
+  max-width: 100% !important;
+  min-height: 48px !important;
+  height: 48px !important;
+  border-radius: 0 !important;
+  font-family: 'Courier New', monospace !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding: 0.75rem 1.5rem !important;
+  border: 2px solid #1a1a1a !important;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+}
+
+.social-login-text {
+  font-family: 'Courier New', monospace !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
 }
 
 /* Password Toggle */
