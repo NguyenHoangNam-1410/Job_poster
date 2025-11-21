@@ -5,7 +5,7 @@ $additionalJS  = [];
 require dirname(__DIR__, 2) . '/layouts/public_header.php';
 
 const BASE_PUBLIC = '/Job_poster/public';
-function route(string $r, array $qs = []): string {
+function build_route(string $r, array $qs = []): string {
   $qs = array_merge(['r' => $r], $qs);
   return BASE_PUBLIC . '/index.php?' . http_build_query($qs);
 }
@@ -183,7 +183,7 @@ document.body.classList.add('jobs-listing-page');
 
       <div id="activeBar" class="jobs-active-filters">
         <div id="activeBadges" class="flex flex-wrap items-center gap-2"></div>
-        <a id="clearAll" href="<?= htmlspecialchars(route('/jobs')) ?>" class="hidden text-sm" style="color: #0688B4; text-decoration: underline; margin-left: 1rem;">✕ Clear all</a>
+        <a id="clearAll" href="<?= htmlspecialchars(build_route('/jobs')) ?>" class="hidden text-sm" style="color: #0688B4; text-decoration: underline; margin-left: 1rem;">✕ Clear all</a>
         <span id="activeCount" class="ml-auto text-sm hidden" style="color: #4a4a4a;"></span>
       </div>
     </div>

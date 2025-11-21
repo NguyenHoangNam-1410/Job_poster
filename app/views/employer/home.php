@@ -3,8 +3,20 @@ require_once '../app/views/layouts/auth_header.php';
 
 // Fetch recent jobs
 require_once __DIR__ . '/../../dao/JobDAO.php';
+require_once __DIR__ . '/../../dao/EmployerDAO.php';
 $jobDAO = new JobDAO();
-$employerId = $_SESSION['user']['id'];
+$employerDAO = new EmployerDAO();
+
+// Get the employer ID from the user ID
+$userId = $_SESSION['user']['id'];
+$employer = $employerDAO->getEmployerByUserId($userId);
+$employerId = $employer ? $employer->getId() : null;
+
+// If no employer profile exists, redirect to create one
+if (!$employerId) {
+    header('Location: /Job_poster/public/company-profile');
+    exit;
+}
 
 // Get most recent approved job
 $approvedJobs = $jobDAO->getJobsByEmployer($employerId, '', '', '', 'approved', '', '', 1, 0);
@@ -39,12 +51,12 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                 </div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">No Job Postings Yet</h2>
                 <p class="text-gray-600 mb-6">Start by creating your first job posting to attract talented candidates</p>
-                <a href="/Job_poster/public/my-jobs/create" class="inline-flex items-center px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">
+                <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/create', 'Create New Job')" class="inline-flex items-center px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
                     Post New Job
-                </a>
+                </button>
             </div>
         <?php else: ?>
             <!-- Recent Jobs Grid -->
@@ -79,9 +91,9 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                     <?php else: ?>
                         <div class="p-6 text-center text-gray-500">
                             <p class="mb-4">No approved jobs yet</p>
-                            <a href="/Job_poster/public/my-jobs/create" class="text-green-600 hover:text-green-700 font-semibold text-sm">
+                            <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/create', 'Create New Job')" class="text-green-600 hover:text-green-700 font-semibold text-sm">
                                 Post a Job →
-                            </a>
+                            </button>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -153,9 +165,9 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                     <?php else: ?>
                         <div class="p-6 text-center text-gray-500">
                             <p class="mb-4">No pending jobs</p>
-                            <a href="/Job_poster/public/my-jobs/create" class="text-yellow-600 hover:text-yellow-700 font-semibold text-sm">
+                            <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/create', 'Create New Job')" class="text-yellow-600 hover:text-yellow-700 font-semibold text-sm">
                                 Post a Job →
-                            </a>
+                            </button>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -177,20 +189,3 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
 <?php
 require_once '../app/views/layouts/auth_footer.php';
 ?>
-
-<script>
-// DEBUG: Check rejected jobs data
-console.log('Rejected Jobs Count:', <?= count($rejectedJobs) ?>);
-console.log('Recent Rejected Job:', <?= $recentRejected ? "'" . $recentRejected->getId() . "'" : 'null' ?>);
-console.log('Recent Rejected is truthy?', <?= $recentRejected ? 'true' : 'false' ?>);
-<?php if ($recentRejected): ?>
-console.log('Rejected Job Details:', {
-    id: <?= $recentRejected->getId() ?>,
-    title: '<?= addslashes($recentRejected->getTitle()) ?>',
-    status: '<?= $recentRejected->getStatus() ?>'
-});
-<?php else: ?>
-console.log('No rejected job found - $recentRejected is falsy');
-<?php endif; ?>
-console.log('All debug logs complete');
-</script>
