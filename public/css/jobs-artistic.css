@@ -1609,7 +1609,9 @@ select[multiple].jobs-filter-select + .choices .choices__inner,
   font-size: 0.85rem !important;
   font-weight: 700 !important;
   color: #1a1a1a !important;
-  min-height: 48px !important;
+  min-height: 60px !important; /* Giảm từ 48px xuống 60px */
+  height: 60px !important; /* Force height cố định */
+  max-height: 60px !important; /* Ngăn không cho cao hơn */
   font-family: 'Courier New', monospace !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;

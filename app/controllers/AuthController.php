@@ -86,7 +86,7 @@ class AuthController
                 'role' => $user->getRole(),
                 'auth_provider' => $user->getAuthProvider(),
             ];
-            header("Location: " . BASE_URL . "/");
+            header("Location: " . BASE_URL . "/employer/home");
             exit;
         }
     }

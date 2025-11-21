@@ -31,11 +31,11 @@ $locations = $filters['locations'] ?? $filters['locs'] ?? [];
 $statuses = $filters['statuses'] ?? $filters['stts'] ?? [];
 
 if (!isset($result) || !is_array($result)) {
-  $sample = [
-    ['id' => 1, 'title' => 'Senior Frontend Engineer', 'company' => 'TechCorp Solutions', 'location' => 'San Francisco, CA', 'type' => 'Full-time', 'posted_at' => '2025-10-18 13:00:00', 'deadline' => '2025-12-01', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/jobs/frontend.jpg', 'tags' => ['React', 'Tailwind']],
-    ['id' => 2, 'title' => 'Junior Backend Developer', 'company' => 'StartupXYZ', 'location' => 'Remote', 'type' => 'Full-time', 'posted_at' => '2025-10-19 10:00:00', 'deadline' => '2025-11-30', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/jobs/backend.jpg', 'tags' => ['Node.js', 'SQL']],
-    ['id' => 3, 'title' => 'DevOps Engineer', 'company' => 'CloudTech Systems', 'location' => 'Singapore', 'type' => 'Full-time', 'posted_at' => '2025-10-21 09:30:00', 'deadline' => '2025-11-15', 'public_status' => 'overdue', 'thumbnail_url' => 'images/jobs/devops.jpg', 'tags' => ['AWS', 'CI/CD']],
-  ];
+    $sample = [
+      ['id' => 1, 'title' => 'Senior Frontend Engineer', 'company' => 'TechCorp Solutions', 'location' => 'San Francisco, CA', 'type' => 'Full-time', 'posted_at' => '2025-10-18 13:00:00', 'deadline' => '2025-12-01', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/jobs/placeholder.jpg', 'tags' => ['React', 'Tailwind']],
+      ['id' => 2, 'title' => 'Junior Backend Developer', 'company' => 'StartupXYZ', 'location' => 'Remote', 'type' => 'Full-time', 'posted_at' => '2025-10-19 10:00:00', 'deadline' => '2025-11-30', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/jobs/placeholder.jpg', 'tags' => ['Node.js', 'SQL']],
+      ['id' => 3, 'title' => 'DevOps Engineer', 'company' => 'CloudTech Systems', 'location' => 'Singapore', 'type' => 'Full-time', 'posted_at' => '2025-10-21 09:30:00', 'deadline' => '2025-11-15', 'public_status' => 'overdue', 'thumbnail_url' => 'images/jobs/placeholder.jpg', 'tags' => ['AWS', 'CI/CD']],
+    ];
   $result = ['total' => count($sample), 'rows' => $sample];
 }
 $rows = $result['rows'] ?? [];
@@ -73,6 +73,38 @@ function status_badge_class($st)
       height: auto !important;
     }
 
+    /* Override cho Categories và Locations - Phải đặt sau và có specificity cao hơn */
+    #categorySelect+.choices .choices__inner,
+    #locationSelect+.choices .choices__inner {
+      min-height: 60px !important;
+      height: 60px !important;
+      max-height: 60px !important;
+      overflow: hidden !important;
+    }
+
+    /* Giảm chiều cao cho Categories và Locations - Phải đặt sau CSS chung */
+    .jobs-search-container #categorySelect+.choices .choices__inner,
+    .jobs-search-container #locationSelect+.choices .choices__inner,
+    .jobs-search-section #categorySelect+.choices .choices__inner,
+    .jobs-search-section #locationSelect+.choices .choices__inner,
+    #categorySelect+.choices .choices__inner,
+    #locationSelect+.choices .choices__inner {
+      min-height: 60px !important; /* Ngắn hơn Status (90px) */
+      height: 60px !important; /* Force height cố định */
+      max-height: 60px !important; /* Ngăn không cho cao hơn */
+    }
+
+    .jobs-search-container #categorySelect.jobs-filter-select,
+    .jobs-search-container #locationSelect.jobs-filter-select,
+    .jobs-search-section #categorySelect.jobs-filter-select,
+    .jobs-search-section #locationSelect.jobs-filter-select,
+    #categorySelect.jobs-filter-select,
+    #locationSelect.jobs-filter-select {
+      min-height: 60px !important; /* Ngắn hơn Status (90px) */
+      height: 60px !important; /* Force height cố định */
+      max-height: 60px !important; /* Ngăn không cho cao hơn */
+    }
+
     /* Remove default browser arrow from Status select */
     #statusSelect,
     .jobs-filter-select {
@@ -96,6 +128,15 @@ function status_badge_class($st)
       width: 100% !important;
       box-sizing: border-box !important;
     }
+
+    /* Override riêng cho Categories và Locations select */
+    #categorySelect.jobs-filter-select,
+    #locationSelect.jobs-filter-select {
+      min-height: 60px !important;
+      height: 60px !important;
+      max-height: 60px !important;
+    }
+
 
     /* Ensure filter containers have same height */
     .grid > .relative {
@@ -142,10 +183,42 @@ function status_badge_class($st)
     /* Style for single-select Choices (Status) */
     #statusSelect+.choices .choices__inner {
       cursor: pointer;
+      min-height: 90px !important; /* Tăng chiều cao */
+      height: 90px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Đảm bảo Status select có cùng chiều cao */
+    #statusSelect.jobs-filter-select {
+      min-height: 90px !important; /* Tăng chiều cao */
+      height: 90px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
     }
 
     #statusSelect+.choices .choices__list--single {
       padding: 0;
+    }
+
+    /* Ẩn option "All Statuses" trong dropdown */
+    #statusSelect+.choices .choices__list--dropdown .choices__item--selectable[data-value=""] {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
+
+    /* Ẩn text khi value rỗng được chọn trong input */
+    #statusSelect+.choices .choices__list--single .choices__item--selectable[data-value=""] {
+      color: transparent !important;
+      opacity: 0 !important;
+    }
+
+    /* Ẩn placeholder text */
+    #statusSelect+.choices .choices__list--single .choices__placeholder {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
     }
 
     /* Ensure all Choices dropdowns have consistent styling */
@@ -259,7 +332,7 @@ function status_badge_class($st)
           <div class="relative">
             <label class="block text-sm font-medium mb-2" style="color: #4a4a4a;">Status</label>
             <select id="statusSelect" name="status" class="jobs-filter-select">
-              <option value="">All Statuses</option>
+              <option value=""></option>
               <option value="recruiting">Recruiting</option>
               <option value="overdue">Overdue</option>
             </select>
@@ -632,7 +705,14 @@ function status_badge_class($st)
           categoryChoices.hideDropdown();
           // Remove focus if any
           const inner = categoryChoices.containerOuter.element.querySelector('.choices__inner');
-          if (inner) inner.blur();
+          if (inner) {
+            inner.blur();
+            // Force height 60px cho Categories
+            inner.style.minHeight = '60px';
+            inner.style.height = '60px';
+            inner.style.maxHeight = '60px';
+            inner.style.overflow = 'hidden';
+          }
         }
       }, 50);
 
@@ -664,7 +744,14 @@ function status_badge_class($st)
           locationChoices.hideDropdown();
           // Remove focus if any
           const inner = locationChoices.containerOuter.element.querySelector('.choices__inner');
-          if (inner) inner.blur();
+          if (inner) {
+            inner.blur();
+            // Force height 60px cho Locations
+            inner.style.minHeight = '60px';
+            inner.style.height = '60px';
+            inner.style.maxHeight = '60px';
+            inner.style.overflow = 'hidden';
+          }
         }
       }, 50);
 
@@ -686,6 +773,21 @@ function status_badge_class($st)
         placeholder: false,
         allowHTML: false,
       });
+
+      // Xóa option "All Statuses" khỏi dropdown
+      setTimeout(() => {
+        if (statusChoices) {
+          const dropdownItems = statusChoices.containerOuter.element.querySelectorAll('.choices__list--dropdown .choices__item--selectable');
+          dropdownItems.forEach(item => {
+            if (item.dataset.value === '') {
+              item.style.display = 'none';
+              item.style.opacity = '0';
+              item.style.visibility = 'hidden';
+              item.remove(); // Xóa hoàn toàn khỏi DOM
+            }
+          });
+        }
+      }, 100);
 
       // Ensure dropdown is closed after initialization
       setTimeout(() => {

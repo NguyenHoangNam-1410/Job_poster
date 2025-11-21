@@ -56,11 +56,17 @@
       padding: 0.5rem 0.8rem;
       transition: all 0.2s ease;
       border: 2px solid transparent;
+      position: relative;
     }
 
     .y2k-nav-link:hover {
       border: 2px solid #b4ff39;
       background: rgba(180, 255, 57, 0.1);
+    }
+
+    .y2k-nav-link.active {
+      border-bottom: 3px solid #b4ff39;
+      background: rgba(180, 255, 57, 0.15);
     }
 
     /* Sidebar (mobile) */
@@ -230,21 +236,21 @@ $userRole = $_SESSION['user']['role'] ?? null;
       <!-- Desktop Nav - Centered -->
       <nav class="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2">
         <?php if (!isset($_SESSION['user'])): ?>
-          <a href="/Job_poster/public/" class="y2k-nav-link">Home</a>
-          <a href="/Job_poster/public/jobs" class="y2k-nav-link">Jobs</a>
-          <a href="/Job_poster/public/auth/register" class="y2k-nav-link">Job Posting</a>
+          <a href="/Job_poster/public/" class="y2k-nav-link <?= $_SERVER['REQUEST_URI'] === '/Job_poster/public/' || $_SERVER['REQUEST_URI'] === '/Job_poster/public' ? 'active' : '' ?>">Home</a>
+          <a href="/Job_poster/public/jobs" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false ? 'active' : '' ?>">Jobs</a>
+          <a href="/Job_poster/public/auth/register" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/auth/register') !== false ? 'active' : '' ?>">Job Posting</a>
         <?php else: ?>
           <a href="/Job_poster/public/"
             class="y2k-nav-link <?= $_SERVER['REQUEST_URI'] === '/Job_poster/public/' ? 'active' : '' ?>">Home</a>
           <?php if ($userRole == 'Employer'): ?>
             <a href="/Job_poster/public/jobs" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false && strpos($_SERVER['REQUEST_URI'], '/my-jobs') === false && strpos($_SERVER['REQUEST_URI'], '/jobs-manage') === false ? 'active' : '' ?>">Jobs</a>
-            <a href="/Job_poster/public/employer/home" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/employer') !== false || strpos($_SERVER['REQUEST_URI'], '/my-jobs') !== false || strpos($_SERVER['REQUEST_URI'], '/company-profile') !== false || strpos($_SERVER['REQUEST_URI'], '/my-feedbacks') !== false ? 'active' : '' ?>">Employer Panel</a>
+            <a href="/Job_poster/public/employer/home" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/employer') !== false || strpos($_SERVER['REQUEST_URI'], '/my-jobs') !== false || strpos($_SERVER['REQUEST_URI'], '/company-profile') !== false || strpos($_SERVER['REQUEST_URI'], '/my-feedbacks') !== false ? 'active' : '' ?>">Job Posting</a>
           <?php elseif ($userRole == 'Admin'): ?>
             <a href="/Job_poster/public/jobs" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false && strpos($_SERVER['REQUEST_URI'], '/jobs-manage') === false ? 'active' : '' ?>">Jobs</a>
             <a href="/Job_poster/public/statistics" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/admin') !== false || strpos($_SERVER['REQUEST_URI'], '/users') !== false || strpos($_SERVER['REQUEST_URI'], '/job-categories') !== false || strpos($_SERVER['REQUEST_URI'], '/jobs-manage') !== false || strpos($_SERVER['REQUEST_URI'], '/approvals') !== false || strpos($_SERVER['REQUEST_URI'], '/staff-actions') !== false || strpos($_SERVER['REQUEST_URI'], '/statistics') !== false || strpos($_SERVER['REQUEST_URI'], '/feedbacks') !== false ? 'active' : '' ?>">Admin Panel</a>
           <?php elseif ($userRole == 'Staff'): ?>
             <a href="/Job_poster/public/jobs" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false && strpos($_SERVER['REQUEST_URI'], '/jobs-manage') === false && strpos($_SERVER['REQUEST_URI'], '/approvals') === false ? 'active' : '' ?>">Jobs</a>
-            <a href="/Job_poster/public/staff/home" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/staff') !== false || strpos($_SERVER['REQUEST_URI'], '/jobs-manage') !== false || strpos($_SERVER['REQUEST_URI'], '/approvals') !== false || strpos($_SERVER['REQUEST_URI'], '/feedbacks') !== false ? 'active' : '' ?>">Job posting</a>
+            <a href="/Job_poster/public/staff/home" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/staff') !== false || strpos($_SERVER['REQUEST_URI'], '/jobs-manage') !== false || strpos($_SERVER['REQUEST_URI'], '/approvals') !== false || strpos($_SERVER['REQUEST_URI'], '/feedbacks') !== false ? 'active' : '' ?>">Staff Panel</a>
           <?php endif; ?>
         <?php endif; ?>
       </nav>
@@ -293,7 +299,7 @@ $userRole = $_SESSION['user']['role'] ?? null;
               </a>
             <?php elseif ($userRole == 'Staff'): ?>
               <a href="/Job_poster/public/staff/home" class="block px-4 py-3 text-sm font-semibold text-black hover:bg-gray-100 uppercase font-mono border-b-2 border-black">
-                Job Posting
+                Staff Panel
               </a>
             <?php elseif ($userRole == 'Employer'): ?>
               <a href="/Job_poster/public/employer/home" class="block px-4 py-3 text-sm font-semibold text-black hover:bg-gray-100 uppercase font-mono border-b-2 border-black">

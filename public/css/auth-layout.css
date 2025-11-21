@@ -160,6 +160,7 @@
     background: var(--theme-primary);
     color: white;
     font-weight: 600;
+    border-bottom: 3px solid var(--theme-primary-dark);
 }
 
 .menu-item.active::before {
