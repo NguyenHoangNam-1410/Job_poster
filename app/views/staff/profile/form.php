@@ -1,11 +1,7 @@
 <?php $pageTitle = 'Edit Profile'; ?>
 <?php 
 // Load header based on user role
-if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
-    include __DIR__ . '/../../layouts/admin_header.php';
-} else {
-    include __DIR__ . '/../../layouts/staff_header.php';
-}
+include __DIR__ . '/../../layouts/auth_header.php';
 ?>
 <link href="/Job_poster/public/css/style.css" rel="stylesheet">
 
@@ -469,23 +465,5 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
 </script>
 
 <?php 
-// Load footer based on user role
-if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
-    include __DIR__ . '/../../layouts/admin_footer.php';
-
-
-
-
-
-
-
-
-
-
-
-
-    
-} else {
-    include __DIR__ . '/../../layouts/staff_footer.php';
-}
+include __DIR__ . '/../../layouts/auth_footer.php';
 ?>

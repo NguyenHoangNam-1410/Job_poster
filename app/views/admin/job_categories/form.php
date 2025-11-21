@@ -1,14 +1,14 @@
 <?php $pageTitle = isset($category) ? 'Update Job Category' : 'Create New Job Category'; ?>
-<?php 
-include __DIR__ . '/../../layouts/admin_header.php';
+<?php
+include __DIR__ . '/../../layouts/auth_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
 <?php
 // Determine if we're in edit mode or create mode
 $isEditMode = isset($category) && $category !== null;
-$formAction = $isEditMode 
-    ? "/Job_poster/public/job-categories/update/{$category->getId()}" 
+$formAction = $isEditMode
+    ? "/Job_poster/public/job-categories/update/{$category->getId()}"
     : "/Job_poster/public/job-categories/store";
 $submitButtonText = $isEditMode ? 'Update' : 'Create';
 $pageHeading = $isEditMode ? "Update Category #{$category->getId()}" : 'Create New Job Category';
@@ -35,12 +35,11 @@ $pageHeading = $isEditMode ? "Update Category #{$category->getId()}" : 'Create N
                         Category Name <span class="required">*</span>
                     </label>
                     <input type="text" name="category_name" required
-                           value="<?= $isEditMode ? htmlspecialchars($category->getCategoryName()) : '' ?>"
-                           class="form-input" 
-                           placeholder="e.g., Software Engineering, Marketing, Design"
-                           minlength="2"
-                           maxlength="255">
-                    <p class="mt-1 text-sm text-gray-500">Category name must be unique and at least 2 characters long.</p>
+                        value="<?= $isEditMode ? htmlspecialchars($category->getCategoryName()) : '' ?>"
+                        class="form-input" placeholder="e.g., Software Engineering, Marketing, Design" minlength="2"
+                        maxlength="255">
+                    <p class="mt-1 text-sm text-gray-500">Category name must be unique and at least 2 characters long.
+                    </p>
                 </div>
             </div>
 
@@ -51,9 +50,11 @@ $pageHeading = $isEditMode ? "Update Category #{$category->getId()}" : 'Create N
                     <p class="form-info-title">Note</p>
                     <p class="form-info-text">
                         <?php if ($isEditMode): ?>
-                            This category name must be unique. If this category is assigned to jobs, you cannot delete it until those assignments are removed.
+                            This category name must be unique. If this category is assigned to jobs, you cannot delete it
+                            until those assignments are removed.
                         <?php else: ?>
-                            Create categories that will be used to organize and filter job postings. Category names must be unique across the system.
+                            Create categories that will be used to organize and filter job postings. Category names must be
+                            unique across the system.
                         <?php endif; ?>
                     </p>
                 </div>
@@ -71,4 +72,4 @@ $pageHeading = $isEditMode ? "Update Category #{$category->getId()}" : 'Create N
     </div>
 </div>
 
-<?php include __DIR__ . '/../../layouts/admin_footer.php'; ?>
+<?php include __DIR__ . '/../../layouts/auth_footer.php'; ?>

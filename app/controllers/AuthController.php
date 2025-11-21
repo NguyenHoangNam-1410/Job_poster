@@ -1,33 +1,42 @@
 <?php
 require_once __DIR__ . '/../services/UserService.php';
 
-class AuthController {
-        private $userService;
-    public function __construct() {
+class AuthController
+{
+    private $userService;
+    public function __construct()
+    {
         $this->userService = new UserService();
     }
-    public function index(){
+    public function index()
+    {
+        require_once __DIR__ . '/../views/public/home.php';
+    }
+    public function loginForm()
+    {
         require_once __DIR__ . '/../views/auth/login.php';
         exit;
     }
 
-    public function showRegisterForm() {
+    public function showRegisterForm()
+    {
         require_once __DIR__ . '/../views/auth/register.php';
         exit;
     }
 
-    public function handleLocalRegister() {
+    public function handleLocalRegister()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
             $fullname = $_POST['name'] ?? '';
             $password = $_POST['password'] ?? '';
             $confirmPassword = $_POST['confirm_password'] ?? '';
-            if($this->userService->getUserByEmail($email)) {
-                if($this->userService->getAuthProvider($email) === 'google') {
+            if ($this->userService->getUserByEmail($email)) {
+                if ($this->userService->getAuthProvider($email) === 'google') {
                     $_SESSION['register_error'] = 'Email already exists with Google. Please login with Google.';
                     header("Location: " . BASE_URL . "/auth/register");
                     exit;
-                } elseif($this->userService->getAuthProvider($email) === 'facebook') {
+                } elseif ($this->userService->getAuthProvider($email) === 'facebook') {
                     $_SESSION['register_error'] = 'Email already exists with Facebook. Please login with Facebook.';
                     header("Location: " . BASE_URL . "/auth/register");
                     exit;
@@ -52,7 +61,7 @@ class AuthController {
                 }
             }
 
-            if($password !== $confirmPassword) {
+            if ($password !== $confirmPassword) {
                 $_SESSION['register_error'] = 'Your confirmation password do not match.';
                 header("Location: " . BASE_URL . "/auth/register");
                 exit;
@@ -64,7 +73,7 @@ class AuthController {
                 'password' => $password,
                 'role' => 'Employer'
             ];
-            if(!$this->userService->registerUser($data)) {
+            if (!$this->userService->registerUser($data)) {
                 $_SESSION['register_error'] = 'Registration failed. Please try again.';
                 header("Location: " . BASE_URL . "/auth/register");
                 exit;
@@ -82,7 +91,8 @@ class AuthController {
         }
     }
 
-    public function logout() {
+    public function logout()
+    {
         session_start();
         session_unset();
         session_destroy();
@@ -91,7 +101,8 @@ class AuthController {
         exit;
     }
 
-    public function handleGoogleLogin() {
+    public function handleGoogleLogin()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = json_decode(file_get_contents('php://input'), true);
             $token = $data['token'] ?? null;
@@ -108,8 +119,8 @@ class AuthController {
                 $avatar = $payload['picture'] ?? null;
                 $user = $this->userService->getUserByEmail($email);
                 $currentUrl = $_SERVER['REQUEST_URI'];
-                if($user && $user->getAuthProvider() !== 'google') {
-                    if($currentUrl === "/Job_poster/public/auth/login") {
+                if ($user && $user->getAuthProvider() !== 'google') {
+                    if ($currentUrl === "/Job_poster/public/auth/login") {
                         $_SESSION['login_error'] = 'Email already exists. Please use a different email or login.';
                         header("Location: " . BASE_URL . "/auth/login");
                         exit;
@@ -132,7 +143,7 @@ class AuthController {
                 ];
                 header("Location: " . BASE_URL . "/");
                 exit;
-                
+
             } else {
                 http_response_code(401);
                 echo 'Invalid ID token.';
@@ -143,13 +154,14 @@ class AuthController {
         }
     }
 
-    public function handleLocalLogin() {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    public function handleLocalLogin()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
             $user = $this->userService->getUserByEmail($email);
             error_log($password);
-            if($user && $this->userService->verifyPasswordLogin($email, $password)) {
+            if ($user && $this->userService->verifyPasswordLogin($email, $password)) {
                 $_SESSION['user'] = [
                     'id' => $user->getId(),
                     'name' => $user->getName(),
@@ -158,40 +170,43 @@ class AuthController {
                     'auth_provider' => $user->getAuthProvider(),
                     'avatar' => $user->getAvatar()
                 ];
+
+                // Redirect based on role
                 switch ($user->getRole()) {
                     case 'Admin':
-                        header("Location: /Job_poster/public/statistics");
+                        header("Location: " . BASE_URL . "/statistics");
                         break;
                     case 'Staff':
-                        header("Location: /Job_poster/public/staff/home");
+                        header("Location: " . BASE_URL . "/staff/home");
                         break;
                     case 'Employer':
-                        header("Location: /Job_poster/public/employer/home");
+                        header("Location: " . BASE_URL . "/employer/home");
                         break;
                     default:
-                        header("Location: /Job_poster/public/home");
+                        header("Location: " . BASE_URL . "/");
                 }
                 exit;
             } else {
                 $_SESSION['login_error'] = 'Invalid email or password.';
-                // Redirect back to login page
                 header("Location: " . BASE_URL . "/auth/login");
                 exit;
             }
         }
     }
 
-    public function handleFacebookLogin() {
+    public function handleFacebookLogin()
+    {
         $clientId = $_ENV['FACEBOOK_CLIENT_ID'];
         $redirectUri = $_ENV['FACEBOOK_REDIRECT_URI'];
         $scope = 'email, public_profile';
-        
+
         $url = "https://www.facebook.com/v19.0/dialog/oauth?client_id=$clientId&redirect_uri=$redirectUri&scope=$scope&response_type=code";
         header("Location: $url");
         exit;
     }
 
-    public function facebookCallback() {
+    public function facebookCallback()
+    {
         if (!isset($_GET['code'])) {
             echo "Facebook login failed or canceled.";
             exit;
@@ -215,22 +230,22 @@ class AuthController {
         $avatar = $user['picture']['data']['url'] ?? null;
         $user = $this->userService->getUserByEmail($email);
         $currentUrl = $_SERVER['REQUEST_URI'];
-        if($user && $user->getAuthProvider() !== 'facebook') {
-            if($currentUrl === "/Job_poster/public/auth/login") {
+        if ($user && $user->getAuthProvider() !== 'facebook') {
+            if ($currentUrl === "/Job_poster/public/auth/login") {
                 $_SESSION['login_error'] = 'Email already exists. Please use a different email or login.';
                 header("Location: " . BASE_URL . "/auth/login");
-                
+
             } else {
                 $_SESSION['register_error'] = 'Email already exists. Please use a different email or login.';
                 header("Location: " . BASE_URL . "/auth/register");
             }
         }
-        
+
         if (!$user) {
             // Create new user
             $user = $this->userService->createUserFacebook($email, $name, $avatar);
         }
-        
+
         $_SESSION['user'] = [
             'id' => $user->getId(),
             'name' => $user->getName(),
@@ -244,35 +259,37 @@ class AuthController {
         exit;
     }
 
-    public function showForgotPasswordForm() {
+    public function showForgotPasswordForm()
+    {
         require_once __DIR__ . '/../views/auth/forgot-password.php';
         exit;
     }
-   
-    public function sendPasswordResetOTP() {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    public function sendPasswordResetOTP()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
             $user = $this->userService->getUserByEmail($email);
             $currentUrl = $_SERVER['REQUEST_URI'];
-            if($user) {
-                if($this->userService->getAuthProvider($email) === 'google') {
+            if ($user) {
+                if ($this->userService->getAuthProvider($email) === 'google') {
                     $error = 'This email is registered with Google. We cannot reset your password with Google.';
-                    if($currentUrl === "/Job_poster/public/auth/login/forgot-password/resetExpired") {
+                    if ($currentUrl === "/Job_poster/public/auth/login/forgot-password/resetExpired") {
                         $_SESSION['error-expired'] = $error;
                         header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
-                    } else{
+                    } else {
                         $_SESSION['error-message'] = $error;
                         header("Location: " . BASE_URL . "/auth/login/forgot-password");
                     }
                     exit;
                 }
-                if($this->userService->getAuthProvider($email) === 'facebook') {
+                if ($this->userService->getAuthProvider($email) === 'facebook') {
                     $error = 'This email is registered with Facebook. We cannot reset your password with Facebook.';
-                    
-                    if($currentUrl === "/Job_poster/public/auth/login/forgot-password/resetExpired") {
+
+                    if ($currentUrl === "/Job_poster/public/auth/login/forgot-password/resetExpired") {
                         $_SESSION['error-expired'] = $error;
                         header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
-                    } else{
+                    } else {
                         $_SESSION['error-message'] = $error;
                         header("Location: " . BASE_URL . "/auth/login/forgot-password");
                     }
@@ -283,10 +300,10 @@ class AuthController {
                 exit;
             } else {
                 $error = 'No email found for that account.';
-                if($currentUrl === "/Job_poster/public/auth/login/forgot-password/resetExpired") {
+                if ($currentUrl === "/Job_poster/public/auth/login/forgot-password/resetExpired") {
                     $_SESSION['error-expired'] = $error;
                     header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
-                } else{
+                } else {
                     $_SESSION['error-message'] = $error;
                     header("Location: " . BASE_URL . "/auth/login/forgot-password");
                 }
@@ -294,7 +311,8 @@ class AuthController {
             }
         }
     }
-    public function showVerifyOTPForm() {
+    public function showVerifyOTPForm()
+    {
         $email = $_SESSION['otp-email'] ?? null;
         if (!$email) {
             header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
@@ -303,8 +321,9 @@ class AuthController {
         require_once __DIR__ . '/../views/auth/inputOtp.php';
         exit;
     }
-    public function verifyPasswordResetOTP() {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    public function verifyPasswordResetOTP()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!isset($_SESSION['otp-email'])) {
                 header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
                 exit;
@@ -329,14 +348,15 @@ class AuthController {
             exit;
         }
     }
-    
-    public function showResetPasswordForm() {
-        if(!$_SESSION['reset-email']) {
+
+    public function showResetPasswordForm()
+    {
+        if (!$_SESSION['reset-email']) {
             header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
             exit;
         }
         $expiry = $_SESSION['reset-expire'] ?? '';
-        if(time() > $expiry) {
+        if (time() > $expiry) {
             unset($_SESSION['reset-email']);
             unset($_SESSION['reset-expire']);
             header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
@@ -346,23 +366,24 @@ class AuthController {
         exit;
     }
 
-    public function resetPassword() {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    public function resetPassword()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_SESSION['reset-email'] ?? '';
             $expiry = $_SESSION['reset-expire'] ?? '';
-            if(time() > $expiry) {
+            if (time() > $expiry) {
                 unset($_SESSION['reset-email']);
                 unset($_SESSION['reset-expire']);
                 header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
                 exit;
             }
-            if(!$email) {
+            if (!$email) {
                 header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
                 exit;
             }
             $newPassword = $_POST['password'] ?? '';
             $confirmPassword = $_POST['confirm_password'] ?? '';
-            if($newPassword !== $confirmPassword) {
+            if ($newPassword !== $confirmPassword) {
                 $_SESSION['error-reset'] = 'Your confirmed password do not match.';
                 header("Location: " . BASE_URL . "/auth/login/forgot-password/reset-password-form");
                 exit;
@@ -382,11 +403,12 @@ class AuthController {
                 }
             }
             error_log("Resetting password for email: " . $email);
-            if(!$this->userService->updatePasswordByEmail($email, $newPassword)) {
+            if (!$this->userService->updatePasswordByEmail($email, $newPassword)) {
                 $_SESSION['error-reset'] = 'Something went wrong. Please try again.';
                 header("Location: " . BASE_URL . "/auth/login/forgot-password/reset-password-form");
                 exit;
-            };
+            }
+            ;
             // Destroy session
             unset($_SESSION['reset-email']);
             unset($_SESSION['reset-expire']);
@@ -395,23 +417,25 @@ class AuthController {
         }
     }
 
-    public function showExpiredTokenOrOTPPage() {
+    public function showExpiredTokenOrOTPPage()
+    {
         require_once __DIR__ . '/../views/auth/reset-expired.php';
         exit;
     }
 
-    public function checkEmail(){
+    public function checkEmail()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
             header('Content-Type: application/json');
             if ($this->userService->getUserByEmail($email)) {
-                if($this->userService->getAuthProvider($email) === 'google') {
+                if ($this->userService->getAuthProvider($email) === 'google') {
                     echo json_encode([
                         'exists' => true,
                         'message' => 'Email already exists with Google. Please login with Google.'
                     ]);
                     exit;
-                } elseif($this->userService->getAuthProvider($email) === 'facebook') {
+                } elseif ($this->userService->getAuthProvider($email) === 'facebook') {
                     echo json_encode([
                         'exists' => true,
                         'message' => 'Email already exists with Facebook. Please login with Facebook.'

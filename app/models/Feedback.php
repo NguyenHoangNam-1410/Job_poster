@@ -1,15 +1,17 @@
 <?php
 
-class Feedback {
+class Feedback
+{
     private $id;
     private $userId;
     private $comments;
     private $createdAt;
-    
+
     // Additional properties for joined data
     private $userName;
 
-    public function __construct($id = null, $userId = null, $comments = null, $createdAt = null) {
+    public function __construct($id = null, $userId = null, $comments = null, $createdAt = null)
+    {
         $this->id = $id;
         $this->userId = $userId;
         $this->comments = $comments;
@@ -17,44 +19,54 @@ class Feedback {
     }
 
     // Getters
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getUserId() {
+    public function getUserId()
+    {
         return $this->userId;
     }
 
-    public function getComments() {
+    public function getComments()
+    {
         return $this->comments;
     }
 
-    public function getCreatedAt() {
+    public function getCreatedAt()
+    {
         return $this->createdAt;
     }
 
-    public function getUserName() {
+    public function getUserName()
+    {
         return $this->userName;
     }
 
     // Setters
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
     }
 
-    public function setUserId($userId) {
+    public function setUserId($userId)
+    {
         $this->userId = $userId;
     }
 
-    public function setComments($comments) {
+    public function setComments($comments)
+    {
         $this->comments = $comments;
     }
 
-    public function setCreatedAt($createdAt) {
+    public function setCreatedAt($createdAt)
+    {
         $this->createdAt = $createdAt;
     }
 
-    public function setUserName($userName) {
+    public function setUserName($userName)
+    {
         $this->userName = $userName;
     }
 }

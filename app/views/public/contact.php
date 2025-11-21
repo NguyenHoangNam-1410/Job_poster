@@ -1,101 +1,101 @@
-<?php 
+<?php
 $pageTitle = 'Contact Us | Job Poster';
 include __DIR__ . '/../layouts/public_header.php';
 ?>
 
 <style>
-.page-hero {
-  background: linear-gradient(135deg, #0a4d5c 0%, #1a8a9d 50%, #2db8ac 100%);
-  padding: 4rem 0;
-}
+  .page-hero {
+    background: linear-gradient(135deg, #0a4d5c 0%, #1a8a9d 50%, #2db8ac 100%);
+    padding: 4rem 0;
+  }
 
-.content-section {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 3rem 1.5rem;
-}
+  .content-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
 
-.retro-card {
-  background: white;
-  border: 3px solid #0a4d5c;
-  box-shadow: 8px 8px 0px rgba(10, 77, 92, 0.15);
-  padding: 2rem;
-  margin-bottom: 2rem;
-  transition: all 0.3s ease;
-}
+  .retro-card {
+    background: white;
+    border: 3px solid #0a4d5c;
+    box-shadow: 8px 8px 0px rgba(10, 77, 92, 0.15);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+  }
 
-.retro-card:hover {
-  transform: translate(-4px, -4px);
-  box-shadow: 12px 12px 0px rgba(10, 77, 92, 0.2);
-}
+  .retro-card:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 12px 12px 0px rgba(10, 77, 92, 0.2);
+  }
 
-.contact-info {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background: #f9fafb;
-  border-left: 4px solid #0a4d5c;
-}
+  .contact-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f9fafb;
+    border-left: 4px solid #0a4d5c;
+  }
 
-.contact-icon {
-  font-size: 2rem;
-  margin-right: 1.5rem;
-  min-width: 50px;
-  text-align: center;
-}
+  .contact-icon {
+    font-size: 2rem;
+    margin-right: 1.5rem;
+    min-width: 50px;
+    text-align: center;
+  }
 
-.contact-form input,
-.contact-form textarea {
-  width: 100%;
-  padding: 0.75rem;
-  border: 3px solid #0a4d5c;
-  margin-bottom: 1rem;
-  font-family: inherit;
-}
+  .contact-form input,
+  .contact-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 3px solid #0a4d5c;
+    margin-bottom: 1rem;
+    font-family: inherit;
+  }
 
-.contact-form input:focus,
-.contact-form textarea:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(10, 77, 92, 0.1);
-}
+  .contact-form input:focus,
+  .contact-form textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(10, 77, 92, 0.1);
+  }
 
-.btn-submit {
-  background: linear-gradient(135deg, #b4ff39 0%, #2db8ac 100%);
-  color: #0a4d5c;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 1rem 2rem;
-  border: 3px solid #0a4d5c;
-  box-shadow: 5px 5px 0px #0a4d5c;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
+  .btn-submit {
+    background: linear-gradient(135deg, #b4ff39 0%, #2db8ac 100%);
+    color: #0a4d5c;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 1rem 2rem;
+    border: 3px solid #0a4d5c;
+    box-shadow: 5px 5px 0px #0a4d5c;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
 
-.btn-submit:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 7px 7px 0px #0a4d5c;
-}
+  .btn-submit:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0px #0a4d5c;
+  }
 
-.faq-item {
-  border-bottom: 2px solid #e5e7eb;
-  padding: 1.5rem 0;
-}
+  .faq-item {
+    border-bottom: 2px solid #e5e7eb;
+    padding: 1.5rem 0;
+  }
 
-.faq-question {
-  font-weight: 900;
-  font-size: 1.1rem;
-  color: #0a4d5c;
-  margin-bottom: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
+  .faq-question {
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: #0a4d5c;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
 
-.faq-answer {
-  color: #4b5563;
-  line-height: 1.7;
-}
+  .faq-answer {
+    color: #4b5563;
+    line-height: 1.7;
+  }
 </style>
 
 <!-- Hero Section -->
@@ -111,11 +111,11 @@ include __DIR__ . '/../layouts/public_header.php';
 <!-- Main Content -->
 <section class="bg-gray-50 py-12">
   <div class="content-section">
-    
+
     <!-- Contact Information -->
     <div class="retro-card">
       <h2 class="text-3xl font-black text-gray-900 mb-6 uppercase tracking-tight">Get In Touch</h2>
-      
+
       <div class="contact-info">
         <div class="contact-icon">📍</div>
         <div>
@@ -186,11 +186,11 @@ include __DIR__ . '/../layouts/public_header.php';
     <!-- FAQ Section -->
     <div class="retro-card">
       <h2 class="text-3xl font-black text-gray-900 mb-6 uppercase tracking-tight">Frequently Asked Questions</h2>
-      
+
       <div class="faq-item">
         <div class="faq-question">How quickly will I receive a response?</div>
         <div class="faq-answer">
-          We aim to respond to all inquiries within 24-48 hours during business days. For urgent matters, 
+          We aim to respond to all inquiries within 24-48 hours during business days. For urgent matters,
           please call us directly at +84 123 456 789.
         </div>
       </div>
@@ -198,7 +198,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <div class="faq-item">
         <div class="faq-question">Can I schedule a meeting or demo?</div>
         <div class="faq-answer">
-          Absolutely! Please send us an email at contact@jobposter.com with your preferred dates and times, 
+          Absolutely! Please send us an email at contact@jobposter.com with your preferred dates and times,
           and we'll arrange a meeting or product demonstration for you.
         </div>
       </div>
@@ -206,7 +206,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <div class="faq-item">
         <div class="faq-question">Do you offer support for employers?</div>
         <div class="faq-answer">
-          Yes! We have dedicated support for employers. Contact us to learn about our premium features, 
+          Yes! We have dedicated support for employers. Contact us to learn about our premium features,
           bulk posting options, and dedicated account management services.
         </div>
       </div>
@@ -214,7 +214,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <div class="faq-item">
         <div class="faq-question">How can I report a technical issue?</div>
         <div class="faq-answer">
-          If you encounter any technical issues, please email us at contact@jobposter.com with a detailed 
+          If you encounter any technical issues, please email us at contact@jobposter.com with a detailed
           description of the problem. Include screenshots if possible, and we'll address it promptly.
         </div>
       </div>
@@ -222,7 +222,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <div class="faq-item">
         <div class="faq-question">Can I provide feedback or suggestions?</div>
         <div class="faq-answer">
-          We love hearing from our users! Your feedback helps us improve. Send your suggestions to 
+          We love hearing from our users! Your feedback helps us improve. Send your suggestions to
           contact@jobposter.com or use the feedback form on our platform.
         </div>
       </div>
@@ -230,7 +230,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <div class="faq-item" style="border-bottom: none;">
         <div class="faq-question">Do you have a physical office I can visit?</div>
         <div class="faq-answer">
-          Our main office is located in Ho Chi Minh City, Vietnam. While we primarily operate online, 
+          Our main office is located in Ho Chi Minh City, Vietnam. While we primarily operate online,
           you can schedule an appointment to visit us. Please contact us in advance to arrange a visit.
         </div>
       </div>
@@ -240,4 +240,3 @@ include __DIR__ . '/../layouts/public_header.php';
 </section>
 
 <?php include __DIR__ . '/../layouts/public_footer.php'; ?>
-

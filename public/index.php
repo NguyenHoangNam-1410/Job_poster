@@ -19,6 +19,32 @@ $path = parse_url($request, PHP_URL_PATH);
 // Remove the base path if Job_poster is in a subdirectory
 $path = str_replace(BASE_URL, '', $path);
 
+// Helper variable for user role
+$userRole = $_SESSION['user']['role'] ?? null;
+$isLoggedIn = isset($_SESSION['user']);
+
+// Define public routes
+$publicRoutes = [
+    '/auth/login', '/auth/register', '/auth/register/local', '/auth/login/local',
+    '/auth/login/facebook', '/auth/login/facebook/callback', '/auth/login/google',
+    '/auth/login/forgot-password', '/auth/login/forgot-password/send-otp',
+    '/auth/login/forgot-password/input-otp', '/auth/login/forgot-password/verify-otp',
+    '/auth/login/forgot-password/reset-password-form', '/auth/login/forgot-password/reset-password',
+    '/auth/login/forgot-password/reset-expired', '/check-email',
+    '/public/home', '/jobs', '/jobs/show/:id', '/jobs/apply', '/', '/contact',
+    '/about', '/help-center', '/terms-of-service', '/privacy-policy',
+    '/ajax/jobs_filters.php', '/ajax/jobs_list.php', '/ajax/jobs_related.php'
+];
+
+// Check if the route is public
+$isPublic = false;
+foreach ($publicRoutes as $route) {
+    if (preg_match('#^' . preg_replace('#:[^/]+#', '[^/]+', $route) . '$#', $path)) {
+        $isPublic = true;
+        break;
+    }
+}
+
 // Handle logout immediately (before access control checks)
 if ($path === '/logout') {
     require_once '../app/controllers/AuthController.php';
@@ -27,394 +53,230 @@ if ($path === '/logout') {
     exit;
 }
 
-$found = false;
-$publicRoutes = ['/auth/login', '/auth/register',
-                '/auth/register/local', '/auth/login/facebook', '/auth/login/facebook/callback',
-                '/auth/login/google','/auth/login/forgot-password', '/auth/login/local', '/contact',
-                '/auth/login/forgot-password/send-otp', '/auth/login/forgot-password/input-otp',
-                '/auth/login/forgot-password/verify-otp', '/auth/login/forgot-password/reset-password-form',
-                '/auth/login/forgot-password/reset-expired', '/check-email', '/public/home', '/jobs', '/jobs/show/:id',
-                '/jobs/apply', '/', '/auth/login/forgot-password/reset-password'];
-
-$isPublic = false;
-// Check if the route is public
-foreach ($publicRoutes as $route) {
-    if (preg_match('#^' . preg_replace('#:[^/]+#', '[^/]+', $route) . '$#', $path)) {
-        $isPublic = true;
-        break;
-    }
-}
-// If not logged in and accessing private route
-if (!isset($_SESSION['user']) && !$isPublic) {
-    header("Location: " . BASE_URL . "/public/home");
-    exit;
-} elseif (isset($_SESSION['user']) && in_array($path, ['/auth/register','/auth/login'])) {
-    header("Location: /");
-    exit;
-}
-// If logged in and accessing public route
-elseif (isset($_SESSION['user']) && $isPublic) {
-    $userRole = $_SESSION['user']['role'] ?? null;
-    if($userRole == 'Admin') {
-        header("Location: /admin/home");
-        exit;
-    } elseif($userRole == 'Staff') {
-        header("Location: /staff/home");
-        exit;
-    } elseif($userRole == 'Employer') {
-        header("Location: /employer/home");
-        exit;
-    }
-}
-
-// Helper variable for user role to avoid undefined array key warnings
-$userRole = isset($_SESSION['user']) ? ($_SESSION['user']['role'] ?? null) : null;
-
-// Route handling
-
-if ($path === '/auth/login/facebook') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->handleFacebookLogin();
-} elseif ($path === '/auth/login/facebook/callback') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->facebookCallback();
-} elseif ($path === '/auth/login/google') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->handleGoogleLogin();
-} elseif($path === '/auth/login') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->index();
-} elseif ($path === '/auth/login/local') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->handleLocalLogin();
-} elseif($path === '/auth/register') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->showRegisterForm();
-} elseif ($path === '/auth/register/local') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->handleLocalRegister();
-} elseif ($path === '/auth/login/forgot-password') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->showForgotPasswordForm();
-} elseif($path == '/auth/login/forgot-password/send-otp') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->sendPasswordResetOTP();
-} elseif ($path === '/auth/login/forgot-password/input-otp') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->showVerifyOTPForm();
-} elseif ($path === '/auth/login/forgot-password/verify-otp') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->verifyPasswordResetOTP();
-} elseif ($path === '/auth/login/forgot-password/reset-password-form') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->showResetPasswordForm();
-} elseif ($path === '/auth/login/forgot-password/reset-password') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->resetPassword();
-} elseif($path === '/auth/login/forgot-password/reset-expired') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->showExpiredTokenOrOTPPage();
-} elseif ($path === '/check-email') {
-    require_once '../app/controllers/AuthController.php';
-    $controller = new AuthController();
-    $controller->checkEmail();
-}
-
-//Home route after logged in with roles
-if ($path === '/public/home') {
-    require_once '../app/controllers/HomeController.php';
-    $controller = new HomeController();
-    $controller->index();
-    exit;
-} elseif($path === '/admin/home' && $userRole == 'Admin') {
-    require_once '../app/controllers/HomeController.php';
-    $controller = new HomeController();
-    $controller->adminIndex();
-    exit;
-} elseif($path === '/staff/home' && $userRole == 'Staff') {
-    require_once '../app/controllers/HomeController.php';
-    $controller = new HomeController();
-    $controller->staffIndex();
-    exit;
-} elseif($path === '/employer/home' && $userRole == 'Employer') {
-    require_once '../app/controllers/HomeController.php';
-    $controller = new HomeController();
-    $controller->employerIndex();
+// Access control: Redirect non-logged in users trying to access private routes
+if (!$isLoggedIn && !$isPublic) {
+    http_response_code(404);
+    include '../app/views/public/404.php';
     exit;
 }
 
-// User CRUD Routes
-if ($path === '/users' && $userRole == 'Admin') {
-    // List all users
-    require_once '../app/controllers/UserController.php';
-    $controller = new UserController();
-    $controller->index();
+// Redirect logged in users away from auth pages
+if ($isLoggedIn && $isPublic && !in_array($path, ['/', '/public/home', '/jobs', '/contact', '/about'])) {
+    header('Location: ' . BASE_URL . '/home');
     exit;
-    
-} elseif ($path === '/users/create' && $userRole == 'Admin') {
-    // Show create form
-    require_once '../app/controllers/UserController.php';
-    $controller = new UserController();
-    $controller->create();
-    
-} elseif ($path === '/users/store' && $_SERVER['REQUEST_METHOD'] === 'POST' && $userRole == 'Admin') {
-    // Store new user
-    require_once '../app/controllers/UserController.php';
-    $controller = new UserController();
-    $controller->store();
-    
-} elseif (preg_match('/^\/users\/edit\/(\d+)$/', $path, $matches ) && $userRole == 'Admin') {
-    // Show edit form
-    require_once '../app/controllers/UserController.php';
-    $controller = new UserController();
-    $controller->edit($matches[1]);
-    
-} elseif (preg_match('/^\/users\/update\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST' && $userRole == 'Admin') {
-    // Update user
-    require_once '../app/controllers/UserController.php';
-    $controller = new UserController();
-    $controller->update($matches[1]);
-    
-} elseif (preg_match('/^\/users\/delete\/(\d+)$/', $path, $matches) && $userRole == 'Admin') {
-    // Delete user
-    require_once '../app/controllers/UserController.php';
-    $controller = new UserController();
-    $controller->destroy($matches[1]);
+}
 
-// Job Category CRUD Routes
-} elseif ($path === '/job-categories' && $userRole == 'Admin')  {
-    // List all job categories
-    require_once '../app/controllers/JobCategoryController.php';
-    $controller = new JobCategoryController();
-    $controller->index();
-    exit;
-    
-} elseif ($path === '/job-categories/create' && $userRole == 'Admin') {
-    // Show create form
-    require_once '../app/controllers/JobCategoryController.php';
-    $controller = new JobCategoryController();
-    $controller->create();
-    
-} elseif ($path === '/job-categories/store' && $_SERVER['REQUEST_METHOD'] === 'POST' && $userRole == 'Admin') {
-    // Store new job category
-    require_once '../app/controllers/JobCategoryController.php';
-    $controller = new JobCategoryController();
-    $controller->store();
-    
-} elseif (preg_match('/^\/job-categories\/edit\/(\d+)$/', $path, $matches) && $userRole == 'Admin') {
-    // Show edit form
-    require_once '../app/controllers/JobCategoryController.php';
-    $controller = new JobCategoryController();
-    $controller->edit($matches[1]);
-    
-} elseif (preg_match('/^\/job-categories\/update\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Update job category
-    require_once '../app/controllers/JobCategoryController.php';
-    $controller = new JobCategoryController();
-    $controller->update($matches[1]);
-    
-} elseif (preg_match('/^\/job-categories\/delete\/(\d+)$/', $path, $matches) && $userRole == 'Admin') {
-    // Delete job category
-    require_once '../app/controllers/JobCategoryController.php';
-    $controller = new JobCategoryController();
-    $controller->destroy($matches[1]);
+// ============================================================================
+// ROUTING FUNCTIONS
+// ============================================================================
 
-// Job Management Routes (Staff/Admin)
-} elseif ($path === '/jobs-manage' && ($userRole == 'Admin' || $userRole == 'Staff')) {
-    // List all jobs
-    require_once '../app/controllers/JobController.php';
-    $controller = new JobController();
-    $controller->index();
+function route($pattern, $callback, $methods = ['GET'], $roles = null) {
+    global $path, $userRole, $isLoggedIn;
     
-} elseif (preg_match('/^\/jobs-manage\/edit\/(\d+)$/', $path, $matches) && ($userRole == 'Admin' || $userRole == 'Staff')) {
-    // Show edit form
-    require_once '../app/controllers/JobController.php';
-    $controller = new JobController();
-    $controller->edit($matches[1]);
-    
-} elseif (preg_match('/^\/jobs-manage\/update\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST' && ($userRole == 'Admin' || $userRole == 'Staff')) {
-    // Update job
-    require_once '../app/controllers/JobController.php';
-    $controller = new JobController();
-    $controller->update($matches[1]);
-    
-} elseif (preg_match('/^\/jobs-manage\/soft-delete\/(\d+)$/', $path, $matches) && ($userRole == 'Admin' || $userRole == 'Staff')) {
-    // Soft delete job
-    require_once '../app/controllers/JobController.php';
-    $controller = new JobController();
-    $controller->softDelete($matches[1]);
-    
-} elseif (preg_match('/^\/jobs-manage\/hard-delete\/(\d+)$/', $path, $matches) && ($userRole == 'Admin' || $userRole == 'Staff')) {
-    // Hard delete job
-    require_once '../app/controllers/JobController.php';
-    $controller = new JobController();
-    $controller->hardDelete($matches[1]);
-    
-} elseif (preg_match('/^\/jobs-manage\/restore\/(\d+)$/', $path, $matches) && ($userRole == 'Admin' || $userRole == 'Staff')) {
-    // Restore soft deleted job
-    require_once '../app/controllers/JobController.php';
-    $controller = new JobController();
-    $controller->restore($matches[1]);
-    
-} elseif (preg_match('/^\/jobs-manage\/change-status\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST' && ($userRole == 'Admin' || $userRole == 'Staff')) {
-    // Change job status
-    require_once '../app/controllers/JobController.php';
-    $controller = new JobController();
-    $controller->changeStatus($matches[1]);
-
-// Job Approval Routes (Staff/Admin)
-} elseif ($path === '/approvals' && ($userRole == 'Admin' || $userRole == 'Staff')) {
-    // List jobs pending approval
-    require_once '../app/controllers/JobController.php';
-    $controller = new JobController();
-    $controller->approvalIndex();
-    
-} elseif (preg_match('/^\/approvals\/detail\/(\d+)$/', $path, $matches) && ($userRole == 'Admin' || $userRole == 'Staff')) {
-    // Show job detail for approval
-    require_once '../app/controllers/JobController.php';
-    $controller = new JobController();
-    $controller->approvalDetail($matches[1]);
-    
-} elseif (preg_match('/^\/approvals\/approve\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST' && ($userRole == 'Admin' || $userRole == 'Staff')) {
-    // Approve job
-    require_once '../app/controllers/JobController.php';
-    $controller = new JobController();
-    $controller->approveJob($matches[1]);
-    
-} elseif (preg_match('/^\/approvals\/reject\/(\d+)$/', $path, $matches) && $_SERVER['REQUEST_METHOD'] === 'POST' && ($userRole == 'Admin' || $userRole == 'Staff')) {
-    // Reject job
-    require_once '../app/controllers/JobController.php';
-    $controller = new JobController();
-    $controller->rejectJob($matches[1]);
-
-
-// Staff Action Logs Routes (Admin)
-} elseif ($path === '/staff-actions') {
-    // List staff actions
-    require_once '../app/controllers/StaffActionController.php';
-    $controller = new StaffActionController();
-    $controller->index();
-} 
-
-// Staff Action Logs Routes (Admin)
-elseif ($path === '/feedbacks') {
-    // List feedbacks
-    require_once '../app/controllers/FeedbackController.php';
-    $controller = new FeedbackController();
-    $controller->index();
-} 
-
-// Statistics Routes (Admin)
-elseif ($path === '/statistics') {
-    // Show statistics dashboard
-    require_once '../app/controllers/StatisticController.php';
-    $controller = new StatisticController();
-    $controller->index();
-} 
-
-// Profile Routes
-elseif ($path === '/profile') {
-    // Show profile edit form
-    require_once '../app/controllers/UserController.php';
-    $controller = new UserController();
-    $controller->profile();
-    
-} elseif ($path === '/profile/update' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Update profile
-    require_once '../app/controllers/UserController.php';
-    $controller = new UserController();
-    $controller->updateProfile();
-} 
-
-else {
-    // Public routes
-
-    if (preg_match('/^\/jobs\/show\/(\d+)$/', $path, $m) || preg_match('#^/jobs/(\d+)$#', $path, $m)) {
-        require_once '../app/controllers/PublicJobController.php';
-        (new PublicJobController())->show($m[1]);
-        exit;
+    // Check if method matches
+    if (!in_array($_SERVER['REQUEST_METHOD'], $methods)) {
+        return false;
     }
-
-    if ($path === '/jobs/apply' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-        require_once '../app/controllers/PublicJobController.php';
-        (new PublicJobController())->apply();
-        exit;
+    
+    // Check if role is required and matches
+    if ($roles !== null && (!$isLoggedIn || !in_array($userRole, (array)$roles))) {
+        return false;
     }
-
-    if ($path === '/jobs') {
-        require_once '../app/controllers/PublicJobController.php';
-        (new PublicJobController())->index();
-        exit;
+    
+    // Check if path matches pattern
+    if (preg_match($pattern, $path, $matches)) {
+        array_shift($matches); // Remove full match
+        call_user_func_array($callback, $matches);
+        return true;
     }
+    
+    return false;
+}
 
-    switch ($path) {
+function controller($name, $method, ...$args) {
+    require_once "../app/controllers/{$name}.php";
+    $controller = new $name();
+    return $controller->$method(...$args);
+}
 
- /* ==== AJAX ENDPOINTS (thêm 2 case này) ==== */
- case '/ajax/jobs_filters.php':
+function view($viewPath) {
+    include "../app/views/{$viewPath}.php";
+}
+
+// ============================================================================
+// AUTHENTICATION ROUTES
+// ============================================================================
+
+// Login routes
+if (route('#^/auth/login$#', fn() => controller('AuthController', 'loginForm'))) exit;
+if (route('#^/auth/login/local$#', fn() => controller('AuthController', 'handleLocalLogin'), ['POST'])) exit;
+if (route('#^/auth/login/facebook$#', fn() => controller('AuthController', 'handleFacebookLogin'))) exit;
+if (route('#^/auth/login/facebook/callback$#', fn() => controller('AuthController', 'facebookCallback'))) exit;
+if (route('#^/auth/login/google$#', fn() => controller('AuthController', 'handleGoogleLogin'))) exit;
+
+// Registration routes
+if (route('#^/auth/register$#', fn() => controller('AuthController', 'showRegisterForm'))) exit;
+if (route('#^/auth/register/local$#', fn() => controller('AuthController', 'handleLocalRegister'), ['POST'])) exit;
+if (route('#^/check-email$#', fn() => controller('AuthController', 'checkEmail'))) exit;
+
+// Password reset routes
+if (route('#^/auth/login/forgot-password$#', fn() => controller('AuthController', 'showForgotPasswordForm'))) exit;
+if (route('#^/auth/login/forgot-password/send-otp$#', fn() => controller('AuthController', 'sendPasswordResetOTP'), ['POST'])) exit;
+if (route('#^/auth/login/forgot-password/input-otp$#', fn() => controller('AuthController', 'showVerifyOTPForm'))) exit;
+if (route('#^/auth/login/forgot-password/verify-otp$#', fn() => controller('AuthController', 'verifyPasswordResetOTP'), ['POST'])) exit;
+if (route('#^/auth/login/forgot-password/reset-password-form$#', fn() => controller('AuthController', 'showResetPasswordForm'))) exit;
+if (route('#^/auth/login/forgot-password/reset-password$#', fn() => controller('AuthController', 'resetPassword'), ['POST'])) exit;
+if (route('#^/auth/login/forgot-password/reset-expired$#', fn() => controller('AuthController', 'showExpiredTokenOrOTPPage'))) exit;
+
+// ============================================================================
+// HOME ROUTES (Role-based)
+// ============================================================================
+
+if (route('#^/public/home$#', fn() => controller('HomeController', 'index'))) exit;
+if (route('#^/admin/home$#', fn() => controller('HomeController', 'adminIndex'), ['GET'], ['Admin'])) exit;
+if (route('#^/staff/home$#', fn() => controller('HomeController', 'staffIndex'), ['GET'], ['Staff'])) exit;
+if (route('#^/employer/home$#', fn() => controller('HomeController', 'employerIndex'), ['GET'], ['Employer'])) exit;
+
+// if (route('#^/employer/home$#', fn() => controller('HomeController', 'employerIndex'), ['GET'], ['Employer'])) exit;
+
+// ============================================================================
+// USER MANAGEMENT ROUTES (Admin Only)
+// ============================================================================
+
+if (route('#^/users$#', fn() => controller('UserController', 'index'), ['GET'], ['Admin'])) exit;
+if (route('#^/users/create$#', fn() => controller('UserController', 'create'), ['GET'], ['Admin'])) exit;
+if (route('#^/users/store$#', fn() => controller('UserController', 'store'), ['POST'], ['Admin'])) exit;
+if (route('#^/users/edit/(\d+)$#', fn($id) => controller('UserController', 'edit', $id), ['GET'], ['Admin'])) exit;
+if (route('#^/users/update/(\d+)$#', fn($id) => controller('UserController', 'update', $id), ['POST'], ['Admin'])) exit;
+if (route('#^/users/delete/(\d+)$#', fn($id) => controller('UserController', 'destroy', $id), ['GET', 'POST'], ['Admin'])) exit;
+
+// ============================================================================
+// JOB CATEGORY MANAGEMENT ROUTES (Admin Only)
+// ============================================================================
+
+if (route('#^/job-categories$#', fn() => controller('JobCategoryController', 'index'), ['GET'], ['Admin'])) exit;
+if (route('#^/job-categories/create$#', fn() => controller('JobCategoryController', 'create'), ['GET'], ['Admin'])) exit;
+if (route('#^/job-categories/store$#', fn() => controller('JobCategoryController', 'store'), ['POST'], ['Admin'])) exit;
+if (route('#^/job-categories/edit/(\d+)$#', fn($id) => controller('JobCategoryController', 'edit', $id), ['GET'], ['Admin'])) exit;
+if (route('#^/job-categories/update/(\d+)$#', fn($id) => controller('JobCategoryController', 'update', $id), ['POST'], ['Admin'])) exit;
+if (route('#^/job-categories/delete/(\d+)$#', fn($id) => controller('JobCategoryController', 'destroy', $id), ['GET', 'POST'], ['Admin'])) exit;
+
+// ============================================================================
+// JOB MANAGEMENT ROUTES (Admin & Staff)
+// ============================================================================
+
+if (route('#^/jobs-manage$#', fn() => controller('JobController', 'index'), ['GET'], ['Admin', 'Staff'])) exit;
+if (route('#^/jobs-manage/edit/(\d+)$#', fn($id) => controller('JobController', 'edit', $id), ['GET'], ['Admin', 'Staff'])) exit;
+if (route('#^/jobs-manage/update/(\d+)$#', fn($id) => controller('JobController', 'update', $id), ['POST'], ['Admin', 'Staff'])) exit;
+if (route('#^/jobs-manage/soft-delete/(\d+)$#', fn($id) => controller('JobController', 'softDelete', $id), ['GET', 'POST'], ['Admin', 'Staff'])) exit;
+if (route('#^/jobs-manage/hard-delete/(\d+)$#', fn($id) => controller('JobController', 'hardDelete', $id), ['GET', 'POST'], ['Admin', 'Staff'])) exit;
+if (route('#^/jobs-manage/restore/(\d+)$#', fn($id) => controller('JobController', 'restore', $id), ['GET', 'POST'], ['Admin', 'Staff'])) exit;
+if (route('#^/jobs-manage/change-status/(\d+)$#', fn($id) => controller('JobController', 'changeStatus', $id), ['POST'], ['Admin', 'Staff'])) exit;
+
+// ============================================================================
+// JOB APPROVAL ROUTES (Admin & Staff)
+// ============================================================================
+
+if (route('#^/approvals$#', fn() => controller('JobController', 'approvalIndex'), ['GET'], ['Admin', 'Staff'])) exit;
+if (route('#^/approvals/detail/(\d+)$#', fn($id) => controller('JobController', 'approvalDetail', $id), ['GET'], ['Admin', 'Staff'])) exit;
+if (route('#^/approvals/approve/(\d+)$#', fn($id) => controller('JobController', 'approveJob', $id), ['POST'], ['Admin', 'Staff'])) exit;
+if (route('#^/approvals/reject/(\d+)$#', fn($id) => controller('JobController', 'rejectJob', $id), ['POST'], ['Admin', 'Staff'])) exit;
+
+
+// ============================================================================
+// FEEDBACK MANAGEMENT ROUTES (Admin & Staff)
+// ============================================================================
+if (route('#^/feedbacks$#', fn() => controller('FeedbackController', 'index'), ['GET'], ['Admin','Staff'])) exit;
+
+// ============================================================================
+// ADMIN-ONLY ROUTES
+// ============================================================================
+
+if (route('#^/staff-actions$#', fn() => controller('StaffActionController', 'index'), ['GET'], ['Admin'])) exit;
+if (route('#^/statistics$#', fn() => controller('StatisticController', 'index'), ['GET'], ['Admin'])) exit;
+
+// ============================================================================
+// PROFILE ROUTES (All authenticated users)
+// ============================================================================
+
+if (route('#^/profile$#', fn() => controller('UserController', 'profile'), ['GET'], ['Admin', 'Staff', 'Employer'])) exit;
+if (route('#^/profile/update$#', fn() => controller('UserController', 'updateProfile'), ['POST'], ['Admin', 'Staff', 'Employer'])) exit; 
+
+// ============================================================================
+// COMPANY PROFILE ROUTES (Employer Only)
+// ============================================================================
+
+if (route('#^/company-profile$#', fn() => controller('CompanyController', 'index'), ['GET'], ['Employer'])) exit;
+if (route('#^/company-profile/update$#', fn() => controller('CompanyController', 'updateCompanyProfile'), ['POST'], ['Employer'])) exit;
+
+// ============================================================================
+// MY JOBS ROUTES (Employer Only)
+// ============================================================================
+
+if (route('#^/my-jobs$#', fn() => controller('JobController', 'myJobs'), ['GET'], ['Employer'])) exit;
+if (route('#^/my-jobs/show/(\d+)$#', fn($id) => controller('JobController', 'myJobDetail', $id), ['GET'], ['Employer'])) exit;
+if (route('#^/my-jobs/create$#', fn() => controller('JobController', 'myJobCreate'), ['GET'], ['Employer'])) exit;
+if (route('#^/my-jobs/store$#', fn() => controller('JobController', 'myJobStore'), ['POST'], ['Employer'])) exit;
+if (route('#^/my-jobs/add$#', fn() => controller('JobController', 'createNewJob'), ['POST'], ['Employer'])) exit;
+if (route('#^/my-jobs/edit/(\d+)$#', fn($id) => controller('JobController', 'myJobEdit', $id), ['GET'], ['Employer'])) exit;
+if (route('#^/my-jobs/update/(\d+)$#', fn($id) => controller('JobController', 'myJobUpdate', $id), ['POST'], ['Employer'])) exit;
+if (route('#^/my-jobs/status/(\d+)$#', fn($id) => controller('JobController', 'myJobStatusChange', $id), ['POST'], ['Employer'])) exit;
+if (route('#^/my-jobs/soft-delete/(\d+)$#', fn($id) => controller('JobController', 'myJobSoftDelete', $id), ['GET', 'POST'], ['Employer'])) exit;
+if (route('#^/my-jobs/hard-delete/(\d+)$#', fn($id) => controller('JobController', 'myJobHardDelete', $id), ['GET', 'POST'], ['Employer'])) exit;
+
+// ============================================================================
+// MY FEEDBACKS ROUTES (Employer Only)
+// ============================================================================
+
+if (route('#^/my-feedbacks$#', fn() => controller('FeedbackController', 'myFeedbacks'), ['GET'], ['Employer'])) exit;
+if (route('#^/my-feedbacks/create$#', fn() => controller('FeedbackController', 'createMyFeedback'), ['GET'], ['Employer'])) exit;
+if (route('#^/my-feedbacks/store$#', fn() => controller('FeedbackController', 'storeMyFeedback'), ['POST'], ['Employer'])) exit;
+if (route('#^/my-feedbacks/edit/(\d+)$#', fn($id) => controller('FeedbackController', 'edit', $id), ['GET'], ['Employer'])) exit;
+if (route('#^/my-feedbacks/update/(\d+)$#', fn($id) => controller('FeedbackController', 'update', $id), ['POST'], ['Employer'])) exit;
+if (route('#^/my-feedbacks/delete/(\d+)$#', fn($id) => controller('FeedbackController', 'destroy', $id), ['GET', 'POST'], ['Employer'])) exit;
+
+// ============================================================================
+// PUBLIC JOB ROUTES
+// ============================================================================
+
+if (route('#^/jobs/show/(\d+)$#', fn($id) => controller('PublicJobController', 'show', $id))) exit;
+if (route('#^/jobs/(\d+)$#', fn($id) => controller('PublicJobController', 'show', $id))) exit;
+if (route('#^/jobs/apply$#', fn() => controller('PublicJobController', 'apply'), ['POST'])) exit;
+if (route('#^/jobs$#', fn() => controller('PublicJobController', 'index'))) exit;
+
+// ============================================================================
+// AJAX ENDPOINTS
+// ============================================================================
+
+if (route('#^/ajax/jobs_filters\.php$#', function() {
     require __DIR__ . '/ajax/jobs_filters.php';
     exit;
+})) exit;
 
-case '/ajax/jobs_list.php':
+if (route('#^/ajax/jobs_list\.php$#', function() {
     require __DIR__ . '/ajax/jobs_list.php';
     exit;
+})) exit;
 
-case '/ajax/jobs_related.php':
+if (route('#^/ajax/jobs_related\.php$#', function() {
     require __DIR__ . '/ajax/jobs_related.php';
     exit;
-/* ========================================= */
+})) exit;
 
-        case '/':
-        case '/public/home':
-            include '../app/views/public/home.php';
-            break;
+// ============================================================================
+// PUBLIC STATIC PAGES
+// ============================================================================
 
-        case '/jobs':
-            include '../app/views/public/jobs/jobslisting.php';
-            break;
+if (route('#^/$#', fn() => view('public/home'))) exit;
+if (route('#^/about$#', fn() => view('public/about'))) exit;
+if (route('#^/contact$#', fn() => view('public/contact'))) exit;
+if (route('#^/help-center$#', fn() => view('public/help-center'))) exit;
+if (route('#^/terms-of-service$#', fn() => view('public/terms-of-service'))) exit;
+if (route('#^/privacy-policy$#', fn() => view('public/privacy-policy'))) exit;
 
-        case '/jobs/show':
-            include '../app/views/public/jobs/show.php';
-            break;
+// ============================================================================
+// 404 NOT FOUND
+// ============================================================================
 
-        case '/about':
-            include '../app/views/public/about.php';
-            break;
-
-        case '/contact':
-            include '../app/views/public/contact.php';
-            break;
-
-        case '/help-center':
-            include '../app/views/public/help-center.php';
-            break;
-
-        case '/terms-of-service':
-            include '../app/views/public/terms-of-service.php';
-            break;
-
-        case '/privacy-policy':
-            include '../app/views/public/privacy-policy.php';
-            break;
-        
-        default:
-            http_response_code(404);
-            include '../app/views/public/404.php';
-            break;
-    }
-}
-
-?>
+http_response_code(404);
+include '../app/views/public/404.php';

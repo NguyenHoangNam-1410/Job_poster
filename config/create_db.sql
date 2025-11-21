@@ -54,10 +54,16 @@ CREATE TABLE `JOBS` (
     ) NOT NULL DEFAULT 'draft',
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `approved_at` TIMESTAMP NULL DEFAULT NULL,
+    `rejected_at` TIMESTAMP NULL DEFAULT NULL,
     FOREIGN KEY (`employer_id`) REFERENCES `EMPLOYERS`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`posted_by`) REFERENCES `USERS`(`UID`) ON DELETE SET NULL ON UPDATE CASCADE,
-    INDEX (`employer_id`),
-    INDEX (`posted_by`)
+    INDEX `idx_employer_id` (`employer_id`),
+    INDEX `idx_posted_by` (`posted_by`),
+    INDEX `idx_status` (`status`),
+    INDEX `idx_employer_status` (`employer_id`, `status`),
+    INDEX `idx_created_at` (`created_at`),
+    INDEX `idx_deadline` (`deadline`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Job categories (master)
@@ -96,7 +102,10 @@ CREATE TABLE JOB_REVIEWS (
     reason TEXT,                       -- rejection reason or notes
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (job_id) REFERENCES JOBS(id) ON DELETE CASCADE,
-    FOREIGN KEY (reviewed_by) REFERENCES USERS(UID) ON DELETE CASCADE
+    FOREIGN KEY (reviewed_by) REFERENCES USERS(UID) ON DELETE CASCADE,
+    INDEX `idx_job_id` (`job_id`),
+    INDEX `idx_reviewed_by` (`reviewed_by`),
+    INDEX `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `FEEDBACK` (

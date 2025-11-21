@@ -1,18 +1,20 @@
 <?php
 
-class StaffAction {
+class StaffAction
+{
     private $id;
     private $userId;
     private $jobId;
     private $actionType;
     private $actionDate;
-    
+
     // Additional properties for joined data
     private $userName;
     private $userRole;
     private $jobTitle;
 
-    public function __construct($id = null, $userId = null, $jobId = null, $actionType = null, $actionDate = null) {
+    public function __construct($id = null, $userId = null, $jobId = null, $actionType = null, $actionDate = null)
+    {
         $this->id = $id;
         $this->userId = $userId;
         $this->jobId = $jobId;
@@ -21,68 +23,84 @@ class StaffAction {
     }
 
     // Getters
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getUserId() {
+    public function getUserId()
+    {
         return $this->userId;
     }
 
-    public function getJobId() {
+    public function getJobId()
+    {
         return $this->jobId;
     }
 
-    public function getActionType() {
+    public function getActionType()
+    {
         return $this->actionType;
     }
 
-    public function getActionDate() {
+    public function getActionDate()
+    {
         return $this->actionDate;
     }
 
-    public function getUserName() {
+    public function getUserName()
+    {
         return $this->userName;
     }
 
-    public function getUserRole() {
+    public function getUserRole()
+    {
         return $this->userRole;
     }
 
-    public function getJobTitle() {
+    public function getJobTitle()
+    {
         return $this->jobTitle;
     }
 
     // Setters
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
     }
 
-    public function setUserId($userId) {
+    public function setUserId($userId)
+    {
         $this->userId = $userId;
     }
 
-    public function setJobId($jobId) {
+    public function setJobId($jobId)
+    {
         $this->jobId = $jobId;
     }
 
-    public function setActionType($actionType) {
+    public function setActionType($actionType)
+    {
         $this->actionType = $actionType;
     }
 
-    public function setActionDate($actionDate) {
+    public function setActionDate($actionDate)
+    {
         $this->actionDate = $actionDate;
     }
 
-    public function setUserName($userName) {
+    public function setUserName($userName)
+    {
         $this->userName = $userName;
     }
 
-    public function setUserRole($userRole) {
+    public function setUserRole($userRole)
+    {
         $this->userRole = $userRole;
     }
 
-    public function setJobTitle($jobTitle) {
+    public function setJobTitle($jobTitle)
+    {
         $this->jobTitle = $jobTitle;
     }
 }

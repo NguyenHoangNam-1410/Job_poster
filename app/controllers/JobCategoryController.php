@@ -1,17 +1,20 @@
 <?php
 require_once __DIR__ . '/../services/JobCategoryService.php';
 
-class JobCategoryController {
+class JobCategoryController
+{
     private $categoryService;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->categoryService = new JobCategoryService();
     }
 
-    public function index() {
+    public function index()
+    {
         $search = $_GET['search'] ?? '';
-        $per_page = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
-        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $per_page = isset($_GET['per_page']) ? (int) $_GET['per_page'] : 10;
+        $current_page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 
         if (!in_array($per_page, [10, 25])) {
             $per_page = 10;
@@ -46,17 +49,19 @@ class JobCategoryController {
         require_once __DIR__ . '/../views/admin/job_categories/list.php';
     }
 
-    public function create() {
+    public function create()
+    {
         $category = null;
         $error = null;
         require_once __DIR__ . '/../views/admin/job_categories/form.php';
     }
 
-    public function store() {
+    public function store()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-                      strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
-            
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+
             try {
                 $success = $this->categoryService->createCategory($_POST);
                 if ($success) {
@@ -91,10 +96,11 @@ class JobCategoryController {
         }
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         try {
             $category = $this->categoryService->getCategoryById($id);
-            
+
             if (!$category) {
                 header('Location: /Job_poster/public/job-categories?error=' . urlencode('Category not found'));
                 exit;
@@ -108,11 +114,12 @@ class JobCategoryController {
         }
     }
 
-    public function update($id) {
+    public function update($id)
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-                      strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
-            
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+
             try {
                 $success = $this->categoryService->updateCategory($id, $_POST);
                 if ($success) {
@@ -147,9 +154,10 @@ class JobCategoryController {
         }
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-                  strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 
         try {
             $result = $this->categoryService->deleteCategory($id);

@@ -1,6 +1,6 @@
 <?php $pageTitle = 'Quản lý người dùng'; ?>
 <?php
-include __DIR__ . '/../../layouts/admin_header.php';
+include __DIR__ . '/../../layouts/auth_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
@@ -11,51 +11,44 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 <h1 class="list-header">User</h1>
             </div>
             <button onclick="window.formModal.loadForm('/Job_poster/public/users/create?ajax=1', 'Create New User')"
-                class="relative inline-flex items-center gap-2 px-6 py-3 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 group overflow-hidden"
-                style="background: linear-gradient(270deg, #020918ff, #070442ff, #595cb4ff, #201d5eff, #011c57ff); background-size: 400% 400%; animation: gradientWave 3s ease infinite;">
+                class="btn-submit">
                 <span class="flex items-center justify-center w-5 h-5 rounded-full bg-white/20 group-hover:bg-white/30 transition-colors relative z-10">
                     <?= Icons::add('w-3 h-3') ?>
                 </span>
-                <span class="font-semibold relative z-10">Add User</span>
-                <span class="absolute inset-0 rounded-lg bg-white opacity-0 group-hover:opacity-10 transition-opacity"></span>
+                <span>Add User</span>
             </button>
-            <style>
-                @keyframes gradientWave {
-                    0% { background-position: 0% 50%; }
-                    50% { background-position: 100% 50%; }
-                    100% { background-position: 0% 50%; }
-                }
-            </style>
         </div>
 
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <form method="GET" action="/Job_poster/public/users" id="filterForm" class="flex flex-col sm:flex-row gap-4">
+            <form method="GET" action="/Job_poster/public/users" id="filterForm"
+                class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search Users</label>
-                    <input 
-                        type="text" 
-                        id="search" 
-                        name="search" 
+                    <input type="text" id="search" name="search"
                         value="<?= htmlspecialchars($pagination['search'] ?? '') ?>"
-                        placeholder="Search by username or email..."
-                        class="form-input w-full"
-                        onkeyup="debounceSearch()"
-                    >
+                        placeholder="Search by username or email..." class="form-input w-full"
+                        onkeyup="debounceSearch()">
                 </div>
                 <div class="sm:w-40">
                     <label for="role" class="block text-sm font-medium text-gray-700 mb-2">Role</label>
-                    <select id="role" name="role" class="form-select" onchange="document.getElementById('filterForm').submit()">
+                    <select id="role" name="role" class="form-select"
+                        onchange="document.getElementById('filterForm').submit()">
                         <option value="" <?= empty($pagination['role_filter']) ? 'selected' : '' ?>>All Roles</option>
-                        <option value="Admin" <?= ($pagination['role_filter'] ?? '') == 'Admin' ? 'selected' : '' ?>>Admin</option>
-                        <option value="Staff" <?= ($pagination['role_filter'] ?? '') == 'Staff' ? 'selected' : '' ?>>Staff</option>
-                        <option value="Employer" <?= ($pagination['role_filter'] ?? '') == 'Employer' ? 'selected' : '' ?>>Employer</option>
-                        <option value="Guest" <?= ($pagination['role_filter'] ?? '') == 'Guest' ? 'selected' : '' ?>>Guest</option>
+                        <option value="Admin" <?= ($pagination['role_filter'] ?? '') == 'Admin' ? 'selected' : '' ?>>Admin
+                        </option>
+                        <option value="Staff" <?= ($pagination['role_filter'] ?? '') == 'Staff' ? 'selected' : '' ?>>Staff
+                        </option>
+                        <option value="Employer" <?= ($pagination['role_filter'] ?? '') == 'Employer' ? 'selected' : '' ?>>
+                            Employer</option>
+                        <option value="Guest" <?= ($pagination['role_filter'] ?? '') == 'Guest' ? 'selected' : '' ?>>Guest
+                        </option>
                     </select>
                 </div>
                 <div class="sm:w-32">
                     <label for="per_page" class="block text-sm font-medium text-gray-700 mb-2">Per Page</label>
-                    <select id="per_page" name="per_page" class="form-select" onchange="document.getElementById('filterForm').submit()">
+                    <select id="per_page" name="per_page" class="form-select"
+                        onchange="document.getElementById('filterForm').submit()">
                         <option value="10" <?= ($pagination['per_page'] ?? 10) == 10 ? 'selected' : '' ?>>10</option>
                         <option value="25" <?= ($pagination['per_page'] ?? 10) == 25 ? 'selected' : '' ?>>25</option>
                         <option value="50" <?= ($pagination['per_page'] ?? 10) == 50 ? 'selected' : '' ?>>50</option>
@@ -86,124 +79,130 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
         <?php else: ?>
             <div class="list-table-wrapper">
                 <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200" id="usersTable">
-                    <thead>
-                        <tr class="bg-gray-50">
-                            <th class="table-header">ID</th>
-                            <th class="table-header">User</th>
-                            <th class="table-header">Email</th>
-                            <th class="table-header">Role</th>
-                            <th class="table-header">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
-                        <?php foreach ($users as $user): ?>
-                            <tr class="hover:bg-gray-50" id="user-row-<?= $user->getId() ?>">
-                                <td class="table-cell table-cell-text">
-                                    <?= $user->getId() ?>
-                                </td>
-                                <td class="table-cell">
-                                    <div class="flex items-center gap-3">
-                                        <img 
-                                            src="<?= !empty($user->getAvatar()) ? htmlspecialchars($user->getAvatar()) : '/Job_poster/public/image/avatar/default.svg' ?>" 
-                                            alt="Avatar" 
-                                            class="w-10 h-10 rounded-full object-cover border border-gray-200"
-                                        >
-                                        <span><?= htmlspecialchars($user->getUsername()) ?></span>
-                                    </div>
-                                </td>
-                                <td class="table-cell">
-                                    <?= htmlspecialchars($user->getEmail()) ?>
-                                </td>
-                                <td class="table-cell">
-                                    <span
-                                        class="px-2 py-1 rounded <?php 
-                                            switch($user->getRole()) {
-                                                case 'Admin': echo 'bg-red-100 text-red-800'; break;
-                                                case 'Staff': echo 'bg-blue-100 text-blue-800'; break;
-                                                case 'Employer': echo 'bg-purple-100 text-purple-800'; break;
-                                                default: echo 'bg-green-100 text-green-800';
-                                            }
-                                        ?>"><?= htmlspecialchars($user->getRole()) ?></span>
-                                </td>
-                                <td class="table-cell">
-                                    <?php 
-                                    $canEdit = ($user->getId() == $currentUserId) || ($user->getRole() !== 'Admin');
-                                    $canDelete = ($user->getId() != $currentUserId);
-                                    ?>
-                                    <?php if ($canEdit): ?>
-                                        <button onclick="window.formModal.loadForm('/Job_poster/public/users/edit/<?= $user->getId() ?>?ajax=1', 'Edit User #<?= $user->getId() ?>')"
-                                            class="inline-flex items-center text-blue-600 hover:text-blue-900 mr-3 focus:outline-none">
-                                            <?= Icons::edit('w-5 h-5 mr-1') ?>
-                                            Edit
-                                        </button>
-                                    <?php else: ?>
-                                        <span class="inline-flex items-center text-gray-400 mr-3 cursor-not-allowed" title="Cannot edit other administrators">
-                                            <?= Icons::edit('w-5 h-5 mr-1') ?>
-                                            Edit
-                                        </span>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($canDelete): ?>
-                                        <button
-                                            onclick="deleteUser(<?= $user->getId() ?>, '<?= htmlspecialchars($user->getUsername(), ENT_QUOTES) ?>')"
-                                            class="inline-flex items-center text-red-600 hover:text-red-900 focus:outline-none">
-                                            <?= Icons::delete('w-5 h-5 mr-1') ?>
-                                            Delete
-                                        </button>
-                                    <?php else: ?>
-                                        <span class="inline-flex items-center text-gray-400 cursor-not-allowed" title="Cannot delete yourself">
-                                            <?= Icons::delete('w-5 h-5 mr-1') ?>
-                                            Delete
-                                        </span>
-                                    <?php endif; ?>
-                                </td>
+                    <table class="min-w-full divide-y divide-gray-200" id="usersTable">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="table-header">ID</th>
+                                <th class="table-header">User</th>
+                                <th class="table-header">Email</th>
+                                <th class="table-header">Role</th>
+                                <th class="table-header">Actions</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
+                            <?php foreach ($users as $user): ?>
+                                <tr class="hover:bg-gray-50" id="user-row-<?= $user->getId() ?>">
+                                    <td class="table-cell table-cell-text">
+                                        <?= $user->getId() ?>
+                                    </td>
+                                    <td class="table-cell">
+                                        <div class="flex items-center gap-3">
+                                            <img src="<?= !empty($user->getAvatar()) ? htmlspecialchars($user->getAvatar()) : '/Job_poster/public/image/avatar/default.svg' ?>"
+                                                alt="Avatar" class="w-10 h-10 rounded-full object-cover border border-gray-200">
+                                            <span><?= htmlspecialchars($user->getUsername()) ?></span>
+                                        </div>
+                                    </td>
+                                    <td class="table-cell">
+                                        <?= htmlspecialchars($user->getEmail()) ?>
+                                    </td>
+                                    <td class="table-cell">
+                                        <span class="px-2 py-1 rounded <?php
+                                        switch ($user->getRole()) {
+                                            case 'Admin':
+                                                echo 'bg-red-100 text-red-800';
+                                                break;
+                                            case 'Staff':
+                                                echo 'bg-blue-100 text-blue-800';
+                                                break;
+                                            case 'Employer':
+                                                echo 'bg-purple-100 text-purple-800';
+                                                break;
+                                            default:
+                                                echo 'bg-green-100 text-green-800';
+                                        }
+                                        ?>"><?= htmlspecialchars($user->getRole()) ?></span>
+                                    </td>
+                                    <td class="table-cell">
+                                        <?php
+                                        $canEdit = ($user->getId() == $currentUserId) || ($user->getRole() !== 'Admin');
+                                        $canDelete = ($user->getId() != $currentUserId);
+                                        ?>
+                                        <?php if ($canEdit): ?>
+                                            <button
+                                                onclick="window.formModal.loadForm('/Job_poster/public/users/edit/<?= $user->getId() ?>?ajax=1', 'Edit User #<?= $user->getId() ?>')"
+                                                class="inline-flex items-center text-blue-600 hover:text-blue-900 mr-3 focus:outline-none">
+                                                <?= Icons::edit('w-5 h-5 mr-1') ?>
+                                                Edit
+                                            </button>
+                                        <?php else: ?>
+                                            <span class="inline-flex items-center text-gray-400 mr-3 cursor-not-allowed"
+                                                title="Cannot edit other administrators">
+                                                <?= Icons::edit('w-5 h-5 mr-1') ?>
+                                                Edit
+                                            </span>
+                                        <?php endif; ?>
 
-            <!-- Pagination -->
-            <?php 
-            require_once __DIR__ . '/../../components/pagination.php';
-            renderPagination(
-                $pagination, 
-                '/Job_poster/public/users',
-                [
-                    'search' => $pagination['search'] ?? '',
-                    'role' => $pagination['role_filter'] ?? '',
-                    'per_page' => $pagination['per_page']
-                ]
-            );
-            ?>
+                                        <?php if ($canDelete): ?>
+                                            <button
+                                                onclick="deleteUser(<?= $user->getId() ?>, '<?= htmlspecialchars($user->getUsername(), ENT_QUOTES) ?>')"
+                                                class="inline-flex items-center text-red-600 hover:text-red-900 focus:outline-none">
+                                                <?= Icons::delete('w-5 h-5 mr-1') ?>
+                                                Delete
+                                            </button>
+                                        <?php else: ?>
+                                            <span class="inline-flex items-center text-gray-400 cursor-not-allowed"
+                                                title="Cannot delete yourself">
+                                                <?= Icons::delete('w-5 h-5 mr-1') ?>
+                                                Delete
+                                            </span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <?php
+                require_once __DIR__ . '/../../components/pagination.php';
+                renderPagination(
+                    $pagination,
+                    '/Job_poster/public/users',
+                    [
+                        'search' => $pagination['search'] ?? '',
+                        'role' => $pagination['role_filter'] ?? '',
+                        'per_page' => $pagination['per_page']
+                    ]
+                );
+                ?>
             </div>
         <?php endif; ?>
     </div>
 </div>
 
 <script>
-// Debounce function for search
-let searchTimeout;
-function debounceSearch() {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-        document.getElementById('filterForm').submit();
-    }, 500); // Wait 500ms after user stops typing
-}
-
-// Restore focus to search input after page load if there was a search
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('search');
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('search') && searchInput.value) {
-        searchInput.focus();
-        // Set cursor to end of text
-        searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+    // Debounce function for search
+    let searchTimeout;
+    function debounceSearch() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            document.getElementById('filterForm').submit();
+        }, 500); // Wait 500ms after user stops typing
     }
-});
+
+    // Restore focus to search input after page load if there was a search
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('search');
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('search') && searchInput.value) {
+            searchInput.focus();
+            // Set cursor to end of text
+            searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+        }
+    });
 </script>
 
 <script src="/Job_poster/public/javascript/user.js"></script>
 
-<?php include __DIR__ . '/../../layouts/admin_footer.php'; ?>
+<?php include __DIR__ . '/../../layouts/auth_footer.php'; ?>

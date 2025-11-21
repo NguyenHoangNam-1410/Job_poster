@@ -1,35 +1,42 @@
 <?php
 require_once __DIR__ . '/../dao/JobCategoryDAO.php';
 
-class JobCategoryService {
+class JobCategoryService
+{
     private $categoryDAO;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->categoryDAO = new JobCategoryDAO();
     }
 
     // Get all categories with pagination and search
-    public function getAllCategories($search, $per_page, $offset) {
+    public function getAllCategories($search, $per_page, $offset)
+    {
         return $this->categoryDAO->getAll($search, $per_page, $offset);
     }
 
     // Get all categories without pagination (for dropdowns in other features)
-    public function getAllCategoriesForSelect() {
+    public function getAllCategoriesForSelect()
+    {
         return $this->categoryDAO->getAll('', null, 0);
     }
 
     // Get total count for pagination
-    public function getTotalCount($search) {
+    public function getTotalCount($search)
+    {
         return $this->categoryDAO->getTotalCount($search);
     }
 
     // Get category by ID
-    public function getCategoryById($id) {
+    public function getCategoryById($id)
+    {
         return $this->categoryDAO->getById($id);
     }
 
     // Create new category
-    public function createCategory($data) {
+    public function createCategory($data)
+    {
         // Validate category name
         if (empty($data['category_name'])) {
             throw new Exception("Category name is required.");
@@ -51,7 +58,8 @@ class JobCategoryService {
     }
 
     // Update category
-    public function updateCategory($id, $data) {
+    public function updateCategory($id, $data)
+    {
         $category = $this->categoryDAO->getById($id);
         if (!$category) {
             throw new Exception("Category not found.");
@@ -78,7 +86,8 @@ class JobCategoryService {
     }
 
     // Delete category
-    public function deleteCategory($id) {
+    public function deleteCategory($id)
+    {
         $category = $this->categoryDAO->getById($id);
         if (!$category) {
             throw new Exception("Category not found.");
@@ -94,12 +103,14 @@ class JobCategoryService {
     }
 
     // Get job count for a category (useful for display)
-    public function getJobCount($id) {
+    public function getJobCount($id)
+    {
         return $this->categoryDAO->getJobCount($id);
     }
 
     // Check if category can be deleted
-    public function canDelete($id) {
+    public function canDelete($id)
+    {
         return !$this->categoryDAO->isUsedInJobs($id);
     }
 }

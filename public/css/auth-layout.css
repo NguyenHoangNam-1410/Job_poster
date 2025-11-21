@@ -1,0 +1,488 @@
+/* ============================================================================
+   UNIFIED AUTHENTICATED LAYOUT STYLES
+   For Admin, Staff, and Employer roles
+   ============================================================================ */
+
+/* Color Variables by Role */
+:root {
+    /* Admin Theme - Blue */
+    --admin-primary: #3b82f6;
+    --admin-primary-dark: #2563eb;
+    --admin-secondary: #1e40af;
+    --admin-light: #dbeafe;
+    --admin-hover: #60a5fa;
+    
+    /* Staff Theme - Purple */
+    --staff-primary: #8b5cf6;
+    --staff-primary-dark: #7c3aed;
+    --staff-secondary: #6d28d9;
+    --staff-light: #ede9fe;
+    --staff-hover: #a78bfa;
+    
+    /* Employer Theme - Green */
+    --employer-primary: #10b981;
+    --employer-primary-dark: #059669;
+    --employer-secondary: #047857;
+    --employer-light: #d1fae5;
+    --employer-hover: #34d399;
+}
+
+/* Admin Theme Colors */
+.admin-theme {
+    --theme-primary: var(--admin-primary);
+    --theme-primary-dark: var(--admin-primary-dark);
+    --theme-secondary: var(--admin-secondary);
+    --theme-light: var(--admin-light);
+    --theme-hover: var(--admin-hover);
+}
+
+/* Staff Theme Colors */
+.staff-theme {
+    --theme-primary: var(--staff-primary);
+    --theme-primary-dark: var(--staff-primary-dark);
+    --theme-secondary: var(--staff-secondary);
+    --theme-light: var(--staff-light);
+    --theme-hover: var(--staff-hover);
+}
+
+/* Employer Theme Colors */
+.employer-theme {
+    --theme-primary: var(--employer-primary);
+    --theme-primary-dark: var(--employer-primary-dark);
+    --theme-secondary: var(--employer-secondary);
+    --theme-light: var(--employer-light);
+    --theme-hover: var(--employer-hover);
+}
+
+/* ============================================================================
+   LAYOUT STRUCTURE
+   ============================================================================ */
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px;
+    background: white;
+    border-right: 1px solid #e5e7eb;
+    z-index: 40;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-header {
+    padding: 1.5rem;
+    border-bottom: 2px solid var(--theme-primary);
+    background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-primary-dark) 100%);
+    color: white;
+}
+
+.header-content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-content a {
+    text-decoration: none;
+    color: white;
+}
+
+.sidebar-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.sidebar-subtitle {
+    font-size: 0.75rem;
+    opacity: 0.9;
+    margin-top: 0.25rem;
+}
+
+.sidebar-toggle-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: white;
+    transition: all 0.2s;
+}
+
+.sidebar-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.toggle-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* Sidebar Navigation */
+.sidebar nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 0;
+}
+
+.menu-section {
+    padding: 0.75rem 1.5rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #6b7280;
+    letter-spacing: 0.05em;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.5rem;
+    color: #374151;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.menu-item:hover {
+    background: var(--theme-light);
+    color: var(--theme-primary);
+}
+
+.menu-item.active {
+    background: var(--theme-primary);
+    color: white;
+    font-weight: 600;
+}
+
+.menu-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--theme-primary-dark);
+}
+
+.menu-item svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+}
+
+.menu-text {
+    transition: opacity 0.3s;
+}
+
+/* Top Navbar */
+.top-navbar {
+    position: fixed;
+    top: 0;
+    left: 280px;
+    right: 0;
+    height: 4rem;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    z-index: 30;
+    transition: left 0.3s ease;
+}
+
+.navbar-container {
+    height: 100%;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar-brand a {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--theme-primary);
+    text-decoration: none;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: #374151;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    transition: all 0.2s;
+}
+
+.nav-link:hover {
+    background: var(--theme-light);
+    color: var(--theme-primary);
+}
+
+.nav-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* User Profile Dropdown */
+.user-profile-container {
+    position: relative;
+}
+
+.user-profile-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.user-profile-button:hover {
+    border-color: var(--theme-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-name {
+    font-weight: 600;
+    color: #374151;
+    display: none;
+}
+
+.dropdown-icon {
+    width: 1rem;
+    height: 1rem;
+    color: #6b7280;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 200px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s;
+}
+
+.user-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: #374151;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.dropdown-item:hover {
+    background: var(--theme-light);
+    color: var(--theme-primary);
+}
+
+.dropdown-item.logout {
+    color: #dc2626;
+    border-top: 1px solid #e5e7eb;
+}
+
+.dropdown-item.logout:hover {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.dropdown-item svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 280px;
+    margin-top: 4rem;
+    padding: 2rem;
+    min-height: calc(100vh - 4rem);
+    transition: margin-left 0.3s ease;
+}
+
+/* Mobile Toggle Button */
+.toggle-sidebar {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 50;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-sidebar:hover {
+    background: var(--theme-light);
+}
+
+/* Sidebar Overlay (Mobile) */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 35;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+}
+
+/* ============================================================================
+   RESPONSIVE - MOBILE
+   ============================================================================ */
+
+@media (max-width: 1023px) {
+    .toggle-sidebar {
+        display: block;
+    }
+
+    .sidebar {
+        left: -280px;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .sidebar-overlay {
+        display: block;
+        pointer-events: none;
+    }
+
+    .sidebar-overlay.active {
+        pointer-events: auto;
+    }
+
+    .top-navbar {
+        left: 0;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .user-name {
+        display: none;
+    }
+
+    .nav-link span {
+        display: none;
+    }
+}
+
+/* ============================================================================
+   RESPONSIVE - TABLET
+   ============================================================================ */
+
+@media (min-width: 768px) {
+    .user-name {
+        display: block;
+    }
+}
+
+/* ============================================================================
+   SIDEBAR MINIMIZED STATE (Desktop only)
+   ============================================================================ */
+
+@media (min-width: 1024px) {
+    .sidebar-minimized-state .sidebar {
+        width: 80px;
+    }
+
+    .sidebar-minimized-state .top-navbar {
+        left: 80px;
+    }
+
+    .sidebar-minimized-state .main-content {
+        margin-left: 80px;
+    }
+
+    .sidebar-minimized-state .sidebar-title,
+    .sidebar-minimized-state .sidebar-subtitle,
+    .sidebar-minimized-state .menu-text,
+    .sidebar-minimized-state .menu-section {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .sidebar-minimized-state .menu-item {
+        justify-content: center;
+        padding: 0.875rem;
+    }
+
+    .sidebar-minimized-state .sidebar-header {
+        padding: 1rem;
+    }
+
+    /* Tooltip for minimized sidebar */
+    .sidebar-minimized-state .menu-item::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        left: 100%;
+        margin-left: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        background: #1f2937;
+        color: white;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+        z-index: 50;
+    }
+
+    .sidebar-minimized-state .menu-item:hover::after {
+        opacity: 1;
+    }
+
+    .sidebar-minimized-state .toggle-icon {
+        transform: rotate(180deg);
+    }
+}

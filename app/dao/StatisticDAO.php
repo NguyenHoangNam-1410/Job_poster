@@ -1,77 +1,83 @@
 <?php
 require_once __DIR__ . '/../../config/db.php';
 
-class StatisticDAO {
+class StatisticDAO
+{
     private $db;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         $database = new Database();
         $this->db = $database->conn;
     }
-    
+
     /**
      * Get count of users by role
      */
-    public function getUserCountByRole($role) {
+    public function getUserCountByRole($role)
+    {
         $sql = "SELECT COUNT(*) as count FROM USERS WHERE Role = ?";
         $stmt = $this->db->prepare($sql);
-        
+
         if (!$stmt) {
             throw new Exception("Prepare failed: " . $this->db->error);
         }
-        
+
         $stmt->bind_param("s", $role);
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
         $stmt->close();
-        
+
         return $row['count'] ?? 0;
     }
-    
+
     /**
      * Get job count by status
      */
-    public function getJobCountByStatus($status) {
+    public function getJobCountByStatus($status)
+    {
         $sql = "SELECT COUNT(*) as count FROM JOBS WHERE status = ?";
         $stmt = $this->db->prepare($sql);
-        
+
         if (!$stmt) {
             throw new Exception("Prepare failed: " . $this->db->error);
         }
-        
+
         $stmt->bind_param("s", $status);
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
         $stmt->close();
-        
+
         return $row['count'] ?? 0;
     }
-    
+
     /**
      * Get total jobs count
      */
-    public function getTotalJobsCount() {
+    public function getTotalJobsCount()
+    {
         $sql = "SELECT COUNT(*) as count FROM JOBS";
         $stmt = $this->db->prepare($sql);
-        
+
         if (!$stmt) {
             throw new Exception("Prepare failed: " . $this->db->error);
         }
-        
+
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
         $stmt->close();
-        
+
         return $row['count'] ?? 0;
     }
-    
+
     /**
      * Get top staff members with highest workload (most actions)
      */
-    public function getTopStaffByWorkload($limit = 3) {
+    public function getTopStaffByWorkload($limit = 3)
+    {
         $sql = "SELECT u.UID, u.Name, u.Role, COUNT(sa.id) as action_count
                 FROM USERS u
                 INNER JOIN STAFF_ACTIONS sa ON u.UID = sa.user_id
@@ -79,17 +85,17 @@ class StatisticDAO {
                 GROUP BY u.UID, u.Name, u.Role
                 ORDER BY action_count DESC
                 LIMIT ?";
-        
+
         $stmt = $this->db->prepare($sql);
-        
+
         if (!$stmt) {
             throw new Exception("Prepare failed: " . $this->db->error);
         }
-        
+
         $stmt->bind_param("i", $limit);
         $stmt->execute();
         $result = $stmt->get_result();
-        
+
         $staff = [];
         while ($row = $result->fetch_assoc()) {
             $staff[] = [
@@ -99,15 +105,16 @@ class StatisticDAO {
                 'action_count' => $row['action_count']
             ];
         }
-        
+
         $stmt->close();
         return $staff;
     }
-    
+
     /**
      * Get top employers who posted most jobs (approved and overdue status only)
      */
-    public function getTopEmployersByJobs($limit = 3) {
+    public function getTopEmployersByJobs($limit = 3)
+    {
         $sql = "SELECT e.id, e.company_name, u.UID as user_id, u.Name as user_name, COUNT(j.id) as job_count
                 FROM EMPLOYERS e
                 INNER JOIN USERS u ON e.user_id = u.UID
@@ -116,17 +123,17 @@ class StatisticDAO {
                 GROUP BY e.id, e.company_name, u.UID, u.Name
                 ORDER BY job_count DESC
                 LIMIT ?";
-        
+
         $stmt = $this->db->prepare($sql);
-        
+
         if (!$stmt) {
             throw new Exception("Prepare failed: " . $this->db->error);
         }
-        
+
         $stmt->bind_param("i", $limit);
         $stmt->execute();
         $result = $stmt->get_result();
-        
+
         $employers = [];
         while ($row = $result->fetch_assoc()) {
             $employers[] = [
@@ -137,7 +144,7 @@ class StatisticDAO {
                 'job_count' => $row['job_count']
             ];
         }
-        
+
         $stmt->close();
         return $employers;
     }
@@ -145,7 +152,8 @@ class StatisticDAO {
     /**
      * Get top trending categories by job count
      */
-    public function getTopTrendingCategories($limit = 5) {
+    public function getTopTrendingCategories($limit = 5)
+    {
         $sql = "SELECT c.id, c.category_name, COUNT(jc.job_id) as job_count
                 FROM JOB_CATEGORIES c
                 INNER JOIN JOB_CATEGORY_MAP jc ON c.id = jc.category_id
@@ -154,17 +162,17 @@ class StatisticDAO {
                 GROUP BY c.id, c.category_name
                 ORDER BY job_count DESC
                 LIMIT ?";
-        
+
         $stmt = $this->db->prepare($sql);
-        
+
         if (!$stmt) {
             throw new Exception("Prepare failed: " . $this->db->error);
         }
-        
+
         $stmt->bind_param("i", $limit);
         $stmt->execute();
         $result = $stmt->get_result();
-        
+
         $categories = [];
         while ($row = $result->fetch_assoc()) {
             $categories[] = [
@@ -173,7 +181,7 @@ class StatisticDAO {
                 'job_count' => $row['job_count']
             ];
         }
-        
+
         $stmt->close();
         return $categories;
     }
@@ -181,23 +189,24 @@ class StatisticDAO {
     /**
      * Get feedback count for current month
      */
-    public function getCurrentMonthFeedbackCount() {
+    public function getCurrentMonthFeedbackCount()
+    {
         $sql = "SELECT COUNT(*) as count 
                 FROM FEEDBACK 
                 WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) 
                 AND YEAR(created_at) = YEAR(CURRENT_DATE())";
-        
+
         $stmt = $this->db->prepare($sql);
-        
+
         if (!$stmt) {
             throw new Exception("Prepare failed: " . $this->db->error);
         }
-        
+
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
         $stmt->close();
-        
+
         return $row['count'] ?? 0;
     }
 }

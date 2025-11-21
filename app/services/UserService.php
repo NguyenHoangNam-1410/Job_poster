@@ -2,43 +2,53 @@
 require_once __DIR__ . '/../dao/UserDAO.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-class UserService {
+class UserService
+{
     private $userDAO;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->userDAO = new UserDAO();
     }
 
-    public function getAllUsers($search, $roleFilter, $per_page, $offset) {
+    public function getAllUsers($search, $roleFilter, $per_page, $offset)
+    {
         return $this->userDAO->getAll($search, $roleFilter, $per_page, $offset);
     }
 
-    public function getTotalCount($search, $roleFilter) {
+    public function getTotalCount($search, $roleFilter)
+    {
         return $this->userDAO->getTotalCount($search, $roleFilter);
     }
 
-    public function getUserById($id) {
+    public function getUserById($id)
+    {
         return $this->userDAO->getById($id);
     }
 
-    public function getUserByEmail($email) {
+    public function getUserByEmail($email)
+    {
         return $this->userDAO->getByEmail($email);
     }
 
-    public function getAuthProvider($email) {
+    public function getAuthProvider($email)
+    {
         return $this->userDAO->getAuthProvider($email);
     }
 
-    public function createUserGoogle($email, $name, $avatar = null) {
+    public function createUserGoogle($email, $name, $avatar = null)
+    {
         return $this->userDAO->createUserGoogle($email, $name, $avatar);
     }
 
-    public function createUserFacebook($email, $name, $avatar = null) {
+    public function createUserFacebook($email, $name, $avatar = null)
+    {
         return $this->userDAO->createUserFacebook($email, $name, $avatar);
     }
 
     // get facebook access token
-    public function getFacebookAccessToken($code) {
+    public function getFacebookAccessToken($code)
+    {
         $url = "https://graph.facebook.com/oauth/access_token?" . http_build_query([
             "client_id" => $_ENV['FACEBOOK_CLIENT_ID'],
             "redirect_uri" => $_ENV['FACEBOOK_REDIRECT_URI'],
@@ -51,14 +61,16 @@ class UserService {
     }
 
     // get facebook user
-    public function getFacebookUser($accessToken) {
+    public function getFacebookUser($accessToken)
+    {
         $url = "https://graph.facebook.com/me?fields=id,name,email,picture&access_token=" . $accessToken;
         return json_decode(file_get_contents($url), true);
     }
 
-    public function verifyPasswordLogin($email, $password) {
+    public function verifyPasswordLogin($email, $password)
+    {
         $hashedPassword = $this->userDAO->getHashedPassword($email);
-        if($hashedPassword){
+        if ($hashedPassword) {
             // Check if it's a bcrypt hash (starts with $2y$)
             if (strpos($hashedPassword, '$2y$') === 0 || strpos($hashedPassword, '$2a$') === 0) {
                 // It's hashed, use password_verify
@@ -71,14 +83,17 @@ class UserService {
         return false;
     }
 
-    public function verifyOTP($otp) {
-        if(isset($_SESSION['otp']) && isset($_SESSION['otp-email']) 
+    public function verifyOTP($otp)
+    {
+        if (
+            isset($_SESSION['otp']) && isset($_SESSION['otp-email'])
             && isset($_SESSION['otp-expire'])
             && time() < $_SESSION['otp-expire']
-            && strval($_SESSION['otp']) === strval($otp)) {
+            && strval($_SESSION['otp']) === strval($otp)
+        ) {
 
             $_SESSION['reset-email'] = $_SESSION['otp-email'];
-            $_SESSION['reset-expire'] =  time() + 900; // 15 minutes from now
+            $_SESSION['reset-expire'] = time() + 900; // 15 minutes from now
             unset($_SESSION['otp']);
             unset($_SESSION['otp-email']);
             unset($_SESSION['otp-expire']);
@@ -88,12 +103,14 @@ class UserService {
         return false;
     }
 
-    public function updatePasswordByEmail($email, $password) {
+    public function updatePasswordByEmail($email, $password)
+    {
         return $this->userDAO->updatePasswordByEmail($email, $password);
     }
 
     // Register user (employer and local only)
-    public function registerUser($data) {
+    public function registerUser($data)
+    {
         // Check email
         if ($this->userDAO->emailExists($data['email'])) {
             throw new Exception("Email already exists.");
@@ -113,12 +130,14 @@ class UserService {
         return $this->userDAO->create($user);
     }
 
-    public function getLocalUserByEmail($email) { 
+    public function getLocalUserByEmail($email)
+    {
         return $this->userDAO->getLocalUserByEmail($email);
     }
 
-    public function generateAndSendOTP($email) {
-        if(isset($_SESSION['otp-email'])) { // Check if OTP already generated, unset it
+    public function generateAndSendOTP($email)
+    {
+        if (isset($_SESSION['otp-email'])) { // Check if OTP already generated, unset it
             unset($_SESSION['otp']);
             unset($_SESSION['otp-email']);
             unset($_SESSION['otp-expire']);
@@ -136,18 +155,18 @@ class UserService {
         $message = str_replace('{{otp}}', $otp, $template);
         $message = str_replace('{{name}}', $this->userDAO->getByEmail($email)->getName(), $message);
 
-        
+
         //send email using PHPMailer
         $mail = new PHPMailer(true);
         try {
             //Server settings
             $mail->isSMTP(); // Send using SMTP
-            $mail->Host       = 'smtp.gmail.com';
-            $mail->SMTPAuth   = true;
-            $mail->Username   = $_ENV['SMTP_EMAIL'];
-            $mail->Password   = $_ENV['SMTP_PASSWORD'];
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = $_ENV['SMTP_EMAIL'];
+            $mail->Password = $_ENV['SMTP_PASSWORD'];
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port       = $_ENV['SMTP_PORT'];
+            $mail->Port = $_ENV['SMTP_PORT'];
 
             //Recipients
             $mail->setFrom('no-reply@worknest.com', 'WorkNest Support');
@@ -156,7 +175,7 @@ class UserService {
             //Content
             $mail->isHTML(true);
             $mail->Subject = '[WorkNest] Your Password Reset OTP';
-            $mail->Body    = $message;
+            $mail->Body = $message;
 
             $mail->send();
             return true;
@@ -165,7 +184,8 @@ class UserService {
             return false;
         }
     }
-    public function createUser($data, $currentUserId = null) {
+    public function createUser($data, $currentUserId = null)
+    {
         // Validate that only Admin or Staff roles can be created
         if (!in_array($data['role'], ['Admin', 'Staff'])) {
             throw new Exception("Invalid role. Only Admin and Staff can be created.");
@@ -182,10 +202,10 @@ class UserService {
         }
 
         $user = new User(
-            null, 
-            $data['username'], 
-            $data['email'], 
-            $data['role'], 
+            null,
+            $data['username'],
+            $data['email'],
+            $data['role'],
             $data['password'],
             null, // avatar
             1 // is_active
@@ -193,7 +213,8 @@ class UserService {
         return $this->userDAO->create($user);
     }
 
-    public function updateUser($id, $data, $currentUserId = null) {
+    public function updateUser($id, $data, $currentUserId = null)
+    {
         $user = $this->userDAO->getById($id);
         if (!$user) {
             throw new Exception("User not found.");
@@ -221,7 +242,8 @@ class UserService {
         return $this->userDAO->update($user);
     }
 
-    public function deleteUser($id, $currentUserId = null) {
+    public function deleteUser($id, $currentUserId = null)
+    {
         $user = $this->userDAO->getById($id);
         if (!$user) {
             throw new Exception("User not found.");
@@ -236,7 +258,8 @@ class UserService {
         return $this->userDAO->delete($id);
     }
 
-    public function canEdit($userId, $currentUserId) {
+    public function canEdit($userId, $currentUserId)
+    {
         $user = $this->userDAO->getById($userId);
         if (!$user) {
             return false;
@@ -246,7 +269,8 @@ class UserService {
         return ($userId == $currentUserId) || ($user->getRole() !== 'Admin');
     }
 
-    public function updateProfile($userId, $data) {
+    public function updateProfile($userId, $data)
+    {
         // Validate name
         if (empty(trim($data['name']))) {
             throw new Exception("Name is required.");
@@ -264,11 +288,12 @@ class UserService {
 
         // Handle avatar if provided
         $avatar = $data['avatar'] ?? null;
-        
+
         return $this->userDAO->updateProfile($userId, $data['name'], $data['email'], $avatar);
     }
 
-    public function updatePassword($userId, $oldPassword, $newPassword, $confirmPassword) {
+    public function updatePassword($userId, $oldPassword, $newPassword, $confirmPassword)
+    {
         // Verify old password
         if (!$this->userDAO->verifyPassword($userId, $oldPassword)) {
             throw new Exception("Current password is incorrect.");
@@ -301,7 +326,8 @@ class UserService {
         return $this->userDAO->updatePassword($userId, $newPassword);
     }
 
-    public function verifyPassword($userId, $password) {
+    public function verifyPassword($userId, $password)
+    {
         return $this->userDAO->verifyPassword($userId, $password);
     }
 }

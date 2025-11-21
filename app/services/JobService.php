@@ -3,44 +3,57 @@ require_once __DIR__ . '/../dao/JobDAO.php';
 require_once __DIR__ . '/../dao/JobCategoryDAO.php';
 require_once __DIR__ . '/StaffActionService.php';
 
-class JobService {
+class JobService
+{
     private $jobDAO;
     private $categoryDAO;
     private $staffActionService;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->jobDAO = new JobDAO();
         $this->categoryDAO = new JobCategoryDAO();
         $this->staffActionService = new StaffActionService();
     }
 
     // Get all jobs with filters and pagination
-    public function getAllJobs($search, $categoryFilter, $locationFilter, $statusFilter, $per_page, $offset) {
+    public function getAllJobs($search, $categoryFilter, $locationFilter, $statusFilter, $per_page, $offset)
+    {
         return $this->jobDAO->getAll($search, $categoryFilter, $locationFilter, $statusFilter, $per_page, $offset);
     }
 
     // Get total count for pagination
-    public function getTotalCount($search, $categoryFilter, $locationFilter, $statusFilter) {
+    public function getTotalCount($search, $categoryFilter, $locationFilter, $statusFilter)
+    {
         return $this->jobDAO->getTotalCount($search, $categoryFilter, $locationFilter, $statusFilter);
     }
 
     // Get job by ID
-    public function getJobById($id) {
+    public function getJobById($id)
+    {
         return $this->jobDAO->getById($id);
     }
 
+    public function getJobsByEmployerId($employerId)
+    {
+        return $this->jobDAO->getByEmployerId($employerId);
+    }
+
     // Get all categories for filter dropdown
-    public function getAllCategories() {
+    public function getAllCategories()
+    {
         return $this->categoryDAO->getAll('', null, 0);
     }
 
     // Get unique locations for filter dropdown
-    public function getUniqueLocations() {
+    public function getUniqueLocations()
+    {
         return $this->jobDAO->getUniqueLocations();
     }
 
     // Create new job
-    public function createJob($data, $currentUserId) {
+    public function createJob($data, $currentUserId)
+    {
         // Validate required fields
         if (empty($data['title'])) {
             throw new Exception("Job title is required.");
@@ -64,7 +77,7 @@ class JobService {
         );
 
         $jobId = $this->jobDAO->create($job);
-        
+
         if ($jobId && !empty($data['categories'])) {
             $this->jobDAO->updateJobCategories($jobId, $data['categories']);
         }
@@ -78,7 +91,8 @@ class JobService {
     }
 
     // Update job
-    public function updateJob($id, $data, $currentUserId = null) {
+    public function updateJob($id, $data, $currentUserId = null)
+    {
         $job = $this->jobDAO->getById($id);
         if (!$job) {
             throw new Exception("Job not found.");
@@ -99,7 +113,6 @@ class JobService {
         $job->setRequirements($data['requirements'] ?? null);
         $job->setSalary($data['salary'] ?? null);
         $job->setDeadline($data['deadline'] ?? null);
-
         // Update status if provided
         if (isset($data['status']) && $data['status'] !== $oldStatus) {
             $job->setStatus($data['status']);
@@ -107,7 +120,7 @@ class JobService {
         }
 
         $result = $this->jobDAO->update($job);
-        
+
         // Update categories
         if (isset($data['categories'])) {
             $this->jobDAO->updateJobCategories($id, $data['categories']);
@@ -126,7 +139,8 @@ class JobService {
     }
 
     // Change job status
-    public function changeStatus($id, $newStatus, $currentUserId = null) {
+    public function changeStatus($id, $newStatus, $currentUserId = null)
+    {
         $job = $this->jobDAO->getById($id);
         if (!$job) {
             throw new Exception("Job not found.");
@@ -149,7 +163,8 @@ class JobService {
     }
 
     // Soft delete job
-    public function softDeleteJob($id, $currentUserId = null) {
+    public function softDeleteJob($id, $currentUserId = null)
+    {
         $job = $this->jobDAO->getById($id);
         if (!$job) {
             throw new Exception("Job not found.");
@@ -166,7 +181,8 @@ class JobService {
     }
 
     // Hard delete job
-    public function hardDeleteJob($id, $currentUserId = null) {
+    public function hardDeleteJob($id, $currentUserId = null)
+    {
         $job = $this->jobDAO->getById($id);
         if (!$job) {
             throw new Exception("Job not found.");
@@ -181,7 +197,8 @@ class JobService {
     }
 
     // Restore soft deleted job (change status from soft_deleted to draft)
-    public function restoreJob($id, $currentUserId = null) {
+    public function restoreJob($id, $currentUserId = null)
+    {
         $job = $this->jobDAO->getById($id);
         if (!$job) {
             throw new Exception("Job not found.");
@@ -202,27 +219,32 @@ class JobService {
     }
 
     // Approve job
-    public function approveJob($id, $currentUserId) {
+    public function approveJob($id, $currentUserId)
+    {
         return $this->changeStatus($id, 'approved', $currentUserId);
     }
 
     // Reject job
-    public function rejectJob($id, $currentUserId) {
+    public function rejectJob($id, $currentUserId)
+    {
         return $this->changeStatus($id, 'rejected', $currentUserId);
     }
 
     // Mark as pending
-    public function markAsPending($id) {
+    public function markAsPending($id)
+    {
         return $this->changeStatus($id, 'pending');
     }
 
     // Mark as overdue
-    public function markAsOverdue($id) {
+    public function markAsOverdue($id)
+    {
         return $this->changeStatus($id, 'overdue');
     }
 
     // Approve job with review record
-    public function approveJobWithReview($id, $currentUserId, $reason = null) {
+    public function approveJobWithReview($id, $currentUserId, $reason = null)
+    {
         $job = $this->jobDAO->getById($id);
         if (!$job) {
             throw new Exception("Job not found.");
@@ -230,22 +252,23 @@ class JobService {
 
         // Change status to approved
         $statusChanged = $this->jobDAO->changeStatus($id, 'approved');
-        
+
         if ($statusChanged) {
             // Create review record with optional reason/notes
             $this->jobDAO->createReview($id, $currentUserId, 'approve', $reason);
-            
+
             // Log staff action
             $this->staffActionService->logAction($currentUserId, $id, 'job_approved');
-            
+
             return true;
         }
-        
+
         return false;
     }
 
     // Reject job with review record
-    public function rejectJobWithReview($id, $currentUserId, $reason) {
+    public function rejectJobWithReview($id, $currentUserId, $reason)
+    {
         $job = $this->jobDAO->getById($id);
         if (!$job) {
             throw new Exception("Job not found.");
@@ -257,22 +280,74 @@ class JobService {
 
         // Change status to rejected
         $statusChanged = $this->jobDAO->changeStatus($id, 'rejected');
-        
+
         if ($statusChanged) {
             // Create review record with reason
             $this->jobDAO->createReview($id, $currentUserId, 'reject', $reason);
-            
+
             // Log staff action
             $this->staffActionService->logAction($currentUserId, $id, 'job_rejected');
-            
+
             return true;
         }
-        
+
         return false;
     }
 
     // Get latest review for a job
-    public function getLatestReview($jobId) {
+    public function getLatestReview($jobId)
+    {
         return $this->jobDAO->getLatestReview($jobId);
+    }
+
+    public function getTotalCountByEmployer(
+        $employerId,
+        $search,
+        $categoryFilter,
+        $locationFilter,
+        $statusesToQuery,
+        $dateFrom,
+        $dateTo
+    ) {
+        return $this->jobDAO->getTotalCountByEmployer(
+            $employerId,
+            $search,
+            $categoryFilter,
+            $locationFilter,
+            $statusesToQuery,
+            $dateFrom,
+            $dateTo
+        );
+    }
+
+    public function getJobsByEmployer(
+        $employerId,
+        $search,
+        $categoryFilter,
+        $locationFilter,
+        $statusesToQuery,
+        $dateFrom,
+        $dateTo
+    ) {
+        return $this->jobDAO->getJobsByEmployer(
+            $employerId,
+            $search,
+            $categoryFilter,
+            $locationFilter,
+            $statusesToQuery,
+            $dateFrom,
+            $dateTo
+        );
+    }
+
+    public function getUniqueLocationsByEmployerId($employerId)
+    {
+        return $this->jobDAO->getUniqueLocationsByEmployer($employerId);
+    }
+
+    // Update only job status (for employer status changes like approved <-> overdue)
+    public function updateJobStatus($id, $newStatus)
+    {
+        return $this->jobDAO->changeStatus($id, $newStatus);
     }
 }

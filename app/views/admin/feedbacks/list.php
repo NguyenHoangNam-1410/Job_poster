@@ -1,6 +1,6 @@
-<?php 
+<?php
 $pageTitle = 'Employer Feedbacks';
-require_once __DIR__ . '/../../layouts/admin_header.php';
+require_once __DIR__ . '/../../layouts/auth_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
@@ -29,29 +29,25 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 <!-- Search by User Name -->
                 <div class="flex-1 min-w-[200px]">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search by User Name</label>
-                    <input type="text" name="search" id="search" 
-                           value="<?php echo htmlspecialchars($pagination['search'] ?? ''); ?>"
-                           placeholder="Enter user name..."
-                           class="form-input"
-                           onkeyup="debounceFeedbackSearch()">
+                    <input type="text" name="search" id="search"
+                        value="<?php echo htmlspecialchars($pagination['search'] ?? ''); ?>"
+                        placeholder="Enter user name..." class="form-input" onkeyup="debounceFeedbackSearch()">
                 </div>
 
                 <!-- Date From -->
                 <div class="flex-1 min-w-[150px]">
                     <label for="date_from" class="block text-sm font-medium text-gray-700 mb-2">Date From</label>
-                    <input type="date" name="date_from" id="date_from" 
-                           value="<?php echo htmlspecialchars($pagination['date_from'] ?? ''); ?>"
-                           class="form-input"
-                           onchange="document.getElementById('feedbackFilterForm').submit()">
+                    <input type="date" name="date_from" id="date_from"
+                        value="<?php echo htmlspecialchars($pagination['date_from'] ?? ''); ?>" class="form-input"
+                        onchange="document.getElementById('feedbackFilterForm').submit()">
                 </div>
 
                 <!-- Date To -->
                 <div class="flex-1 min-w-[150px]">
                     <label for="date_to" class="block text-sm font-medium text-gray-700 mb-2">Date To</label>
-                    <input type="date" name="date_to" id="date_to" 
-                           value="<?php echo htmlspecialchars($pagination['date_to'] ?? ''); ?>"
-                           class="form-input"
-                           onchange="document.getElementById('feedbackFilterForm').submit()">
+                    <input type="date" name="date_to" id="date_to"
+                        value="<?php echo htmlspecialchars($pagination['date_to'] ?? ''); ?>" class="form-input"
+                        onchange="document.getElementById('feedbackFilterForm').submit()">
                 </div>
 
                 <!-- Per Page Selector -->
@@ -90,57 +86,57 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
         <?php else: ?>
             <div class="list-table-wrapper">
                 <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead>
-                        <tr class="bg-gray-50">
-                            <th class="table-header">
-                                ID
-                            </th>
-                            <th class="table-header">
-                                Name
-                            </th>
-                            <th class="table-header">
-                                Feedbacks
-                            </th>
-                            <th class="table-header">
-                                Date
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <?php foreach ($feedbacks as $feedback): ?>
-                            <tr class="hover:bg-gray-50">
-                                <td class="table-cell table-cell-text">
-                                    #<?php echo htmlspecialchars($feedback->getUserId()); ?>
-                                </td>
-                                <td class="table-cell">
-                                    <?php echo htmlspecialchars($feedback->getUserName()); ?>
-                                </td>
-                                <td class="table-cell">
-                                    <div class="max-w-2xl">
-                                        <?php echo nl2br(htmlspecialchars($feedback->getComments())); ?>
-                                    </div>
-                                </td>
-                                <td class="table-cell">
-                                    <?php 
-                                    $date = new DateTime($feedback->getCreatedAt());
-                                    echo $date->format('d M, Y');
-                                    ?>
-                                    <span class="text-gray-500 text-xs block">
-                                        <?php echo $date->format('H:i'); ?>
-                                    </span>
-                                </td>
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="table-header">
+                                    ID
+                                </th>
+                                <th class="table-header">
+                                    Name
+                                </th>
+                                <th class="table-header">
+                                    Feedbacks
+                                </th>
+                                <th class="table-header">
+                                    Date
+                                </th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <?php foreach ($feedbacks as $feedback): ?>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="table-cell table-cell-text">
+                                        #<?php echo htmlspecialchars($feedback->getUserId()); ?>
+                                    </td>
+                                    <td class="table-cell">
+                                        <?php echo htmlspecialchars($feedback->getUserName()); ?>
+                                    </td>
+                                    <td class="table-cell">
+                                        <div class="max-w-2xl">
+                                            <?php echo nl2br(htmlspecialchars($feedback->getComments())); ?>
+                                        </div>
+                                    </td>
+                                    <td class="table-cell">
+                                        <?php
+                                        $date = new DateTime($feedback->getCreatedAt());
+                                        echo $date->format('d M, Y');
+                                        ?>
+                                        <span class="text-gray-500 text-xs block">
+                                            <?php echo $date->format('H:i'); ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
 
                 <!-- Pagination -->
-                <?php 
+                <?php
                 require_once __DIR__ . '/../../components/pagination.php';
                 renderPagination(
-                    $pagination, 
+                    $pagination,
                     '',
                     [
                         'search' => $pagination['search'] ?? '',
@@ -156,31 +152,31 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 </div>
 
 <script>
-function changePerPage(value) {
-    const url = new URL(window.location);
-    url.searchParams.set('per_page', value);
-    url.searchParams.set('page', '1'); // Reset to first page
-    window.location = url.toString();
-}
-
-// Debounce function for feedback search
-let feedbackSearchTimeout;
-function debounceFeedbackSearch() {
-    clearTimeout(feedbackSearchTimeout);
-    feedbackSearchTimeout = setTimeout(() => {
-        document.getElementById('feedbackFilterForm').submit();
-    }, 500); // Wait 500ms after user stops typing
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('search');
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('search') && searchInput.value) {
-        searchInput.focus();
-        // Set cursor to end of text
-        searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+    function changePerPage(value) {
+        const url = new URL(window.location);
+        url.searchParams.set('per_page', value);
+        url.searchParams.set('page', '1'); // Reset to first page
+        window.location = url.toString();
     }
-});
+
+    // Debounce function for feedback search
+    let feedbackSearchTimeout;
+    function debounceFeedbackSearch() {
+        clearTimeout(feedbackSearchTimeout);
+        feedbackSearchTimeout = setTimeout(() => {
+            document.getElementById('feedbackFilterForm').submit();
+        }, 500); // Wait 500ms after user stops typing
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('search');
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('search') && searchInput.value) {
+            searchInput.focus();
+            // Set cursor to end of text
+            searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+        }
+    });
 </script>
 
-<?php require_once __DIR__ . '/../../layouts/admin_footer.php'; ?>
+<?php require_once __DIR__ . '/../../layouts/auth_footer.php'; ?>
