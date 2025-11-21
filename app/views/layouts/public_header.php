@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= $pageTitle ?? 'WorkNest' ?></title>
-  <link rel="icon" type="image/x-icon" href="images/favicon.png">
+  <title><?= $pageTitle ?? 'Job Poster' ?></title>
+  <link rel="icon" type="image/x-icon" href="/Job_poster/public/images/favicon.png">
 
   <link rel="stylesheet" href="/Job_poster/public/css/tailwind.min.css">
   <link rel="stylesheet" href="/Job_poster/public/css/homepage.css">
@@ -30,6 +30,7 @@
       position: sticky;
       top: 0;
       z-index: 50;
+      overflow: visible !important; /* Cho phép dropdown hiển thị ngoài header */
     }
 
     .y2k-logo {
@@ -162,15 +163,58 @@
     }
 
     /* Profile Dropdown Styles */
-    #profileDropdownMenu {
+    #profileDropdownMenu,
+    #guestDropdownMenu {
       font-family: 'Courier New', monospace;
+      border-radius: 0 !important;
+      box-shadow: 6px 6px 0 rgba(6, 136, 180, 0.15) !important;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s ease;
+      position: absolute !important; /* Đảm bảo absolute positioning */
+      top: 100% !important; /* Đặt ngay dưới button */
+      right: 0 !important;
+      margin-top: 0.5rem !important;
+    }
+    
+    /* Đảm bảo dropdown container không làm header mở rộng */
+    #guestDropdown,
+    #profileDropdown {
+      position: relative !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      overflow: visible !important;
+      flex-shrink: 0 !important;
+      height: auto !important;
+      min-height: auto !important;
+    }
+    
+    /* Đảm bảo header container không bị overflow */
+    .y2k-header .container {
+      overflow: visible !important;
+      position: relative !important;
+    }
+    
+    /* Đảm bảo nav không bị ảnh hưởng */
+    .y2k-header nav {
+      overflow: visible !important;
     }
 
-    #profileDropdownMenu a {
+    #profileDropdownMenu.show,
+    #guestDropdownMenu.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    #profileDropdownMenu a,
+    #guestDropdownMenu a {
       transition: all 0.2s ease;
     }
 
-    #profileDropdownMenu a:hover {
+    #profileDropdownMenu a:hover,
+    #guestDropdownMenu a:hover {
       background: #f8f8f8 !important;
       transform: translate(-1px, -1px);
       box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
@@ -186,12 +230,20 @@
       if (guestDropdownBtn && guestDropdownMenu) {
         guestDropdownBtn.addEventListener('click', function(e) {
           e.stopPropagation();
-          guestDropdownMenu.classList.toggle('hidden');
+          // Toggle show class thay vì hidden
+          guestDropdownMenu.classList.toggle('show');
+          // Đảm bảo hidden được remove khi show
+          if (guestDropdownMenu.classList.contains('show')) {
+            guestDropdownMenu.classList.remove('hidden');
+          } else {
+            guestDropdownMenu.classList.add('hidden');
+          }
         });
 
         // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
           if (!guestDropdownBtn.contains(e.target) && !guestDropdownMenu.contains(e.target)) {
+            guestDropdownMenu.classList.remove('show');
             guestDropdownMenu.classList.add('hidden');
           }
         });
@@ -204,12 +256,20 @@
       if (dropdownBtn && dropdownMenu) {
         dropdownBtn.addEventListener('click', function(e) {
           e.stopPropagation();
-          dropdownMenu.classList.toggle('hidden');
+          // Toggle show class thay vì hidden
+          dropdownMenu.classList.toggle('show');
+          // Đảm bảo hidden được remove khi show
+          if (dropdownMenu.classList.contains('show')) {
+            dropdownMenu.classList.remove('hidden');
+          } else {
+            dropdownMenu.classList.add('hidden');
+          }
         });
 
         // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
           if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+            dropdownMenu.classList.remove('show');
             dropdownMenu.classList.add('hidden');
           }
         });
@@ -227,7 +287,7 @@ $userRole = $_SESSION['user']['role'] ?? null;
 
   <!-- Header -->
   <header class="y2k-header text-white">
-    <div class="container mx-auto px-4 flex items-center justify-between">
+    <div class="container mx-auto px-4 flex items-center justify-between relative" style="overflow: visible;">
       <div class="flex items-center space-x-4 ml-4 flex-shrink-0">
         <a href="/Job_poster/public/" class="y2k-logo whitespace-nowrap">Job Poster</a>
         <span class="hidden sm:block y2k-tagline">Find Your Dream Job</span>
@@ -238,7 +298,7 @@ $userRole = $_SESSION['user']['role'] ?? null;
         <?php if (!isset($_SESSION['user'])): ?>
           <a href="/Job_poster/public/" class="y2k-nav-link <?= $_SERVER['REQUEST_URI'] === '/Job_poster/public/' || $_SERVER['REQUEST_URI'] === '/Job_poster/public' ? 'active' : '' ?>">Home</a>
           <a href="/Job_poster/public/jobs" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false ? 'active' : '' ?>">Jobs</a>
-          <a href="/Job_poster/public/auth/register" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/auth/register') !== false ? 'active' : '' ?>">Job Posting</a>
+          <a href="/Job_poster/public/auth/register?redirect=/employer/home" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/auth/register') !== false ? 'active' : '' ?>">Job Posting</a>
         <?php else: ?>
           <a href="/Job_poster/public/"
             class="y2k-nav-link <?= $_SERVER['REQUEST_URI'] === '/Job_poster/public/' ? 'active' : '' ?>">Home</a>
@@ -268,7 +328,7 @@ $userRole = $_SESSION['user']['role'] ?? null;
           </button>
           
           <!-- Dropdown Menu -->
-          <div id="guestDropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white border-2 border-black shadow-lg z-50">
+          <div id="guestDropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white border-2 border-black shadow-lg rounded-none z-50">
             <a href="/Job_poster/public/auth/login" class="block px-4 py-3 text-sm font-semibold text-black hover:bg-gray-100 uppercase font-mono border-b-2 border-black">
               Login
             </a>
@@ -292,7 +352,7 @@ $userRole = $_SESSION['user']['role'] ?? null;
           </button>
           
           <!-- Dropdown Menu -->
-          <div id="profileDropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white border-2 border-black shadow-lg z-50">
+          <div id="profileDropdownMenu" class="hidden absolute right-0 top-full mt-2 w-48 bg-white border-2 border-black shadow-lg rounded-none z-50" style="position: absolute !important; top: 100% !important; right: 0 !important;">
             <?php if ($userRole == 'Admin'): ?>
               <a href="/Job_poster/public/statistics" class="block px-4 py-3 text-sm font-semibold text-black hover:bg-gray-100 uppercase font-mono border-b-2 border-black">
                 Admin Panel

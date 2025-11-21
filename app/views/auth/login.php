@@ -1,7 +1,7 @@
 <?php
+$pageTitle = 'Login | Job Poster';
 $additionalCSS = [
-  "/Job_poster/public/css/
-auth/login.css"
+  "/Job_poster/public/css/auth/login.css"
 ];
 include __DIR__ . '/../layouts/public_header.php'; ?>
 <div class="min-h-screen flex items-center justify-center px-4">

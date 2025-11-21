@@ -20,6 +20,10 @@ class AuthController
 
     public function showRegisterForm()
     {
+        // Lưu redirect URL nếu có trong query parameter
+        if (isset($_GET['redirect'])) {
+            $_SESSION['register_redirect'] = $_GET['redirect'];
+        }
         require_once __DIR__ . '/../views/auth/register.php';
         exit;
     }
@@ -86,7 +90,18 @@ class AuthController
                 'role' => $user->getRole(),
                 'auth_provider' => $user->getAuthProvider(),
             ];
-            header("Location: " . BASE_URL . "/employer/home");
+            
+            // Redirect logic:
+            // - Nếu có register_redirect trong session (từ nút Job Posting) → redirect đến đó
+            // - Nếu không có → redirect về homepage
+            if (isset($_SESSION['register_redirect'])) {
+                $redirectUrl = $_SESSION['register_redirect'];
+                unset($_SESSION['register_redirect']); // Xóa redirect URL sau khi dùng
+                header("Location: " . BASE_URL . $redirectUrl);
+            } else {
+                // Đăng ký thông thường → về homepage
+                header("Location: " . BASE_URL . "/");
+            }
             exit;
         }
     }
@@ -141,7 +156,15 @@ class AuthController
                     'auth_provider' => $user->getAuthProvider(),
                     'avatar' => $user->getAvatar()
                 ];
-                header("Location: " . BASE_URL . "/");
+                
+                // Redirect logic: check register_redirect nếu đăng ký từ trang register
+                if (isset($_SESSION['register_redirect'])) {
+                    $redirectUrl = $_SESSION['register_redirect'];
+                    unset($_SESSION['register_redirect']);
+                    header("Location: " . BASE_URL . $redirectUrl);
+                } else {
+                    header("Location: " . BASE_URL . "/");
+                }
                 exit;
 
             } else {
@@ -255,7 +278,14 @@ class AuthController
             'avatar' => $user->getAvatar()
         ];
 
-        header("Location: " . BASE_URL . "/");
+        // Redirect logic: check register_redirect nếu đăng ký từ trang register
+        if (isset($_SESSION['register_redirect'])) {
+            $redirectUrl = $_SESSION['register_redirect'];
+            unset($_SESSION['register_redirect']);
+            header("Location: " . BASE_URL . $redirectUrl);
+        } else {
+            header("Location: " . BASE_URL . "/");
+        }
         exit;
     }
 

@@ -1,4 +1,5 @@
 <?php
+$pageTitle = 'Register | Job Poster';
 $additionalCSS = ["/Job_poster/public/css/auth/register.css"];
 include __DIR__ . '/../layouts/public_header.php';
 ?>
