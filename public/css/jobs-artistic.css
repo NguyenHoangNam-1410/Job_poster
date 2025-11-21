@@ -164,6 +164,24 @@ body.jobs-listing-page {
   box-sizing: border-box;
   display: flex;
   align-items: center;
+  /* Remove default browser arrow */
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: none !important;
+  background-repeat: no-repeat !important;
+  background-position: right center !important;
+}
+
+/* Remove arrow for all browsers */
+.jobs-filter-select::-ms-expand {
+  display: none !important;
+}
+
+.jobs-filter-select::-webkit-inner-spin-button,
+.jobs-filter-select::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
 }
 
 .jobs-filter-select:focus {
@@ -200,7 +218,7 @@ body .choices__inner,
   font-weight: 700 !important;
   color: #1a1a1a !important;
   min-height: 48px !important;
-  height: 48px !important;
+  height: auto !important;
   font-family: 'Courier New', monospace !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
@@ -212,7 +230,7 @@ body .choices__inner,
   cursor: pointer !important;
   width: 100% !important;
   box-sizing: border-box !important;
-  overflow: hidden !important;
+  overflow: visible !important;
 }
 
 .jobs-search-container .choices__inner:focus,
@@ -230,7 +248,8 @@ main .choices.is-focused .choices__inner {
 .jobs-search-container .choices__inner:hover,
 .jobs-search-section .choices__inner:hover,
 main .choices__inner:hover {
-  background: #f8f8f8 !important;
+  background: white !important;
+  background-color: white !important;
 }
 
 /* Make sure Choices.js container matches status filter exactly */
@@ -244,18 +263,23 @@ main .choices .choices__inner {
 
 .jobs-search-container .choices__list--dropdown,
 .jobs-search-section .choices__list--dropdown,
-main .choices__list--dropdown {
+main .choices__list--dropdown,
+body .choices__list--dropdown,
+.choices__list--dropdown {
   border: 2px solid #1a1a1a !important;
   border-radius: 0 !important;
   box-shadow: 6px 6px 0 rgba(6, 136, 180, 0.15) !important;
   background: white !important;
+  background-color: white !important;
   margin-top: 4px !important;
   z-index: 100 !important;
 }
 
 .jobs-search-container .choices__list--dropdown .choices__item,
 .jobs-search-section .choices__list--dropdown .choices__item,
-main .choices__list--dropdown .choices__item {
+main .choices__list--dropdown .choices__item,
+body .choices__list--dropdown .choices__item,
+.choices__list--dropdown .choices__item {
   padding: 0.75rem 1rem !important;
   font-size: 0.85rem !important;
   font-weight: 600 !important;
@@ -264,13 +288,29 @@ main .choices__list--dropdown .choices__item {
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
   border-bottom: 1px solid #e5e5e5 !important;
+  background-color: white !important;
+  background: white !important;
 }
 
 .jobs-search-container .choices__list--dropdown .choices__item--selectable.is-highlighted,
 .jobs-search-section .choices__list--dropdown .choices__item--selectable.is-highlighted,
-main .choices__list--dropdown .choices__item--selectable.is-highlighted {
-  background-color: var(--primary-teal) !important;
-  color: white !important;
+main .choices__list--dropdown .choices__item--selectable.is-highlighted,
+body .choices__list--dropdown .choices__item--selectable.is-highlighted,
+.choices__list--dropdown .choices__item--selectable.is-highlighted {
+  background-color: white !important;
+  background: white !important;
+  color: #1a1a1a !important;
+}
+
+/* Remove hover/highlight background from all dropdown items */
+.jobs-search-container .choices__list--dropdown .choices__item--selectable:hover,
+.jobs-search-section .choices__list--dropdown .choices__item--selectable:hover,
+main .choices__list--dropdown .choices__item--selectable:hover,
+body .choices__list--dropdown .choices__item--selectable:hover,
+.choices__list--dropdown .choices__item--selectable:hover {
+  background-color: white !important;
+  background: white !important;
+  color: #1a1a1a !important;
 }
 
 /* Remove arrow from highlighted/selected items in dropdown */
@@ -299,7 +339,8 @@ body .choices__list--dropdown .choices__item.is-selected::after,
 main .choices__list--multiple .choices__item,
 body .choices__list--multiple .choices__item,
 .choices__list--multiple .choices__item {
-  background-color: transparent !important;
+  background-color: white !important;
+  background: white !important;
   border: 2px solid #1a1a1a !important;
   border-radius: 0 !important;
   padding: 0.3rem 0.6rem !important;
@@ -370,7 +411,8 @@ body .choices__list--multiple .choices__item [class*="triangle"],
 .jobs-search-container .choices__list--multiple .choices__item.is-highlighted,
 .jobs-search-section .choices__list--multiple .choices__item.is-highlighted,
 main .choices__list--multiple .choices__item.is-highlighted {
-  background-color: #f8f8f8 !important;
+  background-color: white !important;
+  background: white !important;
   border-color: #1a1a1a !important;
 }
 
@@ -410,17 +452,31 @@ main .choices__button:focus {
 
 .jobs-search-container .choices__input,
 .jobs-search-section .choices__input,
-main .choices__input {
+main .choices__input,
+body .choices__input,
+.choices__input {
   font-family: 'Courier New', monospace !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
   font-size: 0.85rem !important;
   font-weight: 700 !important;
   color: #1a1a1a !important;
-  background: transparent !important;
+  background: white !important;
+  background-color: white !important;
   padding: 0.25rem 0 !important;
   border: none !important;
   margin: 0 !important;
+}
+
+/* Hide hidden select element completely */
+select.jobs-filter-select[hidden],
+select.choices__input[hidden] {
+  display: none !important;
+  visibility: hidden !important;
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
 }
 
 .jobs-search-container .choices__input:focus,
@@ -1592,8 +1648,8 @@ select[multiple].jobs-filter-select + .choices .choices__button,
 }
 
 .choices__list--multiple .choices__item {
-  background-color: transparent !important;
-  background: transparent !important;
+  background-color: white !important;
+  background: white !important;
   border: 2px solid #1a1a1a !important;
   border-radius: 0 !important;
   color: #1a1a1a !important;

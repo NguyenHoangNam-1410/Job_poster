@@ -364,4 +364,4 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
     });
 </script>
 
-<?php require_once __DIR__ . '/../../layouts/admin_footer.php'; ?>
+<?php require_once __DIR__ . '/../../layouts/auth_footer.php'; ?>

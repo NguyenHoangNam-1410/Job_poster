@@ -61,7 +61,12 @@ if (!$isLoggedIn && !$isPublic) {
 }
 
 // Redirect logged in users away from auth pages
-if ($isLoggedIn && $isPublic && !in_array($path, ['/', '/public/home', '/jobs', '/contact', '/about'])) {
+// Allow access to public job pages even when logged in
+$allowedPublicPaths = ['/', '/public/home', '/jobs', '/contact', '/about'];
+$isJobShowPage = preg_match('#^/jobs/show/\d+$#', $path);
+$isJobApplyPage = $path === '/jobs/apply';
+
+if ($isLoggedIn && $isPublic && !in_array($path, $allowedPublicPaths) && !$isJobShowPage && !$isJobApplyPage) {
     header('Location: ' . BASE_URL . '/home');
     exit;
 }

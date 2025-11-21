@@ -70,14 +70,29 @@ function status_badge_class($st)
       border: 2px solid #1a1a1a !important;
       border-radius: 0 !important;
       min-height: 48px !important;
-      height: 48px !important;
+      height: auto !important;
+    }
+
+    /* Remove default browser arrow from Status select */
+    #statusSelect,
+    .jobs-filter-select {
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      background-image: none !important;
+      background-repeat: no-repeat !important;
+    }
+
+    #statusSelect::-ms-expand,
+    .jobs-filter-select::-ms-expand {
+      display: none !important;
     }
 
     /* Ensure all filter inputs have same size */
     .jobs-filter-select,
     .choices__inner {
       min-height: 48px !important;
-      height: 48px !important;
+      height: auto !important;
       width: 100% !important;
       box-sizing: border-box !important;
     }
@@ -93,8 +108,8 @@ function status_badge_class($st)
     }
 
     .choices__list--multiple .choices__item {
-      background-color: transparent !important;
-      background: transparent !important;
+      background-color: white !important;
+      background: white !important;
       border: 2px solid #1a1a1a !important;
       border-radius: 0 !important;
       color: #1a1a1a !important;
@@ -164,6 +179,14 @@ function status_badge_class($st)
       display: none !important;
       content: none !important;
       visibility: hidden !important;
+    }
+
+    /* Remove gray highlight background from dropdown items */
+    .choices__list--dropdown .choices__item--selectable.is-highlighted,
+    .choices__list--dropdown .choices__item--selectable:hover {
+      background-color: white !important;
+      background: white !important;
+      color: #1a1a1a !important;
     }
 
     /* Remove ALL arrows from ALL filters (Categories, Locations, Status) */
@@ -591,7 +614,7 @@ function status_badge_class($st)
       elCategorySelect.setAttribute('tabindex', '-1');
       
       categoryChoices = new Choices(elCategorySelect, {
-        removeItemButton: true,
+        removeItemButton: false,
         searchEnabled: true,
         searchPlaceholderValue: 'Search categories...',
         placeholderValue: '',
@@ -624,7 +647,7 @@ function status_badge_class($st)
       elLocationSelect.setAttribute('tabindex', '-1');
       
       locationChoices = new Choices(elLocationSelect, {
-        removeItemButton: true,
+        removeItemButton: false,
         searchEnabled: true,
         searchPlaceholderValue: 'Search locations...',
         placeholderValue: '',

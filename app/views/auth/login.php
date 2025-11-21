@@ -87,7 +87,7 @@ include __DIR__ . '/../layouts/public_header.php'; ?>
 
     <!-- Welcome Section Column -->
     <div class="hidden md:flex md:flex-col md:w-1/2 text-center justify-center animate-fadeInDown">
-      <h1 class="welcome-title">Welcome back to <span> WorkNest! </span></h1>
+      <h1 class="welcome-title">Welcome back to <span> Job Poster! </span></h1>
       <p class="welcome-subtitle">The job portal for job seekers and employers</p>
     </div>
 
