@@ -1,22 +1,26 @@
 <?php
 require_once __DIR__ . '/../services/CompanyService.php';
 
-class CompanyController {
+class CompanyController
+{
     private $companyService;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->companyService = new CompanyService();
     }
 
-    private function getCurrentEmployerId() {
+    private function getCurrentEmployerId()
+    {
         $employer = $this->companyService->getEmployerByUserId($_SESSION['user']['id']);
         return $employer ? $employer->getId() : null;
     }
 
-    public function index() {
+    public function index()
+    {
         // An employer is a company
         $company = $this->companyService->getEmployerByUserId($_SESSION['user']['id']);
-        
+
         if (!$company) {
             // Template 
             $company = new Employer(
@@ -32,11 +36,12 @@ class CompanyController {
 
         $error = $_GET['error'] ?? null;
         $success = $_GET['success'] ?? null;
-        
+
         require_once __DIR__ . '/../views/employer/my_company/profile.php';
     }
 
-    public function createCompanyProfile() {
+    public function createCompanyProfile()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $data = [
@@ -51,18 +56,22 @@ class CompanyController {
                 // Handle logo upload
                 if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
                     $file = $_FILES['logo'];
-                    if ($file['size'] > 1048576) throw new Exception("Logo image must be less than 1MB.");
-                    $allowedTypes = ['image/jpeg','image/png','image/gif','image/webp'];
+                    if ($file['size'] > 1048576)
+                        throw new Exception("Logo image must be less than 1MB.");
+                    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
                     $finfo = finfo_open(FILEINFO_MIME_TYPE);
                     $mimeType = finfo_file($finfo, $file['tmp_name']);
                     finfo_close($finfo);
-                    if (!in_array($mimeType, $allowedTypes)) throw new Exception("Invalid image format.");
+                    if (!in_array($mimeType, $allowedTypes))
+                        throw new Exception("Invalid image format.");
 
                     $uploadDir = __DIR__ . '/../../public/image/logo/' . $_SESSION['user']['id'] . '/';
-                    if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+                    if (!is_dir($uploadDir))
+                        mkdir($uploadDir, 0755, true);
                     $filename = 'logo_' . time() . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
                     $uploadPath = $uploadDir . $filename;
-                    if (!move_uploaded_file($file['tmp_name'], $uploadPath)) throw new Exception("Failed to upload logo.");
+                    if (!move_uploaded_file($file['tmp_name'], $uploadPath))
+                        throw new Exception("Failed to upload logo.");
 
                     $data['logo'] = '/Job_poster/public/image/logo/' . $_SESSION['user']['id'] . '/' . $filename;
                 }
@@ -70,7 +79,7 @@ class CompanyController {
 
                 if ($success) {
                     header('Location: /Job_poster/public/company-profile?success=' . urlencode('Company updated successfully'));
-                    exit;         
+                    exit;
                 } else {
                     throw new Exception("Failed to create company profile.");
                 }
@@ -81,7 +90,8 @@ class CompanyController {
         }
     }
 
-    public function updateCompanyProfile(){
+    public function updateCompanyProfile()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $currentEmployer = $this->companyService->getEmployerByUserId($_SESSION['user']['id']);
             if (!$currentEmployer) {
@@ -100,31 +110,35 @@ class CompanyController {
                 // Handle logo upload
                 if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
                     $file = $_FILES['logo'];
-                    if ($file['size'] > 1048576) throw new Exception("Logo image must be less than 1MB.");
-                    $allowedTypes = ['image/jpeg','image/png','image/gif','image/webp'];
+                    if ($file['size'] > 1048576)
+                        throw new Exception("Logo image must be less than 1MB.");
+                    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
                     $finfo = finfo_open(FILEINFO_MIME_TYPE);
                     $mimeType = finfo_file($finfo, $file['tmp_name']);
                     finfo_close($finfo);
-                    if (!in_array($mimeType, $allowedTypes)) throw new Exception("Invalid image format.");
+                    if (!in_array($mimeType, $allowedTypes))
+                        throw new Exception("Invalid image format.");
 
                     $uploadDir = __DIR__ . '/../../public/image/logo/' . $_SESSION['user']['id'] . '/';
-                    if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+                    if (!is_dir($uploadDir))
+                        mkdir($uploadDir, 0755, true);
                     $filename = 'logo_' . time() . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
                     $uploadPath = $uploadDir . $filename;
-                    if (!move_uploaded_file($file['tmp_name'], $uploadPath)) throw new Exception("Failed to upload logo.");
+                    if (!move_uploaded_file($file['tmp_name'], $uploadPath))
+                        throw new Exception("Failed to upload logo.");
 
                     $data['logo'] = '/Job_poster/public/image/logo/' . $_SESSION['user']['id'] . '/' . $filename;
                 }
-                
+
                 $success = $this->companyService->updateCompanyProfile($currentEmployer, $data);
                 if ($success) {
                     // Check if this is an AJAX request (modal) - check multiple ways
                     $headers = function_exists('getallheaders') ? getallheaders() : [];
                     $isAjax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
-                           || (isset($headers['X-Requested-With']) && strtolower($headers['X-Requested-With']) === 'xmlhttprequest')
-                           || isset($_GET['ajax'])
-                           || isset($_POST['ajax']);
-                    
+                        || (isset($headers['X-Requested-With']) && strtolower($headers['X-Requested-With']) === 'xmlhttprequest')
+                        || isset($_GET['ajax'])
+                        || isset($_POST['ajax']);
+
                     if ($isAjax) {
                         header('Content-Type: application/json');
                         echo json_encode([
@@ -134,13 +148,13 @@ class CompanyController {
                         ]);
                         exit;
                     }
-                    
+
                     // Check if we came from job posting flow
                     if (isset($_POST['referrer']) && $_POST['referrer'] === 'job-posting') {
                         header('Location: /Job_poster/public/my-jobs/create?success=' . urlencode('Company profile updated! You can now post a job.'));
                         exit;
                     }
-                    
+
                     header('Location: /Job_poster/public/company-profile?success=' . urlencode('Company updated successfully'));
                     exit;
                 } else {
@@ -150,10 +164,10 @@ class CompanyController {
                 // Check if this is an AJAX request (modal) - check multiple ways
                 $headers = function_exists('getallheaders') ? getallheaders() : [];
                 $isAjax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
-                       || (isset($headers['X-Requested-With']) && strtolower($headers['X-Requested-With']) === 'xmlhttprequest')
-                       || isset($_GET['ajax'])
-                       || isset($_POST['ajax']);
-                
+                    || (isset($headers['X-Requested-With']) && strtolower($headers['X-Requested-With']) === 'xmlhttprequest')
+                    || isset($_GET['ajax'])
+                    || isset($_POST['ajax']);
+
                 if ($isAjax) {
                     header('Content-Type: application/json');
                     echo json_encode([
@@ -162,7 +176,7 @@ class CompanyController {
                     ]);
                     exit;
                 }
-                
+
                 $error = $e->getMessage();
                 $company = $this->companyService->getEmployerByUserId($_SESSION['user']['id']);
                 require_once __DIR__ . '/../views/employer/my_company/profile.php';

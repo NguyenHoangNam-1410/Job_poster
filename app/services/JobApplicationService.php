@@ -3,36 +3,38 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-class JobApplicationService {
-    
-    public function sendApplication($jobId, $jobTitle, $companyName, $employerEmail, $applicantName, $applicantEmail, $phone, $coverLetter, $cvFile) {
+class JobApplicationService
+{
+
+    public function sendApplication($jobId, $jobTitle, $companyName, $employerEmail, $applicantName, $applicantEmail, $phone, $coverLetter, $cvFile)
+    {
         try {
             $mail = new PHPMailer(true);
-            
+
             // Set UTF-8 encoding for proper character support
             $mail->CharSet = 'UTF-8';
             $mail->Encoding = 'base64';
-            
+
             // Check email sending method from env
             $emailMethod = $_ENV['EMAIL_METHOD'] ?? 'php_mail'; // Options: 'php_mail', 'smtp', 'sendgrid'
-            
+
             if ($emailMethod === 'sendgrid') {
                 // SendGrid method
                 $smtpEmail = $_ENV['SMTP_EMAIL'] ?? 'apikey';
                 $smtpPassword = $_ENV['SMTP_PASSWORD'] ?? null;
                 $smtpHost = $_ENV['SMTP_HOST'] ?? 'smtp.sendgrid.net';
                 $smtpPort = $_ENV['SMTP_PORT'] ?? '587';
-                
+
                 if (!empty($smtpPassword)) {
                     $mail->isSMTP();
-                    $mail->Host       = $smtpHost;
-                    $mail->SMTPAuth   = true;
-                    $mail->Username   = $smtpEmail;
-                    $mail->Password   = $smtpPassword;
+                    $mail->Host = $smtpHost;
+                    $mail->SMTPAuth = true;
+                    $mail->Username = $smtpEmail;
+                    $mail->Password = $smtpPassword;
                     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                    $mail->Port       = (int)$smtpPort;
-                    $mail->Timeout    = 10;
-                    
+                    $mail->Port = (int) $smtpPort;
+                    $mail->Timeout = 10;
+
                     // SendGrid allows sending from any email
                     $fromName = mb_encode_mimeheader($applicantName, 'UTF-8', 'Q');
                     $mail->setFrom($applicantEmail, $fromName);
@@ -45,17 +47,17 @@ class JobApplicationService {
                 $smtpPassword = $_ENV['SMTP_PASSWORD'] ?? null;
                 $smtpHost = $_ENV['SMTP_HOST'] ?? 'smtp.gmail.com';
                 $smtpPort = $_ENV['SMTP_PORT'] ?? '587';
-                
+
                 if (!empty($smtpEmail) && !empty($smtpPassword)) {
                     $mail->isSMTP();
-                    $mail->Host       = $smtpHost;
-                    $mail->SMTPAuth   = true;
-                    $mail->Username   = $smtpEmail;
-                    $mail->Password   = $smtpPassword;
+                    $mail->Host = $smtpHost;
+                    $mail->SMTPAuth = true;
+                    $mail->Username = $smtpEmail;
+                    $mail->Password = $smtpPassword;
                     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                    $mail->Port       = (int)$smtpPort;
-                    $mail->Timeout    = 10;
-                    
+                    $mail->Port = (int) $smtpPort;
+                    $mail->Timeout = 10;
+
                     // For direct SMTP, must send from authenticated email
                     // But set Reply-To to applicant's email
                     // Use mb_encode_mimeheader for proper UTF-8 encoding in email headers
@@ -71,39 +73,39 @@ class JobApplicationService {
                 $fromName = mb_encode_mimeheader($applicantName, 'UTF-8', 'Q');
                 $mail->setFrom($applicantEmail, $fromName);
             }
-            
+
             // Send TO employer
             $toCompanyName = mb_encode_mimeheader($companyName, 'UTF-8', 'Q');
             $mail->addAddress($employerEmail, $toCompanyName);
-            
+
             // BCC to applicant so they know it was sent
             $bccName = mb_encode_mimeheader($applicantName, 'UTF-8', 'Q');
             $mail->addBCC($applicantEmail, $bccName);
-            
+
             // Reply-To is always applicant's email
             $replyName = mb_encode_mimeheader($applicantName, 'UTF-8', 'Q');
             $mail->addReplyTo($applicantEmail, $replyName);
-            
+
             // Attach CV
             if (isset($cvFile['tmp_name']) && file_exists($cvFile['tmp_name'])) {
                 $mail->addAttachment($cvFile['tmp_name'], $cvFile['name']);
             }
-            
+
             // Content
             $mail->isHTML(true);
-            
+
             // Subject format: [Source: Job Poster] Name - Application for Job Title - Company
             // Use mb_encode_mimeheader for proper UTF-8 encoding in subject
             $subjectText = "⏩ [Source: Job Poster] {$applicantName} - Application for {$jobTitle} - {$companyName}";
             $mail->Subject = mb_encode_mimeheader($subjectText, 'UTF-8', 'Q');
-            
+
             // Email body
             $mail->Body = $this->buildEmailBody($jobTitle, $companyName, $applicantName, $applicantEmail, $phone, $coverLetter);
             $mail->AltBody = $this->buildPlainTextBody($jobTitle, $companyName, $applicantName, $applicantEmail, $phone, $coverLetter);
-            
+
             $mail->send();
             return true;
-            
+
         } catch (Exception $e) {
             $errorInfo = isset($mail) ? $mail->ErrorInfo : $e->getMessage();
             error_log("Job Application Email Error: {$errorInfo}");
@@ -111,10 +113,11 @@ class JobApplicationService {
             return false;
         }
     }
-    
-    private function buildEmailBody($jobTitle, $companyName, $applicantName, $applicantEmail, $phone, $coverLetter) {
+
+    private function buildEmailBody($jobTitle, $companyName, $applicantName, $applicantEmail, $phone, $coverLetter)
+    {
         $phoneText = !empty($phone) ? "<p><strong>Phone:</strong> {$phone}</p>" : "";
-        
+
         return "
         <!DOCTYPE html>
         <html>
@@ -162,10 +165,11 @@ class JobApplicationService {
         </html>
         ";
     }
-    
-    private function buildPlainTextBody($jobTitle, $companyName, $applicantName, $applicantEmail, $phone, $coverLetter) {
+
+    private function buildPlainTextBody($jobTitle, $companyName, $applicantName, $applicantEmail, $phone, $coverLetter)
+    {
         $phoneText = !empty($phone) ? "Phone: {$phone}\n" : "";
-        
+
         return "
 New Job Application
 

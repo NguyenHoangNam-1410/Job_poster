@@ -1,5 +1,6 @@
 <?php
-class User {
+class User
+{
     private $id;
     private $name;
     private $email;
@@ -10,9 +11,10 @@ class User {
     private $created_at;
     private $updated_at;
     private $auth_provider;
-    
+
     // Constructor
-    public function __construct($id = null, $name = null, $email = null, $role = 'Guest', $password = null, $avatar = null, $is_active = 1, $auth_provider = null) {
+    public function __construct($id = null, $name = null, $email = null, $role = 'Guest', $password = null, $avatar = null, $is_active = 1, $auth_provider = null)
+    {
         $this->id = $id;
         $this->name = $name;
         $this->email = $email;
@@ -22,28 +24,88 @@ class User {
         $this->is_active = $is_active;
         $this->auth_provider = $auth_provider;
     }
-    
+
     // Getters
-    public function getId() { return $this->id; }
-    public function getName() { return $this->name; }
-    public function getUsername() { return $this->name; } // Alias for backward compatibility
-    public function getEmail() { return $this->email; }
-    public function getPassword() { return $this->password; }
-    public function getRole() { return $this->role; }
-    public function getAvatar() { return $this->avatar; }
-    public function getIsActive() { return $this->is_active; }
-    public function getAuthProvider() { return $this->auth_provider; }
-    public function getCreatedAt() { return $this->created_at; }
-    public function getUpdatedAt() { return $this->updated_at; }
-    
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function getName()
+    {
+        return $this->name;
+    }
+    public function getUsername()
+    {
+        return $this->name;
+    } // Alias for backward compatibility
+    public function getEmail()
+    {
+        return $this->email;
+    }
+    public function getPassword()
+    {
+        return $this->password;
+    }
+    public function getRole()
+    {
+        return $this->role;
+    }
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+    public function getIsActive()
+    {
+        return $this->is_active;
+    }
+    public function getAuthProvider()
+    {
+        return $this->auth_provider;
+    }
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+    public function getUpdatedAt()
+    {
+        return $this->updated_at;
+    }
+
     // Setters
-    public function setId($id) { $this->id = $id; }
-    public function setName($name) { $this->name = $name; }
-    public function setUsername($name) { $this->name = $name; } // Alias for backward compatibility
-    public function setEmail($email) { $this->email = $email; }
-    public function setPassword($password) { $this->password = $password; }
-    public function setRole($role) { $this->role = $role; }
-    public function setAvatar($avatar) { $this->avatar = $avatar; }
-    public function setIsActive($is_active) { $this->is_active = $is_active; }
-    public function setAuthProvider($auth_provider) { $this->auth_provider = $auth_provider; }
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+    public function setUsername($name)
+    {
+        $this->name = $name;
+    } // Alias for backward compatibility
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+    public function setRole($role)
+    {
+        $this->role = $role;
+    }
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+    }
+    public function setIsActive($is_active)
+    {
+        $this->is_active = $is_active;
+    }
+    public function setAuthProvider($auth_provider)
+    {
+        $this->auth_provider = $auth_provider;
+    }
 }

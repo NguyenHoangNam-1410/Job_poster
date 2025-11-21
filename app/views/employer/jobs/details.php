@@ -151,37 +151,37 @@ $jobCategoryIds = array_column($jobCategories, 'id');
             </div>
 
             <?php if (!$isModal): ?>
-            <div class="form-actions">
-                <button type="button" onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/edit/<?= $job->getId() ?>', 'Edit Job')"
-                    class="btn-submit">
-                    <?= Icons::edit('btn-icon') ?> Edit Job
-                </button>
-                <a href="/Job_poster/public/my-jobs"
-                class="inline-flex items-center gap-2 px-5 py-3 font-semibold text-white bg-gradient-to-r from-gray-700 to-gray-900 rounded-lg shadow-lg hover:from-gray-800 hover:to-black transition-all duration-200">
-                    <?= Icons::arrowLeft('w-5 h-5') ?> Return to List
-                </a>
-            </div>
+                <div class="form-actions">
+                    <button type="button"
+                        onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/edit/<?= $job->getId() ?>', 'Edit Job')"
+                        class="btn-submit">
+                        <?= Icons::edit('btn-icon') ?> Edit Job
+                    </button>
+                    <a href="/Job_poster/public/my-jobs"
+                        class="inline-flex items-center gap-2 px-5 py-3 font-semibold text-white bg-gradient-to-r from-gray-700 to-gray-900 rounded-lg shadow-lg hover:from-gray-800 hover:to-black transition-all duration-200">
+                        <?= Icons::arrowLeft('w-5 h-5') ?> Return to List
+                    </a>
+                </div>
             <?php endif; ?>
         </form>
-<?php if (!$isModal): ?>
+        <?php if (!$isModal): ?>
+        </div>
     </div>
-</div>
 
-<?php include __DIR__ . '/../../layouts/public_footer.php'; ?>
+    <?php include __DIR__ . '/../../layouts/public_footer.php'; ?>
 <?php endif; ?>
 
 <?php if ($isModal): ?>
-<!-- Modal Footer Buttons -->
-<div class="flex justify-end gap-3 mt-6">
-    <button type="button" 
+    <!-- Modal Footer Buttons -->
+    <div class="flex justify-end gap-3 mt-6">
+        <button type="button"
             onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/edit/<?= $job->getId() ?>', 'Edit Job')"
             class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
-        <?= Icons::edit('w-4 h-4') ?> Edit Job
-    </button>
-    <button type="button" 
-            onclick="window.formModal.close()"
+            <?= Icons::edit('w-4 h-4') ?> Edit Job
+        </button>
+        <button type="button" onclick="window.formModal.close()"
             class="px-5 py-2.5 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition">
-        Close
-    </button>
-</div>
+            Close
+        </button>
+    </div>
 <?php endif; ?>

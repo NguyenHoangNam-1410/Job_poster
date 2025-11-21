@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once __DIR__ . '/../../layouts/auth_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
@@ -6,7 +6,8 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 <div class="container mx-auto px-4 py-8">
     <!-- Header -->
     <div class="mb-8">
-        <h1 class="text-4xl font-bold text-gray-800 mb-2">Hi, <?= htmlspecialchars($_SESSION['user']['name'] ?? 'Admin'); ?>!</h1>
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">Hi,
+            <?= htmlspecialchars($_SESSION['user']['name'] ?? 'Admin'); ?>!</h1>
     </div>
 
     <?php if (isset($error)): ?>
@@ -82,23 +83,28 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                         <div class="grid grid-cols-2 gap-3">
                             <div class="flex items-center">
                                 <div class="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div>
-                                <span class="text-sm text-gray-700">Pending: <?php echo number_format($stats['job_counts']['pending']); ?></span>
+                                <span class="text-sm text-gray-700">Pending:
+                                    <?php echo number_format($stats['job_counts']['pending']); ?></span>
                             </div>
                             <div class="flex items-center">
                                 <div class="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
-                                <span class="text-sm text-gray-700">Approved: <?php echo number_format($stats['job_counts']['approved']); ?></span>
+                                <span class="text-sm text-gray-700">Approved:
+                                    <?php echo number_format($stats['job_counts']['approved']); ?></span>
                             </div>
                             <div class="flex items-center">
                                 <div class="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
-                                <span class="text-sm text-gray-700">Rejected: <?php echo number_format($stats['job_counts']['rejected']); ?></span>
+                                <span class="text-sm text-gray-700">Rejected:
+                                    <?php echo number_format($stats['job_counts']['rejected']); ?></span>
                             </div>
                             <div class="flex items-center">
                                 <div class="w-4 h-4 rounded-full bg-pink-500 mr-2"></div>
-                                <span class="text-sm text-gray-700">Overdue: <?php echo number_format($stats['job_counts']['overdue']); ?></span>
+                                <span class="text-sm text-gray-700">Overdue:
+                                    <?php echo number_format($stats['job_counts']['overdue']); ?></span>
                             </div>
                             <div class="flex items-center col-span-2">
                                 <div class="w-4 h-4 rounded-full bg-gray-500 mr-2"></div>
-                                <span class="text-sm text-gray-700">Deleted: <?php echo number_format($stats['job_counts']['soft_deleted']); ?></span>
+                                <span class="text-sm text-gray-700">Deleted:
+                                    <?php echo number_format($stats['job_counts']['soft_deleted']); ?></span>
                             </div>
                         </div>
                     </div>
@@ -124,15 +130,16 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     </div>
                     <h2 class="text-2xl font-bold text-gray-800">Top Staffs</h2>
                 </div>
-                
+
                 <?php if (!empty($stats['top_staff'])): ?>
                     <div class="space-y-4">
                         <?php foreach ($stats['top_staff'] as $index => $staff): ?>
-                            <div class="flex items-center p-4 bg-gradient-to-r from-indigo-50 to-transparent rounded-lg border border-indigo-100 hover:shadow-md transition duration-200">
+                            <div
+                                class="flex items-center p-4 bg-gradient-to-r from-indigo-50 to-transparent rounded-lg border border-indigo-100 hover:shadow-md transition duration-200">
                                 <div class="flex-shrink-0 mr-4">
-                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br <?php 
-                                        echo $index === 0 ? 'from-yellow-400 to-yellow-500' : 
-                                            ($index === 1 ? 'from-gray-300 to-gray-400' : 'from-pink-400 to-pink-500'); 
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br <?php
+                                    echo $index === 0 ? 'from-yellow-400 to-yellow-500' :
+                                        ($index === 1 ? 'from-gray-300 to-gray-400' : 'from-pink-400 to-pink-500');
                                     ?> flex items-center justify-center text-white font-bold text-lg">
                                         <?php echo $index + 1; ?>
                                     </div>
@@ -140,14 +147,16 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                 <div class="flex-grow">
                                     <h3 class="font-bold text-gray-800 text-lg"><?php echo htmlspecialchars($staff['name']); ?></h3>
                                     <p class="text-sm text-gray-600">
-                                        <span class="inline-block px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs font-semibold mr-2">
+                                        <span
+                                            class="inline-block px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs font-semibold mr-2">
                                             <?php echo htmlspecialchars($staff['role']); ?>
                                         </span>
                                         ID: #<?php echo htmlspecialchars($staff['id']); ?>
                                     </p>
                                 </div>
                                 <div class="text-right">
-                                    <p class="text-3xl font-bold text-indigo-600"><?php echo number_format($staff['action_count']); ?></p>
+                                    <p class="text-3xl font-bold text-indigo-600">
+                                        <?php echo number_format($staff['action_count']); ?></p>
                                     <p class="text-xs text-gray-500 uppercase">Actions</p>
                                 </div>
                             </div>
@@ -169,28 +178,32 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     </div>
                     <h2 class="text-2xl font-bold text-gray-800">Top Employers</h2>
                 </div>
-                
+
                 <?php if (!empty($stats['top_employers'])): ?>
                     <div class="space-y-4">
                         <?php foreach ($stats['top_employers'] as $index => $employer): ?>
-                            <div class="flex items-center p-4 bg-gradient-to-r from-blue-50 to-transparent rounded-lg border border-blue-100 hover:shadow-md transition duration-200">
+                            <div
+                                class="flex items-center p-4 bg-gradient-to-r from-blue-50 to-transparent rounded-lg border border-blue-100 hover:shadow-md transition duration-200">
                                 <div class="flex-shrink-0 mr-4">
-                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br <?php 
-                                        echo $index === 0 ? 'from-yellow-400 to-yellow-500' : 
-                                            ($index === 1 ? 'from-gray-300 to-gray-400' : 'from-pink-400 to-pink-500'); 
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br <?php
+                                    echo $index === 0 ? 'from-yellow-400 to-yellow-500' :
+                                        ($index === 1 ? 'from-gray-300 to-gray-400' : 'from-pink-400 to-pink-500');
                                     ?> flex items-center justify-center text-white font-bold text-lg">
                                         <?php echo $index + 1; ?>
                                     </div>
                                 </div>
                                 <div class="flex-grow">
-                                    <h3 class="font-bold text-gray-800 text-lg"><?php echo htmlspecialchars($employer['company_name']); ?></h3>
+                                    <h3 class="font-bold text-gray-800 text-lg">
+                                        <?php echo htmlspecialchars($employer['company_name']); ?></h3>
                                     <p class="text-sm text-gray-600">
-                                        <?php echo htmlspecialchars($employer['user_name']); ?> 
-                                        <span class="text-gray-400">• ID: #<?php echo htmlspecialchars($employer['user_id']); ?></span>
+                                        <?php echo htmlspecialchars($employer['user_name']); ?>
+                                        <span class="text-gray-400">• ID:
+                                            #<?php echo htmlspecialchars($employer['user_id']); ?></span>
                                     </p>
                                 </div>
                                 <div class="text-right">
-                                    <p class="text-3xl font-bold text-blue-600"><?php echo number_format($employer['job_count']); ?></p>
+                                    <p class="text-3xl font-bold text-blue-600"><?php echo number_format($employer['job_count']); ?>
+                                    </p>
                                     <p class="text-xs text-gray-500 uppercase">Jobs</p>
                                 </div>
                             </div>
@@ -210,145 +223,145 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 <!-- Include Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Job Status Pie Chart
-    const jobStatusCtx = document.getElementById('jobStatusChart');
-    if (jobStatusCtx) {
-        new Chart(jobStatusCtx, {
-            type: 'pie',
-            data: {
-                labels: ['Pending', 'Approved', 'Rejected', 'Overdue', 'Deleted'],
-                datasets: [{
-                    data: [
-                        <?php echo $stats['job_counts']['pending']; ?>,
-                        <?php echo $stats['job_counts']['approved']; ?>,
-                        <?php echo $stats['job_counts']['rejected']; ?>,
-                        <?php echo $stats['job_counts']['overdue']; ?>,
-                        <?php echo $stats['job_counts']['soft_deleted']; ?>
-                    ],
-                    backgroundColor: [
-                        '#EAB308', // yellow-500
-                        '#22C55E', // green-500
-                        '#EF4444', // red-500
-                        '#EC4899', // pink-500
-                        '#6B7280'  // gray-500
-                    ],
-                    borderWidth: 2,
-                    borderColor: '#fff'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const label = context.label || '';
-                                const value = context.parsed || 0;
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = ((value / total) * 100).toFixed(1);
-                                return label + ': ' + value + ' (' + percentage + '%)';
+    document.addEventListener('DOMContentLoaded', function () {
+        // Job Status Pie Chart
+        const jobStatusCtx = document.getElementById('jobStatusChart');
+        if (jobStatusCtx) {
+            new Chart(jobStatusCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Pending', 'Approved', 'Rejected', 'Overdue', 'Deleted'],
+                    datasets: [{
+                        data: [
+                            <?php echo $stats['job_counts']['pending']; ?>,
+                            <?php echo $stats['job_counts']['approved']; ?>,
+                            <?php echo $stats['job_counts']['rejected']; ?>,
+                            <?php echo $stats['job_counts']['overdue']; ?>,
+                            <?php echo $stats['job_counts']['soft_deleted']; ?>
+                        ],
+                        backgroundColor: [
+                            '#EAB308', // yellow-500
+                            '#22C55E', // green-500
+                            '#EF4444', // red-500
+                            '#EC4899', // pink-500
+                            '#6B7280'  // gray-500
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return label + ': ' + value + ' (' + percentage + '%)';
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
-    }
+            });
+        }
 
-    // Trending Categories Bar Chart
-    const trendingCategoriesCtx = document.getElementById('trendingCategoriesChart');
-    if (trendingCategoriesCtx) {
-        new Chart(trendingCategoriesCtx, {
-            type: 'bar',
-            data: {
-                labels: [
-                    <?php 
-                    if (!empty($stats['trending_categories'])) {
-                        foreach ($stats['trending_categories'] as $cat) {
-                            echo "'" . addslashes($cat['name']) . "',";
-                        }
-                    }
-                    ?>
-                ],
-                datasets: [{
-                    label: 'Number of Jobs',
-                    data: [
-                        <?php 
+        // Trending Categories Bar Chart
+        const trendingCategoriesCtx = document.getElementById('trendingCategoriesChart');
+        if (trendingCategoriesCtx) {
+            new Chart(trendingCategoriesCtx, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        <?php
                         if (!empty($stats['trending_categories'])) {
                             foreach ($stats['trending_categories'] as $cat) {
-                                echo $cat['job_count'] . ',';
+                                echo "'" . addslashes($cat['name']) . "',";
                             }
                         }
                         ?>
                     ],
-                    backgroundColor: [
-                        'rgba(59, 130, 246, 0.8)',  // blue
-                        'rgba(16, 185, 129, 0.8)',  // green
-                        'rgba(251, 146, 60, 0.8)',  // orange
-                        'rgba(139, 92, 246, 0.8)',  // purple
-                        'rgba(236, 72, 153, 0.8)'   // pink
-                    ],
-                    borderColor: [
-                        'rgb(59, 130, 246)',
-                        'rgb(16, 185, 129)',
-                        'rgb(251, 146, 60)',
-                        'rgb(139, 92, 246)',
-                        'rgb(236, 72, 153)'
-                    ],
-                    borderWidth: 2,
-                    borderRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1,
-                            font: {
-                                size: 12
+                    datasets: [{
+                        label: 'Number of Jobs',
+                        data: [
+                            <?php
+                            if (!empty($stats['trending_categories'])) {
+                                foreach ($stats['trending_categories'] as $cat) {
+                                    echo $cat['job_count'] . ',';
+                                }
+                            }
+                            ?>
+                        ],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.8)',  // blue
+                            'rgba(16, 185, 129, 0.8)',  // green
+                            'rgba(251, 146, 60, 0.8)',  // orange
+                            'rgba(139, 92, 246, 0.8)',  // purple
+                            'rgba(236, 72, 153, 0.8)'   // pink
+                        ],
+                        borderColor: [
+                            'rgb(59, 130, 246)',
+                            'rgb(16, 185, 129)',
+                            'rgb(251, 146, 60)',
+                            'rgb(139, 92, 246)',
+                            'rgb(236, 72, 153)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
                             }
                         },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    },
-                    x: {
-                        ticks: {
-                            font: {
-                                size: 11
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 11
+                                },
+                                maxRotation: 45,
+                                minRotation: 45
                             },
-                            maxRotation: 45,
-                            minRotation: 45
-                        },
-                        grid: {
-                            display: false
+                            grid: {
+                                display: false
+                            }
                         }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return 'Jobs: ' + context.parsed.y;
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return 'Jobs: ' + context.parsed.y;
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
-    }
-});
+            });
+        }
+    });
 </script>
 
 <?php require_once __DIR__ . '/../../layouts/admin_footer.php'; ?>

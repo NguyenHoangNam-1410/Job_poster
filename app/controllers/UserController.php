@@ -1,22 +1,26 @@
 <?php
 require_once __DIR__ . '/../services/UserService.php';
 
-class UserController {
+class UserController
+{
     private $userService;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->userService = new UserService();
     }
 
-    private function getCurrentUserId() {
+    private function getCurrentUserId()
+    {
         return $_SESSION['user']['id'] ?? null;
     }
 
-    public function index() {
+    public function index()
+    {
         $search = $_GET['search'] ?? '';
         $roleFilter = $_GET['role'] ?? '';
-        $per_page = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
-        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $per_page = isset($_GET['per_page']) ? (int) $_GET['per_page'] : 10;
+        $current_page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 
         if (!in_array($per_page, [10, 25, 50])) {
             $per_page = 10;
@@ -43,17 +47,19 @@ class UserController {
         require_once __DIR__ . '/../views/admin/users/list.php';
     }
 
-    public function create() {
+    public function create()
+    {
         $user = null;
         $error = null;
         require_once __DIR__ . '/../views/admin/users/form.php';
     }
 
-    public function store() {
+    public function store()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-                      strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
-            
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+
             try {
                 $currentUserId = $this->getCurrentUserId();
                 $success = $this->userService->createUser($_POST, $currentUserId);
@@ -89,18 +95,19 @@ class UserController {
         }
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         try {
             $currentUserId = $this->getCurrentUserId();
-            
+
             // Redirect to profile if user is editing themselves
             if ($id == $currentUserId) {
                 header('Location: /Job_poster/public/profile');
                 exit;
             }
-            
+
             $user = $this->userService->getUserById($id);
-            
+
             if (!$user) {
                 header('Location: /Job_poster/public/users?error=' . urlencode('User not found'));
                 exit;
@@ -120,21 +127,22 @@ class UserController {
         }
     }
 
-    public function update($id) {
+    public function update($id)
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-                      strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
-            
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+
             try {
                 $currentUserId = $this->getCurrentUserId();
                 $success = $this->userService->updateUser($id, $_POST, $currentUserId);
-                
+
                 // If updating an employer, also update company information
                 $user = $this->userService->getUserById($id);
                 if ($user && $user->getRole() === 'Employer' && isset($_POST['employer_id'])) {
                     require_once __DIR__ . '/../dao/EmployerDAO.php';
                     $employerDAO = new EmployderDAO();
-                    
+
                     $employerData = [
                         'company_name' => $_POST['company_name'] ?? '',
                         'website' => $_POST['website'] ?? null,
@@ -144,7 +152,7 @@ class UserController {
                         'description' => $_POST['description'] ?? null,
                         'logo' => null // Will be handled separately
                     ];
-                    
+
                     // Handle logo deletion
                     if (isset($_POST['delete_logo']) && $_POST['delete_logo'] == '1') {
                         $employerData['logo'] = '/Job_poster/public/image/avatar/default.svg';
@@ -153,10 +161,10 @@ class UserController {
                         $employer = $employerDAO->getByUserId($id);
                         $employerData['logo'] = $employer ? $employer->getLogo() : null;
                     }
-                    
+
                     $employerDAO->update($_POST['employer_id'], $employerData);
                 }
-                
+
                 if ($success) {
                     if ($isAjax) {
                         header('Content-Type: application/json');
@@ -189,9 +197,10 @@ class UserController {
         }
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-                  strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 
         try {
             $currentUserId = $this->getCurrentUserId();
@@ -229,10 +238,11 @@ class UserController {
         }
     }
 
-    public function profile() {
+    public function profile()
+    {
         $currentUserId = $this->getCurrentUserId();
         $user = $this->userService->getUserById($currentUserId);
-        
+
         if (!$user) {
             header('Location: /Job_poster/public/401');
             exit;
@@ -240,18 +250,19 @@ class UserController {
 
         $error = $_GET['error'] ?? null;
         $success = $_GET['success'] ?? null;
-        
+
         require_once __DIR__ . '/../views/staff/profile/form.php';
     }
 
-    public function updateProfile() {
+    public function updateProfile()
+    {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: /Job_poster/public/profile');
             exit;
         }
 
         $currentUserId = $this->getCurrentUserId();
-        
+
         try {
             $data = [
                 'name' => trim($_POST['name'] ?? ''),
@@ -262,7 +273,7 @@ class UserController {
             // Handle avatar upload
             if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
                 $file = $_FILES['avatar'];
-                
+
                 // Validate file size (max 1MB)
                 if ($file['size'] > 1048576) {
                     throw new Exception("Avatar image must be less than 1MB.");
@@ -307,15 +318,15 @@ class UserController {
             $oldPassword = trim($_POST['old_password'] ?? '');
             $newPassword = trim($_POST['new_password'] ?? '');
             $confirmPassword = trim($_POST['confirm_password'] ?? '');
-            
+
             $passwordFieldsFilled = array_filter([$oldPassword, $newPassword, $confirmPassword], fn($p) => !empty($p));
-            
+
             if (count($passwordFieldsFilled) > 0) {
                 // If any field is filled, all three must be filled
                 if (count($passwordFieldsFilled) < 3) {
                     throw new Exception("To change password, all three password fields must be filled.");
                 }
-                
+
                 // All three fields are provided, proceed with password change
                 $this->userService->updatePassword($currentUserId, $oldPassword, $newPassword, $confirmPassword);
             }

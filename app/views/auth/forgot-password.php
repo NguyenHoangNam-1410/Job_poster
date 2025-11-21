@@ -1,7 +1,8 @@
-<?php 
-  $additionalCSS = ["/Job_poster/public/css/
-auth/forgotPassword.css"];
-  include __DIR__ . '/../layouts/public_header.php'; 
+<?php
+$additionalCSS = ["/Job_poster/public/css/
+auth/forgotPassword.css"
+];
+include __DIR__ . '/../layouts/public_header.php';
 ?>
 
 <div class="min-h-screen w-full flex flex-col items-center justify-center py-12">
@@ -15,7 +16,7 @@ auth/forgotPassword.css"];
       <h2 class="signup-title">🔑 Send OTP</h2>
 
       <?php if (isset($_SESSION['error-message'])): ?>
-        <div class="alert-login mb-4"><?= $_SESSION['error-message']?? '' ?></div>
+        <div class="alert-login mb-4"><?= $_SESSION['error-message'] ?? '' ?></div>
         <?php unset($_SESSION['error-message']); ?>
       <?php endif; ?>
 
@@ -23,7 +24,7 @@ auth/forgotPassword.css"];
         <div>
           <label for="email" class="form-label">Email address<span class="required">*</span></label>
           <input type="email" id="email" name="email" required placeholder="Enter your registered email"
-                 class="form-control w-full">
+            class="form-control w-full">
         </div>
 
         <button type="submit" class="btn-primary text-white w-full py-2">Send OTP</button>
@@ -38,7 +39,7 @@ auth/forgotPassword.css"];
   </div>
 </div>
 
-<?php 
-  $additionalJS = ["/javascript/handleCredentials.js"];
-  include __DIR__ . '/../layouts/public_footer.php'; 
+<?php
+$additionalJS = ["/javascript/handleCredentials.js"];
+include __DIR__ . '/../layouts/public_footer.php';
 ?>

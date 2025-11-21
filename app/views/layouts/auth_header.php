@@ -16,22 +16,22 @@ $roleConfig = [
         'menuItems' => [
             ['section' => 'Dashboard'],
             ['url' => '/statistics', 'icon' => 'statistic', 'label' => 'Dashboard', 'tooltip' => 'Statistics'],
-            
+
             ['section' => 'User Management'],
             ['url' => '/users', 'icon' => 'users', 'label' => 'Users', 'tooltip' => 'Users'],
-            
+
             ['section' => 'Category Management'],
             ['url' => '/job-categories', 'icon' => 'tag', 'label' => 'Categories', 'tooltip' => 'Categories'],
-            
+
             ['section' => 'Job Management'],
             ['url' => '/jobs-manage', 'icon' => 'briefcase', 'label' => 'Jobs', 'tooltip' => 'Jobs'],
-            
+
             ['section' => 'Request Posting'],
             ['url' => '/approvals', 'icon' => 'checklist', 'label' => 'Request Posting', 'tooltip' => 'Request Posting'],
-            
+
             ['section' => 'History'],
             ['url' => '/staff-actions', 'icon' => 'history', 'label' => 'History', 'tooltip' => 'History'],
-            
+
             ['section' => 'Feedback'],
             ['url' => '/feedbacks', 'icon' => 'comment', 'label' => 'Feedback', 'tooltip' => 'Feedback'],
         ]
@@ -44,13 +44,13 @@ $roleConfig = [
         'menuItems' => [
             ['section' => 'Dashboard'],
             ['url' => '/staff/home', 'icon' => 'home', 'label' => 'Dashboard', 'tooltip' => 'Dashboard'],
-            
+
             ['section' => 'Job Management'],
             ['url' => '/jobs-manage', 'icon' => 'briefcase', 'label' => 'Jobs', 'tooltip' => 'Jobs'],
-            
+
             ['section' => 'Request Posting'],
             ['url' => '/approvals', 'icon' => 'checklist', 'label' => 'Request Posting', 'tooltip' => 'Request Posting'],
-            
+
             ['section' => 'Feedback'],
             ['url' => '/feedbacks', 'icon' => 'comment', 'label' => 'Feedback', 'tooltip' => 'Feedback'],
         ]
@@ -63,13 +63,13 @@ $roleConfig = [
         'menuItems' => [
             ['section' => 'Dashboard'],
             ['url' => '/employer/home', 'icon' => 'home', 'label' => 'Dashboard', 'tooltip' => 'Dashboard'],
-            
+
             ['section' => 'Company'],
             ['url' => '/company-profile', 'icon' => 'building', 'label' => 'Company Profile', 'tooltip' => 'Company Profile'],
-            
+
             ['section' => 'Jobs'],
             ['url' => '/my-jobs', 'icon' => 'briefcase', 'label' => 'My Jobs', 'tooltip' => 'My Jobs'],
-            
+
             ['section' => 'Feedback'],
             ['url' => '/my-feedbacks', 'icon' => 'comment', 'label' => 'Feedbacks', 'tooltip' => 'Feedbacks'],
         ]
@@ -115,7 +115,7 @@ if ($currentUserId) {
     ?>
     <link href="/Job_poster/public/css/<?= $cssFile ?>.css?v=<?= time() ?>" rel="stylesheet">
     <link href="/Job_poster/public/css/style.css" rel="stylesheet">
-    
+
     <style>
         /* Navbar takes full width at top */
         .top-navbar {
@@ -125,12 +125,13 @@ if ($currentUserId) {
             right: 0;
             z-index: 100;
         }
-        
+
         /* Desktop sidebar - below navbar */
         @media (min-width: 768px) {
             .sidebar {
                 position: fixed;
-                top: 64px; /* Below navbar */
+                top: 64px;
+                /* Below navbar */
                 left: 0;
                 bottom: 0;
                 width: 250px;
@@ -138,78 +139,82 @@ if ($currentUserId) {
                 flex-direction: column;
                 transition: width 0.3s ease;
             }
-            
+
             .main-content {
-                margin-top: 64px; /* Below navbar */
+                margin-top: 64px;
+                /* Below navbar */
                 margin-left: 250px;
                 transition: margin-left 0.3s ease;
             }
-            
+
             /* Minimized state on desktop */
             .sidebar-minimized-state .sidebar {
                 width: 70px;
             }
-            
+
             .sidebar-minimized-state .main-content {
                 margin-left: 70px;
             }
         }
-        
+
         /* Mobile sidebar - slides in from right like public header */
         @media (max-width: 767px) {
             .sidebar {
                 position: fixed;
-                top: 64px; /* Below navbar */
+                top: 64px;
+                /* Below navbar */
                 right: -250px;
                 width: 250px;
                 height: calc(100% - 64px);
                 z-index: 50;
                 transition: right 0.3s ease;
-                box-shadow: -4px 0 6px rgba(0,0,0,0.1);
+                box-shadow: -4px 0 6px rgba(0, 0, 0, 0.1);
                 display: flex;
                 flex-direction: column;
             }
-            
+
             .sidebar.active {
                 right: 0;
             }
-            
+
             .sidebar-overlay {
                 display: none;
                 position: fixed;
-                top: 64px; /* Below navbar */
+                top: 64px;
+                /* Below navbar */
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background: rgba(0,0,0,0.3);
+                background: rgba(0, 0, 0, 0.3);
                 z-index: 40;
             }
-            
+
             .sidebar-overlay.active {
                 display: block;
             }
-            
+
             .main-content {
-                margin-top: 64px; /* Below navbar */
+                margin-top: 64px;
+                /* Below navbar */
                 margin-left: 0;
             }
-            
+
             .toggle-sidebar {
                 display: inline-flex !important;
             }
-            
+
             /* Hide desktop-only sidebar features on mobile */
             .sidebar-toggle-btn {
                 display: none !important;
             }
         }
-        
+
         /* Hide mobile toggle on desktop */
         @media (min-width: 768px) {
             .toggle-sidebar {
                 display: none !important;
             }
-            
+
             .sidebar-overlay {
                 display: none !important;
             }
@@ -220,7 +225,7 @@ if ($currentUserId) {
 <body class="bg-gray-100 <?= $colorClass ?>-theme">
     <!-- Restore sidebar state immediately to prevent flicker (desktop only) -->
     <script>
-        (function() {
+        (function () {
             if (window.innerWidth >= 768) {
                 const isMinimized = localStorage.getItem('sidebarMinimized') === 'true';
                 if (isMinimized) {
@@ -245,7 +250,8 @@ if ($currentUserId) {
                 </div>
                 <button class="sidebar-toggle-btn" onclick="toggleSidebarMinimize()" title="Toggle Sidebar">
                     <svg class="toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
                     </svg>
                 </button>
             </div>
@@ -297,12 +303,11 @@ if ($currentUserId) {
                 <!-- User Profile Dropdown -->
                 <div class="user-profile-container">
                     <button class="user-profile-button" onclick="toggleUserDropdown()">
-                        <img src="<?= htmlspecialchars($userAvatar) ?>" 
-                             alt="Avatar" 
-                             class="user-avatar">
+                        <img src="<?= htmlspecialchars($userAvatar) ?>" alt="Avatar" class="user-avatar">
                         <span class="user-name"><?= htmlspecialchars($userName) ?></span>
                         <svg class="dropdown-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
                         </svg>
                     </button>
 

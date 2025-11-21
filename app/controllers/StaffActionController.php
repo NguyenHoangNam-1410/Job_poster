@@ -1,21 +1,24 @@
 <?php
 require_once __DIR__ . '/../services/StaffActionService.php';
 
-class StaffActionController {
+class StaffActionController
+{
     private $staffActionService;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->staffActionService = new StaffActionService();
     }
 
-    public function index() {
+    public function index()
+    {
         // Get filter parameters
         $userRoleFilter = $_GET['user_role'] ?? '';
         $actionTypeFilter = $_GET['action_type'] ?? '';
         $dateFrom = $_GET['date_from'] ?? '';
         $dateTo = $_GET['date_to'] ?? '';
-        $per_page = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
-        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $per_page = isset($_GET['per_page']) ? (int) $_GET['per_page'] : 10;
+        $current_page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 
         // Validate per_page
         if (!in_array($per_page, [10, 25, 50])) {

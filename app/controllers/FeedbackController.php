@@ -1,24 +1,28 @@
 <?php
 require_once __DIR__ . '/../services/FeedbackService.php';
 
-class FeedbackController {
+class FeedbackController
+{
     private $feedbackService;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->feedbackService = new FeedbackService();
     }
 
-    private function getCurrentUserId() {
+    private function getCurrentUserId()
+    {
         return $_SESSION['user']['id'] ?? null;
     }
 
-    public function index() {
+    public function index()
+    {
         // Get filter parameters
         $search = $_GET['search'] ?? '';
         $dateFrom = $_GET['date_from'] ?? '';
         $dateTo = $_GET['date_to'] ?? '';
-        $per_page = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
-        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $per_page = isset($_GET['per_page']) ? (int) $_GET['per_page'] : 10;
+        $current_page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 
         // Validate per_page
         if (!in_array($per_page, [10, 25, 50])) {
@@ -47,7 +51,7 @@ class FeedbackController {
 
         // Determine which layout to use based on user role
         $userRole = $_SESSION['user']['role'] ?? 'Guest';
-        
+
         if ($userRole === 'Staff') {
             require_once __DIR__ . '/../views/staff/feedbacks/list.php';
         } else {
@@ -55,14 +59,15 @@ class FeedbackController {
         }
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-                  strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 
         try {
             $currentUserId = $this->getCurrentUserId();
             $result = $this->feedbackService->deleteFeedback($id, $currentUserId);
-            
+
             if ($result) {
                 if ($isAjax) {
                     header('Content-Type: application/json');
@@ -96,7 +101,8 @@ class FeedbackController {
         }
     }
 
-    public function myFeedbacks() {
+    public function myFeedbacks()
+    {
         $currentUserId = $this->getCurrentUserId();
         if (!$currentUserId) {
             header('Location: /Job_poster/public/login');
@@ -107,8 +113,8 @@ class FeedbackController {
         $search = $_GET['search'] ?? '';
         $dateFrom = $_GET['date_from'] ?? '';
         $dateTo = $_GET['date_to'] ?? '';
-        $per_page = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
-        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $per_page = isset($_GET['per_page']) ? (int) $_GET['per_page'] : 10;
+        $current_page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 
         // Validate per_page
         if (!in_array($per_page, [10, 25, 50])) {
@@ -138,11 +144,13 @@ class FeedbackController {
         require_once __DIR__ . '/../views/employer/my_feedbacks/list.php';
     }
 
-    public function createMyFeedback() {
+    public function createMyFeedback()
+    {
         require_once __DIR__ . '/../views/employer/my_feedbacks/form.php';
     }
 
-    public function storeMyFeedback() {
+    public function storeMyFeedback()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $currentUserId = $this->getCurrentUserId();
@@ -150,14 +158,14 @@ class FeedbackController {
                     throw new Exception("User not logged in.");
                 }
 
-  
-                $comments = $_POST['comments'] ?? '' ;
+
+                $comments = $_POST['comments'] ?? '';
 
                 $success = $this->feedbackService->createFeedback($currentUserId, $comments);
 
                 if ($success) {
                     header('Location: /Job_poster/public/my-feedbacks?success=' . urlencode('Feedback added successfully'));
-                    exit;         
+                    exit;
                 } else {
                     throw new Exception("Failed to create feedback.");
                 }

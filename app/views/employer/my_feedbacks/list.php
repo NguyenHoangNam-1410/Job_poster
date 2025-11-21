@@ -32,30 +32,29 @@
                 <!-- Date From -->
                 <div class="flex-1">
                     <label for="date_from" class="block text-sm font-medium text-gray-700 mb-2">Date From</label>
-                    <input type="date" name="date_from" id="date_from" 
-                           value="<?= htmlspecialchars($pagination['date_from'] ?? '') ?>"
-                           class="form-input w-full"
-                           onchange="document.getElementById('feedbackFilterForm').submit()">
+                    <input type="date" name="date_from" id="date_from"
+                        value="<?= htmlspecialchars($pagination['date_from'] ?? '') ?>" class="form-input w-full"
+                        onchange="document.getElementById('feedbackFilterForm').submit()">
                 </div>
 
                 <!-- Date To -->
                 <div class="flex-1">
                     <label for="date_to" class="block text-sm font-medium text-gray-700 mb-2">Date To</label>
-                    <input type="date" name="date_to" id="date_to" 
-                           value="<?= htmlspecialchars($pagination['date_to'] ?? '') ?>"
-                           class="form-input w-full"
-                           onchange="document.getElementById('feedbackFilterForm').submit()">
+                    <input type="date" name="date_to" id="date_to"
+                        value="<?= htmlspecialchars($pagination['date_to'] ?? '') ?>" class="form-input w-full"
+                        onchange="document.getElementById('feedbackFilterForm').submit()">
                 </div>
-                
+
                 <div class="sm:w-32">
                     <label for="per_page" class="block text-sm font-medium text-gray-700 mb-2">Per Page</label>
-                    <select id="per_page" name="per_page" class="form-select" onchange="document.getElementById('feedbackFilterForm').submit()">
+                    <select id="per_page" name="per_page" class="form-select"
+                        onchange="document.getElementById('feedbackFilterForm').submit()">
                         <option value="10" <?= ($pagination['per_page'] ?? 10) == 10 ? 'selected' : '' ?>>10</option>
                         <option value="25" <?= ($pagination['per_page'] ?? 10) == 25 ? 'selected' : '' ?>>25</option>
                         <option value="50" <?= ($pagination['per_page'] ?? 10) == 50 ? 'selected' : '' ?>>50</option>
                     </select>
                 </div>
-                
+
                 <div class="flex gap-2 items-end">
                     <a href="/Job_poster/public/my-feedbacks" class="btn-cancel">
                         Clear
@@ -99,9 +98,9 @@
                                     </td>
                                     <td class="table-cell"><?= nl2br(htmlspecialchars($feedback->getComments())) ?></td>
                                     <td class="table-cell">
-                                        <?php 
+                                        <?php
                                         $date = new DateTime($feedback->getCreatedAt());
-                                        echo $date->format('M d, Y'); 
+                                        echo $date->format('M d, Y');
                                         ?>
                                         <span class="text-gray-500 text-xs block"><?= $date->format('h:i A') ?></span>
                                     </td>
@@ -112,10 +111,10 @@
                 </div>
 
                 <!-- Pagination -->
-                <?php 
+                <?php
                 require_once __DIR__ . '/../../components/pagination.php';
                 renderPagination(
-                    $pagination, 
+                    $pagination,
                     '/Job_poster/public/my-feedbacks',
                     [
                         'date_from' => $pagination['date_from'] ?? '',
