@@ -3,6 +3,7 @@
 // Load header based on user role
 include __DIR__ . '/../../layouts/auth_header.php';
 ?>
+<link href="/Job_poster/public/css/style.css" rel="stylesheet">
 
 <div class="list-container">
     <div class="list-content max-w-3xl mx-auto">
