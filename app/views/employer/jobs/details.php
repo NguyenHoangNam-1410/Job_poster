@@ -4,7 +4,7 @@ $isModal = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTE
 
 if (!$isModal) {
     $pageTitle = 'Job Details';
-    require_once __DIR__ . '/../../layouts/public_header.php';
+    require_once __DIR__ . '/../../layouts/auth_header.php';
 }
 require_once __DIR__ . '/../../../helpers/Icons.php';
 
@@ -168,7 +168,7 @@ $jobCategoryIds = array_column($jobCategories, 'id');
         </div>
     </div>
 
-    <?php include __DIR__ . '/../../layouts/public_footer.php'; ?>
+    <?php include __DIR__ . '/../../layouts/auth_footer.php'; ?>
 <?php endif; ?>
 
 <?php if ($isModal): ?>

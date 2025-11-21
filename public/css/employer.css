@@ -1,11 +1,11 @@
 ﻿@import url('auth-shared.css');
 
 .sidebar {
-    background: linear-gradient(135deg, #022008 0%, #015a23 100%);
+    background: linear-gradient(135deg, #000000 0%, #03471d 100%);
 }
 
 .navbar-brand .brand-link {
-    background: linear-gradient(135deg, #01160c 0%, #068811 100%);
+    background: linear-gradient(135deg, #02140c 0%, #034909 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

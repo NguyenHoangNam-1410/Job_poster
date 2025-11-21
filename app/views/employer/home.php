@@ -38,7 +38,8 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
         <!-- Welcome Header -->
         <div class="mb-8">
             <h1 class="text-4xl font-bold text-gray-800 mb-2">Hi,
-                <?= htmlspecialchars($_SESSION['user']['name'] ?? 'Employer'); ?>!</h1>
+                <?= htmlspecialchars($_SESSION['user']['name'] ?? 'Employer'); ?>!
+            </h1>
             <p class="text-gray-600">Here's your job posting overview</p>
         </div>
 
@@ -53,9 +54,8 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                 </div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">No Job Postings Yet</h2>
                 <p class="text-gray-600 mb-6">Start by creating your first job posting to attract talented candidates</p>
-                <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/create', 'Create New Job')"
-                    class="inline-flex items-center px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/create', 'Create New Job')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
@@ -81,7 +81,8 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                             onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $recentApproved->getId() ?>', 'Job Details')"
                             class="block p-6 hover:bg-gray-50 transition text-left w-full">
                             <h4 class="font-bold text-xl text-gray-800 mb-2">
-                                <?= htmlspecialchars($recentApproved->getTitle()) ?></h4>
+                                <?= htmlspecialchars($recentApproved->getTitle()) ?>
+                            </h4>
                             <p class="text-sm text-gray-600 mb-2">
                                 <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -125,7 +126,8 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                             onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $recentRejected->getId() ?>', 'Job Details')"
                             class="block p-6 hover:bg-gray-50 transition text-left w-full">
                             <h4 class="font-bold text-xl text-gray-800 mb-2">
-                                <?= htmlspecialchars($recentRejected->getTitle()) ?></h4>
+                                <?= htmlspecialchars($recentRejected->getTitle()) ?>
+                            </h4>
                             <p class="text-sm text-gray-600 mb-2">
                                 <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -201,7 +203,7 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
             <!-- View All Jobs Button -->
             <div class="mt-8 text-center">
                 <a href="/Job_poster/public/my-jobs"
-                    class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+                    class="btn-submit inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />

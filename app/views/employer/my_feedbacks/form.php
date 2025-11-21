@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../../layouts/public_header.php'; ?>
+<?php require_once __DIR__ . '/../../layouts/auth_header.php'; ?>
 
 <div class="container mx-auto px-4 py-8">
     <div class="bg-white rounded-lg shadow-md p-6 max-w-3xl mx-auto">
@@ -34,8 +34,7 @@
             </div>
 
             <div>
-                <button type="submit"
-                    class="bg-blue-600 text-white px-5 py-2 rounded-md shadow hover:bg-blue-700 transition duration-200">
+                <button type="submit" class="btn-submit">
                     Submit Feedback
                 </button>
             </div>
@@ -43,4 +42,4 @@
     </div>
 </div>
 
-<?php require_once __DIR__ . '/../../layouts/public_footer.php'; ?>
+<?php require_once __DIR__ . '/../../layouts/auth_footer.php'; ?>

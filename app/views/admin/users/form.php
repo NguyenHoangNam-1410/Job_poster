@@ -115,7 +115,7 @@ $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User'
                 <?php
                 // Fetch employer data
                 require_once __DIR__ . '/../../../dao/EmployerDAO.php';
-                $employerDAO = new EmployderDAO();
+                $employerDAO = new EmployerDAO();
                 $employer = $employerDAO->getByUserId($user->getId());
                 ?>
                 

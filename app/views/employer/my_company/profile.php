@@ -56,7 +56,7 @@ if (!$isModal) {
                                 alt="Logo Preview" class="w-24 h-24 rounded-full object-cover border-2 border-gray-300">
                         </div>
                         <div class="flex-1">
-                            <label for="logo" class="btn-submit cursor-pointer inline-block">
+                            <label for="logo" class="btn-submit cursor-pointer">
                                 Choose Logo
                             </label>
                             <input type="file" id="logo" name="logo" accept="image/jpeg,image/png,image/gif,image/webp"

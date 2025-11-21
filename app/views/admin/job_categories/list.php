@@ -12,31 +12,12 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
             </div>
             <button
                 onclick="window.formModal.loadForm('/Job_poster/public/job-categories/create?ajax=1', 'Create New Category')"
-                class="relative inline-flex items-center gap-2 px-6 py-3 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 group overflow-hidden"
-                style="background: linear-gradient(270deg, #020918ff, #070442ff, #595cb4ff, #201d5eff, #011c57ff); background-size: 400% 400%; animation: gradientWave 3s ease infinite;">
-                <span
-                    class="flex items-center justify-center w-5 h-5 rounded-full bg-white/20 group-hover:bg-white/30 transition-colors relative z-10">
+                class="btn-submit">
+                <span class="flex items-center justify-center w-5 h-5 rounded-full bg-white/20 group-hover:bg-white/30 transition-colors relative z-10">
                     <?= Icons::add('w-3 h-3') ?>
                 </span>
-                <span class="font-semibold relative z-10">Add Category</span>
-                <span
-                    class="absolute inset-0 rounded-lg bg-white opacity-0 group-hover:opacity-10 transition-opacity"></span>
+                <span>Add Category</span>
             </button>
-            <style>
-                @keyframes gradientWave {
-                    0% {
-                        background-position: 0% 50%;
-                    }
-
-                    50% {
-                        background-position: 100% 50%;
-                    }
-
-                    100% {
-                        background-position: 0% 50%;
-                    }
-                }
-            </style>
         </div>
 
         <!-- Search and Filter Form -->
