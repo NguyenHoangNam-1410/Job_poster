@@ -7,6 +7,7 @@ if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'Admin') {
     include __DIR__ . '/../../layouts/staff_header.php';
 }
 ?>
+<link href="/Job_poster/public/css/style.css" rel="stylesheet">
 
 <div class="list-container">
     <div class="list-content max-w-3xl mx-auto">

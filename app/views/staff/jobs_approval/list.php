@@ -54,7 +54,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     <!-- Clear Button -->
                     <div>
                         <a href="/Job_poster/public/approvals" class="btn-cancel">
-                            Clear Filters
+                            Clear
                         </a>
                     </div>
                 </div>
