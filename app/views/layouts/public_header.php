@@ -159,6 +159,10 @@
 
 <body class="bg-gray-50">
 
+<?php
+// Safely get user role to avoid "Undefined array key" errors
+$userRole = $_SESSION['user']['role'] ?? null;
+?>
 
   <!-- Header -->
   <header class="y2k-header text-white">
@@ -178,7 +182,7 @@
         <?php else: ?>
           <a href="/Job_poster/public/"
             class="y2k-nav-link <?= $_SERVER['REQUEST_URI'] === '/Job_poster/public/' ? 'active' : '' ?>">Home</a>
-          <?php if ($_SESSION['user']['role'] == 'Employer'): ?>
+          <?php if ($userRole == 'Employer'): ?>
             <a href="/Job_poster/public/company-profile"
               class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/company-profile') !== false ? 'active' : '' ?>">Company
               Profile</a>
@@ -186,7 +190,7 @@
               class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/my-jobs') !== false ? 'active' : '' ?>">My Jobs</a>
             <a href="/Job_poster/public/my-feedbacks"
               class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/my-feedbacks') !== false ? 'active' : '' ?>">Feedbacks</a>
-          <?php elseif ($_SESSION['user']['role'] == 'Admin'): ?>
+          <?php elseif ($userRole == 'Admin'): ?>
             <a href="/Job_poster/public/users" class="y2k-nav-link">Users</a>
             <a href="/Job_poster/public/job-categories" class="y2k-nav-link">Categories</a>
             <a href="/Job_poster/public/jobs-manage" class="y2k-nav-link">Jobs</a>
@@ -194,7 +198,7 @@
             <a href="/Job_poster/public/staff-actions" class="y2k-nav-link">History</a>
             <a href="/Job_poster/public/statistics" class="y2k-nav-link">Statistics</a>
             <a href="/Job_poster/public/feedbacks" class="y2k-nav-link">Feedbacks</a>
-          <?php elseif ($_SESSION['user']['role'] == 'Staff'): ?>
+          <?php elseif ($userRole == 'Staff'): ?>
             <a href="/Job_poster/public/approvals" class="y2k-nav-link">Request Approval</a>
             <a href="/Job_poster/public/reports" class="y2k-nav-link">Reports</a>
             <a href="/Job_poster/public/jobs-manage" class="y2k-nav-link">Jobs</a>
@@ -208,7 +212,7 @@
               alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-white shadow">
             <div class="flex flex-col">
               <span class="text-sm font-semibold text-white"><?= $_SESSION['user']['name'] ?? 'User' ?></span>
-              <span class="text-xs text-gray-200"><?= $_SESSION['user']['role'] ?? 'User' ?></span>
+              <span class="text-xs text-gray-200"><?= $userRole ?? 'User' ?></span>
             </div>
           </a>
           <a href="/Job_poster/public/logout"
@@ -248,7 +252,7 @@
             <?= Icons::home() ?>
             <span class="menu-text">Home</span>
           </a>
-          <?php if ($_SESSION['user']['role'] == 'Employer'): ?>
+          <?php if ($userRole == 'Employer'): ?>
             <div class="menu-section">Company Management</div>
             <a href="/Job_poster/public/company-profile"
               class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/company-profile') !== false ? 'active' : '' ?>"
@@ -270,7 +274,7 @@
               <?= Icons::comment() ?>
               <span class="menu-text">My Feedbacks</span>
             </a>
-          <?php elseif ($_SESSION['user']['role'] == 'Admin'): ?>
+          <?php elseif ($userRole == 'Admin'): ?>
             <div class="menu-section">User Management</div>
             <a href="/Job_poster/public/users"
               class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/users') !== false ? 'active' : '' ?>"
@@ -334,7 +338,7 @@
             </a>
 
             <!-- Staff Views -->
-          <?php elseif ($_SESSION['user']['role'] == 'Staff'): ?>
+          <?php elseif ($userRole == 'Staff'): ?>
             <div class="menu-section">Job Requests</div>
             <a href="/Job_poster/public/approvals"
               class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/approvals') !== false ? 'active' : '' ?>">

@@ -55,79 +55,144 @@ function status_badge_class($st)
 ?>
 <style href="/Job_poster/public/css/jobs-listing.css"></style>
 
-<style>
-  /* Force Choices.js to have white background and black border like Status filter */
-  .choices.is-focused .choices__inner,
-  .choices.is-open .choices__inner {
-    border-color: #0688B4 !important;
-    box-shadow: 3px 3px 0 rgba(6, 136, 180, 0.3) !important;
-    transform: translate(-1px, -1px) !important;
-  }
+  <style>
+    /* Force Choices.js to have white background and black border like Status filter */
+    .choices.is-focused .choices__inner,
+    .choices.is-open .choices__inner {
+      border-color: #0688B4 !important;
+      box-shadow: 3px 3px 0 rgba(6, 136, 180, 0.3) !important;
+      transform: translate(-1px, -1px) !important;
+    }
 
-  .choices__inner {
-    background: white !important;
-    background-color: white !important;
-    border: 2px solid #1a1a1a !important;
-    border-radius: 0 !important;
-  }
+    .choices__inner {
+      background: white !important;
+      background-color: white !important;
+      border: 2px solid #1a1a1a !important;
+      border-radius: 0 !important;
+      min-height: 48px !important;
+      height: 48px !important;
+    }
 
-  .choices__list--multiple .choices__item {
-    background-color: transparent !important;
-    background: transparent !important;
-    border: 2px solid #1a1a1a !important;
-    border-radius: 0 !important;
-    color: #1a1a1a !important;
-  }
+    /* Ensure all filter inputs have same size */
+    .jobs-filter-select,
+    .choices__inner {
+      min-height: 48px !important;
+      height: 48px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
 
-  .choices__button {
-    color: #1a1a1a !important;
-    border-left-color: #1a1a1a !important;
-  }
+    /* Ensure filter containers have same height */
+    .grid > .relative {
+      display: flex;
+      flex-direction: column;
+    }
 
-  /* Style for single-select Choices (Status) */
-  #statusSelect+.choices .choices__inner {
-    cursor: pointer;
-  }
+    .grid > .relative > label {
+      margin-bottom: 0.5rem;
+    }
 
-  #statusSelect+.choices .choices__list--single {
-    padding: 0;
-  }
+    .choices__list--multiple .choices__item {
+      background-color: transparent !important;
+      background: transparent !important;
+      border: 2px solid #1a1a1a !important;
+      border-radius: 0 !important;
+      color: #1a1a1a !important;
+    }
 
-  /* Ensure all Choices dropdowns have consistent styling */
-  .choices__list--dropdown {
-    border: 2px solid #1a1a1a !important;
-    border-radius: 0 !important;
-    border-top: none !important;
-  }
+    /* Remove arrow from selected items */
+    .choices__list--multiple .choices__item::after,
+    .choices__list--multiple .choices__item::before,
+    .choices__list--multiple .choices__item *::after,
+    .choices__list--multiple .choices__item *::before {
+      display: none !important;
+      content: none !important;
+      visibility: hidden !important;
+    }
 
-  /* Add dropdown arrow like Status select */
-  .choices[data-type*="select-multiple"] .choices__inner::after,
-  .choices[data-type*="select-one"] .choices__inner::after {
-    content: '' !important;
-    position: absolute !important;
-    right: 1rem !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    width: 0 !important;
-    height: 0 !important;
-    border-left: 5px solid transparent !important;
-    border-right: 5px solid transparent !important;
-    border-top: 6px solid #1a1a1a !important;
-    pointer-events: none !important;
-    margin: 0 !important;
-  }
+    /* Remove any arrow icons from selected items */
+    .choices__list--multiple .choices__item svg,
+    .choices__list--multiple .choices__item .choices__icon,
+    .choices__list--multiple .choices__item [class*="arrow"],
+    .choices__list--multiple .choices__item [class*="triangle"] {
+      display: none !important;
+      visibility: hidden !important;
+    }
 
-  .choices[data-type*="select-multiple"].is-open .choices__inner::after,
-  .choices[data-type*="select-one"].is-open .choices__inner::after {
-    border-top: none !important;
-    border-bottom: 6px solid #1a1a1a !important;
-  }
+    .choices__button {
+      color: #1a1a1a !important;
+      border-left-color: #1a1a1a !important;
+    }
 
-  /* Make room for arrow */
-  .choices__inner {
-    padding-right: 2.5rem !important;
-  }
-</style>
+    /* Style for single-select Choices (Status) */
+    #statusSelect+.choices .choices__inner {
+      cursor: pointer;
+    }
+
+    #statusSelect+.choices .choices__list--single {
+      padding: 0;
+    }
+
+    /* Ensure all Choices dropdowns have consistent styling */
+    .choices__list--dropdown {
+      border: 2px solid #1a1a1a !important;
+      border-radius: 0 !important;
+      border-top: none !important;
+    }
+
+    /* Prevent dropdown from auto-opening - hide by default */
+    .choices__list--dropdown {
+      display: none !important;
+    }
+
+    /* Show dropdown only when is-open class is present */
+    .choices.is-open .choices__list--dropdown {
+      display: block !important;
+    }
+
+    /* Remove all arrows from dropdown items */
+    .choices__list--dropdown .choices__item::after,
+    .choices__list--dropdown .choices__item::before,
+    .choices__list--dropdown .choices__item *::after,
+    .choices__list--dropdown .choices__item *::before,
+    .choices__list--dropdown .choices__item--selectable::after,
+    .choices__list--dropdown .choices__item--selectable::before,
+    .choices__list--dropdown .choices__item--selectable.is-highlighted::after,
+    .choices__list--dropdown .choices__item--selectable.is-highlighted::before,
+    .choices__list--dropdown .choices__item.is-selected::after,
+    .choices__list--dropdown .choices__item.is-selected::before {
+      display: none !important;
+      content: none !important;
+      visibility: hidden !important;
+    }
+
+    /* Remove ALL arrows from ALL filters (Categories, Locations, Status) */
+    .choices[data-type*="select-multiple"] .choices__inner::after,
+    .choices[data-type*="select-one"] .choices__inner::after,
+    .choices .choices__inner::after {
+      display: none !important;
+      content: none !important;
+      visibility: hidden !important;
+    }
+
+    .choices[data-type*="select-multiple"].is-open .choices__inner::after,
+    .choices[data-type*="select-one"].is-open .choices__inner::after,
+    .choices.is-open .choices__inner::after {
+      display: none !important;
+      content: none !important;
+      visibility: hidden !important;
+    }
+
+    /* No extra padding needed since no arrows */
+    .choices__inner {
+      padding-right: 1rem !important;
+    }
+
+    /* Prevent auto-focus on page load */
+    .choices__inner:focus {
+      outline: none !important;
+    }
+  </style>
 
 <script>
   document.body.classList.add('jobs-listing-page');
@@ -522,6 +587,9 @@ function status_badge_class($st)
 
     // Initialize Choices.js for categories (max 3)
     if (elCategorySelect) {
+      // Prevent auto-focus
+      elCategorySelect.setAttribute('tabindex', '-1');
+      
       categoryChoices = new Choices(elCategorySelect, {
         removeItemButton: true,
         searchEnabled: true,
@@ -530,7 +598,20 @@ function status_badge_class($st)
         maxItemCount: 3,
         maxItemText: (maxItemCount) => `Only ${maxItemCount} categories allowed`,
         noResultsText: 'No categories found',
+        allowHTML: false,
+        shouldSort: false,
+        shouldSortItems: false,
       });
+
+      // Ensure dropdown is closed after initialization
+      setTimeout(() => {
+        if (categoryChoices) {
+          categoryChoices.hideDropdown();
+          // Remove focus if any
+          const inner = categoryChoices.containerOuter.element.querySelector('.choices__inner');
+          if (inner) inner.blur();
+        }
+      }, 50);
 
       elCategorySelect.addEventListener('change', () => {
         resetAndLoad();
@@ -539,6 +620,9 @@ function status_badge_class($st)
 
     // Initialize Choices.js for locations (unlimited, OR logic)
     if (elLocationSelect) {
+      // Prevent auto-focus
+      elLocationSelect.setAttribute('tabindex', '-1');
+      
       locationChoices = new Choices(elLocationSelect, {
         removeItemButton: true,
         searchEnabled: true,
@@ -546,7 +630,20 @@ function status_badge_class($st)
         placeholderValue: '',
         maxItemCount: -1,
         noResultsText: 'No locations found',
+        allowHTML: false,
+        shouldSort: false,
+        shouldSortItems: false,
       });
+
+      // Ensure dropdown is closed after initialization
+      setTimeout(() => {
+        if (locationChoices) {
+          locationChoices.hideDropdown();
+          // Remove focus if any
+          const inner = locationChoices.containerOuter.element.querySelector('.choices__inner');
+          if (inner) inner.blur();
+        }
+      }, 50);
 
       elLocationSelect.addEventListener('change', () => {
         resetAndLoad();
@@ -555,12 +652,27 @@ function status_badge_class($st)
 
     // Initialize Choices.js for status (single select)
     if (elStatusSelect) {
+      // Prevent auto-focus
+      elStatusSelect.setAttribute('tabindex', '-1');
+      
       statusChoices = new Choices(elStatusSelect, {
         searchEnabled: false,
         itemSelectText: '',
         shouldSort: false,
+        shouldSortItems: false,
         placeholder: false,
+        allowHTML: false,
       });
+
+      // Ensure dropdown is closed after initialization
+      setTimeout(() => {
+        if (statusChoices) {
+          statusChoices.hideDropdown();
+          // Remove focus if any
+          const inner = statusChoices.containerOuter.element.querySelector('.choices__inner');
+          if (inner) inner.blur();
+        }
+      }, 50);
 
       elStatusSelect.addEventListener('change', () => {
         resetAndLoad();

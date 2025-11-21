@@ -158,6 +158,12 @@ body.jobs-listing-page {
   font-family: 'Courier New', monospace;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  min-height: 48px;
+  height: 48px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
 }
 
 .jobs-filter-select:focus {
@@ -194,7 +200,7 @@ body .choices__inner,
   font-weight: 700 !important;
   color: #1a1a1a !important;
   min-height: 48px !important;
-  height: auto !important;
+  height: 48px !important;
   font-family: 'Courier New', monospace !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
@@ -206,6 +212,7 @@ body .choices__inner,
   cursor: pointer !important;
   width: 100% !important;
   box-sizing: border-box !important;
+  overflow: hidden !important;
 }
 
 .jobs-search-container .choices__inner:focus,
@@ -266,6 +273,27 @@ main .choices__list--dropdown .choices__item--selectable.is-highlighted {
   color: white !important;
 }
 
+/* Remove arrow from highlighted/selected items in dropdown */
+.jobs-search-container .choices__list--dropdown .choices__item--selectable.is-highlighted::after,
+.jobs-search-section .choices__list--dropdown .choices__item--selectable.is-highlighted::after,
+main .choices__list--dropdown .choices__item--selectable.is-highlighted::after,
+body .choices__list--dropdown .choices__item--selectable.is-highlighted::after,
+.choices__list--dropdown .choices__item--selectable.is-highlighted::after,
+.jobs-search-container .choices__list--dropdown .choices__item--selectable.is-highlighted::before,
+.jobs-search-section .choices__list--dropdown .choices__item--selectable.is-highlighted::before,
+main .choices__list--dropdown .choices__item--selectable.is-highlighted::before,
+body .choices__list--dropdown .choices__item--selectable.is-highlighted::before,
+.choices__list--dropdown .choices__item--selectable.is-highlighted::before,
+.jobs-search-container .choices__list--dropdown .choices__item.is-selected::after,
+.jobs-search-section .choices__list--dropdown .choices__item.is-selected::after,
+main .choices__list--dropdown .choices__item.is-selected::after,
+body .choices__list--dropdown .choices__item.is-selected::after,
+.choices__list--dropdown .choices__item.is-selected::after {
+  display: none !important;
+  content: none !important;
+  visibility: hidden !important;
+}
+
 .jobs-search-container .choices__list--multiple .choices__item,
 .jobs-search-section .choices__list--multiple .choices__item,
 main .choices__list--multiple .choices__item,
@@ -286,6 +314,57 @@ body .choices__list--multiple .choices__item,
   display: inline-flex !important;
   align-items: center !important;
   gap: 0.4rem !important;
+}
+
+/* Remove arrow/triangle from selected items */
+.jobs-search-container .choices__list--multiple .choices__item::after,
+.jobs-search-section .choices__list--multiple .choices__item::after,
+main .choices__list--multiple .choices__item::after,
+body .choices__list--multiple .choices__item::after,
+.choices__list--multiple .choices__item::after,
+.jobs-search-container .choices__list--multiple .choices__item::before,
+.jobs-search-section .choices__list--multiple .choices__item::before,
+main .choices__list--multiple .choices__item::before,
+body .choices__list--multiple .choices__item::before,
+.choices__list--multiple .choices__item::before,
+.jobs-search-container .choices__list--multiple .choices__item *::after,
+.jobs-search-section .choices__list--multiple .choices__item *::after,
+main .choices__list--multiple .choices__item *::after,
+body .choices__list--multiple .choices__item *::after,
+.choices__list--multiple .choices__item *::after,
+.jobs-search-container .choices__list--multiple .choices__item *::before,
+.jobs-search-section .choices__list--multiple .choices__item *::before,
+main .choices__list--multiple .choices__item *::before,
+body .choices__list--multiple .choices__item *::before,
+.choices__list--multiple .choices__item *::before {
+  display: none !important;
+  content: none !important;
+  visibility: hidden !important;
+}
+
+/* Remove any arrow icons from selected items */
+.jobs-search-container .choices__list--multiple .choices__item svg,
+.jobs-search-section .choices__list--multiple .choices__item svg,
+main .choices__list--multiple .choices__item svg,
+body .choices__list--multiple .choices__item svg,
+.choices__list--multiple .choices__item svg,
+.jobs-search-container .choices__list--multiple .choices__item .choices__icon,
+.jobs-search-section .choices__list--multiple .choices__item .choices__icon,
+main .choices__list--multiple .choices__item .choices__icon,
+body .choices__list--multiple .choices__item .choices__icon,
+.choices__list--multiple .choices__item .choices__icon,
+.jobs-search-container .choices__list--multiple .choices__item [class*="arrow"],
+.jobs-search-section .choices__list--multiple .choices__item [class*="arrow"],
+main .choices__list--multiple .choices__item [class*="arrow"],
+body .choices__list--multiple .choices__item [class*="arrow"],
+.choices__list--multiple .choices__item [class*="arrow"],
+.jobs-search-container .choices__list--multiple .choices__item [class*="triangle"],
+.jobs-search-section .choices__list--multiple .choices__item [class*="triangle"],
+main .choices__list--multiple .choices__item [class*="triangle"],
+body .choices__list--multiple .choices__item [class*="triangle"],
+.choices__list--multiple .choices__item [class*="triangle"] {
+  display: none !important;
+  visibility: hidden !important;
 }
 
 .jobs-search-container .choices__list--multiple .choices__item.is-highlighted,
@@ -372,41 +451,92 @@ main .choices[data-type*="text"] .choices__button {
   border-left: 2px solid #1a1a1a !important;
 }
 
+/* Remove all arrows from dropdown items */
+.jobs-search-container .choices__list--dropdown .choices__item::after,
+.jobs-search-section .choices__list--dropdown .choices__item::after,
+main .choices__list--dropdown .choices__item::after,
+body .choices__list--dropdown .choices__item::after,
+.choices__list--dropdown .choices__item::after,
+.jobs-search-container .choices__list--dropdown .choices__item::before,
+.jobs-search-section .choices__list--dropdown .choices__item::before,
+main .choices__list--dropdown .choices__item::before,
+body .choices__list--dropdown .choices__item::before,
+.choices__list--dropdown .choices__item::before,
 .jobs-search-container .choices__list--dropdown .choices__item--selectable::after,
 .jobs-search-section .choices__list--dropdown .choices__item--selectable::after,
-main .choices__list--dropdown .choices__item--selectable::after {
+main .choices__list--dropdown .choices__item--selectable::after,
+body .choices__list--dropdown .choices__item--selectable::after,
+.choices__list--dropdown .choices__item--selectable::after,
+.jobs-search-container .choices__list--dropdown .choices__item *::after,
+.jobs-search-section .choices__list--dropdown .choices__item *::after,
+main .choices__list--dropdown .choices__item *::after,
+body .choices__list--dropdown .choices__item *::after,
+.choices__list--dropdown .choices__item *::after {
   display: none !important;
+  content: none !important;
+  visibility: hidden !important;
 }
 
-/* Dropdown arrow - match native select */
+/* Remove ALL arrows from ALL filters (Categories, Locations, Status) */
 .jobs-search-container .choices[data-type*="select-multiple"]::after,
-.jobs-search-container .choices[data-type*="select-one"]::after,
 .jobs-search-section .choices[data-type*="select-multiple"]::after,
-.jobs-search-section .choices[data-type*="select-one"]::after,
 main .choices[data-type*="select-multiple"]::after,
-main .choices[data-type*="select-one"]::after {
-  border-color: #1a1a1a transparent transparent transparent !important;
-  border-style: solid !important;
-  border-width: 5px 4px 0 4px !important;
-  content: '' !important;
-  height: 0 !important;
-  margin-top: -2.5px !important;
-  pointer-events: none !important;
-  position: absolute !important;
-  right: 1rem !important;
-  top: 50% !important;
-  width: 0 !important;
+body .choices[data-type*="select-multiple"]::after,
+.choices[data-type*="select-multiple"]::after,
+.jobs-search-container .choices[data-type*="select-one"]::after,
+.jobs-search-section .choices[data-type*="select-one"]::after,
+main .choices[data-type*="select-one"]::after,
+body .choices[data-type*="select-one"]::after,
+.choices[data-type*="select-one"]::after,
+.jobs-search-container .choices::after,
+.jobs-search-section .choices::after,
+main .choices::after,
+body .choices::after,
+.choices::after {
+  display: none !important;
+  content: none !important;
+  visibility: hidden !important;
 }
 
 .jobs-search-container .choices[data-type*="select-multiple"].is-open::after,
-.jobs-search-container .choices[data-type*="select-one"].is-open::after,
 .jobs-search-section .choices[data-type*="select-multiple"].is-open::after,
-.jobs-search-section .choices[data-type*="select-one"].is-open::after,
 main .choices[data-type*="select-multiple"].is-open::after,
-main .choices[data-type*="select-one"].is-open::after {
-  border-color: transparent transparent #1a1a1a transparent !important;
-  border-width: 0 4px 5px 4px !important;
-  margin-top: -2.5px !important;
+body .choices[data-type*="select-multiple"].is-open::after,
+.choices[data-type*="select-multiple"].is-open::after,
+.jobs-search-container .choices[data-type*="select-one"].is-open::after,
+.jobs-search-section .choices[data-type*="select-one"].is-open::after,
+main .choices[data-type*="select-one"].is-open::after,
+body .choices[data-type*="select-one"].is-open::after,
+.choices[data-type*="select-one"].is-open::after,
+.jobs-search-container .choices.is-open::after,
+.jobs-search-section .choices.is-open::after,
+main .choices.is-open::after,
+body .choices.is-open::after,
+.choices.is-open::after {
+  display: none !important;
+  content: none !important;
+  visibility: hidden !important;
+}
+
+/* Remove arrows from choices__inner as well */
+.jobs-search-container .choices[data-type*="select-multiple"] .choices__inner::after,
+.jobs-search-section .choices[data-type*="select-multiple"] .choices__inner::after,
+main .choices[data-type*="select-multiple"] .choices__inner::after,
+body .choices[data-type*="select-multiple"] .choices__inner::after,
+.choices[data-type*="select-multiple"] .choices__inner::after,
+.jobs-search-container .choices[data-type*="select-one"] .choices__inner::after,
+.jobs-search-section .choices[data-type*="select-one"] .choices__inner::after,
+main .choices[data-type*="select-one"] .choices__inner::after,
+body .choices[data-type*="select-one"] .choices__inner::after,
+.choices[data-type*="select-one"] .choices__inner::after,
+.jobs-search-container .choices .choices__inner::after,
+.jobs-search-section .choices .choices__inner::after,
+main .choices .choices__inner::after,
+body .choices .choices__inner::after,
+.choices .choices__inner::after {
+  display: none !important;
+  content: none !important;
+  visibility: hidden !important;
 }
 
 /* Vertical Text Labels - Artistic */
