@@ -31,7 +31,7 @@ WorkNest is a full-featured job board management system designed to streamline t
 - **Related Jobs**: Discover similar job opportunities based on category and criteria
 
 ### For Admin & Staff
-- **User Management**: Manage user accounts, roles, and permissions
+- **User Management**: Manage user s, roles, and permissions
 - **Company Approval**: Review and approve company registrations
 - **Job Moderation**: Monitor and moderate job postings for compliance
 - **Category Management**: Create and organize job categories
@@ -161,10 +161,10 @@ The application uses a MySQL database (`job_poster`) with the following main tab
 
 ### Core Tables
 
-**`users`** - User accounts and authentication
+**`users`** - User s and authentication
 - User credentials, roles (admin, staff, employer, job_seeker)
 - Profile information (name, email, phone, address)
-- Account status and verification
+-  status and verification
 
 **`employers`** - Company/Employer profiles
 - Company information (name, description, industry)
@@ -197,7 +197,7 @@ The application uses a MySQL database (`job_poster`) with the following main tab
 **`staff_actions`** - Audit trail
 - Staff activity logging
 - Action types and timestamps
-- User accountability tracking
+- User ability tracking
 
 **`statistics`** - Analytics data
 - View counts and engagement metrics
@@ -205,7 +205,7 @@ The application uses a MySQL database (`job_poster`) with the following main tab
 - Platform usage data
 
 ### Relationships
-- Users → Employers (1:1 for employer accounts)
+- Users → Employers (1:1 for employer s)
 - Employers → Jobs (1:N)
 - Jobs → Job Categories (N:1)
 - Jobs → Applications (1:N)
@@ -314,24 +314,6 @@ Open your web browser and navigate to:
 - **Job Listings**: http://localhost/Worknest/public/?page=jobs
 - **Admin/Staff Login**: http://localhost/Worknest/public/?page=login
 - **Employer Registration**: http://localhost/Worknest/public/?page=register
-
-#### 9. Default Credentials (if sample data is imported)
-
-After importing `init_db.sql`, you can use these test accounts:
-
-**Admin Account:**
-- Email: `admin@worknest.com`
-- Password: `admin123`
-
-**Staff Account:**
-- Email: `staff@worknest.com`
-- Password: `staff123`
-
-**Employer Account:**
-- Email: `employer@worknest.com`
-- Password: `employer123`
-
-**Note:** Change these credentials immediately in production!
 
 ## 💡 Usage Guide
 
