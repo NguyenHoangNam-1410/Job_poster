@@ -78,7 +78,7 @@ class FeedbackController
                     ]);
                     exit;
                 } else {
-                    header('Location: /Job_poster/public/feedbacks?success=' . urlencode('Feedback deleted successfully'));
+                    header('Location: /Worknest/public/feedbacks?success=' . urlencode('Feedback deleted successfully'));
                     exit;
                 }
             } else {
@@ -95,7 +95,7 @@ class FeedbackController
                 ]);
                 exit;
             } else {
-                header('Location: /Job_poster/public/feedbacks?error=' . urlencode($e->getMessage()));
+                header('Location: /Worknest/public/feedbacks?error=' . urlencode($e->getMessage()));
                 exit;
             }
         }
@@ -105,7 +105,7 @@ class FeedbackController
     {
         $currentUserId = $this->getCurrentUserId();
         if (!$currentUserId) {
-            header('Location: /Job_poster/public/login');
+            header('Location: /Worknest/public/login');
             exit;
         }
 
@@ -164,7 +164,7 @@ class FeedbackController
                 $success = $this->feedbackService->createFeedback($currentUserId, $comments);
 
                 if ($success) {
-                    header('Location: /Job_poster/public/my-feedbacks?success=' . urlencode('Feedback added successfully'));
+                    header('Location: /Worknest/public/my-feedbacks?success=' . urlencode('Feedback added successfully'));
                     exit;
                 } else {
                     throw new Exception("Failed to create feedback.");

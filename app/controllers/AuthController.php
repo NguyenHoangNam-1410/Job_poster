@@ -20,6 +20,10 @@ class AuthController
 
     public function showRegisterForm()
     {
+        // Lưu redirect URL nếu có trong query parameter
+        if (isset($_GET['redirect'])) {
+            $_SESSION['register_redirect'] = $_GET['redirect'];
+        }
         require_once __DIR__ . '/../views/auth/register.php';
         exit;
     }
@@ -79,6 +83,24 @@ class AuthController
                 exit;
             }
             $user = $this->userService->getUserByEmail($email);
+            
+            // Create employer record for the new employer user
+            require_once __DIR__ . '/../dao/EmployerDAO.php';
+            require_once __DIR__ . '/../models/Employer.php';
+            $employerDAO = new EmployerDAO();
+            $newEmployer = new Employer(
+                null,  // id (auto-generated)
+                null,  // company_name
+                null,  // website
+                null,  // logo
+                null,  // contact_phone
+                null,  // contact_email
+                null,  // contact_person
+                null,  // description
+                $user->getId()  // user_id
+            );
+            $employerDAO->create($newEmployer);
+            
             $_SESSION['user'] = [
                 'id' => $user->getId(),
                 'name' => $user->getName(),
@@ -86,7 +108,18 @@ class AuthController
                 'role' => $user->getRole(),
                 'auth_provider' => $user->getAuthProvider(),
             ];
-            header("Location: " . BASE_URL . "/");
+            
+            // Redirect logic:
+            // - Nếu có register_redirect trong session (từ nút Job Posting) → redirect đến đó
+            // - Nếu không có → redirect về homepage
+            if (isset($_SESSION['register_redirect'])) {
+                $redirectUrl = $_SESSION['register_redirect'];
+                unset($_SESSION['register_redirect']); // Xóa redirect URL sau khi dùng
+                header("Location: " . BASE_URL . $redirectUrl);
+            } else {
+                // Đăng ký thông thường → về homepage
+                header("Location: " . BASE_URL . "/");
+            }
             exit;
         }
     }
@@ -120,7 +153,7 @@ class AuthController
                 $user = $this->userService->getUserByEmail($email);
                 $currentUrl = $_SERVER['REQUEST_URI'];
                 if ($user && $user->getAuthProvider() !== 'google') {
-                    if ($currentUrl === "/Job_poster/public/auth/login") {
+                    if ($currentUrl === "/Worknest/public/auth/login") {
                         $_SESSION['login_error'] = 'Email already exists. Please use a different email or login.';
                         header("Location: " . BASE_URL . "/auth/login");
                         exit;
@@ -141,7 +174,15 @@ class AuthController
                     'auth_provider' => $user->getAuthProvider(),
                     'avatar' => $user->getAvatar()
                 ];
-                header("Location: " . BASE_URL . "/");
+                
+                // Redirect logic: check register_redirect nếu đăng ký từ trang register
+                if (isset($_SESSION['register_redirect'])) {
+                    $redirectUrl = $_SESSION['register_redirect'];
+                    unset($_SESSION['register_redirect']);
+                    header("Location: " . BASE_URL . $redirectUrl);
+                } else {
+                    header("Location: " . BASE_URL . "/");
+                }
                 exit;
 
             } else {
@@ -231,7 +272,7 @@ class AuthController
         $user = $this->userService->getUserByEmail($email);
         $currentUrl = $_SERVER['REQUEST_URI'];
         if ($user && $user->getAuthProvider() !== 'facebook') {
-            if ($currentUrl === "/Job_poster/public/auth/login") {
+            if ($currentUrl === "/Worknest/public/auth/login") {
                 $_SESSION['login_error'] = 'Email already exists. Please use a different email or login.';
                 header("Location: " . BASE_URL . "/auth/login");
 
@@ -255,7 +296,14 @@ class AuthController
             'avatar' => $user->getAvatar()
         ];
 
-        header("Location: " . BASE_URL . "/");
+        // Redirect logic: check register_redirect nếu đăng ký từ trang register
+        if (isset($_SESSION['register_redirect'])) {
+            $redirectUrl = $_SESSION['register_redirect'];
+            unset($_SESSION['register_redirect']);
+            header("Location: " . BASE_URL . $redirectUrl);
+        } else {
+            header("Location: " . BASE_URL . "/");
+        }
         exit;
     }
 
@@ -274,7 +322,7 @@ class AuthController
             if ($user) {
                 if ($this->userService->getAuthProvider($email) === 'google') {
                     $error = 'This email is registered with Google. We cannot reset your password with Google.';
-                    if ($currentUrl === "/Job_poster/public/auth/login/forgot-password/resetExpired") {
+                    if ($currentUrl === "/Worknest/public/auth/login/forgot-password/resetExpired") {
                         $_SESSION['error-expired'] = $error;
                         header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
                     } else {
@@ -286,7 +334,7 @@ class AuthController
                 if ($this->userService->getAuthProvider($email) === 'facebook') {
                     $error = 'This email is registered with Facebook. We cannot reset your password with Facebook.';
 
-                    if ($currentUrl === "/Job_poster/public/auth/login/forgot-password/resetExpired") {
+                    if ($currentUrl === "/Worknest/public/auth/login/forgot-password/resetExpired") {
                         $_SESSION['error-expired'] = $error;
                         header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
                     } else {
@@ -300,7 +348,7 @@ class AuthController
                 exit;
             } else {
                 $error = 'No email found for that account.';
-                if ($currentUrl === "/Job_poster/public/auth/login/forgot-password/resetExpired") {
+                if ($currentUrl === "/Worknest/public/auth/login/forgot-password/resetExpired") {
                     $_SESSION['error-expired'] = $error;
                     header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
                 } else {
@@ -344,8 +392,6 @@ class AuthController
                 header("Location: " . BASE_URL . "/auth/login/forgot-password/input-otp");
                 exit;
             }
-            header("Location: " . BASE_URL . "/auth/login/forgot-password/reset-password-form");
-            exit;
         }
     }
 

@@ -1,5 +1,5 @@
 <?php
-// filepath: /Job_poster/public/ajax/jobs_list.php
+// filepath: /Worknest/public/ajax/jobs_list.php
 declare(strict_types=1);
 
 header('Content-Type: application/json; charset=utf-8');

@@ -1,6 +1,6 @@
 <?php
 $additionalCSS = [
-  "/Job_poster/public/css/auth/forgotPassword.css"
+  "/Worknest/public/css/auth/forgotPassword.css"
 ];
 include __DIR__ . '/../layouts/public_header.php'; ?>
 <div class="container mx-auto py-12 px-4">
@@ -21,7 +21,7 @@ include __DIR__ . '/../layouts/public_header.php'; ?>
         <?php unset($_SESSION['error-expired']); ?>
       <?php endif; ?>
 
-      <form method="POST" action="/Job_poster/public/auth/login/forgot-password/send-otp" class="space-y-4">
+      <form method="POST" action="/Worknest/public/auth/login/forgot-password/send-otp" class="space-y-4">
         <div>
           <label for="email" class="block text-gray-700 font-medium mb-1">Email address</label>
           <input type="email" id="email" name="email" required placeholder="Enter your registered email"
@@ -46,6 +46,6 @@ include __DIR__ . '/../layouts/public_header.php'; ?>
 </div>
 <?php
 $additionalJS = [
-  "/Job_poster/public/javascript/handleCredentials.js"
+  "/Worknest/public/javascript/handleCredentials.js"
 ];
 include __DIR__ . '/../layouts/public_footer.php'; ?>

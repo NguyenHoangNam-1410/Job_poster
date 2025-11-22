@@ -3,7 +3,7 @@
 // Load header based on user role
 include __DIR__ . '/../../layouts/auth_header.php';
 ?>
-<link href="/Job_poster/public/css/style.css" rel="stylesheet">
+<link href="/Worknest/public/css/style.css" rel="stylesheet">
 
 <div class="list-container">
     <div class="list-content max-w-3xl mx-auto">
@@ -20,7 +20,7 @@ include __DIR__ . '/../../layouts/auth_header.php';
         <?php endif; ?>
 
         <div class="bg-white rounded-lg shadow-md p-6">
-            <form id="profileForm" method="POST" action="/Job_poster/public/profile/update" enctype="multipart/form-data" class="space-y-6">
+            <form id="profileForm" method="POST" action="/Worknest/public/profile/update" enctype="multipart/form-data" class="space-y-6">
                 <!-- Store referrer for redirect after update -->
                 <input type="hidden" name="referrer" id="referrer" value="">
 
@@ -35,7 +35,7 @@ include __DIR__ . '/../../layouts/auth_header.php';
                                 <div class="relative">
                                     <img 
                                         id="avatarPreview" 
-                                        src="<?= !empty($user->getAvatar()) ? htmlspecialchars($user->getAvatar()) : '/Job_poster/public/image/avatar/default.svg' ?>" 
+                                        src="<?= !empty($user->getAvatar()) ? htmlspecialchars($user->getAvatar()) : '/Worknest/public/image/avatar/default.svg' ?>" 
                                         alt="Avatar Preview" 
                                         class="w-24 h-24 rounded-full object-cover border-2 border-gray-300"
                                     >
@@ -49,7 +49,7 @@ include __DIR__ . '/../../layouts/auth_header.php';
                                             type="button" 
                                             id="deleteAvatarBtn"
                                             class="btn-cancel"
-                                            <?= empty($user->getAvatar()) || $user->getAvatar() === '/Job_poster/public/image/avatar/default.svg' ? 'style="display:none;"' : '' ?>
+                                            <?= empty($user->getAvatar()) || $user->getAvatar() === '/Worknest/public/image/avatar/default.svg' ? 'style="display:none;"' : '' ?>
                                         >
                                             Delete Avatar
                                         </button>
@@ -237,7 +237,7 @@ include __DIR__ . '/../../layouts/auth_header.php';
     let isSubmitting = false;
 
     // Get the referrer from document.referrer or default
-    const referrer = document.referrer || '/Job_poster/public/profile';
+    const referrer = document.referrer || '/Worknest/public/profile';
     referrerInput.value = referrer;
 
     // Initialize values after DOM is fully loaded
@@ -356,7 +356,7 @@ include __DIR__ . '/../../layouts/auth_header.php';
         );
         if (confirmed) {
             deleteAvatarInput.value = '1';
-            avatarPreview.src = '/Job_poster/public/image/avatar/default.svg';
+            avatarPreview.src = '/Worknest/public/image/avatar/default.svg';
             deleteAvatarBtn.style.display = 'none';
             avatarInput.value = '';
             fileInfo.textContent = '';

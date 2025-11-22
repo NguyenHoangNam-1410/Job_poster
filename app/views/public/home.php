@@ -1,5 +1,5 @@
 <?php
-$pageTitle = 'Homepage | Job Poster';
+$pageTitle = 'Homepage | WorkNest';
 include __DIR__ . '/../layouts/public_header.php';
 ?>
 <style>
@@ -342,7 +342,7 @@ include __DIR__ . '/../layouts/public_header.php';
 
       <!-- Primary CTA -->
       <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
-        <a href="/Job_poster/public/jobs"
+        <a href="/Worknest/public/jobs"
           class="btn-y2k group text-white px-14 py-5 text-lg bg-gradient-to-r from-lime-400 to-cyan-400 hover:from-lime-300 hover:to-cyan-300">
           <span class="flex items-center gap-3">
             EXPLORE JOBS
@@ -409,7 +409,7 @@ include __DIR__ . '/../layouts/public_header.php';
         With Opportunity
       </h2>
       <p class="text-gray-700 text-lg max-w-3xl mx-auto leading-relaxed font-medium">
-        Job Poster is a modern platform connecting talented individuals with top companies.
+        WorkNest is a modern platform connecting talented individuals with top companies.
         Our mission is to simplify job discovery, empower job seekers with insights,
         and help employers find their perfect match quickly and efficiently.
       </p>
@@ -469,7 +469,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <span class="y2k-badge inline-block mb-6">Why Us</span>
       <h2 class="text-5xl md:text-7xl font-black mb-6 uppercase tracking-tight y2k-text">
         Why Choose<br>
-        Job Poster?
+        WorkNest?
       </h2>
     </div>
 
@@ -515,7 +515,7 @@ include __DIR__ . '/../layouts/public_header.php';
     <div class="mb-16 animate-fadeInUp">
       <span class="y2k-badge inline-block mb-6">Watch & Learn</span>
       <h2 class="text-5xl md:text-7xl font-black mb-6 uppercase tracking-tight y2k-text">
-        See Job Poster<br>
+        See WorkNest<br>
         In Action
       </h2>
       <p class="text-gray-700 text-lg max-w-3xl mx-auto font-medium">Discover how our platform revolutionizes job
@@ -526,7 +526,7 @@ include __DIR__ . '/../layouts/public_header.php';
     <div class="retro-card max-w-5xl mx-auto bg-white p-6">
       <div class="relative overflow-hidden border-3 border-gray-900" style="padding-bottom: 56.25%; height: 0;">
         <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/GOqARrckaR8"
-          title="Job Poster Intro Video" frameborder="0"
+          title="WorkNest Intro Video" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen>
         </iframe>
@@ -605,7 +605,7 @@ include __DIR__ . '/../layouts/public_header.php';
           <article class="news-card retro-card overflow-hidden group bg-white">
             <!-- Image -->
             <div class="overflow-hidden border-b-3 border-gray-900">
-              <img src="/Job_poster/public/images/jobs/<?= htmlspecialchars($a['img']) ?>"
+              <img src="/Worknest/public/images/jobs/<?= htmlspecialchars($a['img']) ?>"
                 class="w-full h-56 object-cover" alt="">
             </div>
 
@@ -782,7 +782,7 @@ include __DIR__ . '/../layouts/public_header.php';
           </div>
           <div>
             <p class="leading-relaxed font-medium"><strong class="text-gray-900 font-black uppercase text-sm">• Content
-                Ownership:</strong> Users retain ownership of their content but grant Job Poster the right to display it
+                Ownership:</strong> Users retain ownership of their content but grant WorkNest the right to display it
               on our platform.</p>
           </div>
           <div>

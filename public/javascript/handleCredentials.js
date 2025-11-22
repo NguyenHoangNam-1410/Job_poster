@@ -1,5 +1,5 @@
 function handleCredentialResponse(response) {
-    fetch("/Job_poster/public/auth/login/google", {
+    fetch("/Worknest/public/auth/login/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: response.credential }),

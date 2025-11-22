@@ -18,7 +18,7 @@ $jobCategoryIds = array_column($jobCategories, 'id');
         <div class="form-container">
             <div class="form-header">
                 <h1 class="form-title"><?= $pageHeading ?></h1>
-                <a href="/Job_poster/public/my-jobs"
+                <a href="/Worknest/public/my-jobs"
                     class="inline-flex items-center bg-blue-100 text-blue-800 font-semibold text-lg px-4 py-2 rounded-lg hover:bg-blue-200 hover:text-blue-900 transition-all duration-200">
                     <?= Icons::arrowLeft('w-5 h-5 mr-2') ?> Return to List
                 </a>
@@ -153,11 +153,11 @@ $jobCategoryIds = array_column($jobCategories, 'id');
             <?php if (!$isModal): ?>
                 <div class="form-actions">
                     <button type="button"
-                        onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/edit/<?= $job->getId() ?>', 'Edit Job')"
+                        onclick="window.formModal.loadForm('/Worknest/public/my-jobs/edit/<?= $job->getId() ?>', 'Edit Job')"
                         class="btn-submit">
                         <?= Icons::edit('btn-icon') ?> Edit Job
                     </button>
-                    <a href="/Job_poster/public/my-jobs"
+                    <a href="/Worknest/public/my-jobs"
                         class="inline-flex items-center gap-2 px-5 py-3 font-semibold text-white bg-gradient-to-r from-gray-700 to-gray-900 rounded-lg shadow-lg hover:from-gray-800 hover:to-black transition-all duration-200">
                         <?= Icons::arrowLeft('w-5 h-5') ?> Return to List
                     </a>
@@ -175,7 +175,7 @@ $jobCategoryIds = array_column($jobCategories, 'id');
     <!-- Modal Footer Buttons -->
     <div class="flex justify-end gap-3 mt-6">
         <button type="button"
-            onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/edit/<?= $job->getId() ?>', 'Edit Job')"
+            onclick="window.formModal.loadForm('/Worknest/public/my-jobs/edit/<?= $job->getId() ?>', 'Edit Job')"
             class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
             <?= Icons::edit('w-4 h-4') ?> Edit Job
         </button>

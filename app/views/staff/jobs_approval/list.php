@@ -14,7 +14,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <form method="GET" action="/Job_poster/public/approvals" id="approvalsFilterForm">
+            <form method="GET" action="/Worknest/public/approvals" id="approvalsFilterForm">
                 <div class="flex flex-wrap gap-4 items-end">
                     <!-- Search -->
                     <div class="flex-1 min-w-[200px]">
@@ -49,7 +49,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 
                     <!-- Clear Button -->
                     <div>
-                        <a href="/Job_poster/public/approvals" class="btn-cancel">
+                        <a href="/Worknest/public/approvals" class="btn-cancel">
                             Clear
                         </a>
                     </div>
@@ -109,7 +109,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                     </td>
                                     <td class="table-cell">
                                         <div class="flex items-center gap-3">
-                                            <img src="<?= !empty($job->getEmployerAvatar()) ? htmlspecialchars($job->getEmployerAvatar()) : '/Job_poster/public/image/avatar/default.svg' ?>"
+                                            <img src="<?= !empty($job->getEmployerAvatar()) ? htmlspecialchars($job->getEmployerAvatar()) : '/Worknest/public/image/avatar/default.svg' ?>"
                                                 alt="Avatar" class="w-10 h-10 rounded-full object-cover border border-gray-200">
                                             <span><?= htmlspecialchars($job->getEmployerName() ?? 'N/A') ?></span>
                                         </div>
@@ -120,13 +120,25 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                         </span>
                                     </td>
                                     <td class="table-cell">
-                                        <?= date('d M, Y H:i', strtotime($job->getCreatedAt())) ?>
+                                        <?php
+                                        $date = new DateTime($job->getCreatedAt());
+                                        echo $date->format('d M, Y');
+                                        ?>
+                                        <span class="text-gray-500 text-xs block">
+                                            <?php echo $date->format('H:i'); ?>
+                                        </span>
                                     </td>
                                     <td class="table-cell">
-                                        <?= date('d M, Y H:i', strtotime($job->getUpdatedAt())) ?>
+                                        <?php
+                                        $updatedDate = new DateTime($job->getUpdatedAt());
+                                        echo $updatedDate->format('d M, Y');
+                                        ?>
+                                        <span class="text-gray-500 text-xs block">
+                                            <?php echo $updatedDate->format('H:i'); ?>
+                                        </span>
                                     </td>
                                     <td class="table-cell">
-                                        <a href="/Job_poster/public/approvals/detail/<?= $job->getId() ?>"
+                                        <a href="/Worknest/public/approvals/detail/<?= $job->getId() ?>"
                                             class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">
                                             <?= Icons::view('w-4 h-4 mr-1') ?>
                                             Detail
@@ -141,7 +153,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 <!-- Pagination -->
                 <?php
                 include __DIR__ . '/../../components/pagination.php';
-                renderPagination($pagination, '/Job_poster/public/approvals', [
+                renderPagination($pagination, '/Worknest/public/approvals', [
                     'search' => $pagination['search'] ?? '',
                     'status' => $pagination['status_filter'] ?? '',
                     'per_page' => $pagination['per_page'] ?? 10

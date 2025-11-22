@@ -1,20 +1,50 @@
 <?php
-require_once '../app/views/layouts/auth_header.php';
-
 // Fetch recent jobs
 require_once __DIR__ . '/../../dao/JobDAO.php';
 require_once __DIR__ . '/../../dao/EmployerDAO.php';
+require_once __DIR__ . '/../../models/Employer.php';
 $jobDAO = new JobDAO();
 $employerDAO = new EmployerDAO();
 
 // Get the employer ID from the user ID
 $userId = $_SESSION['user']['id'];
 $employer = $employerDAO->getEmployerByUserId($userId);
+
+// If no employer profile exists, create one automatically
+if (!$employer) {
+    $newEmployer = new Employer(
+        null,  // id (auto-generated)
+        null,  // company_name
+        null,  // website
+        null,  // logo
+        null,  // contact_phone
+        null,  // contact_email
+        null,  // contact_person
+        null,  // description
+        $userId  // user_id
+    );
+    $createdId = $employerDAO->create($newEmployer);
+    if ($createdId) {
+        $employer = $employerDAO->getEmployerByUserId($userId);
+    }
+}
+
 $employerId = $employer ? $employer->getId() : null;
 
-// If no employer profile exists, redirect to create one
+// If still no employer ID, show error
 if (!$employerId) {
-    header('Location: /Job_poster/public/company-profile');
+    $error = "Unable to access employer profile. Please try again later.";
+    require_once '../app/views/layouts/auth_header.php';
+    ?>
+    <div class="list-container">
+        <div class="list-content">
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded" role="alert">
+                <span class="block sm:inline"><?= htmlspecialchars($error) ?></span>
+            </div>
+        </div>
+    </div>
+    <?php
+    require_once '../app/views/layouts/auth_footer.php';
     exit;
 }
 
@@ -31,6 +61,8 @@ $pendingJobs = $jobDAO->getJobsByEmployer($employerId, '', '', '', 'pending', ''
 $recentPending = !empty($pendingJobs) ? $pendingJobs[0] : null;
 
 $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
+
+require_once '../app/views/layouts/auth_header.php';
 ?>
 
 <div class="list-container">
@@ -54,7 +86,7 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                 </div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">No Job Postings Yet</h2>
                 <p class="text-gray-600 mb-6">Start by creating your first job posting to attract talented candidates</p>
-                <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/create', 'Create New Job')">
+                <button class="btn-submit" onclick="window.formModal.loadForm('/Worknest/public/my-jobs/create', 'Create New Job')">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -78,7 +110,7 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                     </div>
                     <?php if ($recentApproved): ?>
                         <button
-                            onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $recentApproved->getId() ?>', 'Job Details')"
+                            onclick="window.formModal.loadForm('/Worknest/public/my-jobs/show/<?= $recentApproved->getId() ?>', 'Job Details')"
                             class="block p-6 hover:bg-gray-50 transition text-left w-full">
                             <h4 class="font-bold text-xl text-gray-800 mb-2">
                                 <?= htmlspecialchars($recentApproved->getTitle()) ?>
@@ -102,7 +134,7 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                     <?php else: ?>
                         <div class="p-6 text-center text-gray-500">
                             <p class="mb-4">No approved jobs yet</p>
-                            <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/create', 'Create New Job')"
+                            <button onclick="window.formModal.loadForm('/Worknest/public/my-jobs/create', 'Create New Job')"
                                 class="text-green-600 hover:text-green-700 font-semibold text-sm">
                                 Post a Job →
                             </button>
@@ -123,7 +155,7 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                     </div>
                     <?php if ($recentRejected): ?>
                         <button
-                            onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $recentRejected->getId() ?>', 'Job Details')"
+                            onclick="window.formModal.loadForm('/Worknest/public/my-jobs/show/<?= $recentRejected->getId() ?>', 'Job Details')"
                             class="block p-6 hover:bg-gray-50 transition text-left w-full">
                             <h4 class="font-bold text-xl text-gray-800 mb-2">
                                 <?= htmlspecialchars($recentRejected->getTitle()) ?>
@@ -147,7 +179,7 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                     <?php else: ?>
                         <div class="p-6 text-center text-gray-500">
                             <p class="mb-4">No rejected jobs</p>
-                            <a href="/Job_poster/public/my-jobs" class="text-red-600 hover:text-red-700 font-semibold text-sm">
+                            <a href="/Worknest/public/my-jobs" class="text-red-600 hover:text-red-700 font-semibold text-sm">
                                 View All Jobs →
                             </a>
                         </div>
@@ -167,7 +199,7 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                     </div>
                     <?php if ($recentPending): ?>
                         <button
-                            onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $recentPending->getId() ?>', 'Job Details')"
+                            onclick="window.formModal.loadForm('/Worknest/public/my-jobs/show/<?= $recentPending->getId() ?>', 'Job Details')"
                             class="block p-6 hover:bg-gray-50 transition text-left w-full">
                             <h4 class="font-bold text-xl text-gray-800 mb-2"><?= htmlspecialchars($recentPending->getTitle()) ?>
                             </h4>
@@ -191,7 +223,7 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
                     <?php else: ?>
                         <div class="p-6 text-center text-gray-500">
                             <p class="mb-4">No pending jobs</p>
-                            <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/create', 'Create New Job')"
+                            <button onclick="window.formModal.loadForm('/Worknest/public/my-jobs/create', 'Create New Job')"
                                 class="text-yellow-600 hover:text-yellow-700 font-semibold text-sm">
                                 Post a Job →
                             </button>
@@ -202,7 +234,7 @@ $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
 
             <!-- View All Jobs Button -->
             <div class="mt-8 text-center">
-                <a href="/Job_poster/public/my-jobs"
+                <a href="/Worknest/public/my-jobs"
                     class="btn-submit inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

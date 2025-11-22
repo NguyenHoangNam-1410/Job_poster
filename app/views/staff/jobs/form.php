@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
 <?php
-$formAction = "/Job_poster/public/jobs-manage/update/{$job->getId()}";
+$formAction = "/Worknest/public/jobs-manage/update/{$job->getId()}";
 $pageHeading = "Edit Job #{$job->getId()} - {$job->getTitle()}";
 $jobCategories = $job->getCategories();
 $jobCategoryIds = array_column($jobCategories, 'id');
@@ -15,7 +15,7 @@ $jobCategoryIds = array_column($jobCategories, 'id');
     <div class="form-container">
         <div class="form-header">
             <h1 class="form-title"><?= $pageHeading ?></h1>
-            <a href="/Job_poster/public/jobs-manage" class="form-back-link">← Return to list</a>
+            <a href="/Worknest/public/jobs-manage" class="form-back-link">← Return to list</a>
         </div>
 
         <?php if (isset($error)): ?>
@@ -133,7 +133,7 @@ $jobCategoryIds = array_column($jobCategories, 'id');
 
             <!-- Action Buttons -->
             <div class="form-actions">
-                <a href="/Job_poster/public/jobs-manage" class="btn-cancel">Cancel</a>
+                <a href="/Worknest/public/jobs-manage" class="btn-cancel">Cancel</a>
                 <button type="submit" class="btn-submit">
                     <?= Icons::check('btn-icon') ?>
                     Update Job
