@@ -77,7 +77,7 @@ $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User'
                     <label class="form-label">
                         Email <span class="required">*</span>
                     </label>
-                    <input type="email" name="email" required disabled="<?= $isEditMode ? 'disabled' : '' ?>"
+                    <input type="email" name="email" required <?= $isEditMode ? 'disabled' : '' ?>
                         value="<?= $isEditMode ? htmlspecialchars($user->getEmail()) : '' ?>"
                         class="form-input" placeholder="example@email.com">
                 </div>

@@ -374,8 +374,6 @@ class AuthController
                 header("Location: " . BASE_URL . "/auth/login/forgot-password/input-otp");
                 exit;
             }
-            header("Location: " . BASE_URL . "/auth/login/forgot-password/reset-password-form");
-            exit;
         }
     }
 

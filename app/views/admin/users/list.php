@@ -12,7 +12,8 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
             </div>
             <button onclick="window.formModal.loadForm('/Job_poster/public/users/create?ajax=1', 'Create New User')"
                 class="btn-submit">
-                <span class="flex items-center justify-center w-5 h-5 rounded-full bg-white/20 group-hover:bg-white/30 transition-colors relative z-10">
+                <span
+                    class="flex items-center justify-center w-5 h-5 rounded-full bg-white/20 group-hover:bg-white/30 transition-colors relative z-10">
                     <?= Icons::add('w-3 h-3') ?>
                 </span>
                 <span>Add User</span>
@@ -86,6 +87,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                 <th class="table-header">User</th>
                                 <th class="table-header">Email</th>
                                 <th class="table-header">Role</th>
+                                <th class="table-header">Created Date</th>
                                 <th class="table-header">Actions</th>
                             </tr>
                         </thead>
@@ -121,6 +123,12 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                                 echo 'bg-green-100 text-green-800';
                                         }
                                         ?>"><?= htmlspecialchars($user->getRole()) ?></span>
+                                    </td>
+                                    <td class="table-cell">
+                                        <?php $createdAt = $user->getCreatedAt(); ?>
+                                        <span class="text-sm text-gray-600">
+                                            <?= $createdAt ? htmlspecialchars(date('d M, Y', strtotime($createdAt))) : '-' ?>
+                                        </span>
                                     </td>
                                     <td class="table-cell">
                                         <?php

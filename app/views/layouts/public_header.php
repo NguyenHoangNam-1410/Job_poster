@@ -363,7 +363,7 @@ $userRole = $_SESSION['user']['role'] ?? null;
               </a>
             <?php elseif ($userRole == 'Employer'): ?>
               <a href="/Job_poster/public/employer/home" class="block px-4 py-3 text-sm font-semibold text-black hover:bg-gray-100 uppercase font-mono border-b-2 border-black">
-                Job postinng 
+                Job posting 
               </a>
             <?php endif; ?>
             <a href="/Job_poster/public/logout" class="block px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 uppercase font-mono">
