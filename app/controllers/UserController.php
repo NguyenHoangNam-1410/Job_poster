@@ -73,7 +73,7 @@ class UserController
                         ]);
                         exit;
                     } else {
-                        header('Location: /Job_poster/public/users');
+                        header('Location: /Worknest/public/users');
                         exit;
                     }
                 }
@@ -102,27 +102,27 @@ class UserController
 
             // Redirect to profile if user is editing themselves
             if ($id == $currentUserId) {
-                header('Location: /Job_poster/public/profile');
+                header('Location: /Worknest/public/profile');
                 exit;
             }
 
             $user = $this->userService->getUserById($id);
 
             if (!$user) {
-                header('Location: /Job_poster/public/users?error=' . urlencode('User not found'));
+                header('Location: /Worknest/public/users?error=' . urlencode('User not found'));
                 exit;
             }
 
             // Check if current user can edit this user
             if (!$this->userService->canEdit($id, $currentUserId)) {
-                header('Location: /Job_poster/public/users?error=' . urlencode('You cannot edit other administrators'));
+                header('Location: /Worknest/public/users?error=' . urlencode('You cannot edit other administrators'));
                 exit;
             }
 
             $error = null;
             require_once __DIR__ . '/../views/admin/users/form.php';
         } catch (Exception $e) {
-            header('Location: /Job_poster/public/users?error=' . urlencode($e->getMessage()));
+            header('Location: /Worknest/public/users?error=' . urlencode($e->getMessage()));
             exit;
         }
     }
@@ -155,7 +155,7 @@ class UserController
 
                     // Handle logo deletion
                     if (isset($_POST['delete_logo']) && $_POST['delete_logo'] == '1') {
-                        $employerData['logo'] = '/Job_poster/public/image/avatar/default.svg';
+                        $employerData['logo'] = '/Worknest/public/image/avatar/default.svg';
                     } else {
                         // Keep existing logo
                         $employer = $employerDAO->getByUserId($id);
@@ -175,7 +175,7 @@ class UserController
                         ]);
                         exit;
                     } else {
-                        header('Location: /Job_poster/public/users');
+                        header('Location: /Worknest/public/users');
                         exit;
                     }
                 }
@@ -215,7 +215,7 @@ class UserController
                     ]);
                     exit;
                 } else {
-                    header('Location: /Job_poster/public/users');
+                    header('Location: /Worknest/public/users');
                     exit;
                 }
             } else {
@@ -232,7 +232,7 @@ class UserController
                 ]);
                 exit;
             } else {
-                header('Location: /Job_poster/public/users?error=' . urlencode($e->getMessage()));
+                header('Location: /Worknest/public/users?error=' . urlencode($e->getMessage()));
                 exit;
             }
         }
@@ -244,7 +244,7 @@ class UserController
         $user = $this->userService->getUserById($currentUserId);
 
         if (!$user) {
-            header('Location: /Job_poster/public/401');
+            header('Location: /Worknest/public/401');
             exit;
         }
 
@@ -257,7 +257,7 @@ class UserController
     public function updateProfile()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: /Job_poster/public/profile');
+            header('Location: /Worknest/public/profile');
             exit;
         }
 
@@ -306,7 +306,7 @@ class UserController
                 }
 
                 // Set avatar path relative to public directory
-                $data['avatar'] = '/Job_poster/public/image/avatar/' . $currentUserId . '/' . $filename;
+                $data['avatar'] = '/Worknest/public/image/avatar/' . $currentUserId . '/' . $filename;
                 $_SESSION['avatar'] = $data['avatar'];
             } else {
                 // Keep existing avatar if no new file uploaded
@@ -335,12 +335,12 @@ class UserController
             $this->userService->updateProfile($currentUserId, $data);
 
             // Get the referrer or default to profile page
-            $referrer = $_POST['referrer'] ?? '/Job_poster/public/profile';
+            $referrer = $_POST['referrer'] ?? '/Worknest/public/profile';
             header('Location: ' . $referrer . '?success=' . urlencode('Profile updated successfully'));
             exit;
 
         } catch (Exception $e) {
-            header('Location: /Job_poster/public/profile?error=' . urlencode($e->getMessage()));
+            header('Location: /Worknest/public/profile?error=' . urlencode($e->getMessage()));
             exit;
         }
     }

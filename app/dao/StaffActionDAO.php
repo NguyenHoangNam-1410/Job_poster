@@ -42,12 +42,12 @@ class StaffActionDAO
                 FROM STAFF_ACTIONS sa
                 INNER JOIN USERS u ON sa.user_id = u.UID
                 INNER JOIN JOBS j ON sa.job_id = j.id
-                WHERE 1=1";
+                WHERE u.Role IN ('Admin', 'Staff')";
 
         $params = [];
         $types = '';
 
-        // Filter by user role (Admin or Staff)
+        // Filter by user role (Admin or Staff only)
         if (!empty($userRoleFilter)) {
             $sql .= " AND u.Role = ?";
             $params[] = $userRoleFilter;
@@ -123,7 +123,7 @@ class StaffActionDAO
                 FROM STAFF_ACTIONS sa
                 INNER JOIN USERS u ON sa.user_id = u.UID
                 INNER JOIN JOBS j ON sa.job_id = j.id
-                WHERE 1=1";
+                WHERE u.Role IN ('Admin', 'Staff')";
 
         $params = [];
         $types = '';

@@ -108,4 +108,12 @@ class User
     {
         $this->auth_provider = $auth_provider;
     }
+    public function setCreatedAt($created_at)
+    {
+        $this->created_at = $created_at;
+    }
+    public function setUpdatedAt($updated_at)
+    {
+        $this->updated_at = $updated_at;
+    }
 }

@@ -71,14 +71,7 @@ class UserService
     {
         $hashedPassword = $this->userDAO->getHashedPassword($email);
         if ($hashedPassword) {
-            // Check if it's a bcrypt hash (starts with $2y$)
-            if (strpos($hashedPassword, '$2y$') === 0 || strpos($hashedPassword, '$2a$') === 0) {
-                // It's hashed, use password_verify
-                return password_verify($password, $hashedPassword);
-            } else {
-                // For testing: plain text comparison (REMOVE IN PRODUCTION!)
-                return $hashedPassword === $password;
-            }
+            return password_verify($password, $hashedPassword);
         }
         return false;
     }

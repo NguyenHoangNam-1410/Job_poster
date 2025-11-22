@@ -8,8 +8,8 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 // Determine if we're in edit mode or create mode
 $isEditMode = isset($user) && $user !== null;
 $formAction = $isEditMode
-    ? "/Job_poster/public/users/update/{$user->getId()}"
-    : "/Job_poster/public/users/store";
+    ? "/Worknest/public/users/update/{$user->getId()}"
+    : "/Worknest/public/users/store";
 $submitButtonText = $isEditMode ? 'Update' : 'Create New';
 $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User';
 ?>
@@ -18,7 +18,7 @@ $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User'
     <div class="form-container form-container-small">
         <div class="form-header">
             <h1 class="form-title"><?= $pageHeading ?></h1>
-            <a href="/Job_poster/public/users" class="form-back-link">← Return to list</a>
+            <a href="/Worknest/public/users" class="form-back-link">← Return to list</a>
         </div>
 
         <?php if (isset($error)): ?>
@@ -34,7 +34,7 @@ $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User'
                     <div class="relative">
                         <img 
                             id="avatarPreview" 
-                            src="<?= !empty($user->getAvatar()) ? htmlspecialchars($user->getAvatar()) : '/Job_poster/public/image/avatar/default.svg' ?>" 
+                            src="<?= !empty($user->getAvatar()) ? htmlspecialchars($user->getAvatar()) : '/Worknest/public/image/avatar/default.svg' ?>" 
                             alt="Avatar Preview" 
                             class="w-24 h-24 rounded-full object-cover border-2 border-gray-300"
                         >
@@ -45,7 +45,7 @@ $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User'
                                 type="button" 
                                 id="deleteAvatarBtn"
                                 class="btn-cancel"
-                                <?= empty($user->getAvatar()) || $user->getAvatar() === '/Job_poster/public/image/avatar/default.svg' ? 'style="display:none;"' : '' ?>
+                                <?= empty($user->getAvatar()) || $user->getAvatar() === '/Worknest/public/image/avatar/default.svg' ? 'style="display:none;"' : '' ?>
                             >
                                 Delete Avatar
                             </button>
@@ -77,7 +77,7 @@ $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User'
                     <label class="form-label">
                         Email <span class="required">*</span>
                     </label>
-                    <input type="email" name="email" required disabled="<?= $isEditMode ? 'disabled' : '' ?>"
+                    <input type="email" name="email" required <?= $isEditMode ? 'disabled' : '' ?>
                         value="<?= $isEditMode ? htmlspecialchars($user->getEmail()) : '' ?>"
                         class="form-input" placeholder="example@email.com">
                 </div>
@@ -127,7 +127,7 @@ $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User'
                         <div class="relative">
                             <img 
                                 id="logoPreview" 
-                                src="<?= !empty($employer->getLogo()) ? htmlspecialchars($employer->getLogo()) : '/Job_poster/public/image/avatar/default.svg' ?>" 
+                                src="<?= !empty($employer->getLogo()) ? htmlspecialchars($employer->getLogo()) : '/Worknest/public/image/avatar/default.svg' ?>" 
                                 alt="Logo Preview" 
                                 class="w-24 h-24 rounded-lg object-cover border-2 border-gray-300"
                             >
@@ -137,7 +137,7 @@ $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User'
                                 type="button" 
                                 id="deleteLogoBtn"
                                 class="btn-cancel"
-                                <?= empty($employer->getLogo()) || $employer->getLogo() === '/Job_poster/public/image/avatar/default.svg' ? 'style="display:none;"' : '' ?>
+                                <?= empty($employer->getLogo()) || $employer->getLogo() === '/Worknest/public/image/avatar/default.svg' ? 'style="display:none;"' : '' ?>
                             >
                                 Delete Logo
                             </button>
@@ -230,7 +230,7 @@ $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User'
 
             <!-- Action Buttons -->
             <div class="form-actions">
-                <a href="/Job_poster/public/users" class="btn-cancel">Cancel</a>
+                <a href="/Worknest/public/users" class="btn-cancel">Cancel</a>
                 <button type="submit" class="btn-submit">
                     <?= $isEditMode ? Icons::check('btn-icon') : Icons::add('btn-icon') ?>
                     <?= $submitButtonText ?>
@@ -261,7 +261,7 @@ $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User'
             );
             if (confirmed) {
                 deleteAvatarInput.value = '1';
-                avatarPreview.src = '/Job_poster/public/image/avatar/default.svg';
+                avatarPreview.src = '/Worknest/public/image/avatar/default.svg';
                 deleteAvatarBtn.style.display = 'none';
             }
         });
@@ -277,7 +277,7 @@ $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User'
             );
             if (confirmed) {
                 deleteLogoInput.value = '1';
-                logoPreview.src = '/Job_poster/public/image/avatar/default.svg';
+                logoPreview.src = '/Worknest/public/image/avatar/default.svg';
                 deleteLogoBtn.style.display = 'none';
             }
         });

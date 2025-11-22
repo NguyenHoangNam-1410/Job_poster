@@ -72,7 +72,7 @@ require_once '../app/views/layouts/auth_header.php';
         <div class="list-table-wrapper mb-8">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-semibold text-gray-800" style="margin-left: 10px;">Recent Job Requests</h2>
-                <a href="/Job_poster/public/approvals"
+                <a href="/Worknest/public/approvals"
                     class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
                     View All
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,7 +104,7 @@ require_once '../app/views/layouts/auth_header.php';
                             <td class="table-cell">2025-11-05</td>
                             <td class="table-cell">
                                 <div class="flex gap-3">
-                                    <a href="/Job_poster/public/approvals/detail/1"
+                                    <a href="/Worknest/public/approvals/detail/1"
                                         class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm font-medium">
                                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -129,7 +129,7 @@ require_once '../app/views/layouts/auth_header.php';
                             <td class="table-cell">2025-11-06</td>
                             <td class="table-cell">
                                 <div class="flex gap-3">
-                                    <a href="/Job_poster/public/approvals/detail/2"
+                                    <a href="/Worknest/public/approvals/detail/2"
                                         class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm font-medium">
                                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -151,7 +151,7 @@ require_once '../app/views/layouts/auth_header.php';
         <div class="list-table-wrapper">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-semibold text-gray-800" style="margin-left: 10px;">Recent Feedback</h2>
-                <a href="/Job_poster/public/feedbacks"
+                <a href="/Worknest/public/feedbacks"
                     class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
                     View All
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -74,7 +74,7 @@ class JobCategoryController
                         ]);
                         exit;
                     } else {
-                        header('Location: /Job_poster/public/job-categories');
+                        header('Location: /Worknest/public/job-categories');
                         exit;
                     }
                 }
@@ -102,14 +102,14 @@ class JobCategoryController
             $category = $this->categoryService->getCategoryById($id);
 
             if (!$category) {
-                header('Location: /Job_poster/public/job-categories?error=' . urlencode('Category not found'));
+                header('Location: /Worknest/public/job-categories?error=' . urlencode('Category not found'));
                 exit;
             }
 
             $error = null;
             require_once __DIR__ . '/../views/admin/job_categories/form.php';
         } catch (Exception $e) {
-            header('Location: /Job_poster/public/job-categories?error=' . urlencode($e->getMessage()));
+            header('Location: /Worknest/public/job-categories?error=' . urlencode($e->getMessage()));
             exit;
         }
     }
@@ -132,7 +132,7 @@ class JobCategoryController
                         ]);
                         exit;
                     } else {
-                        header('Location: /Job_poster/public/job-categories');
+                        header('Location: /Worknest/public/job-categories');
                         exit;
                     }
                 }
@@ -171,7 +171,7 @@ class JobCategoryController
                     ]);
                     exit;
                 } else {
-                    header('Location: /Job_poster/public/job-categories');
+                    header('Location: /Worknest/public/job-categories');
                     exit;
                 }
             } else {
@@ -188,7 +188,7 @@ class JobCategoryController
                 ]);
                 exit;
             } else {
-                header('Location: /Job_poster/public/job-categories?error=' . urlencode($e->getMessage()));
+                header('Location: /Worknest/public/job-categories?error=' . urlencode($e->getMessage()));
                 exit;
             }
         }

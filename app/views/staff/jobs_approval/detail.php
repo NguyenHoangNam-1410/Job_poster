@@ -8,7 +8,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
     <div class="form-container max-w-5xl">
         <div class="form-header">
             <h1 class="form-title">Job Details - Review & Approval</h1>
-            <a href="/Job_poster/public/approvals" class="form-back-link">← Back to Approval List</a>
+            <a href="/Worknest/public/approvals" class="form-back-link">← Back to Approval List</a>
         </div>
 
         <?php if (isset($error)): ?>
@@ -206,7 +206,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 <?php endif; ?>
 
                 <div class="mt-4">
-                    <a href="/Job_poster/public/approvals"
+                    <a href="/Worknest/public/approvals"
                         class="inline-flex items-center px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-md transition">
                         Back to List
                     </a>
@@ -235,7 +235,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     </button>
 
                     <!-- Back Button -->
-                    <a href="/Job_poster/public/approvals"
+                    <a href="/Worknest/public/approvals"
                         class="inline-flex items-center px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-md transition">
                         Back to List
                     </a>
@@ -245,7 +245,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 <div id="rejectForm" class="hidden mt-6 p-4 bg-red-50 border border-red-200 rounded-md">
                     <h4 class="font-medium text-red-900 mb-3">Rejection Reason</h4>
                     <form id="rejectionForm" method="POST"
-                        action="/Job_poster/public/approvals/reject/<?= $job->getId() ?>">
+                        action="/Worknest/public/approvals/reject/<?= $job->getId() ?>">
                         <textarea name="reason" rows="4" required
                             placeholder="Please provide a reason for rejecting this job posting..."
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"></textarea>
@@ -265,7 +265,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 <!-- Approve Form (Hidden by default) -->
                 <div id="approveConfirmation" class="hidden mt-6 p-4 bg-green-50 border border-green-200 rounded-md">
                     <h4 class="font-medium text-green-900 mb-3">Approval Reason/Notes</h4>
-                    <form method="POST" action="/Job_poster/public/approvals/approve/<?= $job->getId() ?>">
+                    <form method="POST" action="/Worknest/public/approvals/approve/<?= $job->getId() ?>">
                         <textarea name="reason" rows="4" placeholder="Optional: Add approval notes or comments..."
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"></textarea>
                         <div class="mt-3 flex gap-2">

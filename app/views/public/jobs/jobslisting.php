@@ -1,10 +1,10 @@
 <?php
 $pageTitle = "Browse Jobs";
-$additionalCSS = ['/Job_poster/public/css/jobs-artistic.css'];
+$additionalCSS = ['/Worknest/public/css/jobs-artistic.css'];
 $additionalJS = [];
 require dirname(__DIR__, 2) . '/layouts/public_header.php';
 
-const BASE_PUBLIC = '/Job_poster/public';
+const BASE_PUBLIC = '/Worknest/public';
 function build_route(string $r, array $qs = []): string
 {
   $qs = array_merge(['r' => $r], $qs);
@@ -31,11 +31,11 @@ $locations = $filters['locations'] ?? $filters['locs'] ?? [];
 $statuses = $filters['statuses'] ?? $filters['stts'] ?? [];
 
 if (!isset($result) || !is_array($result)) {
-  $sample = [
-    ['id' => 1, 'title' => 'Senior Frontend Engineer', 'company' => 'TechCorp Solutions', 'location' => 'San Francisco, CA', 'type' => 'Full-time', 'posted_at' => '2025-10-18 13:00:00', 'deadline' => '2025-12-01', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/jobs/frontend.jpg', 'tags' => ['React', 'Tailwind']],
-    ['id' => 2, 'title' => 'Junior Backend Developer', 'company' => 'StartupXYZ', 'location' => 'Remote', 'type' => 'Full-time', 'posted_at' => '2025-10-19 10:00:00', 'deadline' => '2025-11-30', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/jobs/backend.jpg', 'tags' => ['Node.js', 'SQL']],
-    ['id' => 3, 'title' => 'DevOps Engineer', 'company' => 'CloudTech Systems', 'location' => 'Singapore', 'type' => 'Full-time', 'posted_at' => '2025-10-21 09:30:00', 'deadline' => '2025-11-15', 'public_status' => 'overdue', 'thumbnail_url' => 'images/jobs/devops.jpg', 'tags' => ['AWS', 'CI/CD']],
-  ];
+    $sample = [
+      ['id' => 1, 'title' => 'Senior Frontend Engineer', 'company' => 'TechCorp Solutions', 'location' => 'San Francisco, CA', 'type' => 'Full-time', 'posted_at' => '2025-10-18 13:00:00', 'deadline' => '2025-12-01', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/jobs/placeholder.jpg', 'tags' => ['React', 'Tailwind']],
+      ['id' => 2, 'title' => 'Junior Backend Developer', 'company' => 'StartupXYZ', 'location' => 'Remote', 'type' => 'Full-time', 'posted_at' => '2025-10-19 10:00:00', 'deadline' => '2025-11-30', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/jobs/placeholder.jpg', 'tags' => ['Node.js', 'SQL']],
+      ['id' => 3, 'title' => 'DevOps Engineer', 'company' => 'CloudTech Systems', 'location' => 'Singapore', 'type' => 'Full-time', 'posted_at' => '2025-10-21 09:30:00', 'deadline' => '2025-11-15', 'public_status' => 'overdue', 'thumbnail_url' => 'images/jobs/placeholder.jpg', 'tags' => ['AWS', 'CI/CD']],
+    ];
   $result = ['total' => count($sample), 'rows' => $sample];
 }
 $rows = $result['rows'] ?? [];
@@ -53,81 +53,242 @@ function status_badge_class($st)
   }
 }
 ?>
-<style href="/Job_poster/public/css/jobs-listing.css"></style>
+<style href="/Worknest/public/css/jobs-listing.css"></style>
 
-<style>
-  /* Force Choices.js to have white background and black border like Status filter */
-  .choices.is-focused .choices__inner,
-  .choices.is-open .choices__inner {
-    border-color: #0688B4 !important;
-    box-shadow: 3px 3px 0 rgba(6, 136, 180, 0.3) !important;
-    transform: translate(-1px, -1px) !important;
-  }
+  <style>
+    /* Force Choices.js to have white background and black border like Status filter */
+    .choices.is-focused .choices__inner,
+    .choices.is-open .choices__inner {
+      border-color: #0688B4 !important;
+      box-shadow: 3px 3px 0 rgba(6, 136, 180, 0.3) !important;
+      transform: translate(-1px, -1px) !important;
+    }
 
-  .choices__inner {
-    background: white !important;
-    background-color: white !important;
-    border: 2px solid #1a1a1a !important;
-    border-radius: 0 !important;
-  }
+    .choices__inner {
+      background: white !important;
+      background-color: white !important;
+      border: 2px solid #1a1a1a !important;
+      border-radius: 0 !important;
+      min-height: 48px !important;
+      height: auto !important;
+    }
 
-  .choices__list--multiple .choices__item {
-    background-color: transparent !important;
-    background: transparent !important;
-    border: 2px solid #1a1a1a !important;
-    border-radius: 0 !important;
-    color: #1a1a1a !important;
-  }
+    /* Override cho Categories và Locations - Phải đặt sau và có specificity cao hơn */
+    #categorySelect+.choices .choices__inner,
+    #locationSelect+.choices .choices__inner {
+      min-height: 60px !important;
+      height: 60px !important;
+      max-height: 60px !important;
+      overflow: hidden !important;
+    }
 
-  .choices__button {
-    color: #1a1a1a !important;
-    border-left-color: #1a1a1a !important;
-  }
+    /* Giảm chiều cao cho Categories và Locations - Phải đặt sau CSS chung */
+    .jobs-search-container #categorySelect+.choices .choices__inner,
+    .jobs-search-container #locationSelect+.choices .choices__inner,
+    .jobs-search-section #categorySelect+.choices .choices__inner,
+    .jobs-search-section #locationSelect+.choices .choices__inner,
+    #categorySelect+.choices .choices__inner,
+    #locationSelect+.choices .choices__inner {
+      min-height: 60px !important; /* Ngắn hơn Status (90px) */
+      height: 60px !important; /* Force height cố định */
+      max-height: 60px !important; /* Ngăn không cho cao hơn */
+    }
 
-  /* Style for single-select Choices (Status) */
-  #statusSelect+.choices .choices__inner {
-    cursor: pointer;
-  }
+    .jobs-search-container #categorySelect.jobs-filter-select,
+    .jobs-search-container #locationSelect.jobs-filter-select,
+    .jobs-search-section #categorySelect.jobs-filter-select,
+    .jobs-search-section #locationSelect.jobs-filter-select,
+    #categorySelect.jobs-filter-select,
+    #locationSelect.jobs-filter-select {
+      min-height: 60px !important; /* Ngắn hơn Status (90px) */
+      height: 60px !important; /* Force height cố định */
+      max-height: 60px !important; /* Ngăn không cho cao hơn */
+    }
 
-  #statusSelect+.choices .choices__list--single {
-    padding: 0;
-  }
+    /* Remove default browser arrow from Status select */
+    #statusSelect,
+    .jobs-filter-select {
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      background-image: none !important;
+      background-repeat: no-repeat !important;
+    }
 
-  /* Ensure all Choices dropdowns have consistent styling */
-  .choices__list--dropdown {
-    border: 2px solid #1a1a1a !important;
-    border-radius: 0 !important;
-    border-top: none !important;
-  }
+    #statusSelect::-ms-expand,
+    .jobs-filter-select::-ms-expand {
+      display: none !important;
+    }
 
-  /* Add dropdown arrow like Status select */
-  .choices[data-type*="select-multiple"] .choices__inner::after,
-  .choices[data-type*="select-one"] .choices__inner::after {
-    content: '' !important;
-    position: absolute !important;
-    right: 1rem !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    width: 0 !important;
-    height: 0 !important;
-    border-left: 5px solid transparent !important;
-    border-right: 5px solid transparent !important;
-    border-top: 6px solid #1a1a1a !important;
-    pointer-events: none !important;
-    margin: 0 !important;
-  }
+    /* Ensure all filter inputs have same size */
+    .jobs-filter-select,
+    .choices__inner {
+      min-height: 48px !important;
+      height: auto !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
 
-  .choices[data-type*="select-multiple"].is-open .choices__inner::after,
-  .choices[data-type*="select-one"].is-open .choices__inner::after {
-    border-top: none !important;
-    border-bottom: 6px solid #1a1a1a !important;
-  }
+    /* Override riêng cho Categories và Locations select */
+    #categorySelect.jobs-filter-select,
+    #locationSelect.jobs-filter-select {
+      min-height: 60px !important;
+      height: 60px !important;
+      max-height: 60px !important;
+    }
 
-  /* Make room for arrow */
-  .choices__inner {
-    padding-right: 2.5rem !important;
-  }
-</style>
+
+    /* Ensure filter containers have same height */
+    .grid > .relative {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .grid > .relative > label {
+      margin-bottom: 0.5rem;
+    }
+
+    .choices__list--multiple .choices__item {
+      background-color: white !important;
+      background: white !important;
+      border: 2px solid #1a1a1a !important;
+      border-radius: 0 !important;
+      color: #1a1a1a !important;
+    }
+
+    /* Remove arrow from selected items */
+    .choices__list--multiple .choices__item::after,
+    .choices__list--multiple .choices__item::before,
+    .choices__list--multiple .choices__item *::after,
+    .choices__list--multiple .choices__item *::before {
+      display: none !important;
+      content: none !important;
+      visibility: hidden !important;
+    }
+
+    /* Remove any arrow icons from selected items */
+    .choices__list--multiple .choices__item svg,
+    .choices__list--multiple .choices__item .choices__icon,
+    .choices__list--multiple .choices__item [class*="arrow"],
+    .choices__list--multiple .choices__item [class*="triangle"] {
+      display: none !important;
+      visibility: hidden !important;
+    }
+
+    .choices__button {
+      color: #1a1a1a !important;
+      border-left-color: #1a1a1a !important;
+    }
+
+    /* Style for single-select Choices (Status) */
+    #statusSelect+.choices .choices__inner {
+      cursor: pointer;
+      min-height: 90px !important; /* Tăng chiều cao */
+      height: 90px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Đảm bảo Status select có cùng chiều cao */
+    #statusSelect.jobs-filter-select {
+      min-height: 90px !important; /* Tăng chiều cao */
+      height: 90px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    #statusSelect+.choices .choices__list--single {
+      padding: 0;
+    }
+
+    /* Ẩn option "All Statuses" trong dropdown */
+    #statusSelect+.choices .choices__list--dropdown .choices__item--selectable[data-value=""] {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
+
+    /* Ẩn text khi value rỗng được chọn trong input */
+    #statusSelect+.choices .choices__list--single .choices__item--selectable[data-value=""] {
+      color: transparent !important;
+      opacity: 0 !important;
+    }
+
+    /* Ẩn placeholder text */
+    #statusSelect+.choices .choices__list--single .choices__placeholder {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
+
+    /* Ensure all Choices dropdowns have consistent styling */
+    .choices__list--dropdown {
+      border: 2px solid #1a1a1a !important;
+      border-radius: 0 !important;
+      border-top: none !important;
+    }
+
+    /* Prevent dropdown from auto-opening - hide by default */
+    .choices__list--dropdown {
+      display: none !important;
+    }
+
+    /* Show dropdown only when is-open class is present */
+    .choices.is-open .choices__list--dropdown {
+      display: block !important;
+    }
+
+    /* Remove all arrows from dropdown items */
+    .choices__list--dropdown .choices__item::after,
+    .choices__list--dropdown .choices__item::before,
+    .choices__list--dropdown .choices__item *::after,
+    .choices__list--dropdown .choices__item *::before,
+    .choices__list--dropdown .choices__item--selectable::after,
+    .choices__list--dropdown .choices__item--selectable::before,
+    .choices__list--dropdown .choices__item--selectable.is-highlighted::after,
+    .choices__list--dropdown .choices__item--selectable.is-highlighted::before,
+    .choices__list--dropdown .choices__item.is-selected::after,
+    .choices__list--dropdown .choices__item.is-selected::before {
+      display: none !important;
+      content: none !important;
+      visibility: hidden !important;
+    }
+
+    /* Remove gray highlight background from dropdown items */
+    .choices__list--dropdown .choices__item--selectable.is-highlighted,
+    .choices__list--dropdown .choices__item--selectable:hover {
+      background-color: white !important;
+      background: white !important;
+      color: #1a1a1a !important;
+    }
+
+    /* Remove ALL arrows from ALL filters (Categories, Locations, Status) */
+    .choices[data-type*="select-multiple"] .choices__inner::after,
+    .choices[data-type*="select-one"] .choices__inner::after,
+    .choices .choices__inner::after {
+      display: none !important;
+      content: none !important;
+      visibility: hidden !important;
+    }
+
+    .choices[data-type*="select-multiple"].is-open .choices__inner::after,
+    .choices[data-type*="select-one"].is-open .choices__inner::after,
+    .choices.is-open .choices__inner::after {
+      display: none !important;
+      content: none !important;
+      visibility: hidden !important;
+    }
+
+    /* No extra padding needed since no arrows */
+    .choices__inner {
+      padding-right: 1rem !important;
+    }
+
+    /* Prevent auto-focus on page load */
+    .choices__inner:focus {
+      outline: none !important;
+    }
+  </style>
 
 <script>
   document.body.classList.add('jobs-listing-page');
@@ -171,7 +332,7 @@ function status_badge_class($st)
           <div class="relative">
             <label class="block text-sm font-medium mb-2" style="color: #4a4a4a;">Status</label>
             <select id="statusSelect" name="status" class="jobs-filter-select">
-              <option value="">All Statuses</option>
+              <option value=""></option>
               <option value="recruiting">Recruiting</option>
               <option value="overdue">Overdue</option>
             </select>
@@ -522,15 +683,38 @@ function status_badge_class($st)
 
     // Initialize Choices.js for categories (max 3)
     if (elCategorySelect) {
+      // Prevent auto-focus
+      elCategorySelect.setAttribute('tabindex', '-1');
+      
       categoryChoices = new Choices(elCategorySelect, {
-        removeItemButton: true,
+        removeItemButton: false,
         searchEnabled: true,
         searchPlaceholderValue: 'Search categories...',
         placeholderValue: '',
         maxItemCount: 3,
         maxItemText: (maxItemCount) => `Only ${maxItemCount} categories allowed`,
         noResultsText: 'No categories found',
+        allowHTML: false,
+        shouldSort: false,
+        shouldSortItems: false,
       });
+
+      // Ensure dropdown is closed after initialization
+      setTimeout(() => {
+        if (categoryChoices) {
+          categoryChoices.hideDropdown();
+          // Remove focus if any
+          const inner = categoryChoices.containerOuter.element.querySelector('.choices__inner');
+          if (inner) {
+            inner.blur();
+            // Force height 60px cho Categories
+            inner.style.minHeight = '60px';
+            inner.style.height = '60px';
+            inner.style.maxHeight = '60px';
+            inner.style.overflow = 'hidden';
+          }
+        }
+      }, 50);
 
       elCategorySelect.addEventListener('change', () => {
         resetAndLoad();
@@ -539,14 +723,37 @@ function status_badge_class($st)
 
     // Initialize Choices.js for locations (unlimited, OR logic)
     if (elLocationSelect) {
+      // Prevent auto-focus
+      elLocationSelect.setAttribute('tabindex', '-1');
+      
       locationChoices = new Choices(elLocationSelect, {
-        removeItemButton: true,
+        removeItemButton: false,
         searchEnabled: true,
         searchPlaceholderValue: 'Search locations...',
         placeholderValue: '',
         maxItemCount: -1,
         noResultsText: 'No locations found',
+        allowHTML: false,
+        shouldSort: false,
+        shouldSortItems: false,
       });
+
+      // Ensure dropdown is closed after initialization
+      setTimeout(() => {
+        if (locationChoices) {
+          locationChoices.hideDropdown();
+          // Remove focus if any
+          const inner = locationChoices.containerOuter.element.querySelector('.choices__inner');
+          if (inner) {
+            inner.blur();
+            // Force height 60px cho Locations
+            inner.style.minHeight = '60px';
+            inner.style.height = '60px';
+            inner.style.maxHeight = '60px';
+            inner.style.overflow = 'hidden';
+          }
+        }
+      }, 50);
 
       elLocationSelect.addEventListener('change', () => {
         resetAndLoad();
@@ -555,12 +762,42 @@ function status_badge_class($st)
 
     // Initialize Choices.js for status (single select)
     if (elStatusSelect) {
+      // Prevent auto-focus
+      elStatusSelect.setAttribute('tabindex', '-1');
+      
       statusChoices = new Choices(elStatusSelect, {
         searchEnabled: false,
         itemSelectText: '',
         shouldSort: false,
+        shouldSortItems: false,
         placeholder: false,
+        allowHTML: false,
       });
+
+      // Xóa option "All Statuses" khỏi dropdown
+      setTimeout(() => {
+        if (statusChoices) {
+          const dropdownItems = statusChoices.containerOuter.element.querySelectorAll('.choices__list--dropdown .choices__item--selectable');
+          dropdownItems.forEach(item => {
+            if (item.dataset.value === '') {
+              item.style.display = 'none';
+              item.style.opacity = '0';
+              item.style.visibility = 'hidden';
+              item.remove(); // Xóa hoàn toàn khỏi DOM
+            }
+          });
+        }
+      }, 100);
+
+      // Ensure dropdown is closed after initialization
+      setTimeout(() => {
+        if (statusChoices) {
+          statusChoices.hideDropdown();
+          // Remove focus if any
+          const inner = statusChoices.containerOuter.element.querySelector('.choices__inner');
+          if (inner) inner.blur();
+        }
+      }, 50);
 
       elStatusSelect.addEventListener('change', () => {
         resetAndLoad();

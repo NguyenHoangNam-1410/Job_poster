@@ -10,9 +10,10 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
             <div>
                 <h1 class="list-header">User</h1>
             </div>
-            <button onclick="window.formModal.loadForm('/Job_poster/public/users/create?ajax=1', 'Create New User')"
+            <button onclick="window.formModal.loadForm('/Worknest/public/users/create?ajax=1', 'Create New User')"
                 class="btn-submit">
-                <span class="flex items-center justify-center w-5 h-5 rounded-full bg-white/20 group-hover:bg-white/30 transition-colors relative z-10">
+                <span
+                    class="flex items-center justify-center w-5 h-5 rounded-full bg-white/20 group-hover:bg-white/30 transition-colors relative z-10">
                     <?= Icons::add('w-3 h-3') ?>
                 </span>
                 <span>Add User</span>
@@ -21,7 +22,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <form method="GET" action="/Job_poster/public/users" id="filterForm"
+            <form method="GET" action="/Worknest/public/users" id="filterForm"
                 class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search Users</label>
@@ -55,7 +56,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     </select>
                 </div>
                 <div class="flex gap-2 items-end">
-                    <a href="/Job_poster/public/users" class="btn-cancel">
+                    <a href="/Worknest/public/users" class="btn-cancel">
                         Clear
                     </a>
                 </div>
@@ -86,6 +87,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                 <th class="table-header">User</th>
                                 <th class="table-header">Email</th>
                                 <th class="table-header">Role</th>
+                                <th class="table-header">Created Date</th>
                                 <th class="table-header">Actions</th>
                             </tr>
                         </thead>
@@ -97,7 +99,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                     </td>
                                     <td class="table-cell">
                                         <div class="flex items-center gap-3">
-                                            <img src="<?= !empty($user->getAvatar()) ? htmlspecialchars($user->getAvatar()) : '/Job_poster/public/image/avatar/default.svg' ?>"
+                                            <img src="<?= !empty($user->getAvatar()) ? htmlspecialchars($user->getAvatar()) : '/Worknest/public/image/avatar/default.svg' ?>"
                                                 alt="Avatar" class="w-10 h-10 rounded-full object-cover border border-gray-200">
                                             <span><?= htmlspecialchars($user->getUsername()) ?></span>
                                         </div>
@@ -123,13 +125,19 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                         ?>"><?= htmlspecialchars($user->getRole()) ?></span>
                                     </td>
                                     <td class="table-cell">
+                                        <?php $createdAt = $user->getCreatedAt(); ?>
+                                        <span class="text-sm text-gray-600">
+                                            <?= $createdAt ? htmlspecialchars(date('d M, Y', strtotime($createdAt))) : '-' ?>
+                                        </span>
+                                    </td>
+                                    <td class="table-cell">
                                         <?php
                                         $canEdit = ($user->getId() == $currentUserId) || ($user->getRole() !== 'Admin');
                                         $canDelete = ($user->getId() != $currentUserId);
                                         ?>
                                         <?php if ($canEdit): ?>
                                             <button
-                                                onclick="window.formModal.loadForm('/Job_poster/public/users/edit/<?= $user->getId() ?>?ajax=1', 'Edit User #<?= $user->getId() ?>')"
+                                                onclick="window.formModal.loadForm('/Worknest/public/users/edit/<?= $user->getId() ?>?ajax=1', 'Edit User #<?= $user->getId() ?>')"
                                                 class="inline-flex items-center text-blue-600 hover:text-blue-900 mr-3 focus:outline-none">
                                                 <?= Icons::edit('w-5 h-5 mr-1') ?>
                                                 Edit
@@ -168,7 +176,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 require_once __DIR__ . '/../../components/pagination.php';
                 renderPagination(
                     $pagination,
-                    '/Job_poster/public/users',
+                    '/Worknest/public/users',
                     [
                         'search' => $pagination['search'] ?? '',
                         'role' => $pagination['role_filter'] ?? '',
@@ -203,6 +211,6 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
     });
 </script>
 
-<script src="/Job_poster/public/javascript/user.js"></script>
+<script src="/Worknest/public/javascript/user.js"></script>
 
 <?php include __DIR__ . '/../../layouts/auth_footer.php'; ?>

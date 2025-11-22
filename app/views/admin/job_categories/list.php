@@ -11,7 +11,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 <h1 class="list-header">Job Categories</h1>
             </div>
             <button
-                onclick="window.formModal.loadForm('/Job_poster/public/job-categories/create?ajax=1', 'Create New Category')"
+                onclick="window.formModal.loadForm('/Worknest/public/job-categories/create?ajax=1', 'Create New Category')"
                 class="btn-submit">
                 <span class="flex items-center justify-center w-5 h-5 rounded-full bg-white/20 group-hover:bg-white/30 transition-colors relative z-10">
                     <?= Icons::add('w-3 h-3') ?>
@@ -22,7 +22,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <form method="GET" action="/Job_poster/public/job-categories" id="categoryFilterForm"
+            <form method="GET" action="/Worknest/public/job-categories" id="categoryFilterForm"
                 class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search Categories</label>
@@ -41,7 +41,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     </select>
                 </div>
                 <div class="flex gap-2 items-end">
-                    <a href="/Job_poster/public/job-categories" class="btn-cancel">
+                    <a href="/Worknest/public/job-categories" class="btn-cancel">
                         Clear
                     </a>
                 </div>
@@ -105,7 +105,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                     </td>
                                     <td class="table-cell">
                                         <button
-                                            onclick="window.formModal.loadForm('/Job_poster/public/job-categories/edit/<?= $category->getId() ?>?ajax=1', 'Edit Category #<?= $category->getId() ?>')"
+                                            onclick="window.formModal.loadForm('/Worknest/public/job-categories/edit/<?= $category->getId() ?>?ajax=1', 'Edit Category #<?= $category->getId() ?>')"
                                             class="inline-flex items-center text-blue-600 hover:text-blue-900 mr-3 focus:outline-none">
                                             <?= Icons::edit('w-5 h-5 mr-1') ?>
                                             Edit
@@ -135,7 +135,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 <!-- Pagination -->
                 <?php
                 include __DIR__ . '/../../components/pagination.php';
-                renderPagination($pagination, '/Job_poster/public/job-categories', [
+                renderPagination($pagination, '/Worknest/public/job-categories', [
                     'search' => $pagination['search'] ?? '',
                     'per_page' => $pagination['per_page'] ?? 10
                 ]);
@@ -145,7 +145,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
     </div>
 </div>
 
-<script src="/Job_poster/public/javascript/notyf.min.js"></script>
+<script src="/Worknest/public/javascript/notyf.min.js"></script>
 <script>
     const notyf = new Notyf({
         duration: 3000,
@@ -183,7 +183,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
         );
 
         if (confirmed) {
-            fetch(`/Job_poster/public/job-categories/delete/${id}`, {
+            fetch(`/Worknest/public/job-categories/delete/${id}`, {
                 method: 'GET',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'

@@ -31,7 +31,7 @@ async function deleteUser(userId, username) {
   row.style.pointerEvents = "none";
 
   // Make AJAX request
-  fetch(`/Job_poster/public/users/delete/${userId}`, {
+  fetch(`/Worknest/public/users/delete/${userId}`, {
     method: "GET",
     headers: {
       "X-Requested-With": "XMLHttpRequest",
@@ -68,7 +68,7 @@ async function deleteUser(userId, username) {
 
 // Optional: Reload table data without page refresh
 function refreshUserList() {
-  fetch("/Job_poster/public/users/api/list", {
+  fetch("/Worknest/public/users/api/list", {
     headers: {
       "X-Requested-With": "XMLHttpRequest",
     },
@@ -101,7 +101,7 @@ function refreshUserList() {
                                 : "bg-green-100 text-green-800"
                             }">${escapeHtml(user.role)}</span></td>
                             <td class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <a href="/Job_poster/public/users/edit/${
+                                <a href="/Worknest/public/users/edit/${
                                   user.id
                                 }" class="text-blue-500 hover:underline">Edit</a> |
                                 <button onclick="deleteUser(${

@@ -37,7 +37,7 @@ if (!$isModal) {
 
         <div class="<?= !$isModal ? 'bg-white rounded-lg shadow-md p-6' : '' ?>">
             <form id="companyForm" method="POST"
-                action="/Job_poster/public/company-profile/update<?= $isModal ? '?ajax=1' : '' ?>"
+                action="/Worknest/public/company-profile/update<?= $isModal ? '?ajax=1' : '' ?>"
                 enctype="multipart/form-data" class="space-y-6">
                 <input type="hidden" name="referrer" id="referrer"
                     value="<?= isset($_SESSION['job_posting_flow']) ? 'job-posting' : '' ?>">
@@ -52,7 +52,7 @@ if (!$isModal) {
                     <div class="flex items-center space-x-6">
                         <div class="relative">
                             <img id="logoPreview"
-                                src="<?= !empty($company->getLogo()) ? htmlspecialchars($company->getLogo()) : '/Job_poster/public/image/no_image.png' ?>"
+                                src="<?= !empty($company->getLogo()) ? htmlspecialchars($company->getLogo()) : '/Worknest/public/image/no_image.png' ?>"
                                 alt="Logo Preview" class="w-24 h-24 rounded-full object-cover border-2 border-gray-300">
                         </div>
                         <div class="flex-1">
@@ -170,7 +170,7 @@ if (!$isModal) {
         let isSubmitting = false;
 
         if (!isModal && referrerInput) {
-            const referrer = document.referrer || '/Job_poster/public/employer/company';
+            const referrer = document.referrer || '/Worknest/public/employer/company';
             referrerInput.value = referrer;
         }
 
@@ -242,7 +242,7 @@ if (!$isModal) {
             const cancelBtn = document.getElementById('cancelBtn');
             if (cancelBtn) {
                 cancelBtn.addEventListener('click', function () {
-                    const referrer = document.referrer || '/Job_poster/public/employer/company';
+                    const referrer = document.referrer || '/Worknest/public/employer/company';
                     if (formChanged && window.notyf) {
                         window.notyf.error('You have unsaved changes!');
                         // No blocking - just inform user

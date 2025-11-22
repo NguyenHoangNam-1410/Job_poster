@@ -1,5 +1,5 @@
 <?php
-$pageTitle = 'Help Center | Job Poster';
+$pageTitle = 'Help Center | WorkNest';
 include __DIR__ . '/../layouts/public_header.php';
 ?>
 
@@ -90,9 +90,9 @@ include __DIR__ . '/../layouts/public_header.php';
       </div>
 
       <div class="faq-item">
-        <div class="faq-question">Do I need to pay to use Job Poster?</div>
+        <div class="faq-question">Do I need to pay to use WorkNest?</div>
         <div class="faq-answer">
-          No! Job Poster is completely free for job seekers. You can browse jobs, create a profile, and apply
+          No! WorkNest is completely free for job seekers. You can browse jobs, create a profile, and apply
           to unlimited positions at no cost. Some premium features may be available for employers.
         </div>
       </div>
@@ -106,9 +106,9 @@ include __DIR__ . '/../layouts/public_header.php';
       </div>
 
       <div class="faq-item" style="border-bottom: none;">
-        <div class="faq-question">Can I use Job Poster on mobile?</div>
+        <div class="faq-question">Can I use WorkNest on mobile?</div>
         <div class="faq-answer">
-          Yes! Job Poster is fully responsive and works great on mobile devices, tablets, and desktops.
+          Yes! WorkNest is fully responsive and works great on mobile devices, tablets, and desktops.
           You can access all features from any device with an internet connection.
         </div>
       </div>
@@ -237,7 +237,7 @@ include __DIR__ . '/../layouts/public_header.php';
         <div class="faq-question">Is my personal information secure?</div>
         <div class="faq-answer">
           Yes, we use industry-standard encryption to protect your data. We never share your personal information
-          with third parties without your consent. Read our <a href="/Job_poster/public/privacy-policy"
+          with third parties without your consent. Read our <a href="/Worknest/public/privacy-policy"
             class="text-cyan-600 font-bold hover:underline">Privacy Policy</a> for details.
         </div>
       </div>
@@ -246,7 +246,7 @@ include __DIR__ . '/../layouts/public_header.php';
         <div class="faq-question">What should I do if I notice suspicious activity?</div>
         <div class="faq-answer">
           If you notice any suspicious activity on your account, immediately change your password and contact
-          our support team at contact@jobposter.com. We take security seriously and will investigate promptly.
+          our support team at contact@worknest.com. We take security seriously and will investigate promptly.
         </div>
       </div>
     </div>
@@ -274,7 +274,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <div class="faq-item">
         <div class="faq-question">I'm not receiving email notifications. Why?</div>
         <div class="faq-answer">
-          Check your spam/junk folder first. Make sure our email address (noreply@jobposter.com) is whitelisted.
+          Check your spam/junk folder first. Make sure our email address (noreply@worknest.com) is whitelisted.
           You can also check your notification settings in your account preferences.
         </div>
       </div>
@@ -282,7 +282,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <div class="faq-item" style="border-bottom: none;">
         <div class="faq-question">Still need help?</div>
         <div class="faq-answer">
-          If you can't find the answer you're looking for, please <a href="/Job_poster/public/contact"
+          If you can't find the answer you're looking for, please <a href="/Worknest/public/contact"
             class="text-cyan-600 font-bold hover:underline">contact our support team</a>.
           We're here to help and typically respond within 24-48 hours.
         </div>

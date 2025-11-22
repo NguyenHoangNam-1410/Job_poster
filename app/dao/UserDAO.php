@@ -98,6 +98,8 @@ class UserDAO
                 $row['Avatar'],
                 $row['is_active']
             );
+            $user->setCreatedAt($row['created_at']);
+            $user->setUpdatedAt($row['updated_at']);
             $users[] = $user;
         }
         return $users;

@@ -19,7 +19,8 @@ class EmployerDAO
         $stmt = $this->db->prepare($sql);
 
         $userId = $employer->getUserId();
-        $companyName = $employer->getCompanyName();
+        // Provide default company name if not set
+        $companyName = $employer->getCompanyName() ?? 'Unnamed Company';
         $website = $employer->getWebsite();
         $logo = $employer->getLogo();
         $contactPhone = $employer->getContactPhone();
@@ -29,7 +30,10 @@ class EmployerDAO
 
         $stmt->bind_param("isssssss", $userId, $companyName, $website, $logo, $contactPhone, $contactEmail, $contactPerson, $description);
 
-        return $stmt->execute();
+        if ($stmt->execute()) {
+            return $this->db->insert_id;
+        }
+        return false;
 
     }
 
