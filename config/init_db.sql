@@ -26,6 +26,8 @@ INSERT INTO `users` (`UID`, `Email`, `Password`, `Role`, `Name`, `Avatar`, `auth
 (22, 'nguyen@example.com', 'hashed_pw22', 'Employer', 'Nguyen Van A', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
 (23, 'test_1763129661@example.com', '$2y$10$WbttonZgG9WYXWqTp7LWaeI.uhxXpx1pU.cIraFrzqjEhiRXN8Flq', 'Employer', 'Test User', NULL, 'local', 1, '2025-11-14 14:14:21', '2025-11-14 14:14:21'),
 (24, 'silversoul66666@gmail.com', '$2y$10$FJwn.z8GWZOqwx.7A0DGZ.niTr2PrFPjO1j/D3GcXW3I1JuSYpExS', 'Employer', 'Nguyen Hoang Nam', NULL, 'local', 1, '2025-11-14 14:14:57', '2025-11-14 14:14:57');
+(25, 'worknest@123', '$2y$10$.ztJ7lvF98dB9NkAQAqAhu2v0rYz7P0Ke7wVHe5roI1jCrlctwYNC', 'Admin', 'WorkNest', NULL, NULL, 1, '2025-11-22 02:32:16', '2025-11-22 02:32:16'),
+(26, 'staff@123', '$2y$10$e6kMZ641a85blQjEAkDfMuueo9.Bsw2FreXXxTK4rgZ6LWSfq3ShO', 'Staff', 'Moderator', NULL, NULL, 1, '2025-11-22 02:32:33', '2025-11-22 02:32:33');
 
 -- Employers
 INSERT INTO EMPLOYERS (user_id, company_name, website, logo, contact_phone, contact_email, contact_person, description)

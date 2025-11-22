@@ -1,6 +1,4 @@
 <?php
-require_once '../app/views/layouts/auth_header.php';
-
 // Fetch recent jobs
 require_once __DIR__ . '/../../dao/JobDAO.php';
 require_once __DIR__ . '/../../dao/EmployerDAO.php';
@@ -31,6 +29,8 @@ $pendingJobs = $jobDAO->getJobsByEmployer($employerId, '', '', '', 'pending', ''
 $recentPending = !empty($pendingJobs) ? $pendingJobs[0] : null;
 
 $hasAnyJobs = $recentApproved || $recentRejected || $recentPending;
+
+require_once '../app/views/layouts/auth_header.php';
 ?>
 
 <div class="list-container">
