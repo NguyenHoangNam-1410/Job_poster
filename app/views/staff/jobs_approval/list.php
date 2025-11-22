@@ -120,10 +120,22 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                         </span>
                                     </td>
                                     <td class="table-cell">
-                                        <?= date('d M, Y H:i', strtotime($job->getCreatedAt())) ?>
+                                        <?php
+                                        $date = new DateTime($job->getCreatedAt());
+                                        echo $date->format('d M, Y');
+                                        ?>
+                                        <span class="text-gray-500 text-xs block">
+                                            <?php echo $date->format('H:i'); ?>
+                                        </span>
                                     </td>
                                     <td class="table-cell">
-                                        <?= date('d M, Y H:i', strtotime($job->getUpdatedAt())) ?>
+                                        <?php
+                                        $updatedDate = new DateTime($job->getUpdatedAt());
+                                        echo $updatedDate->format('d M, Y');
+                                        ?>
+                                        <span class="text-gray-500 text-xs block">
+                                            <?php echo $updatedDate->format('H:i'); ?>
+                                        </span>
                                     </td>
                                     <td class="table-cell">
                                         <a href="/Job_poster/public/approvals/detail/<?= $job->getId() ?>"

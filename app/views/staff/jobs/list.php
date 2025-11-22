@@ -26,43 +26,33 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     </div>
 
                     <!-- Category Filter -->
-                    <div class="flex-1 min-w-[150px] relative">
+                    <div class="flex-1 min-w-[150px]">
                         <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                        <input type="text" id="categorySearch" placeholder="Search category..."
-                            class="form-input w-full" autocomplete="off">
-                        <input type="hidden" id="category" name="category"
-                            value="<?= htmlspecialchars($pagination['category_filter'] ?? '') ?>">
-                        <div id="categoryDropdown"
-                            class="hidden absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto">
-                            <div class="cursor-pointer px-4 py-2 hover:bg-gray-100" data-value=""
-                                data-name="All Categories">All Categories</div>
+                        <select id="category" name="category" class="form-select"
+                            onchange="document.getElementById('jobsManageFilterForm').submit()">
+                            <option value="">All Categories</option>
                             <?php foreach ($categories as $category): ?>
-                                <div class="cursor-pointer px-4 py-2 hover:bg-gray-100"
-                                    data-value="<?= $category->getId() ?>"
-                                    data-name="<?= htmlspecialchars($category->getCategoryName()) ?>">
+                                <option value="<?= $category->getId() ?>"
+                                    <?= ($pagination['category_filter'] ?? '') == $category->getId() ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($category->getCategoryName()) ?>
-                                </div>
+                                </option>
                             <?php endforeach; ?>
-                        </div>
+                        </select>
                     </div>
 
                     <!-- Location Filter -->
-                    <div class="flex-1 min-w-[150px] relative">
+                    <div class="flex-1 min-w-[150px]">
                         <label for="location" class="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                        <input type="text" id="locationSearch" placeholder="Search location..."
-                            class="form-input w-full" autocomplete="off">
-                        <input type="hidden" id="location" name="location"
-                            value="<?= htmlspecialchars($pagination['location_filter'] ?? '') ?>">
-                        <div id="locationDropdown"
-                            class="hidden absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto">
-                            <div class="cursor-pointer px-4 py-2 hover:bg-gray-100" data-value="">All Locations</div>
+                        <select id="location" name="location" class="form-select"
+                            onchange="document.getElementById('jobsManageFilterForm').submit()">
+                            <option value="">All Locations</option>
                             <?php foreach ($locations as $location): ?>
-                                <div class="cursor-pointer px-4 py-2 hover:bg-gray-100"
-                                    data-value="<?= htmlspecialchars($location) ?>">
+                                <option value="<?= htmlspecialchars($location) ?>"
+                                    <?= ($pagination['location_filter'] ?? '') == $location ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($location) ?>
-                                </div>
+                                </option>
                             <?php endforeach; ?>
-                        </div>
+                        </select>
                     </div>
 
                     <!-- Status Filter -->
@@ -198,7 +188,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                     </td>
                                     <td class="table-cell">
                                         <?php if ($job->getApprovedAt()): ?>
-                                            <?= date('Y-m-d', strtotime($job->getApprovedAt())) ?>
+                                            <?= date('d M, Y', strtotime($job->getApprovedAt())) ?>
                                         <?php else: ?>
                                             <span class="text-gray-400">N/A</span>
                                         <?php endif; ?>
@@ -270,84 +260,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
             }
         }
-
-        // Initialize custom dropdowns
-        initCustomDropdown('categorySearch', 'category', 'categoryDropdown');
-        initCustomDropdown('locationSearch', 'location', 'locationDropdown');
     });
-
-    function initCustomDropdown(searchId, hiddenId, dropdownId) {
-        const searchInput = document.getElementById(searchId);
-        const hiddenInput = document.getElementById(hiddenId);
-        const dropdown = document.getElementById(dropdownId);
-
-        if (!searchInput || !hiddenInput || !dropdown) return;
-
-        const options = dropdown.querySelectorAll('[data-value]');
-
-        // Set initial display value
-        const currentValue = hiddenInput.value;
-        if (currentValue) {
-            const selectedOption = Array.from(options).find(opt => opt.dataset.value === currentValue);
-            if (selectedOption) {
-                searchInput.value = selectedOption.dataset.name || selectedOption.textContent;
-            }
-        } else {
-            searchInput.value = '';
-        }
-
-        // Show dropdown on focus
-        searchInput.addEventListener('focus', function () {
-            dropdown.classList.remove('hidden');
-            filterOptions();
-        });
-
-        // Filter options on input
-        searchInput.addEventListener('input', filterOptions);
-
-        function filterOptions() {
-            const searchTerm = searchInput.value.toLowerCase();
-            let visibleCount = 0;
-
-            options.forEach(option => {
-                const text = option.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    option.classList.remove('hidden');
-                    visibleCount++;
-                } else {
-                    option.classList.add('hidden');
-                }
-            });
-
-            if (visibleCount === 0) {
-                dropdown.classList.add('hidden');
-            } else {
-                dropdown.classList.remove('hidden');
-            }
-        }
-
-        // Select option
-        options.forEach(option => {
-            option.addEventListener('click', function () {
-                const value = this.dataset.value;
-                const name = this.dataset.name || this.textContent;
-
-                hiddenInput.value = value;
-                searchInput.value = value ? name : '';
-                dropdown.classList.add('hidden');
-
-                // Submit form
-                document.getElementById('jobsManageFilterForm').submit();
-            });
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function (e) {
-            if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.classList.add('hidden');
-            }
-        });
-    }
 
     async function deleteJob(id, title) {
         const confirmed = await window.confirmModal.show(

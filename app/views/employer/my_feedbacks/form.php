@@ -28,13 +28,20 @@
         <!-- Feedback Form -->
         <form method="POST" action="/Job_poster/public/my-feedbacks/store" id="feedbackForm" class="space-y-4">
             <div>
-                <label for="comments" class="block text-sm font-medium text-gray-700 mb-1">Your Feedback</label>
+                <div class="flex justify-between items-center mb-1">
+                    <label for="comments" class="block text-sm font-medium text-gray-700">Your Feedback</label>
+                    <span class="text-sm text-gray-500">
+                        <span id="wordCount">0</span> / 1000 words
+                    </span>
+                </div>
                 <textarea id="comments" name="comments" rows="5" placeholder="Write your feedback here..." required
+                    maxlength="6000"
                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                <p class="text-xs text-gray-500 mt-1">Maximum 1000 words allowed</p>
             </div>
 
             <div>
-                <button type="submit" class="btn-submit">
+                <button type="submit" class="btn-submit" id="submitBtn">
                     Submit Feedback
                 </button>
             </div>
@@ -42,4 +49,43 @@
     </div>
 </div>
 
-<?php require_once __DIR__ . '/../../layouts/auth_footer.php'; ?>
+<script>
+    const textarea = document.getElementById('comments');
+    const wordCountSpan = document.getElementById('wordCount');
+    const submitBtn = document.getElementById('submitBtn');
+    const MAX_WORDS = 1000;
+
+    function updateWordCount() {
+        const text = textarea.value.trim();
+        const words = text === '' ? 0 : text.split(/\s+/).length;
+        wordCountSpan.textContent = words;
+
+        // Disable submit button if over limit
+        if (words > MAX_WORDS) {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            textarea.classList.add('border-red-500');
+        } else {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            textarea.classList.remove('border-red-500');
+        }
+    }
+
+    textarea.addEventListener('input', updateWordCount);
+    textarea.addEventListener('paste', () => {
+        setTimeout(updateWordCount, 10);
+    });
+
+    // Validate on form submit
+    document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+        const text = textarea.value.trim();
+        const words = text === '' ? 0 : text.split(/\s+/).length;
+        
+        if (words > MAX_WORDS) {
+            e.preventDefault();
+            alert(`Your feedback exceeds the limit of ${MAX_WORDS} words. Current word count: ${words}`);
+            return false;
+        }
+    });
+</script>
