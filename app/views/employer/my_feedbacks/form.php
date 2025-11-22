@@ -35,9 +35,8 @@
                     </span>
                 </div>
                 <textarea id="comments" name="comments" rows="5" placeholder="Write your feedback here..." required
-                    maxlength="6000"
                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
-                <p class="text-xs text-gray-500 mt-1">Maximum 1000 words allowed</p>
+                <p class="text-xs text-gray-500 mt-1">Maximum 1000 characters allowed</p>
             </div>
 
             <div>
@@ -56,12 +55,12 @@
     const MAX_WORDS = 1000;
 
     function updateWordCount() {
-        const text = textarea.value.trim();
-        const words = text === '' ? 0 : text.split(/\s+/).length;
-        wordCountSpan.textContent = words;
+        const text = textarea.value;
 
-        // Disable submit button if over limit
-        if (words > MAX_WORDS) {
+        const chars = text.length;
+        wordCountSpan.textContent = chars;
+
+        if (chars > MAX_WORDS) {
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
             textarea.classList.add('border-red-500');
@@ -77,14 +76,13 @@
         setTimeout(updateWordCount, 10);
     });
 
-    // Validate on form submit
-    document.getElementById('feedbackForm').addEventListener('submit', function(e) {
-        const text = textarea.value.trim();
-        const words = text === '' ? 0 : text.split(/\s+/).length;
-        
-        if (words > MAX_WORDS) {
+    document.getElementById('feedbackForm').addEventListener('submit', function (e) {
+        const text = textarea.value;
+        const chars = text.length;
+
+        if (chars > MAX_WORDS) {
             e.preventDefault();
-            alert(`Your feedback exceeds the limit of ${MAX_WORDS} words. Current word count: ${words}`);
+            alert(`Your feedback exceeds the limit of ${MAX_WORDS} characters. Current character count: ${chars}`);
             return false;
         }
     });

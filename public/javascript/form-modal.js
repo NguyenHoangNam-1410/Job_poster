@@ -49,6 +49,7 @@ class FormModal {
 
   setupEventListeners() {
     const closeBtn = document.getElementById("formModalClose");
+    let isMouseDownOnBackdrop = false;
     
     closeBtn.addEventListener("click", () => this.close());
 
@@ -59,11 +60,25 @@ class FormModal {
       }
     });
 
-    // Close on backdrop click
-    this.modal.addEventListener("click", (e) => {
+    // Close on backdrop click only (not on drag)
+    this.modal.addEventListener("mousedown", (e) => {
+      // Only set flag if click is on the backdrop itself, not on modal content
       if (e.target === this.modal) {
+        isMouseDownOnBackdrop = true;
+      }
+    });
+
+    this.modal.addEventListener("mouseup", (e) => {
+      // Only close if mousedown and mouseup both happened on backdrop
+      if (e.target === this.modal && isMouseDownOnBackdrop) {
         this.close();
       }
+      isMouseDownOnBackdrop = false;
+    });
+
+    // Reset flag if mouse leaves modal area
+    this.modal.addEventListener("mouseleave", () => {
+      isMouseDownOnBackdrop = false;
     });
   }
 

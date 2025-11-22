@@ -11,24 +11,21 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 
 <?php if (!$isModal): ?>
     <div class="form-background">
-        <div class="form-container">
-
+        <div class="form-container form-container-small">
             <!-- Header -->
-            <div class="mb-6">
-                <h1 class="text-4xl font-extrabold text-left">Post New Job</h1>
+            <div class="form-header">
+                <h1 class="form-title">Post New Job</h1>
             </div>
-        <?php endif; ?>
-
-        <!-- FORM -->
+        <?php endif; ?> <!-- FORM -->
         <form method="POST" action="/Job_poster/public/my-jobs/store<?= $isModal ? '?ajax=1' : '' ?>" id="jobForm"
-            class="space-y-8">
+            >
             <?php if ($isModal): ?>
                 <input type="hidden" name="ajax" value="1">
             <?php endif; ?>
             <div class="form-grid">
 
                 <!-- TITLE -->
-                <div class="md:col-span-2">
+                <div>
                     <label class="form-label">Job Title <span class="required">*</span></label>
                     <input type="text" name="title" required
                         class="form-input bg-white focus:ring-blue-500 focus:border-blue-500">
@@ -44,7 +41,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 <!-- SALARY -->
                 <div>
                     <label class="form-label">Salary (VND)</label>
-                    <input type="number" name="salary" step="0.01"
+                    <input type="number" name="salary" step="0.01" min="0"
                         class="form-input bg-white focus:ring-blue-500 focus:border-blue-500">
                 </div>
 

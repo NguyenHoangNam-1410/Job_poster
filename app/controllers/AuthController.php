@@ -83,6 +83,24 @@ class AuthController
                 exit;
             }
             $user = $this->userService->getUserByEmail($email);
+            
+            // Create employer record for the new employer user
+            require_once __DIR__ . '/../dao/EmployerDAO.php';
+            require_once __DIR__ . '/../models/Employer.php';
+            $employerDAO = new EmployerDAO();
+            $newEmployer = new Employer(
+                null,  // id (auto-generated)
+                null,  // company_name
+                null,  // website
+                null,  // logo
+                null,  // contact_phone
+                null,  // contact_email
+                null,  // contact_person
+                null,  // description
+                $user->getId()  // user_id
+            );
+            $employerDAO->create($newEmployer);
+            
             $_SESSION['user'] = [
                 'id' => $user->getId(),
                 'name' => $user->getName(),

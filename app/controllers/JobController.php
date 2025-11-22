@@ -417,11 +417,34 @@ class JobController
     public function myJobs()
     {
         $userId = $this->getCurrentUserId();
-        $employer = $this->companyService->getEmployerByUserId($userId);
+        
+        // Use EmployerDAO to get employer (same pattern as employer home)
+        require_once __DIR__ . '/../dao/EmployerDAO.php';
+        require_once __DIR__ . '/../models/Employer.php';
+        $employerDAO = new EmployerDAO();
+        $employer = $employerDAO->getEmployerByUserId($userId);
 
+        // If no employer record exists, create one automatically
         if (!$employer) {
-            header('Location: /Job_poster/public/company-profile');
-            exit;
+            $newEmployer = new Employer(
+                null,  // id (auto-generated)
+                null,  // company_name
+                null,  // website
+                null,  // logo
+                null,  // contact_phone
+                null,  // contact_email
+                null,  // contact_person
+                null,  // description
+                $userId  // user_id
+            );
+            $createdId = $employerDAO->create($newEmployer);
+            if (!$createdId) {
+                throw new Exception("Failed to create employer profile.");
+            }
+            $employer = $employerDAO->getEmployerByUserId($userId);
+            if (!$employer) {
+                throw new Exception("Failed to retrieve employer profile after creation.");
+            }
         }
 
         $employerId = $employer->getId();

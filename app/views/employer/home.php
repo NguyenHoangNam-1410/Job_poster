@@ -2,17 +2,49 @@
 // Fetch recent jobs
 require_once __DIR__ . '/../../dao/JobDAO.php';
 require_once __DIR__ . '/../../dao/EmployerDAO.php';
+require_once __DIR__ . '/../../models/Employer.php';
 $jobDAO = new JobDAO();
 $employerDAO = new EmployerDAO();
 
 // Get the employer ID from the user ID
 $userId = $_SESSION['user']['id'];
 $employer = $employerDAO->getEmployerByUserId($userId);
+
+// If no employer profile exists, create one automatically
+if (!$employer) {
+    $newEmployer = new Employer(
+        null,  // id (auto-generated)
+        null,  // company_name
+        null,  // website
+        null,  // logo
+        null,  // contact_phone
+        null,  // contact_email
+        null,  // contact_person
+        null,  // description
+        $userId  // user_id
+    );
+    $createdId = $employerDAO->create($newEmployer);
+    if ($createdId) {
+        $employer = $employerDAO->getEmployerByUserId($userId);
+    }
+}
+
 $employerId = $employer ? $employer->getId() : null;
 
-// If no employer profile exists, redirect to create one
+// If still no employer ID, show error
 if (!$employerId) {
-    header('Location: /Job_poster/public/company-profile');
+    $error = "Unable to access employer profile. Please try again later.";
+    require_once '../app/views/layouts/auth_header.php';
+    ?>
+    <div class="list-container">
+        <div class="list-content">
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded" role="alert">
+                <span class="block sm:inline"><?= htmlspecialchars($error) ?></span>
+            </div>
+        </div>
+    </div>
+    <?php
+    require_once '../app/views/layouts/auth_footer.php';
     exit;
 }
 
@@ -54,7 +86,7 @@ require_once '../app/views/layouts/auth_header.php';
                 </div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">No Job Postings Yet</h2>
                 <p class="text-gray-600 mb-6">Start by creating your first job posting to attract talented candidates</p>
-                <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/create', 'Create New Job')">
+                <button class="btn-submit" onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/create', 'Create New Job')">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
