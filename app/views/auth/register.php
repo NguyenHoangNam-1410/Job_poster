@@ -1,6 +1,6 @@
 <?php
 $pageTitle = 'Register | WorkNest';
-$additionalCSS = ["/Job_poster/public/css/auth/register.css"];
+$additionalCSS = ["/Worknest/public/css/auth/register.css"];
 include __DIR__ . '/../layouts/public_header.php';
 ?>
 
@@ -25,7 +25,7 @@ include __DIR__ . '/../layouts/public_header.php';
           <?php unset($_SESSION['register_error']); ?>
         <?php endif; ?>
 
-        <form method="POST" action="/Job_poster/public/auth/register/local">
+        <form method="POST" action="/Worknest/public/auth/register/local">
           <div class="mb-3">
             <label for="name" class="form-label">Full Name<span class="text-red-500">*</span></label>
             <input type="text" class="form-control" id="name" name="name" required>
@@ -71,7 +71,7 @@ include __DIR__ . '/../layouts/public_header.php';
 
           <!-- Facebook Login -->
           <div class="flex justify-center my-3">
-            <a href="/Job_poster/public/auth/login/facebook"
+            <a href="/Worknest/public/auth/login/facebook"
               class="flex items-center justify-center w-full max-w-xs bg-blue-700 hover:bg-blue-800 text-white font-medium py-2 transition social-login-btn">
               <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                 viewBox="0 0 24 24">
@@ -83,7 +83,7 @@ include __DIR__ . '/../layouts/public_header.php';
           </div>
 
           <p class="mt-6 text-center text-gray-700">
-            Already have an account? <a href="/Job_poster/public/auth/login" class="text-blue-600 hover:underline">Login
+            Already have an account? <a href="/Worknest/public/auth/login" class="text-blue-600 hover:underline">Login
               here</a>
           </p>
         </form>
@@ -93,6 +93,6 @@ include __DIR__ . '/../layouts/public_header.php';
 </div>
 
 <?php
-$additionalJS = ["/Job_poster/public/javascript/handleCredentials.js"];
+$additionalJS = ["/Worknest/public/javascript/handleCredentials.js"];
 include __DIR__ . '/../layouts/public_footer.php';
 ?>

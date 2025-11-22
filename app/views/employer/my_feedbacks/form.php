@@ -7,7 +7,7 @@
                 <h1 class="text-3xl font-bold text-gray-800">Add New Feedback</h1>
                 <p class="text-gray-600 mt-2">Share feedback for your company</p>
             </div>
-            <a href="/Job_poster/public/my-feedbacks"
+            <a href="/Worknest/public/my-feedbacks"
                 class="mt-4 md:mt-0 inline-block bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition duration-200">
                 ← Back to Feedbacks
             </a>
@@ -26,7 +26,7 @@
         <?php endif; ?>
 
         <!-- Feedback Form -->
-        <form method="POST" action="/Job_poster/public/my-feedbacks/store" id="feedbackForm" class="space-y-4">
+        <form method="POST" action="/Worknest/public/my-feedbacks/store" id="feedbackForm" class="space-y-4">
             <div>
                 <div class="flex justify-between items-center mb-1">
                     <label for="comments" class="block text-sm font-medium text-gray-700">Your Feedback</label>

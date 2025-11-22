@@ -73,7 +73,7 @@ class JobController
             $job = $this->jobService->getJobById($id);
 
             if (!$job) {
-                header('Location: /Job_poster/public/jobs-manage?error=' . urlencode('Job not found'));
+                header('Location: /Worknest/public/jobs-manage?error=' . urlencode('Job not found'));
                 exit;
             }
 
@@ -83,7 +83,7 @@ class JobController
 
             require_once __DIR__ . '/../views/staff/jobs/form.php';
         } catch (Exception $e) {
-            header('Location: /Job_poster/public/jobs-manage?error=' . urlencode($e->getMessage()));
+            header('Location: /Worknest/public/jobs-manage?error=' . urlencode($e->getMessage()));
             exit;
         }
     }
@@ -107,7 +107,7 @@ class JobController
                         ]);
                         exit;
                     } else {
-                        header('Location: /Job_poster/public/jobs-manage?success=' . urlencode('Job updated successfully'));
+                        header('Location: /Worknest/public/jobs-manage?success=' . urlencode('Job updated successfully'));
                         exit;
                     }
                 }
@@ -149,7 +149,7 @@ class JobController
                     ]);
                     exit;
                 } else {
-                    header('Location: /Job_poster/public/jobs-manage?success=' . urlencode('Job soft deleted successfully'));
+                    header('Location: /Worknest/public/jobs-manage?success=' . urlencode('Job soft deleted successfully'));
                     exit;
                 }
             } else {
@@ -166,7 +166,7 @@ class JobController
                 ]);
                 exit;
             } else {
-                header('Location: /Job_poster/public/jobs-manage?error=' . urlencode($e->getMessage()));
+                header('Location: /Worknest/public/jobs-manage?error=' . urlencode($e->getMessage()));
                 exit;
             }
         }
@@ -191,7 +191,7 @@ class JobController
                     ]);
                     exit;
                 } else {
-                    header('Location: /Job_poster/public/jobs-manage?success=' . urlencode('Job permanently deleted'));
+                    header('Location: /Worknest/public/jobs-manage?success=' . urlencode('Job permanently deleted'));
                     exit;
                 }
             } else {
@@ -208,7 +208,7 @@ class JobController
                 ]);
                 exit;
             } else {
-                header('Location: /Job_poster/public/jobs-manage?error=' . urlencode($e->getMessage()));
+                header('Location: /Worknest/public/jobs-manage?error=' . urlencode($e->getMessage()));
                 exit;
             }
         }
@@ -240,7 +240,7 @@ class JobController
                         ]);
                         exit;
                     } else {
-                        header('Location: /Job_poster/public/jobs-manage?success=' . urlencode('Job status changed successfully'));
+                        header('Location: /Worknest/public/jobs-manage?success=' . urlencode('Job status changed successfully'));
                         exit;
                     }
                 } else {
@@ -257,7 +257,7 @@ class JobController
                     ]);
                     exit;
                 } else {
-                    header('Location: /Job_poster/public/jobs-manage?error=' . urlencode($e->getMessage()));
+                    header('Location: /Worknest/public/jobs-manage?error=' . urlencode($e->getMessage()));
                     exit;
                 }
             }
@@ -283,7 +283,7 @@ class JobController
                     ]);
                     exit;
                 } else {
-                    header('Location: /Job_poster/public/jobs-manage?success=' . urlencode('Job restored successfully'));
+                    header('Location: /Worknest/public/jobs-manage?success=' . urlencode('Job restored successfully'));
                     exit;
                 }
             } else {
@@ -300,7 +300,7 @@ class JobController
                 ]);
                 exit;
             } else {
-                header('Location: /Job_poster/public/jobs-manage?error=' . urlencode($e->getMessage()));
+                header('Location: /Worknest/public/jobs-manage?error=' . urlencode($e->getMessage()));
                 exit;
             }
         }
@@ -355,7 +355,7 @@ class JobController
             $job = $this->jobService->getJobById($id);
 
             if (!$job) {
-                header('Location: /Job_poster/public/approvals?error=' . urlencode('Job not found'));
+                header('Location: /Worknest/public/approvals?error=' . urlencode('Job not found'));
                 exit;
             }
 
@@ -365,7 +365,7 @@ class JobController
             $error = null;
             require_once __DIR__ . '/../views/staff/jobs_approval/detail.php';
         } catch (Exception $e) {
-            header('Location: /Job_poster/public/approvals?error=' . urlencode($e->getMessage()));
+            header('Location: /Worknest/public/approvals?error=' . urlencode($e->getMessage()));
             exit;
         }
     }
@@ -380,11 +380,11 @@ class JobController
                 $success = $this->jobService->approveJobWithReview($id, $currentUserId, $reason);
 
                 if ($success) {
-                    header('Location: /Job_poster/public/approvals?success=' . urlencode('Job approved successfully'));
+                    header('Location: /Worknest/public/approvals?success=' . urlencode('Job approved successfully'));
                     exit;
                 }
             } catch (Exception $e) {
-                header('Location: /Job_poster/public/approvals/detail/' . $id . '?error=' . urlencode($e->getMessage()));
+                header('Location: /Worknest/public/approvals/detail/' . $id . '?error=' . urlencode($e->getMessage()));
                 exit;
             }
         }
@@ -404,11 +404,11 @@ class JobController
                 $success = $this->jobService->rejectJobWithReview($id, $currentUserId, $reason);
 
                 if ($success) {
-                    header('Location: /Job_poster/public/approvals?success=' . urlencode('Job rejected successfully'));
+                    header('Location: /Worknest/public/approvals?success=' . urlencode('Job rejected successfully'));
                     exit;
                 }
             } catch (Exception $e) {
-                header('Location: /Job_poster/public/approvals/detail/' . $id . '?error=' . urlencode($e->getMessage()));
+                header('Location: /Worknest/public/approvals/detail/' . $id . '?error=' . urlencode($e->getMessage()));
                 exit;
             }
         }
@@ -521,13 +521,13 @@ class JobController
             $jobReview = $this->jobService->getLatestReview($id)['reason'] ?? null;
 
             if (!$job) {
-                header('Location: /Job_poster/public/my-jobs?error=' . urlencode('Job not found'));
+                header('Location: /Worknest/public/my-jobs?error=' . urlencode('Job not found'));
                 exit;
             }
 
             require_once __DIR__ . '/../views/employer/jobs/details.php';
         } catch (Exception $e) {
-            header('Location: /Job_poster/public/my-jobs?error=' . urlencode($e->getMessage()));
+            header('Location: /Worknest/public/my-jobs?error=' . urlencode($e->getMessage()));
             exit;
         }
     }
@@ -547,11 +547,11 @@ class JobController
             // Check if this is an AJAX request (modal)
             if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
                 // Load company profile form in modal instead
-                header('Location: /Job_poster/public/company-profile');
+                header('Location: /Worknest/public/company-profile');
                 exit;
             }
 
-            header('Location: /Job_poster/public/company-profile');
+            header('Location: /Worknest/public/company-profile');
             exit;
         }
 
@@ -619,7 +619,7 @@ class JobController
                         exit;
                     }
 
-                    header('Location: /Job_poster/public/my-jobs?success=' . urlencode($message));
+                    header('Location: /Worknest/public/my-jobs?success=' . urlencode($message));
                     exit;
                 } else {
                     throw new Exception("Failed to create job.");
@@ -654,7 +654,7 @@ class JobController
             $job = $this->jobService->getJobById($id);
             $jobReview = $this->jobService->getLatestReview($id)['reason'] ?? null;
             if (!$job) {
-                header('Location: /Job_poster/public/my-jobs?error=' . urlencode('Job not found'));
+                header('Location: /Worknest/public/my-jobs?error=' . urlencode('Job not found'));
                 exit;
             }
 
@@ -663,7 +663,7 @@ class JobController
 
             require_once __DIR__ . '/../views/employer/jobs/form.php';
         } catch (Exception $e) {
-            header('Location: /Job_poster/public/my-jobs?error=' . urlencode($e->getMessage()));
+            header('Location: /Worknest/public/my-jobs?error=' . urlencode($e->getMessage()));
             exit;
         }
     }
@@ -685,7 +685,7 @@ class JobController
                         echo json_encode(['success' => false, 'message' => 'Job not found']);
                         exit;
                     }
-                    header("Location: /Job_poster/public/my-jobs?error=" . urlencode("Job not found"));
+                    header("Location: /Worknest/public/my-jobs?error=" . urlencode("Job not found"));
                     exit;
                 }
                 // Determine status based on action
@@ -731,7 +731,7 @@ class JobController
                     exit;
                 }
 
-                header('Location: /Job_poster/public/my-jobs?success=' . urlencode($successMessage));
+                header('Location: /Worknest/public/my-jobs?success=' . urlencode($successMessage));
                 exit;
             } catch (Exception $e) {
                 // Check if this is an AJAX request
@@ -747,7 +747,7 @@ class JobController
                     exit;
                 }
 
-                header('Location: /Job_poster/public/my-jobs?error=' . urlencode($e->getMessage()));
+                header('Location: /Worknest/public/my-jobs?error=' . urlencode($e->getMessage()));
                 exit;
             }
         }
@@ -760,7 +760,7 @@ class JobController
             $job = $this->jobService->getJobById($id);
 
             if (!$job) {
-                header('Location: /Job_poster/public/my-jobs?error=' . urlencode('Job not found'));
+                header('Location: /Worknest/public/my-jobs?error=' . urlencode('Job not found'));
                 exit;
             }
 
@@ -771,10 +771,10 @@ class JobController
             }
 
             $this->jobService->softDeleteJob($id);
-            header('Location: /Job_poster/public/my-jobs?success=' . urlencode('Job deleted successfully'));
+            header('Location: /Worknest/public/my-jobs?success=' . urlencode('Job deleted successfully'));
             exit;
         } catch (Exception $e) {
-            header('Location: /Job_poster/public/my-jobs?error=' . urlencode($e->getMessage()));
+            header('Location: /Worknest/public/my-jobs?error=' . urlencode($e->getMessage()));
             exit;
         }
     }
@@ -786,7 +786,7 @@ class JobController
             $job = $this->jobService->getJobById($id);
 
             if (!$job) {
-                header('Location: /Job_poster/public/my-jobs?error=' . urlencode('Job not found'));
+                header('Location: /Worknest/public/my-jobs?error=' . urlencode('Job not found'));
                 exit;
             }
 
@@ -794,10 +794,10 @@ class JobController
                 throw new Exception("Only jobs in 'draft' status can be hard deleted.");
             }
             $this->jobService->hardDeleteJob($id);
-            header('Location: /Job_poster/public/my-jobs?success=' . urlencode('Job deleted successfully'));
+            header('Location: /Worknest/public/my-jobs?success=' . urlencode('Job deleted successfully'));
             exit;
         } catch (Exception $e) {
-            header('Location: /Job_poster/public/my-jobs?error=' . urlencode($e->getMessage()));
+            header('Location: /Worknest/public/my-jobs?error=' . urlencode($e->getMessage()));
             exit;
         }
     }

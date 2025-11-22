@@ -5,11 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= $pageTitle ?? 'WorkNest' ?></title>
-  <link rel="icon" type="image/x-icon" href="/Job_poster/public/images/favicon.png">
+  <link rel="icon" type="image/x-icon" href="/Worknest/public/images/favicon.png">
 
-  <link rel="stylesheet" href="/Job_poster/public/css/tailwind.min.css">
-  <link rel="stylesheet" href="/Job_poster/public/css/homepage.css">
-  <link rel="stylesheet" href="/Job_poster/public/css/style.css">
+  <link rel="stylesheet" href="/Worknest/public/css/tailwind.min.css">
+  <link rel="stylesheet" href="/Worknest/public/css/homepage.css">
+  <link rel="stylesheet" href="/Worknest/public/css/style.css">
 
   <?php if (isset($additionalCSS)): ?>
     <?php foreach ($additionalCSS as $css): ?>
@@ -289,28 +289,28 @@ $userRole = $_SESSION['user']['role'] ?? null;
   <header class="y2k-header text-white">
     <div class="container mx-auto px-4 flex items-center justify-between relative" style="overflow: visible;">
       <div class="flex items-center space-x-4 ml-4 flex-shrink-0">
-        <a href="/Job_poster/public/" class="y2k-logo whitespace-nowrap">WorkNest</a>
+        <a href="/Worknest/public/" class="y2k-logo whitespace-nowrap">WorkNest</a>
         <span class="hidden sm:block y2k-tagline">Find Your Dream Job</span>
       </div>
 
       <!-- Desktop Nav - Centered -->
       <nav class="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2">
         <?php if (!isset($_SESSION['user'])): ?>
-          <a href="/Job_poster/public/" class="y2k-nav-link <?= $_SERVER['REQUEST_URI'] === '/Job_poster/public/' || $_SERVER['REQUEST_URI'] === '/Job_poster/public' ? 'active' : '' ?>">Home</a>
-          <a href="/Job_poster/public/jobs" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false ? 'active' : '' ?>">Jobs</a>
-          <a href="/Job_poster/public/auth/register?redirect=/employer/home" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/auth/register') !== false ? 'active' : '' ?>">Job Posting</a>
+          <a href="/Worknest/public/" class="y2k-nav-link <?= $_SERVER['REQUEST_URI'] === '/Worknest/public/' || $_SERVER['REQUEST_URI'] === '/Worknest/public' ? 'active' : '' ?>">Home</a>
+          <a href="/Worknest/public/jobs" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false ? 'active' : '' ?>">Jobs</a>
+          <a href="/Worknest/public/auth/register?redirect=/employer/home" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/auth/register') !== false ? 'active' : '' ?>">Job Posting</a>
         <?php else: ?>
-          <a href="/Job_poster/public/"
-            class="y2k-nav-link <?= $_SERVER['REQUEST_URI'] === '/Job_poster/public/' ? 'active' : '' ?>">Home</a>
+          <a href="/Worknest/public/"
+            class="y2k-nav-link <?= $_SERVER['REQUEST_URI'] === '/Worknest/public/' ? 'active' : '' ?>">Home</a>
           <?php if ($userRole == 'Employer'): ?>
-            <a href="/Job_poster/public/jobs" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false && strpos($_SERVER['REQUEST_URI'], '/my-jobs') === false && strpos($_SERVER['REQUEST_URI'], '/jobs-manage') === false ? 'active' : '' ?>">Jobs</a>
-            <a href="/Job_poster/public/employer/home" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/employer') !== false || strpos($_SERVER['REQUEST_URI'], '/my-jobs') !== false || strpos($_SERVER['REQUEST_URI'], '/company-profile') !== false || strpos($_SERVER['REQUEST_URI'], '/my-feedbacks') !== false ? 'active' : '' ?>">Job Posting</a>
+            <a href="/Worknest/public/jobs" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false && strpos($_SERVER['REQUEST_URI'], '/my-jobs') === false && strpos($_SERVER['REQUEST_URI'], '/jobs-manage') === false ? 'active' : '' ?>">Jobs</a>
+            <a href="/Worknest/public/employer/home" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/employer') !== false || strpos($_SERVER['REQUEST_URI'], '/my-jobs') !== false || strpos($_SERVER['REQUEST_URI'], '/company-profile') !== false || strpos($_SERVER['REQUEST_URI'], '/my-feedbacks') !== false ? 'active' : '' ?>">Job Posting</a>
           <?php elseif ($userRole == 'Admin'): ?>
-            <a href="/Job_poster/public/jobs" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false && strpos($_SERVER['REQUEST_URI'], '/jobs-manage') === false ? 'active' : '' ?>">Jobs</a>
-            <a href="/Job_poster/public/statistics" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/admin') !== false || strpos($_SERVER['REQUEST_URI'], '/users') !== false || strpos($_SERVER['REQUEST_URI'], '/job-categories') !== false || strpos($_SERVER['REQUEST_URI'], '/jobs-manage') !== false || strpos($_SERVER['REQUEST_URI'], '/approvals') !== false || strpos($_SERVER['REQUEST_URI'], '/staff-actions') !== false || strpos($_SERVER['REQUEST_URI'], '/statistics') !== false || strpos($_SERVER['REQUEST_URI'], '/feedbacks') !== false ? 'active' : '' ?>">Admin Panel</a>
+            <a href="/Worknest/public/jobs" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false && strpos($_SERVER['REQUEST_URI'], '/jobs-manage') === false ? 'active' : '' ?>">Jobs</a>
+            <a href="/Worknest/public/statistics" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/admin') !== false || strpos($_SERVER['REQUEST_URI'], '/users') !== false || strpos($_SERVER['REQUEST_URI'], '/job-categories') !== false || strpos($_SERVER['REQUEST_URI'], '/jobs-manage') !== false || strpos($_SERVER['REQUEST_URI'], '/approvals') !== false || strpos($_SERVER['REQUEST_URI'], '/staff-actions') !== false || strpos($_SERVER['REQUEST_URI'], '/statistics') !== false || strpos($_SERVER['REQUEST_URI'], '/feedbacks') !== false ? 'active' : '' ?>">Admin Panel</a>
           <?php elseif ($userRole == 'Staff'): ?>
-            <a href="/Job_poster/public/jobs" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false && strpos($_SERVER['REQUEST_URI'], '/jobs-manage') === false && strpos($_SERVER['REQUEST_URI'], '/approvals') === false ? 'active' : '' ?>">Jobs</a>
-            <a href="/Job_poster/public/staff/home" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/staff') !== false || strpos($_SERVER['REQUEST_URI'], '/jobs-manage') !== false || strpos($_SERVER['REQUEST_URI'], '/approvals') !== false || strpos($_SERVER['REQUEST_URI'], '/feedbacks') !== false ? 'active' : '' ?>">Staff Panel</a>
+            <a href="/Worknest/public/jobs" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false && strpos($_SERVER['REQUEST_URI'], '/jobs-manage') === false && strpos($_SERVER['REQUEST_URI'], '/approvals') === false ? 'active' : '' ?>">Jobs</a>
+            <a href="/Worknest/public/staff/home" class="y2k-nav-link <?= strpos($_SERVER['REQUEST_URI'], '/staff') !== false || strpos($_SERVER['REQUEST_URI'], '/jobs-manage') !== false || strpos($_SERVER['REQUEST_URI'], '/approvals') !== false || strpos($_SERVER['REQUEST_URI'], '/feedbacks') !== false ? 'active' : '' ?>">Staff Panel</a>
           <?php endif; ?>
         <?php endif; ?>
       </nav>
@@ -320,7 +320,7 @@ $userRole = $_SESSION['user']['role'] ?? null;
         <!-- Guest User Avatar Dropdown -->
         <div class="relative ml-auto" id="guestDropdown">
           <button type="button" class="flex items-center space-x-2 y2k-nav-link transition p-2 rounded-lg cursor-pointer" id="guestDropdownBtn">
-            <img src="/Job_poster/public/image/avatar/default.svg"
+            <img src="/Worknest/public/image/avatar/default.svg"
               alt="Guest Avatar" class="w-10 h-10 rounded-full border-2 border-white shadow">
             <svg class="w-4 h-4 text-white ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -329,10 +329,10 @@ $userRole = $_SESSION['user']['role'] ?? null;
           
           <!-- Dropdown Menu -->
           <div id="guestDropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white border-2 border-black shadow-lg rounded-none z-50">
-            <a href="/Job_poster/public/auth/login" class="block px-4 py-3 text-sm font-semibold text-black hover:bg-gray-100 uppercase font-mono border-b-2 border-black">
+            <a href="/Worknest/public/auth/login" class="block px-4 py-3 text-sm font-semibold text-black hover:bg-gray-100 uppercase font-mono border-b-2 border-black">
               Login
             </a>
-            <a href="/Job_poster/public/auth/register" class="block px-4 py-3 text-sm font-semibold text-black hover:bg-gray-100 uppercase font-mono">
+            <a href="/Worknest/public/auth/register" class="block px-4 py-3 text-sm font-semibold text-black hover:bg-gray-100 uppercase font-mono">
               Register
             </a>
           </div>
@@ -340,7 +340,7 @@ $userRole = $_SESSION['user']['role'] ?? null;
       <?php else: ?>
         <div class="relative ml-auto" id="profileDropdown">
           <button type="button" class="flex items-center space-x-2 y2k-nav-link transition p-2 rounded-lg cursor-pointer" id="profileDropdownBtn">
-            <img src="<?= $_SESSION['user']['avatar'] ?? '/Job_poster/public/image/avatar/default.svg' ?>"
+            <img src="<?= $_SESSION['user']['avatar'] ?? '/Worknest/public/image/avatar/default.svg' ?>"
               alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-white shadow">
             <div class="flex flex-col">
               <span class="text-sm font-semibold text-white"><?= $_SESSION['user']['name'] ?? 'User' ?></span>
@@ -354,19 +354,19 @@ $userRole = $_SESSION['user']['role'] ?? null;
           <!-- Dropdown Menu -->
           <div id="profileDropdownMenu" class="hidden absolute right-0 top-full mt-2 w-48 bg-white border-2 border-black shadow-lg rounded-none z-50" style="position: absolute !important; top: 100% !important; right: 0 !important;">
             <?php if ($userRole == 'Admin'): ?>
-              <a href="/Job_poster/public/statistics" class="block px-4 py-3 text-sm font-semibold text-black hover:bg-gray-100 uppercase font-mono border-b-2 border-black">
+              <a href="/Worknest/public/statistics" class="block px-4 py-3 text-sm font-semibold text-black hover:bg-gray-100 uppercase font-mono border-b-2 border-black">
                 Admin Panel
               </a>
             <?php elseif ($userRole == 'Staff'): ?>
-              <a href="/Job_poster/public/staff/home" class="block px-4 py-3 text-sm font-semibold text-black hover:bg-gray-100 uppercase font-mono border-b-2 border-black">
+              <a href="/Worknest/public/staff/home" class="block px-4 py-3 text-sm font-semibold text-black hover:bg-gray-100 uppercase font-mono border-b-2 border-black">
                 Staff Panel
               </a>
             <?php elseif ($userRole == 'Employer'): ?>
-              <a href="/Job_poster/public/employer/home" class="block px-4 py-3 text-sm font-semibold text-black hover:bg-gray-100 uppercase font-mono border-b-2 border-black">
+              <a href="/Worknest/public/employer/home" class="block px-4 py-3 text-sm font-semibold text-black hover:bg-gray-100 uppercase font-mono border-b-2 border-black">
                 Job posting 
               </a>
             <?php endif; ?>
-            <a href="/Job_poster/public/logout" class="block px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 uppercase font-mono">
+            <a href="/Worknest/public/logout" class="block px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 uppercase font-mono">
               Logout
             </a>
           </div>
@@ -391,47 +391,47 @@ $userRole = $_SESSION['user']['role'] ?? null;
 
       <nav>
         <?php if (!isset($_SESSION['user'])): ?>
-          <a href="/Job_poster/public/" class="menu-item">Home</a>
-          <a href="/Job_poster/public/jobs" class="menu-item">Jobs</a>
-          <a href="/Job_poster/public/auth/login" class="menu-item">Login</a>
-          <a href="/Job_poster/public/auth/register" class="menu-item">Register</a>
+          <a href="/Worknest/public/" class="menu-item">Home</a>
+          <a href="/Worknest/public/jobs" class="menu-item">Jobs</a>
+          <a href="/Worknest/public/auth/login" class="menu-item">Login</a>
+          <a href="/Worknest/public/auth/register" class="menu-item">Register</a>
         <?php else: ?>
-          <a href="/Job_poster/public/"
-            class="menu-item <?= $_SERVER['REQUEST_URI'] === '/Job_poster/public/' ? 'active' : '' ?>"
+          <a href="/Worknest/public/"
+            class="menu-item <?= $_SERVER['REQUEST_URI'] === '/Worknest/public/' ? 'active' : '' ?>"
             data-tooltip="Home">
             <?= Icons::home() ?>
             <span class="menu-text">Home</span>
           </a>
           <?php if ($userRole == 'Employer'): ?>
             <div class="menu-section">Company Management</div>
-            <a href="/Job_poster/public/company-profile"
+            <a href="/Worknest/public/company-profile"
               class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/company-profile') !== false ? 'active' : '' ?>"
               data-tooltip="Company Profile">
               <?= Icons::profile() ?>
               <span class="menu-text">My Company Profile</span>
             </a>
             <div class="menu-section">Job Management</div>
-            <a href="/Job_poster/public/my-jobs"
+            <a href="/Worknest/public/my-jobs"
               class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/my-jobs') !== false ? 'active' : '' ?>"
               data-tooltip="Jobs">
               <?= Icons::briefcase() ?>
               <span class="menu-text">My Jobs</span>
             </a>
             <div class="menu-section">Feedback Management</div>
-            <a href="/Job_poster/public/my-feedbacks"
+            <a href="/Worknest/public/my-feedbacks"
               class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/my-feedbacks') !== false ? 'active' : '' ?>"
               data-tooltip="Feedback">
               <?= Icons::comment() ?>
               <span class="menu-text">My Feedbacks</span>
             </a>
           <?php elseif ($userRole == 'Admin'): ?>
-            <a href="/Job_poster/public/jobs"
+            <a href="/Worknest/public/jobs"
               class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/jobs') !== false && strpos($_SERVER['REQUEST_URI'], '/jobs-manage') === false ? 'active' : '' ?>"
               data-tooltip="Jobs">
               <?= Icons::briefcase() ?>
               <span class="menu-text">Jobs</span>
             </a>
-            <a href="/Job_poster/public/statistics"
+            <a href="/Worknest/public/statistics"
               class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/admin') !== false || strpos($_SERVER['REQUEST_URI'], '/users') !== false || strpos($_SERVER['REQUEST_URI'], '/job-categories') !== false || strpos($_SERVER['REQUEST_URI'], '/jobs-manage') !== false || strpos($_SERVER['REQUEST_URI'], '/approvals') !== false || strpos($_SERVER['REQUEST_URI'], '/staff-actions') !== false || strpos($_SERVER['REQUEST_URI'], '/statistics') !== false || strpos($_SERVER['REQUEST_URI'], '/feedbacks') !== false ? 'active' : '' ?>"
               data-tooltip="Admin Panel">
               <?= Icons::users() ?>
@@ -441,19 +441,19 @@ $userRole = $_SESSION['user']['role'] ?? null;
             <!-- Staff Views -->
           <?php elseif ($userRole == 'Staff'): ?>
             <div class="menu-section">Job Requests</div>
-            <a href="/Job_poster/public/approvals"
+            <a href="/Worknest/public/approvals"
               class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/approvals') !== false ? 'active' : '' ?>">
               <?= Icons::checklist() ?>
               Request Approval
             </a>
             <div class="menu-section">Reports & Complaints</div>
-            <a href="/Job_poster/public/reports"
+            <a href="/Worknest/public/reports"
               class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/reports') !== false ? 'active' : '' ?>">
               <?= Icons::flag() ?>
               Review Reports
             </a>
             <div class="menu-section">Job Management</div>
-            <a href="/Job_poster/public/jobs-manage"
+            <a href="/Worknest/public/jobs-manage"
               class="menu-item <?= strpos($_SERVER['REQUEST_URI'], '/jobs-manage') !== false ? 'active' : '' ?>">
               <?= Icons::briefcase() ?>
               Jobs
@@ -471,7 +471,7 @@ $userRole = $_SESSION['user']['role'] ?? null;
       <div>
         <p class="text-sm font-semibold"><?= $_SESSION['user']['name'] ?? 'Guest' ?></p>
         <?php if (isset($_SESSION['user'])): ?>
-          <a href="/Job_poster/public/logout" class="text-xs opacity-75 hover:opacity-100">Log
+          <a href="/Worknest/public/logout" class="text-xs opacity-75 hover:opacity-100">Log
             out<?= Icons::logout() ?></a>
         <?php endif; ?>
       </div>

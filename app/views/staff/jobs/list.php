@@ -14,7 +14,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <form method="GET" action="/Job_poster/public/jobs-manage" id="jobsManageFilterForm">
+            <form method="GET" action="/Worknest/public/jobs-manage" id="jobsManageFilterForm">
                 <div class="flex flex-wrap gap-4 items-end">
                     <!-- Search -->
                     <div class="flex-1 min-w-[200px]">
@@ -80,7 +80,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 
                     <!-- Clear Button -->
                     <div>
-                        <a href="/Job_poster/public/jobs-manage" class="btn-cancel">
+                        <a href="/Worknest/public/jobs-manage" class="btn-cancel">
                             Clear
                         </a>
                     </div>
@@ -196,7 +196,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                     <td class="table-cell">
                                         <div class="flex gap-2">
                                             <button
-                                                onclick="window.formModal.loadForm('/Job_poster/public/jobs-manage/edit/<?= $job->getId() ?>?ajax=1', 'Edit Job #<?= $job->getId() ?>')"
+                                                onclick="window.formModal.loadForm('/Worknest/public/jobs-manage/edit/<?= $job->getId() ?>?ajax=1', 'Edit Job #<?= $job->getId() ?>')"
                                                 class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm focus:outline-none">
                                                 <?= Icons::edit('w-4 h-4 mr-1') ?>
                                                 Edit
@@ -219,7 +219,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 <!-- Pagination -->
                 <?php
                 include __DIR__ . '/../../components/pagination.php';
-                renderPagination($pagination, '/Job_poster/public/jobs-manage', [
+                renderPagination($pagination, '/Worknest/public/jobs-manage', [
                     'search' => $pagination['search'] ?? '',
                     'category' => $pagination['category_filter'] ?? '',
                     'location' => $pagination['location_filter'] ?? '',
@@ -232,7 +232,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
     </div>
 </div>
 
-<script src="/Job_poster/public/javascript/notyf.min.js"></script>
+<script src="/Worknest/public/javascript/notyf.min.js"></script>
 <script>
     const notyf = new Notyf({
         duration: 3000,
@@ -270,7 +270,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
         );
 
         if (confirmed) {
-            fetch(`/Job_poster/public/jobs-manage/hard-delete/${id}`, {
+            fetch(`/Worknest/public/jobs-manage/hard-delete/${id}`, {
                 method: 'GET',
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             })

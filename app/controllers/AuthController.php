@@ -153,7 +153,7 @@ class AuthController
                 $user = $this->userService->getUserByEmail($email);
                 $currentUrl = $_SERVER['REQUEST_URI'];
                 if ($user && $user->getAuthProvider() !== 'google') {
-                    if ($currentUrl === "/Job_poster/public/auth/login") {
+                    if ($currentUrl === "/Worknest/public/auth/login") {
                         $_SESSION['login_error'] = 'Email already exists. Please use a different email or login.';
                         header("Location: " . BASE_URL . "/auth/login");
                         exit;
@@ -272,7 +272,7 @@ class AuthController
         $user = $this->userService->getUserByEmail($email);
         $currentUrl = $_SERVER['REQUEST_URI'];
         if ($user && $user->getAuthProvider() !== 'facebook') {
-            if ($currentUrl === "/Job_poster/public/auth/login") {
+            if ($currentUrl === "/Worknest/public/auth/login") {
                 $_SESSION['login_error'] = 'Email already exists. Please use a different email or login.';
                 header("Location: " . BASE_URL . "/auth/login");
 
@@ -322,7 +322,7 @@ class AuthController
             if ($user) {
                 if ($this->userService->getAuthProvider($email) === 'google') {
                     $error = 'This email is registered with Google. We cannot reset your password with Google.';
-                    if ($currentUrl === "/Job_poster/public/auth/login/forgot-password/resetExpired") {
+                    if ($currentUrl === "/Worknest/public/auth/login/forgot-password/resetExpired") {
                         $_SESSION['error-expired'] = $error;
                         header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
                     } else {
@@ -334,7 +334,7 @@ class AuthController
                 if ($this->userService->getAuthProvider($email) === 'facebook') {
                     $error = 'This email is registered with Facebook. We cannot reset your password with Facebook.';
 
-                    if ($currentUrl === "/Job_poster/public/auth/login/forgot-password/resetExpired") {
+                    if ($currentUrl === "/Worknest/public/auth/login/forgot-password/resetExpired") {
                         $_SESSION['error-expired'] = $error;
                         header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
                     } else {
@@ -348,7 +348,7 @@ class AuthController
                 exit;
             } else {
                 $error = 'No email found for that account.';
-                if ($currentUrl === "/Job_poster/public/auth/login/forgot-password/resetExpired") {
+                if ($currentUrl === "/Worknest/public/auth/login/forgot-password/resetExpired") {
                     $_SESSION['error-expired'] = $error;
                     header("Location: " . BASE_URL . "/auth/login/forgot-password/resetExpired");
                 } else {

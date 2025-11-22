@@ -1,6 +1,6 @@
 <?php
 if (!isset($_SESSION['user']) || !isset($_SESSION['user']['role'])) {
-    header('Location: /Job_poster/public/auth/login');
+    header('Location: /Worknest/public/auth/login');
     exit;
 }
 
@@ -12,7 +12,7 @@ $roleConfig = [
         'color' => 'admin',
         'title' => 'Admin Panel',
         'subtitle' => 'System Management',
-        'homeUrl' => '/Job_poster/public/statistics',
+        'homeUrl' => '/Worknest/public/statistics',
         'menuItems' => [
             ['section' => 'Dashboard'],
             ['url' => '/statistics', 'icon' => 'statistic', 'label' => 'Dashboard', 'tooltip' => 'Statistics'],
@@ -40,7 +40,7 @@ $roleConfig = [
         'color' => 'staff',
         'title' => 'Staff Panel',
         'subtitle' => 'Support & Review',
-        'homeUrl' => '/Job_poster/public/staff/home',
+        'homeUrl' => '/Worknest/public/staff/home',
         'menuItems' => [
             ['section' => 'Dashboard'],
             ['url' => '/staff/home', 'icon' => 'home', 'label' => 'Dashboard', 'tooltip' => 'Dashboard'],
@@ -59,7 +59,7 @@ $roleConfig = [
         'color' => 'employer',
         'title' => 'Employer Panel',
         'subtitle' => 'Manage Your Jobs',
-        'homeUrl' => '/Job_poster/public/employer/home',
+        'homeUrl' => '/Worknest/public/employer/home',
         'menuItems' => [
             ['section' => 'Dashboard'],
             ['url' => '/employer/home', 'icon' => 'home', 'label' => 'Dashboard', 'tooltip' => 'Dashboard'],
@@ -87,7 +87,7 @@ if (!class_exists('Icons')) {
 
 // Get current user's avatar from database
 $currentUserId = $_SESSION['user']['id'] ?? null;
-$userAvatar = '/Job_poster/public/image/avatar/default.svg';
+$userAvatar = '/Worknest/public/image/avatar/default.svg';
 $userName = $_SESSION['user']['name'] ?? $userRole . ' User';
 
 if ($currentUserId) {
@@ -108,13 +108,13 @@ if ($currentUserId) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $pageTitle ?? $config['title'] ?></title>
-    <link href="/Job_poster/public/css/tailwind.min.css" rel="stylesheet">
+    <link href="/Worknest/public/css/tailwind.min.css" rel="stylesheet">
     <?php
     // Load role-specific CSS file
     $cssFile = strtolower($config['color']); // admin, staff, or employer
     ?>
-    <link href="/Job_poster/public/css/<?= $cssFile ?>.css?v=<?= time() ?>" rel="stylesheet">
-    <link href="/Job_poster/public/css/style.css" rel="stylesheet">
+    <link href="/Worknest/public/css/<?= $cssFile ?>.css?v=<?= time() ?>" rel="stylesheet">
+    <link href="/Worknest/public/css/style.css" rel="stylesheet">
 
     <style>
         /* Navbar takes full width at top */
@@ -262,7 +262,7 @@ if ($currentUserId) {
                 <?php if (isset($item['section'])): ?>
                     <div class="menu-section"><?= $item['section'] ?></div>
                 <?php else: ?>
-                    <a href="/Job_poster/public<?= $item['url'] ?>"
+                    <a href="/Worknest/public<?= $item['url'] ?>"
                         class="menu-item <?= strpos($_SERVER['REQUEST_URI'], $item['url']) !== false ? 'active' : '' ?>"
                         data-tooltip="<?= $item['tooltip'] ?>">
                         <?= Icons::{$item['icon']}() ?>
@@ -283,7 +283,7 @@ if ($currentUserId) {
 
             <!-- Left: Website Name -->
             <div class="navbar-brand">
-                <a href="/Job_poster/public/" class="brand-link">
+                <a href="/Worknest/public/" class="brand-link">
                     WorkNest
                 </a>
             </div>
@@ -291,11 +291,11 @@ if ($currentUserId) {
             <!-- Right: Navigation Links and User Profile -->
             <div class="navbar-right">
                 <!-- Navigation Links -->
-                <a href="/Job_poster/public/" class="nav-link">
+                <a href="/Worknest/public/" class="nav-link">
                     <?= Icons::home() ?>
                     <span>Home</span>
                 </a>
-                <a href="/Job_poster/public/about" class="nav-link">
+                <a href="/Worknest/public/about" class="nav-link">
                     <?= Icons::info() ?>
                     <span>About Us</span>
                 </a>
@@ -313,11 +313,11 @@ if ($currentUserId) {
 
                     <!-- Dropdown Menu -->
                     <div class="user-dropdown" id="userDropdown">
-                        <a href="/Job_poster/public/profile" class="dropdown-item">
+                        <a href="/Worknest/public/profile" class="dropdown-item">
                             <?= Icons::settings() ?>
                             <span>Edit Profile</span>
                         </a>
-                        <a href="/Job_poster/public/logout" class="dropdown-item logout">
+                        <a href="/Worknest/public/logout" class="dropdown-item logout">
                             <?= Icons::logout() ?>
                             <span>Logout</span>
                         </a>

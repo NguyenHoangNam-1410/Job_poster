@@ -6,7 +6,7 @@
             <div>
                 <h1 class="list-header">My Feedbacks</h1>
             </div>
-            <button onclick="window.formModal.loadForm('/Job_poster/public/my-feedbacks/create', 'Add New Feedback')"
+            <button onclick="window.formModal.loadForm('/Worknest/public/my-feedbacks/create', 'Add New Feedback')"
                 class="btn-submit">
                 <?= Icons::add('btn-icon') ?>
                 Add Feedback
@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="flex gap-2 items-end">
-                    <a href="/Job_poster/public/my-feedbacks" class="btn-cancel">
+                    <a href="/Worknest/public/my-feedbacks" class="btn-cancel">
                         Clear
                     </a>
                 </div>
@@ -115,7 +115,7 @@
                 require_once __DIR__ . '/../../components/pagination.php';
                 renderPagination(
                     $pagination,
-                    '/Job_poster/public/my-feedbacks',
+                    '/Worknest/public/my-feedbacks',
                     [
                         'date_from' => $pagination['date_from'] ?? '',
                         'date_to' => $pagination['date_to'] ?? '',

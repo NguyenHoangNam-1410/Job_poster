@@ -181,7 +181,7 @@ include __DIR__ . '/../layouts/public_header.php';
         <div class="faq-answer">
           Yes, we take data security seriously. Your personal information is protected with bank-level
           encryption, and we never share your data with third parties without your consent. Read our
-          <a href="/Job_poster/public/privacy-policy" class="text-cyan-600 font-bold hover:underline">Privacy Policy</a>
+          <a href="/Worknest/public/privacy-policy" class="text-cyan-600 font-bold hover:underline">Privacy Policy</a>
           for more details.
         </div>
       </div>

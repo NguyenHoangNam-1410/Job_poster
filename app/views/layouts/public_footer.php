@@ -14,10 +14,10 @@
     <div>
       <h3 class="text-white font-semibold mb-3">Quick Links</h3>
       <ul class="space-y-2 text-sm">
-        <li><a href="/Job_poster/public/" class="hover:text-blue-400 transition">Home</a></li>
-        <li><a href="/Job_poster/public/jobs" class="hover:text-blue-400 transition">Jobs</a></li>
-        <li><a href="/Job_poster/public/about" class="hover:text-blue-400 transition">About</a></li>
-        <li><a href="/Job_poster/public/contact" class="hover:text-blue-400 transition">Contact</a></li>
+        <li><a href="/Worknest/public/" class="hover:text-blue-400 transition">Home</a></li>
+        <li><a href="/Worknest/public/jobs" class="hover:text-blue-400 transition">Jobs</a></li>
+        <li><a href="/Worknest/public/about" class="hover:text-blue-400 transition">About</a></li>
+        <li><a href="/Worknest/public/contact" class="hover:text-blue-400 transition">Contact</a></li>
       </ul>
     </div>
 
@@ -25,10 +25,10 @@
     <div>
       <h3 class="text-white font-semibold mb-3">Support</h3>
       <ul class="space-y-2 text-sm">
-        <li><a href="/Job_poster/public/help-center" class="hover:text-blue-400 transition">Help Center</a></li>
-        <li><a href="/Job_poster/public/terms-of-service" class="hover:text-blue-400 transition">Terms of Service</a>
+        <li><a href="/Worknest/public/help-center" class="hover:text-blue-400 transition">Help Center</a></li>
+        <li><a href="/Worknest/public/terms-of-service" class="hover:text-blue-400 transition">Terms of Service</a>
         </li>
-        <li><a href="/Job_poster/public/privacy-policy" class="hover:text-blue-400 transition">Privacy Policy</a></li>
+        <li><a href="/Worknest/public/privacy-policy" class="hover:text-blue-400 transition">Privacy Policy</a></li>
       </ul>
     </div>
 
@@ -54,11 +54,11 @@
   </div>
 </footer>
 
-<script src="/Job_poster/public/javascript/jquery.min.js"></script>
+<script src="/Worknest/public/javascript/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="/Job_poster/public/javascript/notyf.min.js"></script>
-<script src="/Job_poster/public/javascript/main.js"></script>
+<script src="/Worknest/public/javascript/notyf.min.js"></script>
+<script src="/Worknest/public/javascript/main.js"></script>
 <?php if (isset($additionalJS)): ?>
   <?php foreach ($additionalJS as $js): ?>
     <script src="<?= $js ?>"></script>

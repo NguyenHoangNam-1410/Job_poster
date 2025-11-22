@@ -1,10 +1,10 @@
 <?php
 $pageTitle = "Browse Jobs";
-$additionalCSS = ['/Job_poster/public/css/jobs-artistic.css'];
+$additionalCSS = ['/Worknest/public/css/jobs-artistic.css'];
 $additionalJS = [];
 require dirname(__DIR__, 2) . '/layouts/public_header.php';
 
-const BASE_PUBLIC = '/Job_poster/public';
+const BASE_PUBLIC = '/Worknest/public';
 function build_route(string $r, array $qs = []): string
 {
   $qs = array_merge(['r' => $r], $qs);
@@ -53,7 +53,7 @@ function status_badge_class($st)
   }
 }
 ?>
-<style href="/Job_poster/public/css/jobs-listing.css"></style>
+<style href="/Worknest/public/css/jobs-listing.css"></style>
 
   <style>
     /* Force Choices.js to have white background and black border like Status filter */

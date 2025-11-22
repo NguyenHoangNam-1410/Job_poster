@@ -38,7 +38,7 @@
 ## 📁 Project Structure
 
 ```
-Job_poster/
+Worknest/
 ├── app/
 │   ├── controllers/        # Controllers for handling HTTP requests
 │   ├── services/          # Service layer for business logic
@@ -73,13 +73,13 @@ Job_poster/
 1. **Clone or download the project**
    ```bash
    git clone <>
-   cd Job_poster
+   cd Worknest
    ```
 
 2. **Move to XAMPP directory**
    ```bash
    # Copy the project to XAMPP's htdocs folder
-   cp -r Job_poster C:/xampp/htdocs/
+   cp -r Worknest C:/xampp/htdocs/
    ```
 
 3. **Start XAMPP**
@@ -104,8 +104,8 @@ Job_poster/
      ```
 
 6. **Access the Application**
-   - Guest Interface: http://localhost/Job_poster/public/
-   - Admin Panel: http://localhost/Job_poster/public/users
+   - Guest Interface: http://localhost/Worknest/public/
+   - Admin Panel: http://localhost/Worknest/public/users
 
 ## 💡 Usage
 

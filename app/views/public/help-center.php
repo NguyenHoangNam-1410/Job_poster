@@ -237,7 +237,7 @@ include __DIR__ . '/../layouts/public_header.php';
         <div class="faq-question">Is my personal information secure?</div>
         <div class="faq-answer">
           Yes, we use industry-standard encryption to protect your data. We never share your personal information
-          with third parties without your consent. Read our <a href="/Job_poster/public/privacy-policy"
+          with third parties without your consent. Read our <a href="/Worknest/public/privacy-policy"
             class="text-cyan-600 font-bold hover:underline">Privacy Policy</a> for details.
         </div>
       </div>
@@ -282,7 +282,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <div class="faq-item" style="border-bottom: none;">
         <div class="faq-question">Still need help?</div>
         <div class="faq-answer">
-          If you can't find the answer you're looking for, please <a href="/Job_poster/public/contact"
+          If you can't find the answer you're looking for, please <a href="/Worknest/public/contact"
             class="text-cyan-600 font-bold hover:underline">contact our support team</a>.
           We're here to help and typically respond within 24-48 hours.
         </div>

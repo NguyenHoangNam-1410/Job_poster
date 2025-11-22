@@ -161,7 +161,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <div class="section-content">
         <p>
           Your use of our service is also governed by our Privacy Policy. Please review our
-          <a href="/Job_poster/public/privacy-policy" class="text-cyan-600 font-bold hover:underline">Privacy Policy</a>
+          <a href="/Worknest/public/privacy-policy" class="text-cyan-600 font-bold hover:underline">Privacy Policy</a>
           to understand how we collect, use, and protect your information.
         </p>
       </div>

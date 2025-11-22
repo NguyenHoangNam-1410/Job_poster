@@ -1,8 +1,8 @@
 <?php
 $additionalCSS = [
-  "/Job_poster/public/css/
+  "/Worknest/public/css/
 auth/inputOTP.css",
-  "/Job_poster/public/css/
+  "/Worknest/public/css/
 auth/forgotPassword.css"
 ];
 include __DIR__ . '/../layouts/public_header.php';

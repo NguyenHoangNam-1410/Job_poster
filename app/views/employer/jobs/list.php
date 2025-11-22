@@ -15,7 +15,7 @@ $totalPages = $total_pages;
             <div>
                 <h1 class="list-header">My Posted Jobs</h1>
             </div>
-            <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/create', 'Post New Job')"
+            <button onclick="window.formModal.loadForm('/Worknest/public/my-jobs/create', 'Post New Job')"
                 class="btn-submit">
                 <?= Icons::add('btn-icon') ?>
                 Post New Job
@@ -90,7 +90,7 @@ $totalPages = $total_pages;
                     </div>
 
                     <div>
-                        <a href="/Job_poster/public/my-jobs" class="btn-cancel">Clear Filters</a>
+                        <a href="/Worknest/public/my-jobs" class="btn-cancel">Clear Filters</a>
                     </div>
                 </div>
             </form>
@@ -163,13 +163,13 @@ $totalPages = $total_pages;
                                         <div class="flex gap-2">
                                             <?php if ($job->getStatus() === 'pending'): ?>
                                                 <button
-                                                    onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $job->getId() ?>', 'Job Details')"
+                                                    onclick="window.formModal.loadForm('/Worknest/public/my-jobs/show/<?= $job->getId() ?>', 'Job Details')"
                                                     class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm">
                                                     <?= Icons::view('w-4 h-4 mr-1') ?> View
                                                 </button>
                                             <?php else: ?>
                                                 <button
-                                                    onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/edit/<?= $job->getId() ?>', 'Edit Job')"
+                                                    onclick="window.formModal.loadForm('/Worknest/public/my-jobs/edit/<?= $job->getId() ?>', 'Edit Job')"
                                                     class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm">
                                                     <?= Icons::edit('w-4 h-4 mr-1') ?> Edit
                                                 </button>
@@ -226,11 +226,11 @@ $totalPages = $total_pages;
         );
 
         if (confirmed) {
-            window.location.href = `/Job_poster/public/my-jobs/${type}-delete/${jobId}?type=${type}`;
+            window.location.href = `/Worknest/public/my-jobs/${type}-delete/${jobId}?type=${type}`;
         }
     };
 </script>
 <?php
-$additionalJS = ['/Job_poster/public/javascript/employer_jobs.js'];
+$additionalJS = ['/Worknest/public/javascript/employer_jobs.js'];
 include __DIR__ . '/../../layouts/auth_footer.php';
 ?>

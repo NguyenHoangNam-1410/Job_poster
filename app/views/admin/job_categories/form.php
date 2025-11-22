@@ -8,8 +8,8 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 // Determine if we're in edit mode or create mode
 $isEditMode = isset($category) && $category !== null;
 $formAction = $isEditMode
-    ? "/Job_poster/public/job-categories/update/{$category->getId()}"
-    : "/Job_poster/public/job-categories/store";
+    ? "/Worknest/public/job-categories/update/{$category->getId()}"
+    : "/Worknest/public/job-categories/store";
 $submitButtonText = $isEditMode ? 'Update' : 'Create';
 $pageHeading = $isEditMode ? "Update Category #{$category->getId()}" : 'Create New Job Category';
 ?>
@@ -18,7 +18,7 @@ $pageHeading = $isEditMode ? "Update Category #{$category->getId()}" : 'Create N
     <div class="form-container form-container-small">
         <div class="form-header">
             <h1 class="form-title"><?= $pageHeading ?></h1>
-            <a href="/Job_poster/public/job-categories" class="form-back-link">← Return to list</a>
+            <a href="/Worknest/public/job-categories" class="form-back-link">← Return to list</a>
         </div>
 
         <?php if (isset($error)): ?>
@@ -62,7 +62,7 @@ $pageHeading = $isEditMode ? "Update Category #{$category->getId()}" : 'Create N
 
             <!-- Action Buttons -->
             <div class="form-actions">
-                <a href="/Job_poster/public/job-categories" class="btn-cancel">Cancel</a>
+                <a href="/Worknest/public/job-categories" class="btn-cancel">Cancel</a>
                 <button type="submit" class="btn-submit">
                     <?= $isEditMode ? Icons::check('btn-icon') : Icons::add('btn-icon') ?>
                     <?= $submitButtonText ?>

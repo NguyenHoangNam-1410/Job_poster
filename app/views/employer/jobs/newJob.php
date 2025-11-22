@@ -17,7 +17,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                 <h1 class="form-title">Post New Job</h1>
             </div>
         <?php endif; ?> <!-- FORM -->
-        <form method="POST" action="/Job_poster/public/my-jobs/store<?= $isModal ? '?ajax=1' : '' ?>" id="jobForm"
+        <form method="POST" action="/Worknest/public/my-jobs/store<?= $isModal ? '?ajax=1' : '' ?>" id="jobForm"
             >
             <?php if ($isModal): ?>
                 <input type="hidden" name="ajax" value="1">
@@ -97,7 +97,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 
                 <!-- Cancel -->
                 <?php if (!$isModal): ?>
-                    <a href="/Job_poster/public/my-jobs" id="cancelBtn"
+                    <a href="/Worknest/public/my-jobs" id="cancelBtn"
                         class="px-4 py-2 rounded-lg font-semibold bg-gray-300 hover:bg-gray-400 transition">
                         Cancel
                     </a>
@@ -164,7 +164,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 <?php if (!$isModal): ?>
     <?php
     $additionalJS = [
-        '/Job_poster/public/javascript/employer_jobs.js'
+        '/Worknest/public/javascript/employer_jobs.js'
     ];
     include __DIR__ . '/../../layouts/public_footer.php';
 ?>

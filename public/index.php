@@ -1,5 +1,5 @@
 <?php
-// filepath: c:\xampp\htdocs\Job_poster\public\index.php
+// filepath: c:\xampp\htdocs\Worknest\public\index.php
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Dotenv\Dotenv;
@@ -7,7 +7,7 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..'); // points to project root
 $dotenv->load();
 
-define('BASE_URL', '/Job_poster/public');
+define('BASE_URL', '/Worknest/public');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 session_start();
@@ -16,7 +16,7 @@ session_start();
 $request = $_SERVER['REQUEST_URI'];
 $path = parse_url($request, PHP_URL_PATH);
 
-// Remove the base path if Job_poster is in a subdirectory
+// Remove the base path if Worknest is in a subdirectory
 $path = str_replace(BASE_URL, '', $path);
 
 // Helper variable for user role

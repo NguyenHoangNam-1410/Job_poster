@@ -1,10 +1,10 @@
 <?php
 $pageTitle = "Job Details";
-$additionalCSS = ['/Job_poster/public/css/jobs-artistic.css'];
+$additionalCSS = ['/Worknest/public/css/jobs-artistic.css'];
 $additionalJS = [];
 require dirname(__DIR__, 2) . '/layouts/public_header.php';
 
-const BASE_PUBLIC = '/Job_poster/public';
+const BASE_PUBLIC = '/Worknest/public';
 
 function h($s)
 {

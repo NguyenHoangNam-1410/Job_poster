@@ -86,7 +86,7 @@ require_once '../app/views/layouts/auth_header.php';
                 </div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">No Job Postings Yet</h2>
                 <p class="text-gray-600 mb-6">Start by creating your first job posting to attract talented candidates</p>
-                <button class="btn-submit" onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/create', 'Create New Job')">
+                <button class="btn-submit" onclick="window.formModal.loadForm('/Worknest/public/my-jobs/create', 'Create New Job')">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -110,7 +110,7 @@ require_once '../app/views/layouts/auth_header.php';
                     </div>
                     <?php if ($recentApproved): ?>
                         <button
-                            onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $recentApproved->getId() ?>', 'Job Details')"
+                            onclick="window.formModal.loadForm('/Worknest/public/my-jobs/show/<?= $recentApproved->getId() ?>', 'Job Details')"
                             class="block p-6 hover:bg-gray-50 transition text-left w-full">
                             <h4 class="font-bold text-xl text-gray-800 mb-2">
                                 <?= htmlspecialchars($recentApproved->getTitle()) ?>
@@ -134,7 +134,7 @@ require_once '../app/views/layouts/auth_header.php';
                     <?php else: ?>
                         <div class="p-6 text-center text-gray-500">
                             <p class="mb-4">No approved jobs yet</p>
-                            <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/create', 'Create New Job')"
+                            <button onclick="window.formModal.loadForm('/Worknest/public/my-jobs/create', 'Create New Job')"
                                 class="text-green-600 hover:text-green-700 font-semibold text-sm">
                                 Post a Job →
                             </button>
@@ -155,7 +155,7 @@ require_once '../app/views/layouts/auth_header.php';
                     </div>
                     <?php if ($recentRejected): ?>
                         <button
-                            onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $recentRejected->getId() ?>', 'Job Details')"
+                            onclick="window.formModal.loadForm('/Worknest/public/my-jobs/show/<?= $recentRejected->getId() ?>', 'Job Details')"
                             class="block p-6 hover:bg-gray-50 transition text-left w-full">
                             <h4 class="font-bold text-xl text-gray-800 mb-2">
                                 <?= htmlspecialchars($recentRejected->getTitle()) ?>
@@ -179,7 +179,7 @@ require_once '../app/views/layouts/auth_header.php';
                     <?php else: ?>
                         <div class="p-6 text-center text-gray-500">
                             <p class="mb-4">No rejected jobs</p>
-                            <a href="/Job_poster/public/my-jobs" class="text-red-600 hover:text-red-700 font-semibold text-sm">
+                            <a href="/Worknest/public/my-jobs" class="text-red-600 hover:text-red-700 font-semibold text-sm">
                                 View All Jobs →
                             </a>
                         </div>
@@ -199,7 +199,7 @@ require_once '../app/views/layouts/auth_header.php';
                     </div>
                     <?php if ($recentPending): ?>
                         <button
-                            onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/show/<?= $recentPending->getId() ?>', 'Job Details')"
+                            onclick="window.formModal.loadForm('/Worknest/public/my-jobs/show/<?= $recentPending->getId() ?>', 'Job Details')"
                             class="block p-6 hover:bg-gray-50 transition text-left w-full">
                             <h4 class="font-bold text-xl text-gray-800 mb-2"><?= htmlspecialchars($recentPending->getTitle()) ?>
                             </h4>
@@ -223,7 +223,7 @@ require_once '../app/views/layouts/auth_header.php';
                     <?php else: ?>
                         <div class="p-6 text-center text-gray-500">
                             <p class="mb-4">No pending jobs</p>
-                            <button onclick="window.formModal.loadForm('/Job_poster/public/my-jobs/create', 'Create New Job')"
+                            <button onclick="window.formModal.loadForm('/Worknest/public/my-jobs/create', 'Create New Job')"
                                 class="text-yellow-600 hover:text-yellow-700 font-semibold text-sm">
                                 Post a Job →
                             </button>
@@ -234,7 +234,7 @@ require_once '../app/views/layouts/auth_header.php';
 
             <!-- View All Jobs Button -->
             <div class="mt-8 text-center">
-                <a href="/Job_poster/public/my-jobs"
+                <a href="/Worknest/public/my-jobs"
                     class="btn-submit inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

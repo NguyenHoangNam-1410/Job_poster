@@ -342,7 +342,7 @@ include __DIR__ . '/../layouts/public_header.php';
 
       <!-- Primary CTA -->
       <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
-        <a href="/Job_poster/public/jobs"
+        <a href="/Worknest/public/jobs"
           class="btn-y2k group text-white px-14 py-5 text-lg bg-gradient-to-r from-lime-400 to-cyan-400 hover:from-lime-300 hover:to-cyan-300">
           <span class="flex items-center gap-3">
             EXPLORE JOBS
@@ -605,7 +605,7 @@ include __DIR__ . '/../layouts/public_header.php';
           <article class="news-card retro-card overflow-hidden group bg-white">
             <!-- Image -->
             <div class="overflow-hidden border-b-3 border-gray-900">
-              <img src="/Job_poster/public/images/jobs/<?= htmlspecialchars($a['img']) ?>"
+              <img src="/Worknest/public/images/jobs/<?= htmlspecialchars($a['img']) ?>"
                 class="w-full h-56 object-cover" alt="">
             </div>
 

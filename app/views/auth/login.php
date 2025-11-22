@@ -1,7 +1,7 @@
 <?php
 $pageTitle = 'Login | WorkNest';
 $additionalCSS = [
-  "/Job_poster/public/css/auth/login.css"
+  "/Worknest/public/css/auth/login.css"
 ];
 include __DIR__ . '/../layouts/public_header.php'; ?>
 <div class="min-h-screen flex items-center justify-center px-4">
@@ -18,7 +18,7 @@ include __DIR__ . '/../layouts/public_header.php'; ?>
         <?php unset($_SESSION['login_error']); ?>
       <?php endif; ?>
 
-      <form method="POST" action="/Job_poster/public/auth/login/local" class="space-y-5">
+      <form method="POST" action="/Worknest/public/auth/login/local" class="space-y-5">
         <div>
           <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label>
           <input type="text" id="email" name="email" required
@@ -48,7 +48,7 @@ include __DIR__ . '/../layouts/public_header.php'; ?>
           Login
         </button>
 
-        <a href="/Job_poster/public/auth/login/forgot-password"
+        <a href="/Worknest/public/auth/login/forgot-password"
           class="block text-center mt-2 text-blue-600 hover:underline">
           Forgot Password?
         </a>
@@ -67,7 +67,7 @@ include __DIR__ . '/../layouts/public_header.php'; ?>
 
         <!-- Facebook Login -->
         <div class="flex justify-center my-3">
-          <a href="/Job_poster/public/auth/login/facebook"
+          <a href="/Worknest/public/auth/login/facebook"
             class="flex items-center justify-center w-full max-w-xs bg-blue-700 hover:bg-blue-800 text-white font-medium py-2 transition social-login-btn">
             <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
               viewBox="0 0 24 24">
@@ -80,7 +80,7 @@ include __DIR__ . '/../layouts/public_header.php'; ?>
       </form>
 
       <p class="mt-6 text-center text-gray-600">
-        Don't have an account? <a href="/Job_poster/public/auth/register" class="text-blue-600 hover:underline">Register
+        Don't have an account? <a href="/Worknest/public/auth/register" class="text-blue-600 hover:underline">Register
           here</a>
       </p>
     </div>
@@ -144,6 +144,6 @@ include __DIR__ . '/../layouts/public_header.php'; ?>
 
 <?php
 $additionalJS = [
-  "/Job_poster/public/javascript/handleCredentials.js"
+  "/Worknest/public/javascript/handleCredentials.js"
 ];
 include __DIR__ . '/../layouts/public_footer.php'; ?>

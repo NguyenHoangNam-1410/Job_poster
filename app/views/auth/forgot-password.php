@@ -1,5 +1,5 @@
 <?php
-$additionalCSS = ["/Job_poster/public/css/
+$additionalCSS = ["/Worknest/public/css/
 auth/forgotPassword.css"
 ];
 include __DIR__ . '/../layouts/public_header.php';
@@ -20,7 +20,7 @@ include __DIR__ . '/../layouts/public_header.php';
         <?php unset($_SESSION['error-message']); ?>
       <?php endif; ?>
 
-      <form method="POST" action="/Job_poster/public/auth/login/forgot-password/send-otp" class="space-y-5">
+      <form method="POST" action="/Worknest/public/auth/login/forgot-password/send-otp" class="space-y-5">
         <div>
           <label for="email" class="form-label">Email address<span class="required">*</span></label>
           <input type="email" id="email" name="email" required placeholder="Enter your registered email"

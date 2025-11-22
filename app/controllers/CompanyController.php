@@ -73,12 +73,12 @@ class CompanyController
                     if (!move_uploaded_file($file['tmp_name'], $uploadPath))
                         throw new Exception("Failed to upload logo.");
 
-                    $data['logo'] = '/Job_poster/public/image/logo/' . $_SESSION['user']['id'] . '/' . $filename;
+                    $data['logo'] = '/Worknest/public/image/logo/' . $_SESSION['user']['id'] . '/' . $filename;
                 }
                 $success = $this->companyService->createCompanyProfile($_SESSION['user']['id'], $data);
 
                 if ($success) {
-                    header('Location: /Job_poster/public/company-profile?success=' . urlencode('Company updated successfully'));
+                    header('Location: /Worknest/public/company-profile?success=' . urlencode('Company updated successfully'));
                     exit;
                 } else {
                     throw new Exception("Failed to create company profile.");
@@ -127,7 +127,7 @@ class CompanyController
                     if (!move_uploaded_file($file['tmp_name'], $uploadPath))
                         throw new Exception("Failed to upload logo.");
 
-                    $data['logo'] = '/Job_poster/public/image/logo/' . $_SESSION['user']['id'] . '/' . $filename;
+                    $data['logo'] = '/Worknest/public/image/logo/' . $_SESSION['user']['id'] . '/' . $filename;
                 }
 
                 $success = $this->companyService->updateCompanyProfile($currentEmployer, $data);
@@ -144,18 +144,18 @@ class CompanyController
                         echo json_encode([
                             'success' => true,
                             'message' => 'Company profile updated successfully',
-                            'redirect' => '/Job_poster/public/my-jobs/create'
+                            'redirect' => '/Worknest/public/my-jobs/create'
                         ]);
                         exit;
                     }
 
                     // Check if we came from job posting flow
                     if (isset($_POST['referrer']) && $_POST['referrer'] === 'job-posting') {
-                        header('Location: /Job_poster/public/my-jobs/create?success=' . urlencode('Company profile updated! You can now post a job.'));
+                        header('Location: /Worknest/public/my-jobs/create?success=' . urlencode('Company profile updated! You can now post a job.'));
                         exit;
                     }
 
-                    header('Location: /Job_poster/public/company-profile?success=' . urlencode('Company updated successfully'));
+                    header('Location: /Worknest/public/company-profile?success=' . urlencode('Company updated successfully'));
                     exit;
                 } else {
                     throw new Exception("Failed to update company profile.");

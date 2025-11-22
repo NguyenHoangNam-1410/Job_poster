@@ -2,13 +2,13 @@ USE job_poster;
 
 -- Users
 INSERT INTO `users` (`UID`, `Email`, `Password`, `Role`, `Name`, `Avatar`, `auth_provider`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'alice@example.com', 'hashed_pw1', 'Staff', 'Alice Nguyen', '/Job_poster/public/image/avatar/1/avatar_1763266714.png', 'local', 1, '2025-11-05 13:08:06', '2025-11-16 04:18:34'),
-(2, 'bob@example.com', 'hashed_pw2', 'Admin', 'Bob Tran', '/Job_poster/public/image/avatar/2/avatar_1763267198.png', 'local', 1, '2025-11-05 13:08:06', '2025-11-16 04:26:38'),
+(1, 'alice@example.com', 'hashed_pw1', 'Staff', 'Alice Nguyen', '/Worknest/public/image/avatar/1/avatar_1763266714.png', 'local', 1, '2025-11-05 13:08:06', '2025-11-16 04:18:34'),
+(2, 'bob@example.com', 'hashed_pw2', 'Admin', 'Bob Tran', '/Worknest/public/image/avatar/2/avatar_1763267198.png', 'local', 1, '2025-11-05 13:08:06', '2025-11-16 04:26:38'),
 (3, 'chris@example.com', 'hashed_pw3', 'Employer', 'Chris Le', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
 (4, 'diana@example.com', 'hashed_pw4', 'Employer', 'Diana Pham', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
 (5, 'edward@example.com', 'hashed_pw5', 'Employer', 'Edward Vu', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
-(6, 'fiona@example.com', 'hashed_pw6', 'Staff', 'Fiona Huynh', '/Job_poster/public/image/avatar/6/avatar_1763265481.jpg', 'local', 1, '2025-11-05 13:08:06', '2025-11-16 03:58:01'),
-(7, 'george@example.com', 'hashed_pw7', 'Admin', 'George Dao', '/Job_poster/public/image/avatar/7/avatar_1763268812.png', 'local', 1, '2025-11-05 13:08:06', '2025-11-16 04:53:32'),
+(6, 'fiona@example.com', 'hashed_pw6', 'Staff', 'Fiona Huynh', '/Worknest/public/image/avatar/6/avatar_1763265481.jpg', 'local', 1, '2025-11-05 13:08:06', '2025-11-16 03:58:01'),
+(7, 'george@example.com', 'hashed_pw7', 'Admin', 'George Dao', '/Worknest/public/image/avatar/7/avatar_1763268812.png', 'local', 1, '2025-11-05 13:08:06', '2025-11-16 04:53:32'),
 (8, 'hannah@example.com', 'hashed_pw8', 'Employer', 'Hannah Trinh', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
 (9, 'ivan@example.com', 'hashed_pw9', 'Employer', 'Ivan Bui', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),
 (10, 'jasmine@example.com', 'hashed_pw10', 'Employer', 'Jasmine Ngo', NULL, 'local', 1, '2025-11-05 13:08:06', '2025-11-05 13:08:06'),

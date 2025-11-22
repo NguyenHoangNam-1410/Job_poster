@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 - Page Not Found</title>
-    <link href="/Job_poster/public/css/tailwind.min.css" rel="stylesheet">
+    <link href="/Worknest/public/css/tailwind.min.css" rel="stylesheet">
     <style>
         @keyframes float {
 
@@ -51,7 +51,7 @@
 
         <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <a href="/Job_poster/public/"
+            <a href="/Worknest/public/"
                 class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:bg-indigo-700 transform hover:scale-105 transition-all duration-200">
                 <?= Icons::home('w-5 h-5 mr-2') ?>
                 Go Home
