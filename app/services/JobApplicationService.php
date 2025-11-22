@@ -61,7 +61,7 @@ class JobApplicationService
                     // For direct SMTP, must send from authenticated email
                     // But set Reply-To to applicant's email
                     // Use mb_encode_mimeheader for proper UTF-8 encoding in email headers
-                    $fromName = mb_encode_mimeheader($applicantName . ' (via Job Poster)', 'UTF-8', 'Q');
+                    $fromName = mb_encode_mimeheader($applicantName . ' (via WorkNest)', 'UTF-8', 'Q');
                     $mail->setFrom($smtpEmail, $fromName);
                 } else {
                     throw new Exception("SMTP credentials not configured");
@@ -94,9 +94,9 @@ class JobApplicationService
             // Content
             $mail->isHTML(true);
 
-            // Subject format: [Source: Job Poster] Name - Application for Job Title - Company
+            // Subject format: [Source: WorkNest] Name - Application for Job Title - Company
             // Use mb_encode_mimeheader for proper UTF-8 encoding in subject
-            $subjectText = "⏩ [Source: Job Poster] {$applicantName} - Application for {$jobTitle} - {$companyName}";
+            $subjectText = "⏩ [Source: WorkNest] {$applicantName} - Application for {$jobTitle} - {$companyName}";
             $mail->Subject = mb_encode_mimeheader($subjectText, 'UTF-8', 'Q');
 
             // Email body
@@ -157,7 +157,7 @@ class JobApplicationService
                     </div>
                     
                     <p style='margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 12px;'>
-                        This application was submitted through Job Poster platform. The CV is attached to this email.
+                        This application was submitted through WorkNest platform. The CV is attached to this email.
                     </p>
                 </div>
             </div>
@@ -185,7 +185,7 @@ Cover Letter:
 {$coverLetter}
 
 ---
-This application was submitted through Job Poster platform. The CV is attached to this email.
+This application was submitted through WorkNest platform. The CV is attached to this email.
         ";
     }
 }

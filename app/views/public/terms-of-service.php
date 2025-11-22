@@ -1,5 +1,5 @@
 <?php
-$pageTitle = 'Terms of Service | Job Poster';
+$pageTitle = 'Terms of Service | WorkNest';
 include __DIR__ . '/../layouts/public_header.php';
 ?>
 
@@ -77,7 +77,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <div class="section-content">
         <p><strong>Last Updated: January 1, 2025</strong></p>
         <p>
-          Welcome to Job Poster. These Terms of Service ("Terms") govern your access to and use of the Job Poster
+          Welcome to WorkNest. These Terms of Service ("Terms") govern your access to and use of the WorkNest
           website and services. By accessing or using our platform, you agree to be bound by these Terms.
         </p>
       </div>
@@ -85,7 +85,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <h2 class="section-title">1. Acceptance of Terms</h2>
       <div class="section-content">
         <p>
-          By creating an account, accessing, or using Job Poster, you acknowledge that you have read, understood,
+          By creating an account, accessing, or using WorkNest, you acknowledge that you have read, understood,
           and agree to be bound by these Terms and our Privacy Policy. If you do not agree to these Terms, you
           may not use our services.
         </p>
@@ -94,7 +94,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <h2 class="section-title">2. Description of Service</h2>
       <div class="section-content">
         <p>
-          Job Poster is an online platform that connects job seekers with employers. We provide tools for job
+          WorkNest is an online platform that connects job seekers with employers. We provide tools for job
           searching, application management, candidate matching, and recruitment services. We reserve the right
           to modify, suspend, or discontinue any aspect of our service at any time.
         </p>
@@ -151,7 +151,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <h2 class="section-title">7. Intellectual Property</h2>
       <div class="section-content">
         <p>
-          All content on Job Poster, including text, graphics, logos, and software, is the property of Job Poster
+          All content on WorkNest, including text, graphics, logos, and software, is the property of WorkNest
           or its licensors and is protected by copyright and other intellectual property laws. You may not reproduce,
           distribute, or create derivative works without our written permission.
         </p>
@@ -191,7 +191,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <h2 class="section-title">11. Disclaimers</h2>
       <div class="section-content">
         <p>
-          Job Poster is provided "as is" without warranties of any kind. We do not guarantee the accuracy,
+          WorkNest is provided "as is" without warranties of any kind. We do not guarantee the accuracy,
           completeness, or reliability of any job postings or user content. We are not responsible for the
           actions of employers or job seekers using our platform.
         </p>
@@ -200,7 +200,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <h2 class="section-title">12. Limitation of Liability</h2>
       <div class="section-content">
         <p>
-          To the maximum extent permitted by law, Job Poster shall not be liable for any indirect, incidental,
+          To the maximum extent permitted by law, WorkNest shall not be liable for any indirect, incidental,
           special, or consequential damages arising from your use of the service, including but not limited to
           loss of data, loss of profits, or business interruption.
         </p>

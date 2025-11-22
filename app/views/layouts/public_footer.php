@@ -4,7 +4,7 @@
 
     <!-- Logo & Intro -->
     <div>
-      <h2 class="text-white text-2xl font-semibold mb-3">Job Poster</h2>
+      <h2 class="text-white text-2xl font-semibold mb-3">WorkNest</h2>
       <p class="text-sm leading-relaxed">
         A smart and efficient job management system built for modern recruiters and job seekers.
       </p>
@@ -49,7 +49,7 @@
 
   <!-- Bottom Bar -->
   <div class="border-t border-gray-700 mt-8 py-4 text-center text-sm text-gray-400">
-    <p>© 2025 <span class="text-white font-medium">Job Poster</span> — Job Management System</p>
+    <p>© 2025 <span class="text-white font-medium">WorkNest</span> — Job Management System</p>
 
   </div>
 </footer>

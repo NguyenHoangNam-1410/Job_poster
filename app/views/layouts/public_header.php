@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= $pageTitle ?? 'Job Poster' ?></title>
+  <title><?= $pageTitle ?? 'WorkNest' ?></title>
   <link rel="icon" type="image/x-icon" href="/Job_poster/public/images/favicon.png">
 
   <link rel="stylesheet" href="/Job_poster/public/css/tailwind.min.css">
@@ -289,7 +289,7 @@ $userRole = $_SESSION['user']['role'] ?? null;
   <header class="y2k-header text-white">
     <div class="container mx-auto px-4 flex items-center justify-between relative" style="overflow: visible;">
       <div class="flex items-center space-x-4 ml-4 flex-shrink-0">
-        <a href="/Job_poster/public/" class="y2k-logo whitespace-nowrap">Job Poster</a>
+        <a href="/Job_poster/public/" class="y2k-logo whitespace-nowrap">WorkNest</a>
         <span class="hidden sm:block y2k-tagline">Find Your Dream Job</span>
       </div>
 

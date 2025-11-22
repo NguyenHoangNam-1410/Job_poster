@@ -1,5 +1,5 @@
 <?php
-$pageTitle = 'Privacy Policy | Job Poster';
+$pageTitle = 'Privacy Policy | WorkNest';
 include __DIR__ . '/../layouts/public_header.php';
 ?>
 
@@ -77,7 +77,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <div class="section-content">
         <p><strong>Last Updated: January 1, 2025</strong></p>
         <p>
-          At Job Poster, we are committed to protecting your privacy. This Privacy Policy explains how we collect,
+          At WorkNest, we are committed to protecting your privacy. This Privacy Policy explains how we collect,
           use, disclose, and safeguard your information when you use our website and services.
         </p>
       </div>

@@ -1,5 +1,5 @@
 <?php
-$pageTitle = 'Help Center | Job Poster';
+$pageTitle = 'Help Center | WorkNest';
 include __DIR__ . '/../layouts/public_header.php';
 ?>
 
@@ -90,9 +90,9 @@ include __DIR__ . '/../layouts/public_header.php';
       </div>
 
       <div class="faq-item">
-        <div class="faq-question">Do I need to pay to use Job Poster?</div>
+        <div class="faq-question">Do I need to pay to use WorkNest?</div>
         <div class="faq-answer">
-          No! Job Poster is completely free for job seekers. You can browse jobs, create a profile, and apply
+          No! WorkNest is completely free for job seekers. You can browse jobs, create a profile, and apply
           to unlimited positions at no cost. Some premium features may be available for employers.
         </div>
       </div>
@@ -106,9 +106,9 @@ include __DIR__ . '/../layouts/public_header.php';
       </div>
 
       <div class="faq-item" style="border-bottom: none;">
-        <div class="faq-question">Can I use Job Poster on mobile?</div>
+        <div class="faq-question">Can I use WorkNest on mobile?</div>
         <div class="faq-answer">
-          Yes! Job Poster is fully responsive and works great on mobile devices, tablets, and desktops.
+          Yes! WorkNest is fully responsive and works great on mobile devices, tablets, and desktops.
           You can access all features from any device with an internet connection.
         </div>
       </div>

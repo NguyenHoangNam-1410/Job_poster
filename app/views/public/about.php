@@ -1,5 +1,5 @@
 <?php
-$pageTitle = 'About Us | Job Poster';
+$pageTitle = 'About Us | WorkNest';
 include __DIR__ . '/../layouts/public_header.php';
 ?>
 
@@ -52,7 +52,7 @@ include __DIR__ . '/../layouts/public_header.php';
 <!-- Hero Section -->
 <section class="page-hero text-white text-center">
   <div class="container mx-auto px-6">
-    <h1 class="text-5xl md:text-6xl font-black mb-4 uppercase tracking-tight">About Job Poster</h1>
+    <h1 class="text-5xl md:text-6xl font-black mb-4 uppercase tracking-tight">About WorkNest</h1>
     <p class="text-xl md:text-2xl font-bold max-w-2xl mx-auto">
       Connecting Talent With Opportunity
     </p>
@@ -67,7 +67,7 @@ include __DIR__ . '/../layouts/public_header.php';
     <div class="retro-card">
       <h2 class="text-3xl font-black text-gray-900 mb-4 uppercase tracking-tight">Our Mission</h2>
       <p class="text-gray-700 leading-relaxed text-lg mb-4">
-        Job Poster is a modern platform designed to revolutionize the way job seekers and employers connect.
+        WorkNest is a modern platform designed to revolutionize the way job seekers and employers connect.
         We believe that finding the right job or the perfect candidate shouldn't be complicated.
       </p>
       <p class="text-gray-700 leading-relaxed text-lg">
@@ -107,7 +107,7 @@ include __DIR__ . '/../layouts/public_header.php';
 
     <!-- Why Choose Us -->
     <div class="retro-card">
-      <h2 class="text-3xl font-black text-gray-900 mb-4 uppercase tracking-tight">Why Choose Job Poster?</h2>
+      <h2 class="text-3xl font-black text-gray-900 mb-4 uppercase tracking-tight">Why Choose WorkNest?</h2>
       <ul class="space-y-3 text-gray-700">
         <li class="flex items-start">
           <span class="font-black text-2xl text-cyan-500 mr-3">✓</span>
@@ -136,17 +136,17 @@ include __DIR__ . '/../layouts/public_header.php';
       <h2 class="text-3xl font-black text-gray-900 mb-6 uppercase tracking-tight">Frequently Asked Questions</h2>
 
       <div class="faq-item">
-        <div class="faq-question">What is Job Poster?</div>
+        <div class="faq-question">What is WorkNest?</div>
         <div class="faq-answer">
-          Job Poster is a comprehensive job management platform that connects job seekers with employers.
+          WorkNest is a comprehensive job management platform that connects job seekers with employers.
           We provide tools for job discovery, application management, and intelligent candidate matching.
         </div>
       </div>
 
       <div class="faq-item">
-        <div class="faq-question">Is Job Poster free to use?</div>
+        <div class="faq-question">Is WorkNest free to use?</div>
         <div class="faq-answer">
-          Yes! Job Poster is completely free for job seekers. Employers may have access to premium features
+          Yes! WorkNest is completely free for job seekers. Employers may have access to premium features
           for enhanced visibility and recruitment tools.
         </div>
       </div>

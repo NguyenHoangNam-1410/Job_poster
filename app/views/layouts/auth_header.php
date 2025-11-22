@@ -284,7 +284,7 @@ if ($currentUserId) {
             <!-- Left: Website Name -->
             <div class="navbar-brand">
                 <a href="/Job_poster/public/" class="brand-link">
-                    Job Poster
+                    WorkNest
                 </a>
             </div>
 

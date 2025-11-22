@@ -1,5 +1,5 @@
 <?php
-$pageTitle = 'Contact Us | Job Poster';
+$pageTitle = 'Contact Us | WorkNest';
 include __DIR__ . '/../layouts/public_header.php';
 ?>
 
