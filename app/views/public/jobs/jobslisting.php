@@ -32,9 +32,9 @@ $statuses = $filters['statuses'] ?? $filters['stts'] ?? [];
 
 if (!isset($result) || !is_array($result)) {
     $sample = [
-      ['id' => 1, 'title' => 'Senior Frontend Engineer', 'company' => 'TechCorp Solutions', 'location' => 'San Francisco, CA', 'type' => 'Full-time', 'posted_at' => '2025-10-18 13:00:00', 'deadline' => '2025-12-01', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/jobs/placeholder.jpg', 'tags' => ['React', 'Tailwind']],
-      ['id' => 2, 'title' => 'Junior Backend Developer', 'company' => 'StartupXYZ', 'location' => 'Remote', 'type' => 'Full-time', 'posted_at' => '2025-10-19 10:00:00', 'deadline' => '2025-11-30', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/jobs/placeholder.jpg', 'tags' => ['Node.js', 'SQL']],
-      ['id' => 3, 'title' => 'DevOps Engineer', 'company' => 'CloudTech Systems', 'location' => 'Singapore', 'type' => 'Full-time', 'posted_at' => '2025-10-21 09:30:00', 'deadline' => '2025-11-15', 'public_status' => 'overdue', 'thumbnail_url' => 'images/jobs/placeholder.jpg', 'tags' => ['AWS', 'CI/CD']],
+      ['id' => 1, 'title' => 'Senior Frontend Engineer', 'company' => 'TechCorp Solutions', 'location' => 'San Francisco, CA', 'type' => 'Full-time', 'posted_at' => '2025-10-18 13:00:00', 'deadline' => '2025-12-01', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/placeholder.jpg', 'tags' => ['React', 'Tailwind']],
+      ['id' => 2, 'title' => 'Junior Backend Developer', 'company' => 'StartupXYZ', 'location' => 'Remote', 'type' => 'Full-time', 'posted_at' => '2025-10-19 10:00:00', 'deadline' => '2025-11-30', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/placeholder.jpg', 'tags' => ['Node.js', 'SQL']],
+      ['id' => 3, 'title' => 'DevOps Engineer', 'company' => 'CloudTech Systems', 'location' => 'Singapore', 'type' => 'Full-time', 'posted_at' => '2025-10-21 09:30:00', 'deadline' => '2025-11-15', 'public_status' => 'overdue', 'thumbnail_url' => 'images/placeholder.jpg', 'tags' => ['AWS', 'CI/CD']],
     ];
   $result = ['total' => count($sample), 'rows' => $sample];
 }
@@ -359,7 +359,7 @@ function status_badge_class($st)
   <div id="grid" class="jobs-grid">
     <?php foreach ($rows as $job): ?>
       <?php
-      $thumb = $job['thumbnail_url'] ?: 'images/jobs/placeholder.jpg';
+      $thumb = $job['thumbnail_url'] ?: 'images/placeholder.jpg';
       $posted = isset($job['posted_at']) ? strtotime($job['posted_at']) : time();
       $st = $job['public_status'] ?? ($job['status'] ?? '');
       $label = $st === 'recruiting' ? 'Recruiting' : ucfirst($st);
@@ -474,7 +474,7 @@ function status_badge_class($st)
   }
 
   function card(job) {
-    const thumb = job.thumbnail_url || 'images/jobs/placeholder.jpg';
+    const thumb = job.thumbnail_url || 'images/placeholder.jpg';
     const posted = job.posted_at ? formatDate(job.posted_at) : '';
     const st = job.public_status || job.status || '';
     const tags = (job.tags || []).map(t => `<span class="job-card-tag">${escapeHtml(t)}</span>`).join('');

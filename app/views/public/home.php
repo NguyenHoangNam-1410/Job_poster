@@ -605,7 +605,12 @@ include __DIR__ . '/../layouts/public_header.php';
           <article class="news-card retro-card overflow-hidden group bg-white">
             <!-- Image -->
             <div class="overflow-hidden border-b-3 border-gray-900">
-              <img src="/Worknest/public/images/jobs/<?= htmlspecialchars($a['img']) ?>"
+              <?php 
+              $imgPath = $a['img'] === 'placeholder.jpg' 
+                ? '/Worknest/public/images/placeholder.jpg' 
+                : '/Worknest/public/images/jobs/' . htmlspecialchars($a['img']);
+              ?>
+              <img src="<?= $imgPath ?>"
                 class="w-full h-56 object-cover" alt="">
             </div>
 
