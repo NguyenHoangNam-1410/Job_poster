@@ -76,10 +76,35 @@ function status_badge_class($st)
     /* Override cho Categories và Locations - Phải đặt sau và có specificity cao hơn */
     #categorySelect+.choices .choices__inner,
     #locationSelect+.choices .choices__inner {
-      min-height: 60px !important;
-      height: 60px !important;
-      max-height: 60px !important;
+      min-height: 80px !important;
+      height: auto !important;
+      max-height: 80px !important;
       overflow: hidden !important;
+      position: relative !important;
+      display: flex !important;
+      align-items: flex-start !important;
+    }
+
+    /* Đảm bảo các items nằm trong container */
+    #categorySelect+.choices .choices__list--multiple,
+    #locationSelect+.choices .choices__list--multiple {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 4px !important;
+      padding: 6px 8px !important;
+      margin: 0 !important;
+      overflow: visible !important;
+      max-height: none !important;
+      height: auto !important;
+      align-items: flex-start !important;
+      width: 100% !important;
+    }
+
+    /* Đảm bảo container không overflow */
+    #categorySelect+.choices,
+    #locationSelect+.choices {
+      overflow: hidden !important;
+      position: relative !important;
     }
 
     /* Giảm chiều cao cho Categories và Locations - Phải đặt sau CSS chung */
@@ -89,9 +114,13 @@ function status_badge_class($st)
     .jobs-search-section #locationSelect+.choices .choices__inner,
     #categorySelect+.choices .choices__inner,
     #locationSelect+.choices .choices__inner {
-      min-height: 60px !important; /* Ngắn hơn Status (90px) */
-      height: 60px !important; /* Force height cố định */
-      max-height: 60px !important; /* Ngăn không cho cao hơn */
+      min-height: 80px !important; /* Đủ để chứa 2 dòng tags */
+      height: auto !important; /* Tự động điều chỉnh theo nội dung */
+      max-height: 80px !important; /* Giới hạn tối đa */
+      overflow: hidden !important;
+      position: relative !important;
+      display: flex !important;
+      align-items: flex-start !important;
     }
 
     .jobs-search-container #categorySelect.jobs-filter-select,
@@ -100,9 +129,9 @@ function status_badge_class($st)
     .jobs-search-section #locationSelect.jobs-filter-select,
     #categorySelect.jobs-filter-select,
     #locationSelect.jobs-filter-select {
-      min-height: 60px !important; /* Ngắn hơn Status (90px) */
-      height: 60px !important; /* Force height cố định */
-      max-height: 60px !important; /* Ngăn không cho cao hơn */
+      min-height: 80px !important; /* Đủ để chứa 2 dòng tags */
+      height: auto !important; /* Tự động điều chỉnh */
+      max-height: 80px !important; /* Giới hạn tối đa */
     }
 
     /* Remove default browser arrow from Status select */
@@ -132,9 +161,9 @@ function status_badge_class($st)
     /* Override riêng cho Categories và Locations select */
     #categorySelect.jobs-filter-select,
     #locationSelect.jobs-filter-select {
-      min-height: 60px !important;
-      height: 60px !important;
-      max-height: 60px !important;
+      min-height: 80px !important;
+      height: auto !important;
+      max-height: 80px !important;
     }
 
 
@@ -154,6 +183,17 @@ function status_badge_class($st)
       border: 2px solid #1a1a1a !important;
       border-radius: 0 !important;
       color: #1a1a1a !important;
+      margin: 0 !important;
+      padding: 4px 8px !important;
+      font-size: 12px !important;
+      line-height: 1.4 !important;
+      max-width: calc(100% - 8px) !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      flex-shrink: 0 !important;
+      display: inline-flex !important;
+      align-items: center !important;
     }
 
     /* Remove arrow from selected items */
@@ -707,10 +747,10 @@ function status_badge_class($st)
           const inner = categoryChoices.containerOuter.element.querySelector('.choices__inner');
           if (inner) {
             inner.blur();
-            // Force height 60px cho Categories
-            inner.style.minHeight = '60px';
-            inner.style.height = '60px';
-            inner.style.maxHeight = '60px';
+            // Force height 80px cho Categories để chứa được 2 dòng tags
+            inner.style.minHeight = '80px';
+            inner.style.height = 'auto';
+            inner.style.maxHeight = '80px';
             inner.style.overflow = 'hidden';
           }
         }
@@ -746,10 +786,10 @@ function status_badge_class($st)
           const inner = locationChoices.containerOuter.element.querySelector('.choices__inner');
           if (inner) {
             inner.blur();
-            // Force height 60px cho Locations
-            inner.style.minHeight = '60px';
-            inner.style.height = '60px';
-            inner.style.maxHeight = '60px';
+            // Force height 80px cho Locations để chứa được 2 dòng tags
+            inner.style.minHeight = '80px';
+            inner.style.height = 'auto';
+            inner.style.maxHeight = '80px';
             inner.style.overflow = 'hidden';
           }
         }
