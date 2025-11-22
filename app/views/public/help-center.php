@@ -246,7 +246,7 @@ include __DIR__ . '/../layouts/public_header.php';
         <div class="faq-question">What should I do if I notice suspicious activity?</div>
         <div class="faq-answer">
           If you notice any suspicious activity on your account, immediately change your password and contact
-          our support team at contact@jobposter.com. We take security seriously and will investigate promptly.
+          our support team at contact@worknest.com. We take security seriously and will investigate promptly.
         </div>
       </div>
     </div>
@@ -274,7 +274,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <div class="faq-item">
         <div class="faq-question">I'm not receiving email notifications. Why?</div>
         <div class="faq-answer">
-          Check your spam/junk folder first. Make sure our email address (noreply@jobposter.com) is whitelisted.
+          Check your spam/junk folder first. Make sure our email address (noreply@worknest.com) is whitelisted.
           You can also check your notification settings in your account preferences.
         </div>
       </div>

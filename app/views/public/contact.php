@@ -129,8 +129,8 @@ include __DIR__ . '/../layouts/public_header.php';
         <div>
           <h3 class="font-black text-lg text-gray-900 mb-1 uppercase">Email</h3>
           <p class="text-gray-700">
-            <a href="mailto:contact@jobposter.com" class="text-cyan-600 font-bold hover:underline">
-              contact@jobposter.com
+            <a href="mailto:contact@worknest.com" class="text-cyan-600 font-bold hover:underline">
+              contact@worknest.com
             </a>
           </p>
         </div>
@@ -198,7 +198,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <div class="faq-item">
         <div class="faq-question">Can I schedule a meeting or demo?</div>
         <div class="faq-answer">
-          Absolutely! Please send us an email at contact@jobposter.com with your preferred dates and times,
+          Absolutely! Please send us an email at contact@worknest.com with your preferred dates and times,
           and we'll arrange a meeting or product demonstration for you.
         </div>
       </div>
@@ -214,7 +214,7 @@ include __DIR__ . '/../layouts/public_header.php';
       <div class="faq-item">
         <div class="faq-question">How can I report a technical issue?</div>
         <div class="faq-answer">
-          If you encounter any technical issues, please email us at contact@jobposter.com with a detailed
+          If you encounter any technical issues, please email us at contact@worknest.com with a detailed
           description of the problem. Include screenshots if possible, and we'll address it promptly.
         </div>
       </div>
@@ -223,7 +223,7 @@ include __DIR__ . '/../layouts/public_header.php';
         <div class="faq-question">Can I provide feedback or suggestions?</div>
         <div class="faq-answer">
           We love hearing from our users! Your feedback helps us improve. Send your suggestions to
-          contact@jobposter.com or use the feedback form on our platform.
+          contact@worknest.com or use the feedback form on our platform.
         </div>
       </div>
 

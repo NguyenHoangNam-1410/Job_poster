@@ -181,8 +181,8 @@ include __DIR__ . '/../layouts/public_header.php';
           <li><strong>Withdraw Consent:</strong> Withdraw consent for data processing where applicable</li>
         </ul>
         <p>
-          To exercise these rights, contact us at <a href="mailto:contact@jobposter.com"
-            class="text-cyan-600 font-bold hover:underline">contact@jobposter.com</a>.
+          To exercise these rights, contact us at <a href="mailto:contact@worknest.com"
+            class="text-cyan-600 font-bold hover:underline">contact@worknest.com</a>.
         </p>
       </div>
 
@@ -239,8 +239,8 @@ include __DIR__ . '/../layouts/public_header.php';
           please contact us:
         </p>
         <p>
-          <strong>Email:</strong> <a href="mailto:contact@jobposter.com"
-            class="text-cyan-600 font-bold hover:underline">contact@jobposter.com</a><br>
+          <strong>Email:</strong> <a href="mailto:contact@worknest.com"
+            class="text-cyan-600 font-bold hover:underline">contact@worknest.com</a><br>
           <strong>Phone:</strong> +84 123 456 789<br>
           <strong>Address:</strong> Ho Chi Minh City, Vietnam
         </p>

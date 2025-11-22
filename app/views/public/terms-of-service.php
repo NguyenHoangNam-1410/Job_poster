@@ -221,8 +221,8 @@ include __DIR__ . '/../layouts/public_header.php';
           If you have questions about these Terms, please contact us at:
         </p>
         <p>
-          <strong>Email:</strong> <a href="mailto:contact@jobposter.com"
-            class="text-cyan-600 font-bold hover:underline">contact@jobposter.com</a><br>
+          <strong>Email:</strong> <a href="mailto:contact@worknest.com"
+            class="text-cyan-600 font-bold hover:underline">contact@worknest.com</a><br>
           <strong>Phone:</strong> +84 123 456 789<br>
           <strong>Address:</strong> Ho Chi Minh City, Vietnam
         </p>

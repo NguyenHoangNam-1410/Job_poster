@@ -36,7 +36,7 @@
     <div>
       <h3 class="text-white font-semibold mb-3">Contact Us</h3>
       <p class="text-sm mb-2">📍 Ho Chi Minh City, Vietnam</p>
-      <p class="text-sm mb-2">✉️ contact@jobposter.com</p>
+      <p class="text-sm mb-2">✉️ contact@worknest.com</p>
       <p class="text-sm">📞 +84 123 456 789</p>
       <div class="flex space-x-4 mt-3">
         <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-facebook-f"></i></a>
