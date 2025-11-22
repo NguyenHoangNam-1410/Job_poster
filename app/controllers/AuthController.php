@@ -198,40 +198,75 @@ class AuthController
     public function handleLocalLogin()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['email'] ?? '';
+            $email = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
-            $user = $this->userService->getUserByEmail($email);
-            error_log($password);
-            if ($user && $this->userService->verifyPasswordLogin($email, $password)) {
-                $_SESSION['user'] = [
-                    'id' => $user->getId(),
-                    'name' => $user->getName(),
-                    'email' => $user->getEmail(),
-                    'role' => $user->getRole(),
-                    'auth_provider' => $user->getAuthProvider(),
-                    'avatar' => $user->getAvatar()
-                ];
-
-                // Redirect based on role
-                switch ($user->getRole()) {
-                    case 'Admin':
-                        header("Location: " . BASE_URL . "/statistics");
-                        break;
-                    case 'Staff':
-                        header("Location: " . BASE_URL . "/staff/home");
-                        break;
-                    case 'Employer':
-                        header("Location: " . BASE_URL . "/employer/home");
-                        break;
-                    default:
-                        header("Location: " . BASE_URL . "/");
-                }
+            
+            // Basic email validation (allow test emails like worknest@123)
+            if (empty($email) || strpos($email, '@') === false) {
+                $_SESSION['login_error'] = 'Invalid email format.';
+                header("Location: " . BASE_URL . "/auth/login");
                 exit;
-            } else {
+            }
+            
+            $user = $this->userService->getUserByEmail($email);
+            
+            // Check if user exists
+            if (!$user) {
+                error_log("Login failed: User not found for email: " . $email);
                 $_SESSION['login_error'] = 'Invalid email or password.';
                 header("Location: " . BASE_URL . "/auth/login");
                 exit;
             }
+            
+            // Check if user is using local authentication
+            // Note: NULL auth_provider is treated as 'local' (legacy users)
+            $authProvider = $user->getAuthProvider();
+            if ($authProvider !== null && $authProvider !== 'local') {
+                error_log("Login failed: User email " . $email . " uses " . $authProvider . " authentication, not local");
+                if ($authProvider === 'google') {
+                    $_SESSION['login_error'] = 'This email is registered with Google. Please login with Google.';
+                } elseif ($authProvider === 'facebook') {
+                    $_SESSION['login_error'] = 'This email is registered with Facebook. Please login with Facebook.';
+                } else {
+                    $_SESSION['login_error'] = 'Invalid email or password.';
+                }
+                header("Location: " . BASE_URL . "/auth/login");
+                exit;
+            }
+            
+            // Verify password
+            if (!$this->userService->verifyPasswordLogin($email, $password)) {
+                error_log("Login failed: Invalid password for email: " . $email);
+                $_SESSION['login_error'] = 'Invalid email or password.';
+                header("Location: " . BASE_URL . "/auth/login");
+                exit;
+            }
+            
+            // Login successful
+            $_SESSION['user'] = [
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+                'email' => $user->getEmail(),
+                'role' => $user->getRole(),
+                'auth_provider' => $user->getAuthProvider(),
+                'avatar' => $user->getAvatar()
+            ];
+
+            // Redirect based on role
+            switch ($user->getRole()) {
+                case 'Admin':
+                    header("Location: " . BASE_URL . "/statistics");
+                    break;
+                case 'Staff':
+                    header("Location: " . BASE_URL . "/staff/home");
+                    break;
+                case 'Employer':
+                    header("Location: " . BASE_URL . "/employer/home");
+                    break;
+                default:
+                    header("Location: " . BASE_URL . "/");
+            }
+            exit;
         }
     }
 
