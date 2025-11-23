@@ -13,7 +13,7 @@
 
   <?php if (isset($additionalCSS)): ?>
     <?php foreach ($additionalCSS as $css): ?>
-      <link rel="stylesheet" href="<?= $css ?>">
+      <link rel="stylesheet" href="<?= $css ?>?v=<?= time() ?>">
     <?php endforeach; ?>
   <?php endif; ?>
   <?php require_once __DIR__ . '/../../helpers/Icons.php'; ?>
@@ -468,7 +468,7 @@ $userRole = $_SESSION['user']['role'] ?? null;
 
     <div class="sidebar-footer">
       <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
-        <img src="<?= $_SESSION['user']['avatar'] ?? 'image/avatar/default.svg' ?>" alt="User"
+        <img src="<?= $_SESSION['user']['avatar'] ?? '/Worknest/public/image/avatar/default.svg' ?>" alt="User"
           class="w-full h-full rounded-full">
       </div>
       <div>

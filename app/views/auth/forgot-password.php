@@ -1,45 +1,59 @@
 <?php
-$additionalCSS = ["/Worknest/public/css/
-auth/forgotPassword.css"
+$pageTitle = 'Forgot Password | WorkNest';
+$additionalCSS = [
+  "/Worknest/public/css/auth/login.css"
 ];
-include __DIR__ . '/../layouts/public_header.php';
-?>
+include __DIR__ . '/../layouts/public_header.php'; ?>
+<div class="min-h-screen flex items-center justify-center px-4">
+  <div class="flex flex-col md:flex-row md:gap-12 w-full max-w-6xl items-center">
 
-<div class="min-h-screen w-full flex flex-col items-center justify-center py-12">
-  <div class="w-full max-w-md space-y-4">
-    <div class="text-center animate-fadeInDown">
-      <h1 class="welcome-title">Forgot your password?</h1>
-      <p class="welcome-subtitle">Don’t worry! We’ll send you an OTP to reset your password!</p>
-    </div>
-
-    <div class="card animate-fadeInUp">
-      <h2 class="signup-title">🔑 Send OTP</h2>
+    <!-- Forgot Password Form -->
+    <div class="w-full md:w-1/2 max-w-lg bg-white shadow-xl rounded-xl p-10 animate-fadeInUp">
+      <h2 class="text-3xl font-bold text-center mb-6 text-gray-800">Forgot Password?</h2>
+      <p class="text-center text-gray-600 mb-6">Don't worry! We'll send you an OTP to reset your password!</p>
 
       <?php if (isset($_SESSION['error-message'])): ?>
-        <div class="alert-login mb-4"><?= $_SESSION['error-message'] ?? '' ?></div>
+        <div class="alert-login mb-4">
+          <?= $_SESSION['error-message']; ?>
+        </div>
         <?php unset($_SESSION['error-message']); ?>
       <?php endif; ?>
 
       <form method="POST" action="/Worknest/public/auth/login/forgot-password/send-otp" class="space-y-5">
         <div>
-          <label for="email" class="form-label">Email address<span class="required">*</span></label>
+          <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label>
           <input type="email" id="email" name="email" required placeholder="Enter your registered email"
-            class="form-control w-full">
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
         </div>
 
-        <button type="submit" class="btn-primary text-white w-full py-2">Send OTP</button>
-        <a href="/auth/login" class="btn-secondary w-full block text-center py-2">Back to Login</a>
+        <button type="submit"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition">
+          Send OTP
+        </button>
+
+        <a href="/Worknest/public/auth/login"
+          class="block text-center mt-2 text-blue-600 hover:underline">
+          Back to Login
+        </a>
       </form>
 
       <p class="mt-6 text-center text-gray-600">
-        Don’t have an account? <a href="/auth/register" class="text-blue-600 hover:underline">Register here</a>
+        Don't have an account? <a href="/Worknest/public/auth/register" class="text-blue-600 hover:underline">Register
+          here</a>
       </p>
+    </div>
+
+    <!-- Welcome Section Column -->
+    <div class="hidden md:flex md:flex-col md:w-1/2 text-center justify-center animate-fadeInDown">
+      <h1 class="welcome-title">Reset Your <span>Password</span></h1>
+      <p class="welcome-subtitle">We'll help you get back into your account</p>
     </div>
 
   </div>
 </div>
 
 <?php
-$additionalJS = ["/javascript/handleCredentials.js"];
-include __DIR__ . '/../layouts/public_footer.php';
-?>
+$additionalJS = [
+  "/Worknest/public/javascript/handleCredentials.js"
+];
+include __DIR__ . '/../layouts/public_footer.php'; ?>
