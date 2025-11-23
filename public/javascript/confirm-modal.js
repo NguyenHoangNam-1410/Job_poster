@@ -3,10 +3,10 @@ class ConfirmModal {
   constructor() {
     this.modal = null;
     this.resolveCallback = null;
-    
+
     // Wait for DOM to be ready before creating modal
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => this.createModal());
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => this.createModal());
     } else {
       this.createModal();
     }
@@ -14,8 +14,8 @@ class ConfirmModal {
 
   createModal() {
     // Don't create if already exists
-    if (document.getElementById('confirmModal')) {
-      this.modal = document.getElementById('confirmModal');
+    if (document.getElementById("confirmModal")) {
+      this.modal = document.getElementById("confirmModal");
       this.setupEventListeners();
       return;
     }
@@ -76,7 +76,11 @@ class ConfirmModal {
 
     // Close on ESC key
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && this.modal && !this.modal.classList.contains("hidden")) {
+      if (
+        e.key === "Escape" &&
+        this.modal &&
+        !this.modal.classList.contains("hidden")
+      ) {
         this.close(false);
       }
     });
@@ -107,7 +111,7 @@ class ConfirmModal {
 
   close(result) {
     if (!this.modal) return;
-    
+
     // Hide modal with animation
     this.modal.style.opacity = "0";
     setTimeout(() => {
@@ -122,9 +126,9 @@ class ConfirmModal {
 }
 
 // Create global instance when DOM is ready
-if (typeof window !== 'undefined') {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
+if (typeof window !== "undefined") {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
       window.confirmModal = new ConfirmModal();
     });
   } else {

@@ -7,8 +7,8 @@ class FormModal {
 
   createModal() {
     // Don't create if already exists
-    if (document.getElementById('formModal')) {
-      this.modal = document.getElementById('formModal');
+    if (document.getElementById("formModal")) {
+      this.modal = document.getElementById("formModal");
       return;
     }
 
@@ -50,12 +50,16 @@ class FormModal {
   setupEventListeners() {
     const closeBtn = document.getElementById("formModalClose");
     let isMouseDownOnBackdrop = false;
-    
+
     closeBtn.addEventListener("click", () => this.close());
 
     // Close on ESC key
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && this.modal && !this.modal.classList.contains("hidden")) {
+      if (
+        e.key === "Escape" &&
+        this.modal &&
+        !this.modal.classList.contains("hidden")
+      ) {
         this.close();
       }
     });
@@ -83,31 +87,31 @@ class FormModal {
   }
 
   adjustModalHeight() {
-    const modalContainer = this.modal.querySelector('.bg-white');
+    const modalContainer = this.modal.querySelector(".bg-white");
     const modalBody = document.getElementById("formModalBody");
-    
+
     // Wait for content to render
     setTimeout(() => {
       const contentHeight = modalBody.scrollHeight;
       const headerHeight = 73; // Approximate header height with padding
       const totalNeededHeight = contentHeight + headerHeight;
       const maxHeight = window.innerHeight - 128; // 8rem = 128px
-      
+
       // If content is short enough to fit without scrolling
       if (totalNeededHeight < maxHeight) {
-        modalContainer.style.maxHeight = 'none';
-        modalContainer.style.height = 'auto';
-        modalBody.style.maxHeight = 'none';
-        modalBody.style.overflow = 'visible';
-        modalBody.classList.remove('flex-1');
+        modalContainer.style.maxHeight = "none";
+        modalContainer.style.height = "auto";
+        modalBody.style.maxHeight = "none";
+        modalBody.style.overflow = "visible";
+        modalBody.classList.remove("flex-1");
       } else {
         // For long content, keep scrollable behavior
-        modalContainer.style.maxHeight = 'calc(100vh - 8rem)';
-        modalContainer.style.height = '';
-        modalBody.style.maxHeight = '';
-        modalBody.style.overflow = '';
-        if (!modalBody.classList.contains('flex-1')) {
-          modalBody.classList.add('flex-1');
+        modalContainer.style.maxHeight = "calc(100vh - 8rem)";
+        modalContainer.style.height = "";
+        modalBody.style.maxHeight = "";
+        modalBody.style.overflow = "";
+        if (!modalBody.classList.contains("flex-1")) {
+          modalBody.classList.add("flex-1");
         }
       }
     }, 100);
@@ -125,7 +129,7 @@ class FormModal {
     // Show modal with loading state
     this.modal.classList.remove("hidden");
     this.modal.classList.add("flex");
-    
+
     const modalBody = document.getElementById("formModalBody");
     modalBody.innerHTML = `
       <div class="flex items-center justify-center py-8">
@@ -136,64 +140,70 @@ class FormModal {
     try {
       const response = await fetch(url, {
         headers: {
-          'X-Requested-With': 'XMLHttpRequest'
-        }
+          "X-Requested-With": "XMLHttpRequest",
+        },
       });
 
       if (!response.ok) {
-        throw new Error('Failed to load form');
+        throw new Error("Failed to load form");
       }
 
       const html = await response.text();
-      
+
       // Extract form content (between form tags)
       const parser = new DOMParser();
-      const doc = parser.parseFromString(html, 'text/html');
-      const formElement = doc.querySelector('form');
-      
+      const doc = parser.parseFromString(html, "text/html");
+      const formElement = doc.querySelector("form");
+
       if (formElement) {
         // Update the form action to handle modal submission
         const originalAction = formElement.action;
         formElement.dataset.originalAction = originalAction;
-        
+
         // Move form buttons to footer
-        const formButtons = formElement.querySelector('.flex.gap-3, .flex.gap-4, .mt-6');
-        const modalFooter = document.getElementById('formModalFooter');
-        
+        const formButtons = formElement.querySelector(
+          ".flex.gap-3, .flex.gap-4, .mt-6"
+        );
+        const modalFooter = document.getElementById("formModalFooter");
+
         if (formButtons && formButtons.querySelector('button[type="submit"]')) {
           // Clone buttons to footer
           const buttonContainer = formButtons.cloneNode(true);
-          buttonContainer.classList.add('justify-end');
-          modalFooter.innerHTML = '';
+          buttonContainer.classList.add("justify-end");
+          modalFooter.innerHTML = "";
           modalFooter.appendChild(buttonContainer);
-          modalFooter.classList.remove('hidden');
-          
+          modalFooter.classList.remove("hidden");
+
           // Remove original buttons from form
           formButtons.remove();
-          
+
           // Re-attach event listeners to new buttons
-          const newSubmitBtn = modalFooter.querySelector('button[type="submit"]');
-          const newCancelBtn = modalFooter.querySelector('button[type="button"]');
-          
+          const newSubmitBtn = modalFooter.querySelector(
+            'button[type="submit"]'
+          );
+          const newCancelBtn = modalFooter.querySelector(
+            'button[type="button"]'
+          );
+
           if (newSubmitBtn) {
             newSubmitBtn.onclick = (e) => {
               e.preventDefault();
               formElement.requestSubmit();
             };
           }
-          
+
           if (newCancelBtn) {
             newCancelBtn.onclick = () => this.close();
           }
         }
-        
-        modalBody.innerHTML = '';
+
+        modalBody.innerHTML = "";
         modalBody.appendChild(formElement);
-        
+
         // Execute any script tags in the loaded content
-        const scripts = doc.querySelectorAll('script');
-        scripts.forEach(oldScript => {
-          const newScript = document.createElement('script');
+        const scripts = doc.querySelectorAll("script");
+        scripts.forEach((oldScript) => {
+          const newScript = document.createElement("script");
           if (oldScript.src) {
             newScript.src = oldScript.src;
           } else {
@@ -201,27 +211,39 @@ class FormModal {
           }
           document.head.appendChild(newScript);
         });
-        
+
         // Setup form submission handler
         this.setupFormSubmission(formElement);
       } else {
         modalBody.innerHTML = '<p class="text-red-600">Error loading form</p>';
       }
     } catch (error) {
-      console.error('Error loading form:', error);
-      modalBody.innerHTML = '<p class="text-red-600">Error loading form. Please try again.</p>';
+      console.error("Error loading form:", error);
+      modalBody.innerHTML =
+        '<p class="text-red-600">Error loading form. Please try again.</p>';
     }
   }
 
   setupFormSubmission(form) {
-    form.addEventListener('submit', async (e) => {
+    let clickedButton = null;
+
+    // Track which button was clicked
+    form.querySelectorAll('button[type="submit"]').forEach((btn) => {
+      btn.addEventListener("click", function () {
+        clickedButton = this;
+      });
+    });
+
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      
+
       // Find submit button in footer
-      const modalFooter = document.getElementById('formModalFooter');
-      const submitBtn = modalFooter.querySelector('button[type="submit"]') || form.querySelector('button[type="submit"]');
+      const modalFooter = document.getElementById("formModalFooter");
+      const submitBtn =
+        modalFooter.querySelector('button[type="submit"]') ||
+        form.querySelector('button[type="submit"]');
       const originalText = submitBtn.innerHTML;
-      
+
       // Show loading state
       submitBtn.disabled = true;
       submitBtn.innerHTML = `
@@ -234,41 +256,66 @@ class FormModal {
 
       try {
         const formData = new FormData(form);
+
+        // Add clicked button's name and value to FormData
+        if (clickedButton && clickedButton.name) {
+          formData.append(clickedButton.name, clickedButton.value);
+        }
+
+        // CASCADE LOGIC: If "post_job" button was clicked in modal, also trigger background form
+        if (clickedButton && clickedButton.value === "post_job") {
+          const backgroundForm = document.querySelector(
+            'body > form[action*="/my-jobs/"]'
+          );
+          const backgroundPostBtn = backgroundForm?.querySelector(
+            'button[value="post_job"]'
+          );
+
+          if (backgroundPostBtn) {
+            console.log("CASCADE: Triggering background Post Job button");
+            // Simulate a click on the background button (will use the background form's submission)
+            backgroundPostBtn.click();
+          }
+        }
+
         // Use getAttribute to avoid conflict with form elements named 'action'
-        const formAction = form.getAttribute('action');
+        const formAction = form.getAttribute("action");
         const response = await fetch(formAction, {
-          method: 'POST',
+          method: "POST",
           body: formData,
           headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-          }
+            "X-Requested-With": "XMLHttpRequest",
+          },
         });
 
         // Get response text first to check if it's JSON
         const responseText = await response.text();
         let data;
-        
+
         try {
           data = JSON.parse(responseText);
         } catch (e) {
           // Response is not JSON, likely HTML error page
-          console.error('Server returned non-JSON response:', responseText.substring(0, 200));
-          throw new Error('Server error: Invalid response format');
+          console.error(
+            "Server returned non-JSON response:",
+            responseText.substring(0, 200)
+          );
+          throw new Error("Server error: Invalid response format");
         }
 
         if (data.success) {
           // Close modal first
           this.close();
-          
+
           // Show success notification
           if (window.notyf) {
-            window.notyf.success(data.message || 'Saved successfully!');
+            window.notyf.success(data.message || "Saved successfully!");
           }
-          
+
           // Check if there's a redirect URL (e.g., from company profile to job posting)
           if (data.redirect) {
             setTimeout(() => {
-              window.formModal.loadForm(data.redirect, 'Post New Job');
+              window.formModal.loadForm(data.redirect, "Post New Job");
             }, 800);
           } else {
             // Reload page after a short delay
@@ -278,26 +325,30 @@ class FormModal {
           }
         } else {
           // Show error message in modal
-          const errorDiv = document.createElement('div');
-          errorDiv.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4';
-          errorDiv.textContent = data.message || 'An error occurred';
-          
+          const errorDiv = document.createElement("div");
+          errorDiv.className =
+            "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4";
+          errorDiv.textContent = data.message || "An error occurred";
+
           form.insertBefore(errorDiv, form.firstChild);
-          
+
           // Restore button
           submitBtn.disabled = false;
           submitBtn.innerHTML = originalText;
         }
       } catch (error) {
-        console.error('Error submitting form:', error);
-        
+        console.error("Error submitting form:", error);
+
         // Show error message with more detail
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4';
-        errorDiv.innerHTML = `<strong>Error:</strong> ${error.message || 'An error occurred. Please try again.'}`;
-        
+        const errorDiv = document.createElement("div");
+        errorDiv.className =
+          "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4";
+        errorDiv.innerHTML = `<strong>Error:</strong> ${
+          error.message || "An error occurred. Please try again."
+        }`;
+
         form.insertBefore(errorDiv, form.firstChild);
-        
+
         // Restore button
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
@@ -307,21 +358,21 @@ class FormModal {
 
   close() {
     if (!this.modal) return;
-    
+
     this.modal.classList.add("hidden");
     this.modal.classList.remove("flex");
-    
+
     // Clear content
-    document.getElementById("formModalBody").innerHTML = '';
-    document.getElementById("formModalFooter").innerHTML = '';
-    document.getElementById("formModalFooter").classList.add('hidden');
+    document.getElementById("formModalBody").innerHTML = "";
+    document.getElementById("formModalFooter").innerHTML = "";
+    document.getElementById("formModalFooter").classList.add("hidden");
   }
 }
 
 // Initialize when DOM is ready
-if (typeof window !== 'undefined') {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
+if (typeof window !== "undefined") {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
       window.formModal = new FormModal();
     });
   } else {
