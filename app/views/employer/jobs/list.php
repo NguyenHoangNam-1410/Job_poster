@@ -174,7 +174,7 @@ $totalPages = $total_pages;
                                                     <?= Icons::edit('w-4 h-4 mr-1') ?> Edit
                                                 </button>
                                             <?php endif; ?>
-                                            <?php $deleteType = in_array($job->getStatus(), ['draft', 'pending']) ? 'hard' : 'soft'; ?>
+                                            <?php $deleteType = $job->getStatus() === 'draft' ? 'hard' : 'soft'; ?>
                                             <button type="button"
                                                 onclick="handleDeleteJob('<?= $deleteType ?>', '<?= $job->getId() ?>')"
                                                 class="inline-flex items-center text-red-600 hover:text-red-900 text-sm">

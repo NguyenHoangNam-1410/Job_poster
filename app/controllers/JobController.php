@@ -467,8 +467,9 @@ class JobController
         if (!empty($statusFilter) && !in_array($statusFilter, $allowedStatuses)) {
             $statusFilter = '';
         }
-        // If no status filter is selected, default to show only allowed statuses
-        $statusesToQuery = !empty($statusFilter) ? $statusFilter : implode(',', $allowedStatuses);
+        // If no status filter is selected, default to show all statuses EXCEPT soft_deleted
+        $defaultStatuses = ['draft', 'pending', 'approved', 'overdue', 'rejected'];
+        $statusesToQuery = !empty($statusFilter) ? $statusFilter : implode(',', $defaultStatuses);
 
         $total_records = $this->jobService->getTotalCountByEmployer(
             $employerId,
