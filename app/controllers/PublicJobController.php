@@ -33,7 +33,7 @@ class PublicJobController
       'status' => $m->getStatus(),
       'created_at' => $m->getCreatedAt(),
       'categories' => $cats,
-      'logo' => '',
+      'logo' => $m->getEmployerLogo() ?: '',
       'website' => ''
     ];
 

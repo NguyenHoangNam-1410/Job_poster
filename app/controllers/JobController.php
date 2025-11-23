@@ -572,7 +572,21 @@ class JobController
                 }
                 $employerId = $employer->getId();
 
-                $status = (isset($_POST['action']) && $_POST['action'] === 'post_job') ? 'pending' : 'draft';
+                // Determine status: post_job = pending, save_draft = draft
+                $action = $_POST['action'] ?? 'save_draft';
+                $status = ($action === 'post_job') ? 'pending' : 'draft';
+                
+                // Debug: Log the action and status
+                error_log("DEBUG myJobStore - Action: " . $action . ", Status: " . $status);
+                
+                // Force override: if action is post_job, ALWAYS set status to pending
+                if ($action === 'post_job') {
+                    $status = 'pending';
+                } else {
+                    $status = 'draft';
+                }
+                
+                error_log("DEBUG myJobStore - Final Status: " . $status);
 
                 $data = [
                     'employer_id' => $employerId,

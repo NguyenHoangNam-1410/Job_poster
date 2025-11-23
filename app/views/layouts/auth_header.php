@@ -108,6 +108,7 @@ if ($currentUserId) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $pageTitle ?? $config['title'] ?></title>
+    <link rel="icon" type="image/jpeg" href="/Worknest/public/images/favicon.jpg">
     <link href="/Worknest/public/css/tailwind.min.css" rel="stylesheet">
     <?php
     // Load role-specific CSS file
@@ -283,8 +284,8 @@ if ($currentUserId) {
 
             <!-- Left: Website Name -->
             <div class="navbar-brand">
-                <a href="/Worknest/public/" class="brand-link">
-                    WorkNest
+                <a href="/Worknest/public/" class="brand-link flex items-center space-x-2">
+                    <span>WorkNest</span>
                 </a>
             </div>
 

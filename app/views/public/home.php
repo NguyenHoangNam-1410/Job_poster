@@ -525,7 +525,7 @@ include __DIR__ . '/../layouts/public_header.php';
     <!-- Video container -->
     <div class="retro-card max-w-5xl mx-auto bg-white p-6">
       <div class="relative overflow-hidden border-3 border-gray-900" style="padding-bottom: 56.25%; height: 0;">
-        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/GOqARrckaR8"
+        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/IawcFovAQRw"
           title="WorkNest Intro Video" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen>
@@ -605,7 +605,12 @@ include __DIR__ . '/../layouts/public_header.php';
           <article class="news-card retro-card overflow-hidden group bg-white">
             <!-- Image -->
             <div class="overflow-hidden border-b-3 border-gray-900">
-              <img src="/Worknest/public/images/jobs/<?= htmlspecialchars($a['img']) ?>"
+              <?php 
+              $imgPath = $a['img'] === 'placeholder.jpg' 
+                ? '/Worknest/public/images/placeholder.jpg' 
+                : '/Worknest/public/images/jobs/' . htmlspecialchars($a['img']);
+              ?>
+              <img src="<?= $imgPath ?>"
                 class="w-full h-56 object-cover" alt="">
             </div>
 

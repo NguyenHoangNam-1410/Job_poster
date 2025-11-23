@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= $pageTitle ?? 'WorkNest' ?></title>
-  <link rel="icon" type="image/x-icon" href="/Worknest/public/images/favicon.png">
+  <link rel="icon" type="image/jpeg" href="/Worknest/public/images/favicon.jpg">
 
   <link rel="stylesheet" href="/Worknest/public/css/tailwind.min.css">
   <link rel="stylesheet" href="/Worknest/public/css/homepage.css">
@@ -289,7 +289,10 @@ $userRole = $_SESSION['user']['role'] ?? null;
   <header class="y2k-header text-white">
     <div class="container mx-auto px-4 flex items-center justify-between relative" style="overflow: visible;">
       <div class="flex items-center space-x-4 ml-4 flex-shrink-0">
-        <a href="/Worknest/public/" class="y2k-logo whitespace-nowrap">WorkNest</a>
+        <a href="/Worknest/public/" class="flex items-center space-x-2">
+          <img src="/Worknest/public/images/logo.png" alt="WorkNest Logo" class="h-10 w-auto object-contain">
+          <span class="y2k-logo whitespace-nowrap">WorkNest</span>
+        </a>
         <span class="hidden sm:block y2k-tagline">Find Your Dream Job</span>
       </div>
 

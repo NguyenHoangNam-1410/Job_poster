@@ -64,8 +64,9 @@ $posted = $postedRaw ? date('M j, Y', strtotime($postedRaw)) : 'No information p
 $statusRaw = $job['status'] ?? ($job['public_status'] ?? '');
 $status = strtolower((string) $statusRaw) === 'approved' ? 'recruiting' : ($statusRaw ?? '');
 $statusLbl = capStatus($status);
-$logo = !empty($job['logo']) ? $job['logo'] : '';
-$banner = !empty($job['banner']) ? $job['banner'] : ($logo ?: BASE_PUBLIC . '/images/jobs/placeholder.jpg');
+// Use logo from employer with proper path prefixing
+$logo = $job['logo'] ?? '';
+$banner = $logo ? (strpos($logo, 'http') === 0 || strpos($logo, '/') === 0 ? $logo : BASE_PUBLIC . '/' . $logo) : BASE_PUBLIC . '/images/placeholder.jpg';
 $chips = $job['categories'] ?? [];
 $desc = $job['description'] ?? '';
 $reqStr = $job['requirements'] ?? '';

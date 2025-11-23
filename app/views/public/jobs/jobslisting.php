@@ -32,9 +32,9 @@ $statuses = $filters['statuses'] ?? $filters['stts'] ?? [];
 
 if (!isset($result) || !is_array($result)) {
     $sample = [
-      ['id' => 1, 'title' => 'Senior Frontend Engineer', 'company' => 'TechCorp Solutions', 'location' => 'San Francisco, CA', 'type' => 'Full-time', 'posted_at' => '2025-10-18 13:00:00', 'deadline' => '2025-12-01', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/jobs/placeholder.jpg', 'tags' => ['React', 'Tailwind']],
-      ['id' => 2, 'title' => 'Junior Backend Developer', 'company' => 'StartupXYZ', 'location' => 'Remote', 'type' => 'Full-time', 'posted_at' => '2025-10-19 10:00:00', 'deadline' => '2025-11-30', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/jobs/placeholder.jpg', 'tags' => ['Node.js', 'SQL']],
-      ['id' => 3, 'title' => 'DevOps Engineer', 'company' => 'CloudTech Systems', 'location' => 'Singapore', 'type' => 'Full-time', 'posted_at' => '2025-10-21 09:30:00', 'deadline' => '2025-11-15', 'public_status' => 'overdue', 'thumbnail_url' => 'images/jobs/placeholder.jpg', 'tags' => ['AWS', 'CI/CD']],
+      ['id' => 1, 'title' => 'Senior Frontend Engineer', 'company' => 'TechCorp Solutions', 'location' => 'San Francisco, CA', 'type' => 'Full-time', 'posted_at' => '2025-10-18 13:00:00', 'deadline' => '2025-12-01', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/placeholder.jpg', 'tags' => ['React', 'Tailwind']],
+      ['id' => 2, 'title' => 'Junior Backend Developer', 'company' => 'StartupXYZ', 'location' => 'Remote', 'type' => 'Full-time', 'posted_at' => '2025-10-19 10:00:00', 'deadline' => '2025-11-30', 'public_status' => 'recruiting', 'thumbnail_url' => 'images/placeholder.jpg', 'tags' => ['Node.js', 'SQL']],
+      ['id' => 3, 'title' => 'DevOps Engineer', 'company' => 'CloudTech Systems', 'location' => 'Singapore', 'type' => 'Full-time', 'posted_at' => '2025-10-21 09:30:00', 'deadline' => '2025-11-15', 'public_status' => 'overdue', 'thumbnail_url' => 'images/placeholder.jpg', 'tags' => ['AWS', 'CI/CD']],
     ];
   $result = ['total' => count($sample), 'rows' => $sample];
 }
@@ -76,10 +76,35 @@ function status_badge_class($st)
     /* Override cho Categories và Locations - Phải đặt sau và có specificity cao hơn */
     #categorySelect+.choices .choices__inner,
     #locationSelect+.choices .choices__inner {
-      min-height: 60px !important;
-      height: 60px !important;
-      max-height: 60px !important;
+      min-height: 80px !important;
+      height: auto !important;
+      max-height: 80px !important;
       overflow: hidden !important;
+      position: relative !important;
+      display: flex !important;
+      align-items: flex-start !important;
+    }
+
+    /* Đảm bảo các items nằm trong container */
+    #categorySelect+.choices .choices__list--multiple,
+    #locationSelect+.choices .choices__list--multiple {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 4px !important;
+      padding: 6px 8px !important;
+      margin: 0 !important;
+      overflow: visible !important;
+      max-height: none !important;
+      height: auto !important;
+      align-items: flex-start !important;
+      width: 100% !important;
+    }
+
+    /* Đảm bảo container không overflow */
+    #categorySelect+.choices,
+    #locationSelect+.choices {
+      overflow: hidden !important;
+      position: relative !important;
     }
 
     /* Giảm chiều cao cho Categories và Locations - Phải đặt sau CSS chung */
@@ -89,9 +114,13 @@ function status_badge_class($st)
     .jobs-search-section #locationSelect+.choices .choices__inner,
     #categorySelect+.choices .choices__inner,
     #locationSelect+.choices .choices__inner {
-      min-height: 60px !important; /* Ngắn hơn Status (90px) */
-      height: 60px !important; /* Force height cố định */
-      max-height: 60px !important; /* Ngăn không cho cao hơn */
+      min-height: 80px !important; /* Đủ để chứa 2 dòng tags */
+      height: auto !important; /* Tự động điều chỉnh theo nội dung */
+      max-height: 80px !important; /* Giới hạn tối đa */
+      overflow: hidden !important;
+      position: relative !important;
+      display: flex !important;
+      align-items: flex-start !important;
     }
 
     .jobs-search-container #categorySelect.jobs-filter-select,
@@ -100,9 +129,9 @@ function status_badge_class($st)
     .jobs-search-section #locationSelect.jobs-filter-select,
     #categorySelect.jobs-filter-select,
     #locationSelect.jobs-filter-select {
-      min-height: 60px !important; /* Ngắn hơn Status (90px) */
-      height: 60px !important; /* Force height cố định */
-      max-height: 60px !important; /* Ngăn không cho cao hơn */
+      min-height: 80px !important; /* Đủ để chứa 2 dòng tags */
+      height: auto !important; /* Tự động điều chỉnh */
+      max-height: 80px !important; /* Giới hạn tối đa */
     }
 
     /* Remove default browser arrow from Status select */
@@ -132,9 +161,9 @@ function status_badge_class($st)
     /* Override riêng cho Categories và Locations select */
     #categorySelect.jobs-filter-select,
     #locationSelect.jobs-filter-select {
-      min-height: 60px !important;
-      height: 60px !important;
-      max-height: 60px !important;
+      min-height: 80px !important;
+      height: auto !important;
+      max-height: 80px !important;
     }
 
 
@@ -154,6 +183,17 @@ function status_badge_class($st)
       border: 2px solid #1a1a1a !important;
       border-radius: 0 !important;
       color: #1a1a1a !important;
+      margin: 0 !important;
+      padding: 4px 8px !important;
+      font-size: 12px !important;
+      line-height: 1.4 !important;
+      max-width: calc(100% - 8px) !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      flex-shrink: 0 !important;
+      display: inline-flex !important;
+      align-items: center !important;
     }
 
     /* Remove arrow from selected items */
@@ -359,7 +399,9 @@ function status_badge_class($st)
   <div id="grid" class="jobs-grid">
     <?php foreach ($rows as $job): ?>
       <?php
-      $thumb = $job['thumbnail_url'] ?: 'images/jobs/placeholder.jpg';
+      // Use logo from employer, with proper path prefixing
+      $logo = $job['thumbnail_url'] ?? '';
+      $thumb = $logo ? (strpos($logo, 'http') === 0 || strpos($logo, '/') === 0 ? $logo : BASE_PUBLIC . '/' . $logo) : BASE_PUBLIC . '/images/placeholder.jpg';
       $posted = isset($job['posted_at']) ? strtotime($job['posted_at']) : time();
       $st = $job['public_status'] ?? ($job['status'] ?? '');
       $label = $st === 'recruiting' ? 'Recruiting' : ucfirst($st);
@@ -474,7 +516,11 @@ function status_badge_class($st)
   }
 
   function card(job) {
-    const thumb = job.thumbnail_url || 'images/jobs/placeholder.jpg';
+    // Use logo from employer with proper path handling
+    const logo = job.thumbnail_url || '';
+    const thumb = logo 
+      ? (logo.startsWith('http') || logo.startsWith('/') ? logo : `${BASE}/${logo}`) 
+      : `${BASE}/images/placeholder.jpg`;
     const posted = job.posted_at ? formatDate(job.posted_at) : '';
     const st = job.public_status || job.status || '';
     const tags = (job.tags || []).map(t => `<span class="job-card-tag">${escapeHtml(t)}</span>`).join('');
@@ -707,10 +753,10 @@ function status_badge_class($st)
           const inner = categoryChoices.containerOuter.element.querySelector('.choices__inner');
           if (inner) {
             inner.blur();
-            // Force height 60px cho Categories
-            inner.style.minHeight = '60px';
-            inner.style.height = '60px';
-            inner.style.maxHeight = '60px';
+            // Force height 80px cho Categories để chứa được 2 dòng tags
+            inner.style.minHeight = '80px';
+            inner.style.height = 'auto';
+            inner.style.maxHeight = '80px';
             inner.style.overflow = 'hidden';
           }
         }
@@ -746,10 +792,10 @@ function status_badge_class($st)
           const inner = locationChoices.containerOuter.element.querySelector('.choices__inner');
           if (inner) {
             inner.blur();
-            // Force height 60px cho Locations
-            inner.style.minHeight = '60px';
-            inner.style.height = '60px';
-            inner.style.maxHeight = '60px';
+            // Force height 80px cho Locations để chứa được 2 dòng tags
+            inner.style.minHeight = '80px';
+            inner.style.height = 'auto';
+            inner.style.maxHeight = '80px';
             inner.style.overflow = 'hidden';
           }
         }
