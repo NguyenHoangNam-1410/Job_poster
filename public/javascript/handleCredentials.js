@@ -6,8 +6,34 @@ function handleCredentialResponse(response) {
         credentials: "include" // include cookies cross-origin
     })
     .then(res => {
-        if (res.ok) window.location.href = "/";
-        else alert("Google login failed");
+        if (res.ok) {
+            // Parse JSON response with redirect URL
+            res.json().then(data => {
+                if (data.success && data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    // Fallback to home
+                    window.location.href = "/Worknest/public/";
+                }
+            }).catch(() => {
+                // If not JSON, try to follow redirect or go to home
+                if (res.redirected) {
+                    window.location.href = res.url;
+                } else {
+                    window.location.href = "/Worknest/public/";
+                }
+            });
+        } else {
+            // Get error message from response
+            res.text().then(errorText => {
+                console.error("Google login error:", errorText);
+                alert("Google login failed: " + (errorText || "Unknown error. Please check console for details."));
+            });
+        }
+    })
+    .catch(error => {
+        console.error("Google login fetch error:", error);
+        alert("Google login failed: Network error. Please check console for details.");
     });
 }
 let confirmPassword = $('#confirm_password');
