@@ -92,6 +92,7 @@ body::before {
   box-shadow: 6px 6px 0 rgba(6, 136, 180, 0.15) !important;
   position: relative;
   z-index: 2;
+  overflow: visible !important;
 }
 
 .bg-white h2 {
@@ -102,6 +103,13 @@ body::before {
   letter-spacing: 0.5px;
   color: #1a1a1a;
   margin-bottom: 2rem;
+}
+
+/* Form - Ensure Google button is clickable */
+form.space-y-5 {
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 1 !important;
 }
 
 /* Form Inputs */
@@ -238,37 +246,192 @@ a:hover {
   transform: translate(-1px, -1px);
 }
 
-/* Google Sign In */
-.g_id_signin {
-  border-radius: 0 !important;
+/* Social Login Buttons - Unified Style */
+.social-login-btn {
   width: 300px !important;
   max-width: 100% !important;
   min-height: 48px !important;
   height: 48px !important;
+  border-radius: 0 !important;
+  font-family: 'Courier New', monospace !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.2s ease !important;
+}
+
+.social-login-btn:hover {
+  box-shadow: 6px 6px 0 rgba(6, 136, 180, 0.3) !important;
+  transform: translate(-1px, -1px) !important;
+}
+
+.social-login-text {
+  font-family: 'Courier New', monospace !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Social Login Buttons - New Design - High Specificity */
+.bg-white .social-buttons-wrapper,
+form .social-buttons-wrapper,
+.social-buttons-wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.75rem !important;
+  width: 100% !important;
+  margin: 1.5rem 0 !important;
+  padding: 0 !important;
+}
+
+.bg-white .social-login-button,
+form .social-login-button,
+a.social-login-button,
+button.social-login-button,
+.social-login-button,
+#custom-google-login {
+  width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.75rem !important;
+  padding: 0.75rem 1.5rem !important;
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+  background-color: #ffffff !important;
+  color: #1a1a1a !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2) !important;
+  position: relative !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+  pointer-events: auto !important;
+  z-index: 10 !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+.bg-white .social-login-button:hover,
+form .social-login-button:hover,
+a.social-login-button:hover,
+button.social-login-button:hover,
+.social-login-button:hover {
+  box-shadow: 6px 6px 0 rgba(6, 136, 180, 0.3) !important;
+  transform: translate(-1px, -1px) !important;
+  background-color: #f8f8f8 !important;
+}
+
+.bg-white .social-login-button:active,
+form .social-login-button:active,
+a.social-login-button:active,
+button.social-login-button:active,
+.social-login-button:active {
+  transform: translate(0, 0) !important;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2) !important;
+}
+
+.bg-white .social-icon,
+form .social-icon,
+.social-icon {
+  width: 20px !important;
+  height: 20px !important;
+  flex-shrink: 0 !important;
   display: inline-block !important;
 }
 
-.g_id_signin:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 6px 6px 0 rgba(6, 136, 180, 0.3) !important;
-  transition: all 0.2s ease;
+.bg-white .social-button-facebook,
+form .social-button-facebook,
+a.social-button-facebook,
+.social-button-facebook {
+  background-color: #1877F2 !important;
+  color: #ffffff !important;
+  border-color: #1877F2 !important;
 }
 
-/* Override Google button inner styles */
-.g_id_signin iframe,
-.g_id_signin div {
+.bg-white .social-button-facebook:hover,
+form .social-button-facebook:hover,
+a.social-button-facebook:hover,
+.social-button-facebook:hover {
+  background-color: #166fe5 !important;
+  border-color: #166fe5 !important;
+}
+
+.bg-white .social-button-google,
+form .social-button-google,
+button.social-button-google,
+.social-button-google {
+  background-color: #ffffff !important;
+  color: #1a1a1a !important;
+  border-color: #1a1a1a !important;
+}
+
+.bg-white .social-button-google:hover,
+form .social-button-google:hover,
+button.social-button-google:hover,
+.social-button-google:hover {
+  background-color: #f8f8f8 !important;
+}
+
+/* Google Button Wrapper - Style container only */
+.google-button-wrapper {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#g_id_signin_real {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 48px !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+#g_id_signin_real iframe {
+  width: 100% !important;
+  height: 48px !important;
   border-radius: 0 !important;
-  min-height: 48px !important;
-  height: 48px !important;
 }
 
-.g_id_signin iframe {
-  width: 300px !important;
-  height: 48px !important;
-  min-height: 48px !important;
+/* Social Login Buttons Container - Simple */
+.space-y-3 {
+  display: block !important;
+  width: 100% !important;
+  position: relative !important;
+  clear: both !important;
 }
 
-/* Social Login Buttons - Unified Style */
+.space-y-3 > * + * {
+  margin-top: 0.75rem !important;
+}
+
+.space-y-3 > div {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  position: relative !important;
+  clear: both !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Social Login Buttons - Simple Unified Style */
 .social-login-btn {
   width: 300px !important;
   max-width: 100% !important;
@@ -286,6 +449,21 @@ a:hover {
   align-items: center !important;
   justify-content: center !important;
   line-height: 1 !important;
+  margin: 0 auto !important;
+  position: relative !important;
+  background: #1a1a1a !important;
+  color: white !important;
+  text-decoration: none !important;
+  /* No transform or animation */
+  transform: none !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.social-login-btn:hover {
+  background: var(--primary-teal) !important;
+  border-color: var(--primary-teal) !important;
+  /* No transform */
+  transform: none !important;
 }
 
 .social-login-text {
