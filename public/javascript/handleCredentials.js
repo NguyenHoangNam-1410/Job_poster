@@ -95,7 +95,7 @@ email.on("input", function () {
   } else {
     error_email.hide();
     $.post(
-      "/check-email",
+      "/Worknest/public/check-email",
       { email: value },
       function (res) {
         if (res.exists) {
