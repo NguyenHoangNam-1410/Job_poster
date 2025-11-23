@@ -21,6 +21,7 @@ class Job
     private $company_name;
     private $posted_by_name;
     private $employer_avatar;
+    private $employer_logo;
     private $categories = [];
 
     // Constructor
@@ -121,6 +122,10 @@ class Job
     {
         return $this->employer_avatar;
     }
+    public function getEmployerLogo()
+    {
+        return $this->employer_logo;
+    }
     public function getCategories()
     {
         return $this->categories;
@@ -198,6 +203,10 @@ class Job
     public function setEmployerAvatar($employer_avatar)
     {
         $this->employer_avatar = $employer_avatar;
+    }
+    public function setEmployerLogo($employer_logo)
+    {
+        $this->employer_logo = $employer_logo;
     }
     public function setCategories($categories)
     {

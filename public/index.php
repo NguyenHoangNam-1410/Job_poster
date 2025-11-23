@@ -117,12 +117,12 @@ if (route('#^/auth/login$#', fn() => controller('AuthController', 'loginForm')))
 if (route('#^/auth/login/local$#', fn() => controller('AuthController', 'handleLocalLogin'), ['POST'])) exit;
 if (route('#^/auth/login/facebook$#', fn() => controller('AuthController', 'handleFacebookLogin'))) exit;
 if (route('#^/auth/login/facebook/callback$#', fn() => controller('AuthController', 'facebookCallback'))) exit;
-if (route('#^/auth/login/google$#', fn() => controller('AuthController', 'handleGoogleLogin'), ['POST'])) exit;
+if (route('#^/auth/login/google$#', fn() => controller('AuthController', 'handleGoogleLogin', ['POST']))) exit;
 
 // Registration routes
 if (route('#^/auth/register$#', fn() => controller('AuthController', 'showRegisterForm'))) exit;
 if (route('#^/auth/register/local$#', fn() => controller('AuthController', 'handleLocalRegister'), ['POST'])) exit;
-if (route('#^/check-email$#', fn() => controller('AuthController', 'checkEmail'))) exit;
+if (route('#^/check-email$#', fn() => controller('AuthController', 'checkEmail', ['POST']))) exit;
 
 // Password reset routes
 if (route('#^/auth/login/forgot-password$#', fn() => controller('AuthController', 'showForgotPasswordForm'))) exit;
