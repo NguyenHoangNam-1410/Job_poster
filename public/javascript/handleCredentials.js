@@ -30,8 +30,27 @@ password.on('input', () => {
         /[a-z]/, // at least 1 lowercase letter
         /[!@#$%^&*(),.?":{}|<>]/ // at least 1 special character
     ];
+    
+    // Map the 5 rules to 4 HTML list items
+    // Rules 2 and 3 (uppercase and lowercase) map to item 2 (combined)
     requirements.each((index, item) => {
-        if(rules[index].test(password.val())) {
+        let isValid = false;
+        
+        if (index === 0) {
+            // First item: 8+ characters
+            isValid = rules[0].test(password.val());
+        } else if (index === 1) {
+            // Second item: at least 1 number
+            isValid = rules[1].test(password.val());
+        } else if (index === 2) {
+            // Third item: uppercase AND lowercase
+            isValid = rules[2].test(password.val()) && rules[3].test(password.val());
+        } else if (index === 3) {
+            // Fourth item: special character
+            isValid = rules[4].test(password.val());
+        }
+        
+        if (isValid) {
             $(item).addClass('valid');
             $(item).removeClass('invalid');
         } else {
