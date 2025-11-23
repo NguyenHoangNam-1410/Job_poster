@@ -55,27 +55,28 @@ include __DIR__ . '/../layouts/public_header.php'; ?>
 
         <div class="text-center text-gray-500 mt-3 mb-3">— or —</div>
 
-        <!-- Google Sign-In -->
-        <div id="g_id_onload" data-client_id="<?= ($_ENV['GOOGLE_CLIENT_ID']) ?>"
-          data-callback="handleCredentialResponse" data-locale="en" data-auto_prompt="false"></div>
+        <!-- Social Login Buttons -->
+        <div class="social-buttons-wrapper">
+          <!-- Facebook Login -->
+          <a href="/Worknest/public/auth/login/facebook" class="social-login-button social-button-facebook">
+            <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.407.593 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.464.099 2.794.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.763v2.312h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.324-.593 1.324-1.326V1.326C24 .593 23.407 0 22.675 0z" />
+            </svg>
+            <span>SIGN IN WITH FACEBOOK</span>
+          </a>
 
-        <div class="flex justify-center my-3">
-          <div class="g_id_signin shadow-md" data-type="standard" data-shape="rectangular"
-            data-theme="filled_black" data-text="sign_in_with" data-size="large" data-logo_alignment="left"
-            data-width="300" data-locale="en"></div>
+          <!-- Google Sign-In - Use Google's default button with styling -->
+          <div class="google-button-wrapper">
+            <div id="g_id_signin_real" class="g_id_signin" data-type="standard" data-shape="rectangular"
+              data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="left"
+              data-width="300" data-locale="en">
+            </div>
+          </div>
         </div>
 
-        <!-- Facebook Login -->
-        <div class="flex justify-center my-3">
-          <a href="/Worknest/public/auth/login/facebook"
-            class="flex items-center justify-center w-full max-w-xs bg-blue-700 hover:bg-blue-800 text-white font-medium py-2 transition social-login-btn">
-            <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-              viewBox="0 0 24 24">
-              <path
-                d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.407.593 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.464.099 2.794.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.763v2.312h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.324-.593 1.324-1.326V1.326C24 .593 23.407 0 22.675 0z" />
-            </svg>
-            <span class="social-login-text">SIGN IN WITH FACEBOOK</span>
-          </a>
+        <!-- Google Sign-In Script -->
+        <div id="g_id_onload" data-client_id="<?= ($_ENV['GOOGLE_CLIENT_ID']) ?>" data-locale="en"
+          data-callback="handleCredentialResponse" data-auto_prompt="false" data-use_fedcm_for_prompt="false" data-cancel_on_tap_outside="true">
         </div>
       </form>
 
@@ -139,6 +140,36 @@ include __DIR__ . '/../layouts/public_header.php'; ?>
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
   `;
+  });
+</script>
+
+<script>
+  // Disable Google One Tap prompt completely
+  window.onload = function() {
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+      window.google.accounts.id.cancel();
+      window.google.accounts.id.disableAutoSelect();
+    }
+  };
+  
+  // Also disable after GSI script loads
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        window.google.accounts.id.cancel();
+        window.google.accounts.id.disableAutoSelect();
+      }
+    }, 1000);
+  });
+
+  // Disable Google One Tap completely
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        window.google.accounts.id.disableAutoSelect();
+        window.google.accounts.id.cancel();
+      }
+    }, 1000);
   });
 </script>
 

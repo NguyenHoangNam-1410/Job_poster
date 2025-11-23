@@ -117,7 +117,7 @@ if (route('#^/auth/login$#', fn() => controller('AuthController', 'loginForm')))
 if (route('#^/auth/login/local$#', fn() => controller('AuthController', 'handleLocalLogin'), ['POST'])) exit;
 if (route('#^/auth/login/facebook$#', fn() => controller('AuthController', 'handleFacebookLogin'))) exit;
 if (route('#^/auth/login/facebook/callback$#', fn() => controller('AuthController', 'facebookCallback'))) exit;
-if (route('#^/auth/login/google$#', fn() => controller('AuthController', 'handleGoogleLogin'))) exit;
+if (route('#^/auth/login/google$#', fn() => controller('AuthController', 'handleGoogleLogin'), ['POST'])) exit;
 
 // Registration routes
 if (route('#^/auth/register$#', fn() => controller('AuthController', 'showRegisterForm'))) exit;

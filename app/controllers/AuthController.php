@@ -137,16 +137,27 @@ class AuthController
     public function handleGoogleLogin()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = json_decode(file_get_contents('php://input'), true);
-            $token = $data['token'] ?? null;
-            if (!$token) {
-                http_response_code(400);
-                echo 'ID token is required.';
-                return;
-            }
-            $client = new Google_Client(['client_id' => $_ENV['GOOGLE_CLIENT_ID']]);
-            $payload = $client->verifyIdToken($token);
-            if ($payload) {
+            try {
+                $data = json_decode(file_get_contents('php://input'), true);
+                $token = $data['token'] ?? null;
+                if (!$token) {
+                    http_response_code(400);
+                    echo 'ID token is required.';
+                    error_log("Google login: Missing token");
+                    return;
+                }
+                
+                $googleClientId = $_ENV['GOOGLE_CLIENT_ID'] ?? null;
+                if (empty($googleClientId)) {
+                    http_response_code(500);
+                    echo 'Google OAuth is not configured. Please configure GOOGLE_CLIENT_ID in .env file.';
+                    error_log("Google login: GOOGLE_CLIENT_ID not set in .env");
+                    return;
+                }
+                
+                $client = new Google_Client(['client_id' => $googleClientId]);
+                $payload = $client->verifyIdToken($token);
+                if ($payload) {
                 $email = $payload['email'];
                 $name = $payload['name'];
                 $avatar = $payload['picture'] ?? null;
@@ -175,19 +186,45 @@ class AuthController
                     'avatar' => $user->getAvatar()
                 ];
                 
-                // Redirect logic: check register_redirect nếu đăng ký từ trang register
-                if (isset($_SESSION['register_redirect'])) {
-                    $redirectUrl = $_SESSION['register_redirect'];
-                    unset($_SESSION['register_redirect']);
-                    header("Location: " . BASE_URL . $redirectUrl);
-                } else {
-                    header("Location: " . BASE_URL . "/");
+                // Redirect based on role (same as local login)
+                $redirectUrl = BASE_URL . "/";
+                switch ($user->getRole()) {
+                    case 'Admin':
+                        $redirectUrl = BASE_URL . "/statistics";
+                        break;
+                    case 'Staff':
+                        $redirectUrl = BASE_URL . "/staff/home";
+                        break;
+                    case 'Employer':
+                        $redirectUrl = BASE_URL . "/employer/home";
+                        break;
+                    default:
+                        $redirectUrl = BASE_URL . "/";
                 }
+                
+                // Check register_redirect nếu đăng ký từ trang register
+                if (isset($_SESSION['register_redirect'])) {
+                    $redirectUrl = BASE_URL . $_SESSION['register_redirect'];
+                    unset($_SESSION['register_redirect']);
+                }
+                
+                // Return redirect URL in JSON for JavaScript to handle
+                header('Content-Type: application/json');
+                echo json_encode(['success' => true, 'redirect' => $redirectUrl]);
                 exit;
 
-            } else {
-                http_response_code(401);
-                echo 'Invalid ID token.';
+                } else {
+                    http_response_code(401);
+                    $errorMsg = 'Invalid ID token. Please check GOOGLE_CLIENT_ID in .env file matches your Google Cloud Console configuration.';
+                    error_log("Google login: Token verification failed. Client ID: " . substr($googleClientId, 0, 20) . "...");
+                    echo $errorMsg;
+                }
+            } catch (Exception $e) {
+                http_response_code(500);
+                $errorMsg = 'Google login error: ' . $e->getMessage();
+                error_log("Google login exception: " . $e->getMessage());
+                error_log("Stack trace: " . $e->getTraceAsString());
+                echo $errorMsg;
             }
         } else {
             http_response_code(405);
@@ -198,40 +235,75 @@ class AuthController
     public function handleLocalLogin()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['email'] ?? '';
+            $email = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
-            $user = $this->userService->getUserByEmail($email);
-            error_log($password);
-            if ($user && $this->userService->verifyPasswordLogin($email, $password)) {
-                $_SESSION['user'] = [
-                    'id' => $user->getId(),
-                    'name' => $user->getName(),
-                    'email' => $user->getEmail(),
-                    'role' => $user->getRole(),
-                    'auth_provider' => $user->getAuthProvider(),
-                    'avatar' => $user->getAvatar()
-                ];
-
-                // Redirect based on role
-                switch ($user->getRole()) {
-                    case 'Admin':
-                        header("Location: " . BASE_URL . "/statistics");
-                        break;
-                    case 'Staff':
-                        header("Location: " . BASE_URL . "/staff/home");
-                        break;
-                    case 'Employer':
-                        header("Location: " . BASE_URL . "/employer/home");
-                        break;
-                    default:
-                        header("Location: " . BASE_URL . "/");
-                }
+            
+            // Basic email validation (allow test emails like worknest@123)
+            if (empty($email) || strpos($email, '@') === false) {
+                $_SESSION['login_error'] = 'Invalid email format.';
+                header("Location: " . BASE_URL . "/auth/login");
                 exit;
-            } else {
+            }
+            
+            $user = $this->userService->getUserByEmail($email);
+            
+            // Check if user exists
+            if (!$user) {
+                error_log("Login failed: User not found for email: " . $email);
                 $_SESSION['login_error'] = 'Invalid email or password.';
                 header("Location: " . BASE_URL . "/auth/login");
                 exit;
             }
+            
+            // Check if user is using local authentication
+            // Note: NULL auth_provider is treated as 'local' (legacy users)
+            $authProvider = $user->getAuthProvider();
+            if ($authProvider !== null && $authProvider !== 'local') {
+                error_log("Login failed: User email " . $email . " uses " . $authProvider . " authentication, not local");
+                if ($authProvider === 'google') {
+                    $_SESSION['login_error'] = 'This email is registered with Google. Please login with Google.';
+                } elseif ($authProvider === 'facebook') {
+                    $_SESSION['login_error'] = 'This email is registered with Facebook. Please login with Facebook.';
+                } else {
+                    $_SESSION['login_error'] = 'Invalid email or password.';
+                }
+                header("Location: " . BASE_URL . "/auth/login");
+                exit;
+            }
+            
+            // Verify password
+            if (!$this->userService->verifyPasswordLogin($email, $password)) {
+                error_log("Login failed: Invalid password for email: " . $email);
+                $_SESSION['login_error'] = 'Invalid email or password.';
+                header("Location: " . BASE_URL . "/auth/login");
+                exit;
+            }
+            
+            // Login successful
+            $_SESSION['user'] = [
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+                'email' => $user->getEmail(),
+                'role' => $user->getRole(),
+                'auth_provider' => $user->getAuthProvider(),
+                'avatar' => $user->getAvatar()
+            ];
+
+            // Redirect based on role
+            switch ($user->getRole()) {
+                case 'Admin':
+                    header("Location: " . BASE_URL . "/statistics");
+                    break;
+                case 'Staff':
+                    header("Location: " . BASE_URL . "/staff/home");
+                    break;
+                case 'Employer':
+                    header("Location: " . BASE_URL . "/employer/home");
+                    break;
+                default:
+                    header("Location: " . BASE_URL . "/");
+            }
+            exit;
         }
     }
 
@@ -239,7 +311,9 @@ class AuthController
     {
         $clientId = $_ENV['FACEBOOK_CLIENT_ID'];
         $redirectUri = $_ENV['FACEBOOK_REDIRECT_URI'];
-        $scope = 'email, public_profile';
+        // Facebook API v19+ - email is returned automatically with public_profile
+        // Do not include 'email' in scope to avoid warning
+        $scope = 'public_profile';
 
         $url = "https://www.facebook.com/v19.0/dialog/oauth?client_id=$clientId&redirect_uri=$redirectUri&scope=$scope&response_type=code";
         header("Location: $url");
@@ -266,8 +340,26 @@ class AuthController
             exit;
         }
 
-        $email = $user['email'];
-        $name = $user['name'];
+        // Log Facebook response for debugging
+        error_log("Facebook user data: " . json_encode($user));
+
+        // Check if email is available
+        $email = $user['email'] ?? null;
+        $facebookId = $user['id'] ?? null;
+        
+        // If no email, create a temporary email from Facebook ID
+        if (empty($email)) {
+            if (empty($facebookId)) {
+                $_SESSION['login_error'] = 'Failed to get Facebook account information. Please try again.';
+                header("Location: " . BASE_URL . "/auth/login");
+                exit;
+            }
+            // Create email from Facebook ID (format: facebook_{id}@facebook.temp)
+            $email = 'facebook_' . $facebookId . '@facebook.temp';
+            error_log("Facebook email not available, using generated email: " . $email);
+        }
+        
+        $name = $user['name'] ?? 'Facebook User';
         $avatar = $user['picture']['data']['url'] ?? null;
         $user = $this->userService->getUserByEmail($email);
         $currentUrl = $_SERVER['REQUEST_URI'];

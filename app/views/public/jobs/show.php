@@ -65,7 +65,7 @@ $statusRaw = $job['status'] ?? ($job['public_status'] ?? '');
 $status = strtolower((string) $statusRaw) === 'approved' ? 'recruiting' : ($statusRaw ?? '');
 $statusLbl = capStatus($status);
 $logo = !empty($job['logo']) ? $job['logo'] : '';
-$banner = !empty($job['banner']) ? $job['banner'] : ($logo ?: BASE_PUBLIC . '/images/jobs/placeholder.jpg');
+$banner = !empty($job['banner']) ? $job['banner'] : ($logo ?: BASE_PUBLIC . '/images/placeholder.jpg');
 $chips = $job['categories'] ?? [];
 $desc = $job['description'] ?? '';
 $reqStr = $job['requirements'] ?? '';

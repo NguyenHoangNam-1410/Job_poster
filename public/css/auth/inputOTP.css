@@ -1,29 +1,42 @@
+/* OTP Inputs - Matching WorkNest Theme */
 #otp-inputs {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 0.75rem;
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
 }
 
-#otp-inputs .form-control {
+#otp-inputs .otp-input {
   flex: 1;
   max-width: 60px;
-  min-width: 45px;
+  min-width: 50px;
   aspect-ratio: 1 / 1;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
+  font-weight: 700;
   text-align: center;
-  border-radius: 12px;
-  border: 2px solid #99ccff; /* Soft blue border */
-  background-color: #fff;
-  box-shadow: 0 3px 8px rgba(153, 204, 255, 0.2); /* Light blue shadow */
-  transition: all 0.3s ease-in-out;
+  border-radius: 0 !important;
+  border: 2px solid #1a1a1a !important;
+  background-color: #fff !important;
+  color: #1a1a1a;
+  font-family: 'Courier New', monospace;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
 }
 
-#otp-inputs .form-control:focus {
-  border-color: #3399ff; /* Brighter blue on focus */
-  box-shadow: 0 0 12px rgba(51, 153, 255, 0.6); /* Glow effect */
-  outline: none;
-  transform: scale(1.05);
+#otp-inputs .otp-input:hover {
+  background: #f8f8f8 !important;
+}
+
+#otp-inputs .otp-input:focus {
+  outline: none !important;
+  border-color: var(--primary-teal) !important;
+  box-shadow: 3px 3px 0 rgba(6, 136, 180, 0.3) !important;
+  transform: translate(-1px, -1px) !important;
+}
+
+#otp-inputs .otp-input:active {
+  transform: translate(0, 0);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
 }
