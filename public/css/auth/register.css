@@ -11,7 +11,20 @@
 /* Header Styling for Login/Register Pages */
 .y2k-logo {
   color: #ffffff !important;
-  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3) !important;
+  text-shadow: 2px 2px 0 rgba(180, 255, 57, 0.3) !important;
+}
+
+/* Remove underline when hovering over logo link */
+.y2k-header a[href="/Worknest/public/"]:hover,
+.y2k-header a:has(.y2k-logo):hover {
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+.y2k-header a[href="/Worknest/public/"]:hover .y2k-logo,
+.y2k-header a:has(.y2k-logo):hover .y2k-logo {
+  text-decoration: none !important;
+  border-bottom: none !important;
 }
 
 .y2k-tagline {
@@ -22,12 +35,25 @@
 .y2k-nav-link {
   color: #ffffff !important;
   opacity: 1 !important;
+  border: 2px solid transparent !important;
 }
 
-.y2k-nav-link:hover {
+.y2k-nav-link:hover,
+.y2k-header .y2k-nav-link:hover,
+header .y2k-nav-link:hover {
   color: #ffffff !important;
-  border-color: #0688B4 !important;
-  background: rgba(6, 136, 180, 0.2) !important;
+  border-top: 2px solid #b4ff39 !important;
+  border-right: 2px solid #b4ff39 !important;
+  border-bottom: 2px solid #b4ff39 !important;
+  border-left: 2px solid #b4ff39 !important;
+  background: rgba(180, 255, 57, 0.1) !important;
+  text-decoration: none !important;
+}
+
+.y2k-nav-link.active {
+  border-bottom: 3px solid #b4ff39 !important;
+  background: rgba(180, 255, 57, 0.15) !important;
+  text-decoration: none !important;
 }
 
 body {
@@ -315,37 +341,260 @@ a:hover {
   transform: translate(-1px, -1px);
 }
 
-/* Google Sign In */
-.g_id_signin {
-  border-radius: 0 !important;
-  width: 300px !important;
-  max-width: 100% !important;
-  min-height: 48px !important;
-  height: 48px !important;
-  display: inline-block !important;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* Form - Ensure Google button is clickable and stable */
+form {
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 1 !important;
 }
 
-.g_id_signin:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 6px 6px 0 rgba(6, 136, 180, 0.3) !important;
+/* Prevent Google button wrapper from being affected by parent transforms */
+.card,
+.card.animate-fadeInUp {
+  transform-style: preserve-3d !important;
 }
 
-/* Override Google button inner styles */
-.g_id_signin iframe,
-.g_id_signin div {
-  border-radius: 0 !important;
-  min-height: 48px !important;
-  height: 48px !important;
-}
-
-.g_id_signin iframe {
-  width: 300px !important;
-  height: 48px !important;
-  min-height: 48px !important;
+/* Ensure social-buttons-wrapper doesn't affect Google button positioning */
+.social-buttons-wrapper {
+  position: relative !important;
+  transform: none !important;
+  will-change: auto !important;
 }
 
 /* Social Login Buttons - Unified Style */
+.card .social-buttons-wrapper,
+form .social-buttons-wrapper,
+.social-buttons-wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.75rem !important;
+  width: 100% !important;
+  margin: 1.5rem 0 !important;
+  padding: 0 !important;
+}
+
+.card .social-login-button,
+form .social-login-button,
+a.social-login-button,
+button.social-login-button,
+.social-login-button,
+#custom-google-login {
+  width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.75rem !important;
+  padding: 0.75rem 1.5rem !important;
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+  background-color: #ffffff !important;
+  color: #1a1a1a !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2) !important;
+  position: relative !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+  pointer-events: auto !important;
+  z-index: 10 !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+.card .social-login-button:hover,
+form .social-login-button:hover,
+a.social-login-button:hover,
+button.social-login-button:hover,
+.social-login-button:hover {
+  box-shadow: 6px 6px 0 rgba(6, 136, 180, 0.3) !important;
+  transform: translate(-1px, -1px) !important;
+  background-color: #f8f8f8 !important;
+}
+
+.card .social-login-button:active,
+form .social-login-button:active,
+a.social-login-button:active,
+button.social-login-button:active,
+.social-login-button:active {
+  transform: translate(0, 0) !important;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2) !important;
+}
+
+.card .social-icon,
+form .social-icon,
+.social-icon {
+  width: 20px !important;
+  height: 20px !important;
+  flex-shrink: 0 !important;
+  display: inline-block !important;
+}
+
+.card .social-button-facebook,
+form .social-button-facebook,
+a.social-button-facebook,
+.social-button-facebook {
+  background-color: #1877F2 !important;
+  color: #ffffff !important;
+  border-color: #1877F2 !important;
+}
+
+.card .social-button-facebook:hover,
+form .social-button-facebook:hover,
+a.social-button-facebook:hover,
+.social-button-facebook:hover {
+  background-color: #166fe5 !important;
+  border-color: #166fe5 !important;
+}
+
+.card .social-button-google,
+form .social-button-google,
+button.social-button-google,
+.social-button-google {
+  background-color: #ffffff !important;
+  color: #1a1a1a !important;
+  border-color: #1a1a1a !important;
+}
+
+.card .social-button-google:hover,
+form .social-button-google:hover,
+button.social-button-google:hover,
+.social-button-google:hover {
+  background-color: #f8f8f8 !important;
+}
+
+/* Google Button Wrapper - Fixed position for proper iframe rendering */
+.card .google-button-wrapper,
+form .google-button-wrapper,
+.google-button-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  display: block !important;
+  position: relative !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+/* Google Sign-In Button - According to Google Guidelines */
+.card #g_id_signin_real,
+form #g_id_signin_real,
+#g_id_signin_real {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  display: block !important;
+  position: relative !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  line-height: 0 !important;
+}
+
+/* Google iframe - Fixed size for proper rendering */
+#g_id_signin_real iframe {
+  width: 100% !important;
+  min-width: 240px !important;
+  max-width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  border-radius: 0 !important;
+  border: none !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+}
+
+/* Google Sign In - Base styles */
+.card .g_id_signin,
+form .g_id_signin,
+.g_id_signin {
+  border-radius: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 48px !important;
+  height: 48px !important;
+  max-height: 48px !important;
+  display: block !important;
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  line-height: 0 !important;
+}
+
+/* Override Google button inner div styles */
+.g_id_signin > div {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  border-radius: 0 !important;
+  display: block !important;
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+/* Google button container in social-buttons-wrapper */
+.card .social-buttons-wrapper .google-button-wrapper,
+form .social-buttons-wrapper .google-button-wrapper,
+.social-buttons-wrapper .google-button-wrapper {
+  flex-shrink: 0 !important;
+  flex-grow: 1 !important;
+  align-self: stretch !important;
+  width: 100% !important;
+}
+
+/* Additional fixes for Google button stability */
+.card .social-buttons-wrapper .google-button-wrapper #g_id_signin_real,
+form .social-buttons-wrapper .google-button-wrapper #g_id_signin_real,
+.social-buttons-wrapper .google-button-wrapper #g_id_signin_real {
+  position: static !important;
+  transform: none !important;
+  transition: none !important;
+  will-change: auto !important;
+}
+
+/* Ensure iframe renders properly without layout shifts */
+.card .social-buttons-wrapper .google-button-wrapper #g_id_signin_real iframe,
+form .social-buttons-wrapper .google-button-wrapper #g_id_signin_real iframe,
+.social-buttons-wrapper .google-button-wrapper #g_id_signin_real iframe {
+  position: relative !important;
+  width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  vertical-align: top !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* Social Login Buttons - Unified Style (Legacy) */
 .social-login-btn {
   width: 300px !important;
   max-width: 100% !important;
@@ -411,6 +660,48 @@ a:hover {
 
 .animate-fadeInUp {
   animation: fadeInUp 0.8s ease-out;
+}
+
+/* Footer Styling - White text matching Homepage */
+footer.bg-gray-900 {
+  background-color: #111827 !important;
+}
+
+footer.bg-gray-900,
+footer.bg-gray-900 * {
+  color: #ffffff !important;
+}
+
+footer.bg-gray-900 h2,
+footer.bg-gray-900 h3 {
+  color: #ffffff !important;
+}
+
+footer.bg-gray-900 a {
+  color: #ffffff !important;
+}
+
+footer.bg-gray-900 a:hover {
+  color: #60a5fa !important; /* lighter blue on hover */
+}
+
+footer.bg-gray-900 .border-t.border-gray-700 {
+  border-color: #374151 !important; /* border-gray-700 */
+}
+
+footer.bg-gray-900 .text-gray-400,
+footer.bg-gray-900 .text-gray-300 {
+  color: #ffffff !important;
+}
+
+footer.bg-gray-900 .text-white {
+  color: #ffffff !important;
+}
+
+footer.bg-gray-900 p,
+footer.bg-gray-900 li,
+footer.bg-gray-900 span {
+  color: #ffffff !important;
 }
 
 /* Responsive */

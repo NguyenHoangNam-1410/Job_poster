@@ -169,6 +169,36 @@ include __DIR__ . '/../layouts/public_header.php'; ?>
   });
 </script>
 
+<script>
+  // Disable Google One Tap prompt completely
+  window.onload = function() {
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+      window.google.accounts.id.cancel();
+      window.google.accounts.id.disableAutoSelect();
+    }
+  };
+  
+  // Also disable after GSI script loads
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        window.google.accounts.id.cancel();
+        window.google.accounts.id.disableAutoSelect();
+      }
+    }, 1000);
+  });
+
+  // Disable Google One Tap completely
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        window.google.accounts.id.disableAutoSelect();
+        window.google.accounts.id.cancel();
+      }
+    }, 1000);
+  });
+</script>
+
 <?php
 $additionalJS = [
   "/Worknest/public/javascript/handleCredentials.js"
