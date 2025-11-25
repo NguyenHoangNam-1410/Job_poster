@@ -399,7 +399,9 @@ function status_badge_class($st)
   <div id="grid" class="jobs-grid">
     <?php foreach ($rows as $job): ?>
       <?php
-      $thumb = $job['thumbnail_url'] ?: 'images/placeholder.jpg';
+      // Use logo from employer, with proper path prefixing
+      $logo = $job['thumbnail_url'] ?? '';
+      $thumb = $logo ? (strpos($logo, 'http') === 0 || strpos($logo, '/') === 0 ? $logo : BASE_PUBLIC . '/' . $logo) : BASE_PUBLIC . '/images/placeholder.jpg';
       $posted = isset($job['posted_at']) ? strtotime($job['posted_at']) : time();
       $st = $job['public_status'] ?? ($job['status'] ?? '');
       $label = $st === 'recruiting' ? 'Recruiting' : ucfirst($st);
@@ -514,7 +516,11 @@ function status_badge_class($st)
   }
 
   function card(job) {
-    const thumb = job.thumbnail_url || 'images/placeholder.jpg';
+    // Use logo from employer with proper path handling
+    const logo = job.thumbnail_url || '';
+    const thumb = logo 
+      ? (logo.startsWith('http') || logo.startsWith('/') ? logo : `${BASE}/${logo}`) 
+      : `${BASE}/images/placeholder.jpg`;
     const posted = job.posted_at ? formatDate(job.posted_at) : '';
     const st = job.public_status || job.status || '';
     const tags = (job.tags || []).map(t => `<span class="job-card-tag">${escapeHtml(t)}</span>`).join('');
