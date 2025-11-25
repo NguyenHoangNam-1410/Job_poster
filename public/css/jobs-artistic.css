@@ -1662,3 +1662,9 @@ select[multiple].jobs-filter-select + .choices .choices__button,
   border-left-color: #1a1a1a !important;
 }
 
+/* Remove white space below footer */
+footer.bg-gray-900 {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
