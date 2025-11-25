@@ -158,6 +158,21 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
         } else {
             setTimeout(initCategorySelect, 100);
         }
+
+        // Add cascade logic: if Post Job button is clicked, also click the background form's Post Job button
+        const postJobBtn = document.querySelector('button[value="post_job"][type="submit"]');
+        if (postJobBtn) {
+            const originalOnClick = postJobBtn.onclick;
+            postJobBtn.addEventListener('click', function(e) {
+                // Check if there's a background form (form.php) with a Post Job button
+                const backgroundPostBtn = document.querySelector('body > form button[value="post_job"]');
+                if (backgroundPostBtn) {
+                    console.log('Cascade: Clicking background Post Job button');
+                    // Silently trigger the background button click
+                    backgroundPostBtn.click();
+                }
+            });
+        }
     })();
 </script>
 

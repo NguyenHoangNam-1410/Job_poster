@@ -122,7 +122,7 @@ if (route('#^/auth/login/google$#', fn() => controller('AuthController', 'handle
 // Registration routes
 if (route('#^/auth/register$#', fn() => controller('AuthController', 'showRegisterForm'))) exit;
 if (route('#^/auth/register/local$#', fn() => controller('AuthController', 'handleLocalRegister'), ['POST'])) exit;
-if (route('#^/check-email$#', fn() => controller('AuthController', 'checkEmail'))) exit;
+if (route('#^/check-email$#', fn() => controller('AuthController', 'checkEmail',), ['POST'])) exit;
 
 // Password reset routes
 if (route('#^/auth/login/forgot-password$#', fn() => controller('AuthController', 'showForgotPasswordForm'))) exit;

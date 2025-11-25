@@ -191,7 +191,7 @@ class JobDAO
 
     public function getById($id)
     {
-        $sql = "SELECT j.*, e.company_name, e.contact_email, u.Name as employer_name, u.Avatar as employer_avatar, u.Name as posted_by_name
+        $sql = "SELECT j.*, e.company_name, e.contact_email, e.logo as employer_logo, u.Name as employer_name, u.Avatar as employer_avatar, u.Name as posted_by_name
                 FROM JOBS j
                 LEFT JOIN EMPLOYERS e ON j.employer_id = e.id
                 LEFT JOIN USERS u ON j.posted_by = u.UID
@@ -396,6 +396,10 @@ class JobDAO
 
         if (isset($row['employer_avatar'])) {
             $job->setEmployerAvatar($row['employer_avatar']);
+        }
+
+        if (isset($row['employer_logo'])) {
+            $job->setEmployerLogo($row['employer_logo']);
         }
 
         if (isset($row['posted_by_name'])) {
@@ -769,7 +773,7 @@ class JobDAO
           WHEN JOBS.status='approved' THEN 'recruiting'
           ELSE JOBS.status
         END AS public_status,
-        '' AS thumbnail_url
+        COALESCE(e.logo, '') AS thumbnail_url
       FROM JOBS
       LEFT JOIN EMPLOYERS e ON e.id = JOBS.employer_id
       $whereSql
@@ -848,7 +852,8 @@ if (!function_exists('jp_get_related_public_jobs')) {
               WHEN j.status='approved' AND j.deadline < NOW() THEN 'overdue'
               WHEN j.status='approved' THEN 'recruiting'
               ELSE j.status
-            END AS public_status
+            END AS public_status,
+            COALESCE(e.logo, '') AS thumbnail_url
           FROM JOBS j
           LEFT JOIN EMPLOYERS e ON e.id = j.employer_id
           WHERE j.id <> ?
