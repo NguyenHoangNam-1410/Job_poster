@@ -11,7 +11,20 @@
 /* Header Styling for Login/Register Pages */
 .y2k-logo {
   color: #ffffff !important;
-  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3) !important;
+  text-shadow: 2px 2px 0 rgba(180, 255, 57, 0.3) !important;
+}
+
+/* Remove underline when hovering over logo link */
+.y2k-header a[href="/Worknest/public/"]:hover,
+.y2k-header a:has(.y2k-logo):hover {
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+.y2k-header a[href="/Worknest/public/"]:hover .y2k-logo,
+.y2k-header a:has(.y2k-logo):hover .y2k-logo {
+  text-decoration: none !important;
+  border-bottom: none !important;
 }
 
 .y2k-tagline {
@@ -22,12 +35,25 @@
 .y2k-nav-link {
   color: #ffffff !important;
   opacity: 1 !important;
+  border: 2px solid transparent !important;
 }
 
-.y2k-nav-link:hover {
+.y2k-nav-link:hover,
+.y2k-header .y2k-nav-link:hover,
+header .y2k-nav-link:hover {
   color: #ffffff !important;
-  border-color: #0688B4 !important;
-  background: rgba(6, 136, 180, 0.2) !important;
+  border-top: 2px solid #b4ff39 !important;
+  border-right: 2px solid #b4ff39 !important;
+  border-bottom: 2px solid #b4ff39 !important;
+  border-left: 2px solid #b4ff39 !important;
+  background: rgba(180, 255, 57, 0.1) !important;
+  text-decoration: none !important;
+}
+
+.y2k-nav-link.active {
+  border-bottom: 3px solid #b4ff39 !important;
+  background: rgba(180, 255, 57, 0.15) !important;
+  text-decoration: none !important;
 }
 
 body, html {
@@ -513,6 +539,48 @@ button.social-button-google:hover,
 
 .animate-fadeInUp {
   animation: fadeInUp 0.8s ease-out;
+}
+
+/* Footer Styling - White text matching Homepage */
+footer.bg-gray-900 {
+  background-color: #111827 !important;
+}
+
+footer.bg-gray-900,
+footer.bg-gray-900 * {
+  color: #ffffff !important;
+}
+
+footer.bg-gray-900 h2,
+footer.bg-gray-900 h3 {
+  color: #ffffff !important;
+}
+
+footer.bg-gray-900 a {
+  color: #ffffff !important;
+}
+
+footer.bg-gray-900 a:hover {
+  color: #60a5fa !important; /* lighter blue on hover */
+}
+
+footer.bg-gray-900 .border-t.border-gray-700 {
+  border-color: #374151 !important; /* border-gray-700 */
+}
+
+footer.bg-gray-900 .text-gray-400,
+footer.bg-gray-900 .text-gray-300 {
+  color: #ffffff !important;
+}
+
+footer.bg-gray-900 .text-white {
+  color: #ffffff !important;
+}
+
+footer.bg-gray-900 p,
+footer.bg-gray-900 li,
+footer.bg-gray-900 span {
+  color: #ffffff !important;
 }
 
 /* Responsive */
