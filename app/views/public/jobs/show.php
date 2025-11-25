@@ -345,9 +345,19 @@ $left = days_left($deadlineRaw);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(6, 136, 180, 0.3);
   }
+
+  /* Remove white space below footer */
+  footer.bg-gray-900 {
+    margin-bottom: 0 !important;
+  }
+
+  /* Fix background animation overflow */
+  .bg-animated {
+    overflow: hidden;
+  }
 </style>
 
-<main class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 text-left bg-animated">
+<main class="flex-grow mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 text-left bg-animated">
   <div class="content-wrapper">
     <nav class="text-sm text-gray-500 mb-6">
       <a href="<?= BASE_PUBLIC ?>/jobs" class="hover:text-gray-900 transition-colors">Jobs</a> <span

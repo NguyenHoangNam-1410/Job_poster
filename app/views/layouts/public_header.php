@@ -278,7 +278,7 @@
   </script>
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-gray-50 flex flex-col min-h-screen">
 
 <?php
 // Safely get user role to avoid "Undefined array key" errors
@@ -482,5 +482,5 @@ $userRole = $_SESSION['user']['role'] ?? null;
   </aside>
 
   <!-- Main Content -->
-  <main class="main-content" id="mainContent">
+  <main class="main-content flex-grow" id="mainContent">
     <!-- Your page content here -->
