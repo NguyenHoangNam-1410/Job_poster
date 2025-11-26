@@ -659,6 +659,7 @@ CREATE TABLE IF NOT EXISTS new_features (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
 
 ### Code Organization
 
