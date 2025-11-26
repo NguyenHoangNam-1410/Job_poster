@@ -346,8 +346,6 @@ Open your web browser and navigate to:
 1. **Company Registration**
    - Register as an employer
    - Complete company profile (name, logo, description, industry)
-   - Submit for admin approval
-   - Wait for account verification
 
 2. **Post Jobs**
    - Login to employer dashboard
@@ -388,11 +386,10 @@ Open your web browser and navigate to:
    - Modify user roles and permissions
    - Deactivate or ban problematic accounts
 
-3. **Company Management**
-   - Review pending company registrations
-   - Approve or reject company profiles
-   - Edit company information if needed
-   - Monitor company activity
+3. **Job request Management**
+   - Review pending job posting
+   - Approve or reject job requests
+   - Monitor job posting activity
 
 4. **Job Management**
    - View all job postings across platform
@@ -932,6 +929,18 @@ MAIL_PORT=587
 MAIL_USER=noreply@worknest.com
 MAIL_PASS=your_email_password
 
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_REDIRECT_URI=http://localhost/Worknest/public/auth/google/callback
+
+FACEBOOK_CLIENT_ID=YOUR_FACEBOOK_CLIENT_ID
+FACEBOOK_CLIENT_SECRET=YOUR_FACEBOOK_CLIENT_SECRET
+FACEBOOK_REDIRECT_URI=YOUR_FACEBOOK_REDIRECT
+
+SMTP_EMAIL=YOUR_SMTP_EMAIL
+SMTP_PASSWORD="YOUR_SMTP_PASSWORD"
+SMTP_PORT=587 (Or another if conflicted)
+
 JWT_SECRET=your_secret_key_here
 APP_ENV=production
 APP_DEBUG=false
@@ -1012,6 +1021,8 @@ If you use this project as a base, please provide credit to the original author.
 
 ### Development Team
 - **Lead Developer**: [NguyenHoangNam-1410](https://github.com/NguyenHoangNam-1410)
+- **Developer**: [Hayzen2](https://github.com/Hayzen2)
+- **Developer**: [nguyendangcole](https://github.com/nguyendangcole)
 
 ### How to Contribute
 
@@ -1034,7 +1045,7 @@ We welcome contributions! Here's how you can help:
 
 - **GitHub Repository**: [Job_poster](https://github.com/NguyenHoangNam-1410/Job_poster)
 - **Issue Tracker**: [Report Bugs](https://github.com/NguyenHoangNam-1410/Job_poster/issues)
-- **Email**: [Contact Developer](mailto:your-email@example.com)
+- **Email**: [Contact Developer](mailto:nam.nguyensilv666@hcmut.edu.vn)
 
 ## 🙏 Acknowledgments
 
@@ -1063,6 +1074,6 @@ We welcome contributions! Here's how you can help:
 
 ---
 
-*Last Updated: November 22, 2025*  
-*Version: 1.0.0*  
+*Last Updated: November 26, 2025*  
+*Version: 1.0.2*  
 *Status: Active Development*
