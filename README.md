@@ -29,6 +29,10 @@ WorkNest is a full-featured job board management system designed to streamline t
 - **Advanced Filtering**: Filter jobs by multiple criteria including company, category, and posting date
 - **Job Details**: View comprehensive job information including company details and requirements
 - **Related Jobs**: Discover similar job opportunities based on category and criteria
+- **🤖 AI Job Search Copilot**: Get personalized job recommendations using AI-powered search
+  - Natural language job search (e.g., "Em học IT năm 2, biết PHP, tìm part-time ở Tân Phú")
+  - Job description summarization with key highlights
+  - Q&A about specific job postings (requirements, skills, salary, etc.)
 
 ### For Admin & Staff
 - **User Management**: Manage user s, roles, and permissions
@@ -946,10 +950,33 @@ APP_ENV=production
 APP_DEBUG=false
 ```
 
+## 🤖 AI Assistant Feature
+
+Worknest now includes an **AI-powered Job Search Copilot** powered by Google Gemini API!
+
+### Features
+- **🔍 Smart Job Search**: Describe your profile and requirements in natural language
+- **📋 JD Summarization**: Get quick bullet-point summaries of long job descriptions
+- **💬 Job Q&A**: Ask questions about specific jobs (requirements, skills needed, etc.)
+
+### Setup
+See detailed instructions in [`GEMINI_AI_SETUP.md`](GEMINI_AI_SETUP.md)
+
+Quick setup:
+1. Get a free API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
+2. Add `GEMINI_API_KEY=your_key_here` to your `.env` file
+3. Restart your web server
+4. The chatbot will appear on job listing and job detail pages
+
+### Free Tier
+- 60 requests/minute
+- 1,500 requests/day
+- **Completely FREE!**
+
 ## 🔮 Future Enhancements
 
 ### Planned Features
-- [ ] Advanced job search with AI-powered recommendations
+- [x] Advanced job search with AI-powered recommendations ✅
 - [ ] Real-time chat between employers and candidates
 - [ ] Video interview scheduling and integration
 - [ ] Resume builder and CV parser

@@ -4,9 +4,65 @@ function handleCredentialResponse(response) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ token: response.credential }),
     credentials: "include", // include cookies cross-origin
-  }).then((res) => {
-    if (res.ok) window.location.href = "/";
-    else alert("Google login failed");
+  })
+  .then((res) => {
+    if (!res.ok) {
+      throw new Error('Login failed with status: ' + res.status);
+    }
+    // Check content type to ensure it's JSON
+    const contentType = res.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return res.json();
+    } else {
+      // If not JSON, read as text to see what we got
+      return res.text().then(text => {
+        console.error("Expected JSON but got:", text);
+        throw new Error("Server returned non-JSON response");
+      });
+    }
+  })
+  .then((data) => {
+    console.log("Login response:", data); // Debug log
+    
+    if (!data) {
+      console.error("No data received from server");
+      window.location.href = "/Worknest/public/";
+      return;
+    }
+    
+    // Handle success case
+    if (data.success && data.redirect) {
+      // Use redirect URL from server (already includes BASE_URL like /Worknest/public/employer/home)
+      let redirectUrl = data.redirect.trim();
+      
+      // Build full URL to ensure proper redirect
+      if (!redirectUrl.startsWith('http://') && !redirectUrl.startsWith('https://')) {
+        // It's a relative path, make it absolute by prepending origin
+        redirectUrl = window.location.origin + redirectUrl;
+      }
+      
+      console.log("Redirecting to:", redirectUrl);
+      console.log("Current location:", window.location.href);
+      
+      // Force a full page reload to ensure session is properly set
+      window.location.href = redirectUrl;
+    } 
+    // Handle error case - might still have redirect URL
+    else if (data.redirect) {
+      console.warn("Login failed but redirect URL provided:", data.error);
+      window.location.href = data.redirect;
+    }
+    // Fallback to default redirect
+    else {
+      console.warn("No redirect URL in response, using fallback. Data:", data);
+      window.location.href = "/Worknest/public/";
+    }
+  })
+  .catch((error) => {
+    console.error("Google login error:", error);
+    // Don't show alert to avoid interrupting redirect
+    // On error, redirect to a safe page
+    window.location.href = "/Worknest/public/";
   });
 }
 let confirmPassword = $("#confirm_password");

@@ -16,6 +16,11 @@
       <link rel="stylesheet" href="<?= $css ?>?v=<?= time() ?>">
     <?php endforeach; ?>
   <?php endif; ?>
+  
+  <!-- AI Chatbot CSS - Load on job-related pages -->
+  <?php if (strpos($_SERVER['REQUEST_URI'], '/jobs') !== false || $_SERVER['REQUEST_URI'] === '/Worknest/public/' || $_SERVER['REQUEST_URI'] === '/'): ?>
+    <link rel="stylesheet" href="/Worknest/public/css/ai-chatbot.css?v=<?= time() ?>">
+  <?php endif; ?>
   <?php require_once __DIR__ . '/../../helpers/Icons.php'; ?>
   <style>
     .container {

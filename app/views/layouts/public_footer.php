@@ -64,6 +64,35 @@
     <script src="<?= $js ?>"></script>
   <?php endforeach; ?>
 <?php endif; ?>
+
+<!-- AI Chatbot JS - Load on job-related pages -->
+<?php if (strpos($_SERVER['REQUEST_URI'], '/jobs') !== false || $_SERVER['REQUEST_URI'] === '/Worknest/public/' || $_SERVER['REQUEST_URI'] === '/'): ?>
+  <script>
+    // Pass user avatar to chatbot
+    window.WORKNEST_USER_AVATAR = <?php 
+      $userAvatar = null;
+      if (isset($_SESSION['user']['avatar']) && !empty($_SESSION['user']['avatar'])) {
+        $avatar = $_SESSION['user']['avatar'];
+        // Check if avatar is a full URL (from Google/Facebook) or a relative path
+        if (filter_var($avatar, FILTER_VALIDATE_URL)) {
+          // It's a full URL (e.g., from Google: https://lh3.googleusercontent.com/...)
+          $userAvatar = $avatar;
+        } else {
+          // It's a relative path (e.g., /Worknest/public/image/avatar/1/avatar_123.jpg)
+          // If it starts with /, it's already an absolute path from root
+          if (strpos($avatar, '/') === 0) {
+            $userAvatar = $avatar;
+          } else {
+            // Otherwise, prepend BASE_URL
+            $userAvatar = BASE_URL . '/' . $avatar;
+          }
+        }
+      }
+      echo json_encode($userAvatar);
+    ?>;
+  </script>
+  <script src="/Worknest/public/javascript/ai-chatbot.js?v=<?= time() ?>"></script>
+<?php endif; ?>
 </body>
 
 </html>
