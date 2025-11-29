@@ -59,8 +59,5 @@
     <priority>0.3</priority>
   </url>
   
-  <!-- Note: Job detail pages should be dynamically generated from database -->
-  <!-- Add your job URLs here or generate dynamically -->
-  
 </urlset>
 

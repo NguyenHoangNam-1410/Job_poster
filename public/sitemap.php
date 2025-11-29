@@ -57,7 +57,7 @@ foreach ($staticPages as $page) {
 // Dynamic Job Detail Pages
 foreach ($jobs as $job) {
     $jobId = $job->getId();
-    $lastModified = $job->getCreatedAt() ? date('Y-m-d', strtotime($job->getCreatedAt())) : $currentDate;
+    $lastModified = $job->getCreatedAt() ? date('d m, Y', strtotime($job->getCreatedAt())) : $currentDate;
     
     echo "  <url>\n";
     echo "    <loc>" . htmlspecialchars($baseUrl . '/jobs/show/' . $jobId, ENT_XML1) . "</loc>\n";

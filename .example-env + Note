@@ -20,3 +20,5 @@ composer init
 composer require phpmailer/phpmailer
 composer require vlucas/phpdotenv
 composer require google/apiclient
+
+cd 'C:\xampp\htdocs\Worknest'; & 'C:\xampp\php\php.exe' composer.phar require phpmailer/phpmailer --ignore-platform-reqs
