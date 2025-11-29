@@ -1,5 +1,13 @@
 <?php
-$pageTitle = "Browse Jobs";
+// SEO Meta Data
+$pageTitle = "Browse Jobs - Find Your Dream Career | WorkNest";
+$metaDescription = "Browse thousands of job opportunities in Vietnam. Find your dream job in IT, Finance, Marketing, Sales, and more. Search by location, category, and salary. Apply today!";
+$metaKeywords = ['browse jobs', 'job search', 'jobs Vietnam', 'career opportunities', 'find jobs', 'job listings', 'employment', 'hiring'];
+$breadcrumbs = [
+    ['name' => 'Home', 'url' => '/'],
+    ['name' => 'Browse Jobs', 'url' => '/jobs']
+];
+
 $additionalCSS = ['/Worknest/public/css/jobs-artistic.css'];
 $additionalJS = [];
 require dirname(__DIR__, 2) . '/layouts/public_header.php';

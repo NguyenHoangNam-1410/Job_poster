@@ -4,8 +4,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= $pageTitle ?? 'WorkNest' ?></title>
+  <title><?= $pageTitle ?? 'WorkNest - Job Board & Recruitment Platform' ?></title>
   <link rel="icon" type="image/jpeg" href="/Worknest/public/images/favicon.jpg">
+  
+  <?php
+  // Load SEO Helper
+  require_once __DIR__ . '/../../helpers/SEO.php';
+  
+  // Set base URL for SEO
+  $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+  $baseUrl = $protocol . $_SERVER['HTTP_HOST'] . BASE_URL;
+  SEO::setBaseUrl($baseUrl);
+  
+  // Prepare SEO data
+  $seoTitle = $pageTitle ?? 'WorkNest - Job Board & Recruitment Platform';
+  $seoDescription = $metaDescription ?? 'WorkNest - A smart and efficient job management system built for modern recruiters and job seekers. Find your dream job or the perfect candidate in Vietnam.';
+  $seoKeywords = $metaKeywords ?? ['job board', 'job search', 'recruitment', 'careers', 'jobs Vietnam', 'hiring'];
+  $seoImage = $metaImage ?? '/Worknest/public/images/og-image.jpg';
+  $currentUrl = $_SERVER['REQUEST_URI'];
+  
+  // Generate all SEO tags
+  echo SEO::generateAll([
+    'title' => $seoTitle,
+    'description' => $seoDescription,
+    'keywords' => $seoKeywords,
+    'image' => $seoImage,
+    'url' => $currentUrl,
+    'canonical' => $currentUrl,
+    'og_type' => isset($job) ? 'article' : 'website'
+  ]);
+  
+  // Organization Schema (load on all pages)
+  echo SEO::organizationSchema([
+    'name' => 'WorkNest',
+    'url' => $baseUrl,
+    'description' => $seoDescription,
+    'city' => 'Ho Chi Minh City',
+    'country' => 'VN',
+    'email' => 'contact@worknest.com',
+    'socialLinks' => [
+      'https://www.facebook.com/worknest',
+      'https://www.linkedin.com/company/worknest',
+      'https://twitter.com/worknest'
+    ]
+  ]);
+  
+  // Website Schema with SearchAction
+  echo SEO::websiteSchema('/jobs');
+  
+  // Breadcrumb Schema if provided
+  if (isset($breadcrumbs) && is_array($breadcrumbs)) {
+    echo SEO::breadcrumbSchema($breadcrumbs);
+  }
+  
+  // Job Posting Schema for job detail pages
+  if (isset($job) && is_array($job)) {
+    echo SEO::jobPostingSchema($job);
+  }
+  ?>
 
   <link rel="stylesheet" href="/Worknest/public/css/tailwind.min.css">
   <link rel="stylesheet" href="/Worknest/public/css/homepage.css">

@@ -60,7 +60,7 @@ $jobCategoryIds = array_column($jobCategories, 'id');
                         Application Deadline
                     </label>
                     <input type="datetime-local" name="deadline"
-                        value="<?= $job->getDeadline() ? date('Y-m-d\TH:i', strtotime($job->getDeadline())) : '' ?>"
+                        value="<?= $job->getDeadline() ? date('d m, Y\TH:i', strtotime($job->getDeadline())) : '' ?>"
                         class="form-input">
                 </div>
 
@@ -124,9 +124,9 @@ $jobCategoryIds = array_column($jobCategories, 'id');
                         <strong>Employer:</strong> <?= htmlspecialchars($job->getEmployerName() ?? 'N/A') ?><br>
                         <strong>Posted By:</strong> <?= htmlspecialchars($job->getPostedByName() ?? 'N/A') ?><br>
                         <strong>Created:</strong>
-                        <?= $job->getCreatedAt() ? date('Y-m-d H:i', strtotime($job->getCreatedAt())) : 'N/A' ?><br>
+                        <?= $job->getCreatedAt() ? date('d m, Y H:i', strtotime($job->getCreatedAt())) : 'N/A' ?><br>
                         <strong>Last Updated:</strong>
-                        <?= $job->getUpdatedAt() ? date('Y-m-d H:i', strtotime($job->getUpdatedAt())) : 'N/A' ?>
+                        <?= $job->getUpdatedAt() ? date('d m, Y H:i', strtotime($job->getUpdatedAt())) : 'N/A' ?>
                     </p>
                 </div>
             </div>

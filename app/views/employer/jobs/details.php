@@ -143,9 +143,9 @@ $jobCategoryIds = array_column($jobCategories, 'id');
                         <strong>Employer:</strong> <?= htmlspecialchars($job->getEmployerName() ?? 'N/A') ?><br>
                         <strong>Posted By:</strong> <?= htmlspecialchars($job->getPostedByName() ?? 'N/A') ?><br>
                         <strong>Created:</strong>
-                        <?= $job->getCreatedAt() ? date('Y-m-d H:i', strtotime($job->getCreatedAt())) : 'N/A' ?><br>
+                        <?= $job->getCreatedAt() ? date('d m, Y H:i', strtotime($job->getCreatedAt())) : 'N/A' ?><br>
                         <strong>Last Updated:</strong>
-                        <?= $job->getUpdatedAt() ? date('Y-m-d H:i', strtotime($job->getUpdatedAt())) : 'N/A' ?>
+                        <?= $job->getUpdatedAt() ? date('d m, Y H:i', strtotime($job->getUpdatedAt())) : 'N/A' ?>
                     </p>
                 </div>
             </div>

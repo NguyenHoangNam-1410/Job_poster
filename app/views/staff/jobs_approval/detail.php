@@ -7,8 +7,8 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
 <div class="form-background">
     <div class="form-container max-w-5xl">
         <div class="form-header">
-            <h1 class="form-title">Job Details - Review & Approval</h1>
-            <a href="/Worknest/public/approvals" class="form-back-link">← Back to Approval List</a>
+            <h1 class="form-title">Job Details - Review</h1>
+            <a href="/Worknest/public/approvals" class="form-back-link">← Back to Request List</a>
         </div>
 
         <?php if (isset($error)): ?>
@@ -76,7 +76,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                         <p class="text-gray-900">
                             <span class="font-medium">Application Deadline:</span>
                             <?php if ($job->getDeadline()): ?>
-                                <?= date('Y-m-d H:i', strtotime($job->getDeadline())) ?>
+                                <?= date('d M, Y H:i', strtotime($job->getDeadline())) ?>
                             <?php else: ?>
                                 <span class="text-gray-400">N/A</span>
                             <?php endif; ?>
@@ -89,11 +89,11 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <p class="text-gray-900">
                     <span class="font-medium">Created At:</span>
-                    <?= date('Y-m-d H:i:s', strtotime($job->getCreatedAt())) ?>
+                    <?= date('d M, Y H:i:s', strtotime($job->getCreatedAt())) ?>
                 </p>
                 <p class="text-gray-900">
                     <span class="font-medium">Last Updated:</span>
-                    <?= date('Y-m-d H:i:s', strtotime($job->getUpdatedAt())) ?>
+                    <?= date('d M, Y H:i:s', strtotime($job->getUpdatedAt())) ?>
                 </p>
             </div>
 
@@ -143,7 +143,7 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                         <p><span class="font-medium">Reviewed By:</span>
                             <?= htmlspecialchars($previousReview['reviewer_name']) ?></p>
                         <p><span class="font-medium">Date:</span>
-                            <?= date('Y-m-d H:i:s', strtotime($previousReview['created_at'])) ?></p>
+                            <?= date('d m, Y H:i:s', strtotime($previousReview['created_at'])) ?></p>
                         <?php if ($previousReview['reason']): ?>
                             <p class="mt-2"><span class="font-medium">Reason:</span></p>
                             <p class="mt-1 p-2 bg-white rounded"><?= nl2br(htmlspecialchars($previousReview['reason'])) ?></p>
