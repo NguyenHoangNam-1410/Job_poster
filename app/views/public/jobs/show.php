@@ -1,10 +1,54 @@
 <?php
-$pageTitle = "Job Details";
+const BASE_PUBLIC = '/Worknest/public';
+
+// Check if job exists first
+if (!isset($job) || !is_array($job)) {
+  http_response_code(404);
+  echo '<main class="max-w-3xl mx-auto px-6 py-12 text-center"><h1 class="text-xl font-semibold">Job not found</h1><p class="mt-2 text-gray-600">No job data available.</p></main>';
+  require dirname(__DIR__, 2) . '/layouts/public_footer.php';
+  return;
+}
+
+// SEO Meta Data
+$jobTitle = isset($job['title']) ? htmlspecialchars($job['title'], ENT_QUOTES, 'UTF-8') : 'Job Details';
+$companyName = isset($job['company']) ? htmlspecialchars($job['company'], ENT_QUOTES, 'UTF-8') : (isset($job['company_name']) ? htmlspecialchars($job['company_name'], ENT_QUOTES, 'UTF-8') : '');
+$location = isset($job['location']) ? htmlspecialchars($job['location'], ENT_QUOTES, 'UTF-8') : '';
+$salary = isset($job['salary']) && $job['salary'] > 0 ? number_format($job['salary'], 0, '.', ',') . ' VND' : 'Negotiable';
+
+// Build page title
+$pageTitle = $jobTitle . ' - ' . $companyName . ($location ? ' | ' . $location : '') . ' | WorkNest';
+
+// Build meta description
+$description = isset($job['description']) ? strip_tags($job['description']) : '';
+$description = mb_substr($description, 0, 160);
+$metaDescription = $jobTitle . ' at ' . $companyName . ($location ? ' in ' . $location : '') . '. ' . $description;
+
+// Meta keywords
+$metaKeywords = [
+    strtolower($jobTitle),
+    strtolower($companyName),
+    $location ? strtolower($location) : '',
+    'job', 'career', 'hiring', 'recruitment',
+    'Vietnam jobs', 'work in Vietnam'
+];
+$metaKeywords = array_filter($metaKeywords);
+
+// Meta image (company logo or default)
+$logo = $job['logo'] ?? '';
+$metaImage = !empty($logo) 
+    ? (strpos($logo, 'http') === 0 ? $logo : BASE_PUBLIC . '/' . ltrim($logo, '/'))
+    : BASE_PUBLIC . '/images/og-image.jpg';
+
+// Breadcrumbs for structured data
+$breadcrumbs = [
+    ['name' => 'Home', 'url' => '/'],
+    ['name' => 'Jobs', 'url' => '/jobs'],
+    ['name' => $jobTitle, 'url' => '/jobs/show/' . (isset($job['id']) ? $job['id'] : '')]
+];
+
 $additionalCSS = ['/Worknest/public/css/jobs-artistic.css'];
 $additionalJS = [];
 require dirname(__DIR__, 2) . '/layouts/public_header.php';
-
-const BASE_PUBLIC = '/Worknest/public';
 
 function h($s)
 {
@@ -44,13 +88,6 @@ function capStatus($s)
   return ucfirst($s);
 }
 
-if (!isset($job) || !is_array($job)) {
-  http_response_code(404);
-  echo '<main class="max-w-3xl mx-auto px-6 py-12 text-center"><h1 class="text-xl font-semibold">Job not found</h1><p class="mt-2 text-gray-600">No job data available.</p></main>';
-  require dirname(__DIR__, 2) . '/layouts/public_footer.php';
-  return;
-}
-
 $title = $job['title'] ?? '';
 $jobId = (int) ($job['id'] ?? 0);
 $companyRaw = $job['company'] ?? ($job['company_name'] ?? ($job['employer_name'] ?? ''));
@@ -65,7 +102,6 @@ $statusRaw = $job['status'] ?? ($job['public_status'] ?? '');
 $status = strtolower((string) $statusRaw) === 'approved' ? 'recruiting' : ($statusRaw ?? '');
 $statusLbl = capStatus($status);
 // Use logo from employer with proper path prefixing
-$logo = $job['logo'] ?? '';
 $banner = $logo ? (strpos($logo, 'http') === 0 || strpos($logo, '/') === 0 ? $logo : BASE_PUBLIC . '/' . $logo) : BASE_PUBLIC . '/images/placeholder.jpg';
 $chips = $job['categories'] ?? [];
 $desc = $job['description'] ?? '';

@@ -6,6 +6,7 @@ class AIChatbot {
         this.container = null;
         this.window = null;
         this.isOpen = false;
+        this.isSending = false; // Flag to prevent multiple submissions
         this.context = options.context || {}; // Can contain job_id, etc.
         this.apiBase = options.apiBase || '/Worknest/public/api/ai';
         this.messages = [];
@@ -445,8 +446,16 @@ class AIChatbot {
     }
 
     async sendMessage() {
+        // Prevent multiple submissions
+        if (this.isSending) {
+            return;
+        }
+
         const message = this.input.value.trim();
         if (!message) return;
+
+        // Set sending flag
+        this.isSending = true;
 
         // Clear input
         this.input.value = '';
@@ -460,9 +469,10 @@ class AIChatbot {
         // Show typing indicator
         this.showTyping();
 
-        // Disable send button
+        // Disable send button and input
         const sendBtn = document.getElementById('ai-chatbot-send');
         sendBtn.disabled = true;
+        this.input.disabled = true;
 
         try {
             // Determine which API endpoint to use
@@ -580,7 +590,10 @@ class AIChatbot {
             
             this.addMessage('ai', errorMsg + '\n\n💡 **Troubleshooting:**\n1. Check if API key is configured correctly\n2. Visit: /Worknest/public/test-gemini-api.php to test connection\n3. See OPENROUTER_AI_SETUP.md for setup guide');
         } finally {
+            // Reset sending flag and re-enable UI
+            this.isSending = false;
             sendBtn.disabled = false;
+            this.input.disabled = false;
         }
     }
 
@@ -598,6 +611,12 @@ if (document.readyState === 'loading') {
 }
 
 function initChatbot() {
+    // Prevent multiple initializations
+    if (window.worknestAI && window.worknestAI instanceof AIChatbot) {
+        console.log('Chatbot already initialized, skipping...');
+        return;
+    }
+
     // Detect if we're on a job detail page
     const jobIdMatch = window.location.pathname.match(/\/jobs\/show\/(\d+)/);
     const context = {};
@@ -606,7 +625,7 @@ function initChatbot() {
         context.job_id = parseInt(jobIdMatch[1]);
     }
 
-        // Initialize chatbot with avatar paths and user avatar
+    // Initialize chatbot with avatar paths and user avatar
     window.worknestAI = new AIChatbot({
         context: context,
         apiBase: '/Worknest/public/api/ai',

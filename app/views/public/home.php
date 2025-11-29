@@ -1,5 +1,12 @@
 <?php
-$pageTitle = 'Homepage | WorkNest';
+// SEO Meta Data
+$pageTitle = 'WorkNest - Job Board & Recruitment Platform | Find Jobs in Vietnam';
+$metaDescription = 'WorkNest is a smart and efficient job management system for modern recruiters and job seekers. Find your dream job or the perfect candidate in Vietnam. Browse thousands of job opportunities across IT, Finance, Marketing, and more.';
+$metaKeywords = ['job board', 'job search', 'recruitment', 'careers', 'jobs Vietnam', 'hiring platform', 'find jobs', 'job opportunities', 'Vietnam jobs', 'recruitment system'];
+$breadcrumbs = [
+    ['name' => 'Home', 'url' => '/']
+];
+
 include __DIR__ . '/../layouts/public_header.php';
 ?>
 <style>

@@ -1,0 +1,45 @@
+# robots.txt for WorkNest Job Board
+# https://www.worknest.com/robots.txt
+
+User-agent: *
+Allow: /
+Disallow: /auth/
+Disallow: /admin/
+Disallow: /staff/
+Disallow: /employer/
+Disallow: /api/
+Disallow: /ajax/
+Disallow: /*.json$
+Disallow: /*?*filter=
+Disallow: /*?*search=
+
+# Allow important pages
+Allow: /jobs
+Allow: /jobs/
+Allow: /about
+Allow: /contact
+Allow: /help-center
+
+# Sitemap location (dynamic sitemap)
+Sitemap: http://localhost/Worknest/public/sitemap.php
+
+# Crawl-delay (optional - uncomment if needed)
+# Crawl-delay: 1
+
+# Specific bot rules
+User-agent: Googlebot
+Allow: /
+Disallow: /auth/
+Disallow: /admin/
+Disallow: /staff/
+Disallow: /employer/
+Disallow: /api/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /auth/
+Disallow: /admin/
+Disallow: /staff/
+Disallow: /employer/
+Disallow: /api/
+
