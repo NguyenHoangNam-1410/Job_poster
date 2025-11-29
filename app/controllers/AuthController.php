@@ -107,6 +107,7 @@ class AuthController
                 'email' => $user->getEmail(),
                 'role' => $user->getRole(),
                 'auth_provider' => $user->getAuthProvider(),
+                'avatar' => $user->getAvatar()
             ];
             
             // Redirect logic:
@@ -137,22 +138,25 @@ class AuthController
     public function handleGoogleLogin()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Set JSON header early
+            header('Content-Type: application/json');
+            
             try {
                 $data = json_decode(file_get_contents('php://input'), true);
                 $token = $data['token'] ?? null;
                 if (!$token) {
                     http_response_code(400);
-                    echo 'ID token is required.';
+                    echo json_encode(['success' => false, 'error' => 'ID token is required.']);
                     error_log("Google login: Missing token");
-                    return;
+                    exit;
                 }
                 
                 $googleClientId = $_ENV['GOOGLE_CLIENT_ID'] ?? null;
                 if (empty($googleClientId)) {
                     http_response_code(500);
-                    echo 'Google OAuth is not configured. Please configure GOOGLE_CLIENT_ID in .env file.';
+                    echo json_encode(['success' => false, 'error' => 'Google OAuth is not configured. Please configure GOOGLE_CLIENT_ID in .env file.']);
                     error_log("Google login: GOOGLE_CLIENT_ID not set in .env");
-                    return;
+                    exit;
                 }
                 
                 $client = new Google_Client(['client_id' => $googleClientId]);
@@ -164,15 +168,23 @@ class AuthController
                 $user = $this->userService->getUserByEmail($email);
                 $currentUrl = $_SERVER['REQUEST_URI'];
                 if ($user && $user->getAuthProvider() !== 'google') {
+                    // Return JSON error instead of redirect for AJAX requests
+                    http_response_code(400);
+                    $errorMsg = 'Email already exists. Please use a different email or login.';
                     if ($currentUrl === "/Worknest/public/auth/login") {
-                        $_SESSION['login_error'] = 'Email already exists. Please use a different email or login.';
-                        header("Location: " . BASE_URL . "/auth/login");
-                        exit;
+                        echo json_encode([
+                            'success' => false, 
+                            'error' => $errorMsg,
+                            'redirect' => BASE_URL . '/auth/login'
+                        ]);
                     } else {
-                        $_SESSION['register_error'] = 'Email already exists. Please use a different email or login.';
-                        header("Location: " . BASE_URL . "/auth/register");
-                        exit;
+                        echo json_encode([
+                            'success' => false, 
+                            'error' => $errorMsg,
+                            'redirect' => BASE_URL . '/auth/register'
+                        ]);
                     }
+                    exit;
                 }
                 if (!$user) {
                     $user = $this->userService->createUserGoogle($email, $name, $avatar);
@@ -187,7 +199,7 @@ class AuthController
                 ];
                 
                 // Redirect based on role (same as local login)
-                $redirectUrl = BASE_URL . "/";
+                $redirectUrl = BASE_URL . "/public/home";
                 switch ($user->getRole()) {
                     case 'Admin':
                         $redirectUrl = BASE_URL . "/statistics";
@@ -199,7 +211,7 @@ class AuthController
                         $redirectUrl = BASE_URL . "/employer/home";
                         break;
                     default:
-                        $redirectUrl = BASE_URL . "/";
+                        $redirectUrl = BASE_URL . "/public/home";
                 }
                 
                 // Check register_redirect nếu đăng ký từ trang register
@@ -209,7 +221,6 @@ class AuthController
                 }
                 
                 // Return redirect URL in JSON for JavaScript to handle
-                header('Content-Type: application/json');
                 echo json_encode(['success' => true, 'redirect' => $redirectUrl]);
                 exit;
 
@@ -217,18 +228,19 @@ class AuthController
                     http_response_code(401);
                     $errorMsg = 'Invalid ID token. Please check GOOGLE_CLIENT_ID in .env file matches your Google Cloud Console configuration.';
                     error_log("Google login: Token verification failed. Client ID: " . substr($googleClientId, 0, 20) . "...");
-                    echo $errorMsg;
+                    echo json_encode(['success' => false, 'error' => $errorMsg]);
                 }
             } catch (Exception $e) {
                 http_response_code(500);
                 $errorMsg = 'Google login error: ' . $e->getMessage();
                 error_log("Google login exception: " . $e->getMessage());
                 error_log("Stack trace: " . $e->getTraceAsString());
-                echo $errorMsg;
+                echo json_encode(['success' => false, 'error' => $errorMsg]);
             }
         } else {
             http_response_code(405);
-            echo 'Method Not Allowed';
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'error' => 'Method Not Allowed']);
         }
     }
 
@@ -301,7 +313,8 @@ class AuthController
                     header("Location: " . BASE_URL . "/employer/home");
                     break;
                 default:
-                    header("Location: " . BASE_URL . "/");
+                    // For users without specific role, redirect to public home
+                    header("Location: " . BASE_URL . "/public/home");
             }
             exit;
         }

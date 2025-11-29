@@ -33,7 +33,9 @@ $publicRoutes = [
     '/auth/login/forgot-password/reset-expired', '/check-email',
     '/public/home', '/jobs', '/jobs/show/:id', '/jobs/apply', '/', '/contact',
     '/about', '/help-center', '/terms-of-service', '/privacy-policy',
-    '/ajax/jobs_filters.php', '/ajax/jobs_list.php', '/ajax/jobs_related.php'
+    '/ajax/jobs_filters.php', '/ajax/jobs_list.php', '/ajax/jobs_related.php',
+    '/api/ai/chat', '/api/ai/search-jobs', '/api/ai/summarize-job', '/api/ai/answer-job-question',
+    '/test-gemini-api.php'
 ];
 
 // Check if the route is public
@@ -60,19 +62,8 @@ if (!$isLoggedIn && !$isPublic) {
     exit;
 }
 
-// Redirect logged in users away from auth pages
-// Allow access to public job pages even when logged in
-$allowedPublicPaths = ['/', '/public/home', '/jobs', '/contact', '/about'];
-$isJobShowPage = preg_match('#^/jobs/show/\d+$#', $path);
-$isJobApplyPage = $path === '/jobs/apply';
-
-if ($isLoggedIn && $isPublic && !in_array($path, $allowedPublicPaths) && !$isJobShowPage && !$isJobApplyPage) {
-    header('Location: ' . BASE_URL . '/home');
-    exit;
-}
-
 // ============================================================================
-// ROUTING FUNCTIONS
+// ROUTING FUNCTIONS (Define first so we can use them)
 // ============================================================================
 
 function route($pattern, $callback, $methods = ['GET'], $roles = null) {
@@ -106,6 +97,53 @@ function controller($name, $method, ...$args) {
 
 function view($viewPath) {
     include "../app/views/{$viewPath}.php";
+}
+
+// ============================================================================
+// AI ASSISTANT ENDPOINTS (Handle early, before redirect logic)
+// ============================================================================
+
+if (route('#^/api/ai/chat$#', fn() => controller('AIAssistantController', 'chat'), ['POST'])) exit;
+if (route('#^/api/ai/search-jobs$#', fn() => controller('AIAssistantController', 'searchJobs'), ['POST'])) exit;
+if (route('#^/api/ai/summarize-job$#', fn() => controller('AIAssistantController', 'summarizeJob'), ['POST'])) exit;
+if (route('#^/api/ai/answer-job-question$#', fn() => controller('AIAssistantController', 'answerJobQuestion'), ['POST'])) exit;
+
+// ============================================================================
+// REDIRECT LOGIC (After API routes are handled)
+// ============================================================================
+
+// Redirect logged in users away from auth pages
+// Allow access to public job pages and API endpoints even when logged in
+$allowedPublicPaths = ['/', '/public/home', '/jobs', '/contact', '/about'];
+$isJobShowPage = preg_match('#^/jobs/show/\d+$#', $path);
+$isJobApplyPage = $path === '/jobs/apply';
+$isApiRoute = preg_match('#^/api/ai/#', $path); // AI API routes should always be accessible
+
+// Redirect logged in users away from auth pages (but allow public pages)
+if ($isLoggedIn && $isPublic) {
+    // Check if it's an auth route that logged-in users shouldn't access
+    $authRoutes = ['/auth/login', '/auth/register'];
+    if (in_array($path, $authRoutes)) {
+        // Redirect to appropriate home based on role
+        $homePath = '/';
+        switch ($userRole) {
+            case 'Admin':
+                $homePath = '/statistics';
+                break;
+            case 'Staff':
+                $homePath = '/staff/home';
+                break;
+            case 'Employer':
+                $homePath = '/employer/home';
+                break;
+            default:
+                $homePath = '/';
+        }
+        header('Location: ' . BASE_URL . $homePath);
+        exit;
+    }
+    // Otherwise, allow access to public pages like /, /jobs, etc.
+    // Don't redirect if they're accessing allowed public paths
 }
 
 // ============================================================================
