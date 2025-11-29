@@ -12,10 +12,10 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(180deg, #0a4d5c 0%, #1a8a9d 100%);
     border: none;
     cursor: pointer;
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 20px rgba(18, 95, 50, 0.4);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -34,8 +34,8 @@
 
 .ai-chatbot-toggle-tab:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 30px rgba(102, 126, 234, 0.6);
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    box-shadow: 0 6px 30px rgba(18, 95, 50, 0.6);
+    background: linear-gradient(180deg, #0a4d5c 0%, #1a8a9d 100%);
 }
 
 .ai-chatbot-toggle-icon {
@@ -96,7 +96,7 @@
 }
 
 .ai-chatbot-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(180deg, #0a4d5c 0%, #1a8a9d 100%);
     color: white;
     padding: 16px 20px;
     display: flex;
@@ -179,7 +179,7 @@
 }
 
 .ai-chatbot-message.user .ai-chatbot-message-avatar {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(180deg, #0a4d5c 0%, #1a8a9d 100%);
     color: white;
 }
 
@@ -206,7 +206,7 @@
 }
 
 .ai-chatbot-message.user .ai-chatbot-message-content {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(180deg, #0a4d5c 0%, #1a8a9d 100%);
     color: white;
     border-bottom-right-radius: 4px;
 }
@@ -430,7 +430,7 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(180deg, #0a4d5c 0%, #1a8a9d 100%);
     border: none;
     color: white;
     cursor: pointer;
@@ -506,7 +506,7 @@
 }
 
 .ai-chatbot-suggestion:hover {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(180deg, #0a4d5c 0%, #1a8a9d 100%);
     border-color: #667eea;
     color: white;
     transform: translateY(-1px);

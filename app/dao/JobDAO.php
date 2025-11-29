@@ -766,6 +766,7 @@ class JobDAO
         JOBS.title,
         COALESCE(e.company_name,'') AS company,
         JOBS.location,
+        JOBS.salary,
         JOBS.created_at AS posted_at,
         JOBS.deadline,
         CASE
