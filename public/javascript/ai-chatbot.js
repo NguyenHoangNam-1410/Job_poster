@@ -250,11 +250,9 @@ class AIChatbot {
     
     getAvatarHTML(role) {
         if (role === 'user') {
-            // User avatar: use real avatar if available, otherwise emoji
-            if (this.userAvatar) {
-                return `<img src="${this.userAvatar}" alt="User" class="ai-chatbot-avatar-img">`;
-            }
-            return '👤';
+            // User avatar: use real avatar if available, otherwise use default.svg
+            let avatarSrc = this.userAvatar || '/Worknest/public/image/avatar/default.svg';
+            return `<img src="${avatarSrc}" alt="User" class="ai-chatbot-avatar-img">`;
         } else {
             // AI avatar uses image if available, otherwise fallback to emoji
             if (this.currentAvatar) {

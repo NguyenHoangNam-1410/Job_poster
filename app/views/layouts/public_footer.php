@@ -68,10 +68,15 @@
 <!-- AI Chatbot JS - Load on job-related pages -->
 <?php if (strpos($_SERVER['REQUEST_URI'], '/jobs') !== false || $_SERVER['REQUEST_URI'] === '/Worknest/public/' || $_SERVER['REQUEST_URI'] === '/'): ?>
   <script>
-    // Pass user avatar to chatbot
+    // Pass user avatar and role to chatbot
     window.WORKNEST_USER_AVATAR = <?php 
       $userAvatar = null;
-      if (isset($_SESSION['user']['avatar']) && !empty($_SESSION['user']['avatar'])) {
+      $userRole = $_SESSION['user']['role'] ?? null;
+      
+      // Check if user is guest or role is not set
+      if ($userRole === 'guest' || !$userRole) {
+        $userAvatar = null;  // Will use default.svg in JS
+      } elseif (isset($_SESSION['user']['avatar']) && !empty($_SESSION['user']['avatar'])) {
         $avatar = $_SESSION['user']['avatar'];
         // Check if avatar is a full URL (from Google/Facebook) or a relative path
         if (filter_var($avatar, FILTER_VALIDATE_URL)) {
@@ -90,6 +95,7 @@
       }
       echo json_encode($userAvatar);
     ?>;
+    window.WORKNEST_USER_ROLE = <?php echo json_encode($userRole); ?>;
   </script>
   <script src="/Worknest/public/javascript/ai-chatbot.js?v=<?= time() ?>"></script>
 <?php endif; ?>

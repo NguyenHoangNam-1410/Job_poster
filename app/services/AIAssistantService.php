@@ -624,13 +624,65 @@ If the question is about missing skills, format it as a clear list with headers.
     }
 
     /**
+     * Detect if message is a job search intent vs general conversation
+     */
+    private function isJobSearchIntent($message)
+    {
+        // Strong job search indicators - these clearly indicate job search
+        $strongIndicators = [
+            '/(tìm|kiếm|tuyển|việc).*job/i',           // "tìm job", "kiếm việc"
+            '/job.*(search|list|find|looking|available|open)/i',  // "job search", "job available"
+            '/(looking for|find|search for|apply for|apply to).*(job|role|position)/i',  // "looking for a job"
+            '/\b(developer|engineer|manager|designer|analyst|programmer|architect|designer|coordinator|specialist|consultant|assistant|intern)\b.*\b(job|position|role|work)\b/i'  // specific roles
+        ];
+        
+        foreach ($strongIndicators as $pattern) {
+            if (preg_match($pattern, $message)) {
+                return true;
+            }
+        }
+        
+        // Weak indicators that could be job search OR general conversation
+        $weakIndicators = [
+            '/salary/',
+            '/work/',
+            '/job/',
+            '/hire/',
+            '/apply/',
+            '/position/'
+        ];
+        
+        // Count how many weak indicators are present
+        $weakCount = 0;
+        foreach ($weakIndicators as $pattern) {
+            if (preg_match($pattern, $message, $matches)) {
+                $weakCount++;
+            }
+        }
+        
+        // If multiple weak indicators AND message sounds like a search query (not a question about the topic)
+        if ($weakCount >= 2) {
+            // Check if it's phrased as a question about the topic (general conversation)
+            // vs a directive to search (job search)
+            if (preg_match('/^(why|how|what|when|where|who|can|should|will|is|are|does|do)\b/i', $message)) {
+                // Phrased as a question - likely general conversation
+                return false;
+            }
+            // Otherwise it's likely a job search
+            return true;
+        }
+        
+        return false;
+    }
+
+    /**
      * General chat handler
      */
     public function handleChat($message, $context = [])
     {
         try {
             // Check if message contains job search intent
-            if (preg_match('/(tìm|kiếm|tuyển|việc|job|work|part-time|full-time)/i', $message)) {
+            if ($this->isJobSearchIntent($message)) {
                 return $this->searchJobs($message);
             }
 
