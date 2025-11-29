@@ -209,25 +209,6 @@ $pageHeading = $isEditMode ? "Update user #{$user->getId()}" : 'Create New User'
             </div>
             <?php endif; ?>
 
-            <!-- Info Box for Edit Mode -->
-            <?php if ($isEditMode): ?>
-                <div class="form-info-box">
-                    <?= Icons::infoCircle('form-info-icon') ?>
-                    <div>
-                        <p class="form-info-title">Note</p>
-                        <p class="form-info-text">Password cannot be changed through this form. Guest and Employer accounts are managed separately.</p>
-                    </div>
-                </div>
-            <?php else: ?>
-                <div class="form-info-box">
-                    <?= Icons::infoCircle('form-info-icon') ?>
-                    <div>
-                        <p class="form-info-title">Note</p>
-                        <p class="form-info-text">Only Admin and Staff roles can be created here. Guest and Employer accounts are managed separately. Emails must be unique across all user types.</p>
-                    </div>
-                </div>
-            <?php endif; ?>
-
             <!-- Action Buttons -->
             <div class="form-actions">
                 <a href="/Worknest/public/users" class="btn-cancel">Cancel</a>
