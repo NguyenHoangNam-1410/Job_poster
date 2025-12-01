@@ -168,14 +168,12 @@ h1 {
 
 .btn-submit {
     padding: 0.5rem 1.5rem;
-    background: linear-gradient(
-        270deg,
-        #020918ff,
-        #070442ff,
-        #595cb4ff,
-        #201d5eff,
-        #011c57ff
-    );
+    background: linear-gradient(270deg,
+            #020918ff,
+            #070442ff,
+            #595cb4ff,
+            #201d5eff,
+            #011c57ff);
     background-size: 400% 400%;
     animation: gradientWave 10s ease infinite;
     color: white;
@@ -194,10 +192,54 @@ h1 {
     transform: translateY(-1px);
 }
 
+/* Role-based button colors */
+body.role-employer .btn-submit {
+    background: linear-gradient(270deg, #041f17, #06523c, #0f815b, #06462e, #042b1a);
+    background-size: 400% 400%;
+    animation: gradientWave 10s ease infinite;
+}
+
+body.role-employer .btn-submit:hover {
+    box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3), 0 4px 6px -2px rgba(16, 185, 129, 0.2);
+}
+
+body.role-admin .btn-submit {
+    background: linear-gradient(270deg,
+            #020918ff,
+            #070442ff,
+            #595cb4ff,
+            #201d5eff,
+            #011c57ff);
+    background-size: 400% 400%;
+    animation: gradientWave 10s ease infinite;
+}
+
+body.role-admin .btn-submit:hover {
+    box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.3), 0 4px 6px -2px rgba(124, 58, 237, 0.2);
+}
+
+body.role-staff .btn-submit {
+    background: linear-gradient(270deg, #2c0323, #3b0935, #751875, #4b0a47, #360029);
+    background-size: 400% 400%;
+    animation: gradientWave 10s ease infinite;
+}
+
+body.role-staff .btn-submit:hover {
+    box-shadow: 0 10px 15px -3px rgba(112, 24, 100, 0.3), 0 4px 6px -2px rgba(121, 26, 124, 0.2);
+}
+
 @keyframes gradientWave {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .btn-icon {
@@ -207,20 +249,21 @@ h1 {
 }
 
 .btn {
-  background-color: #3b82f6;
-  color: white;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 8px 16px;
-  line-height: 1.25rem;
+    background-color: #3b82f6;
+    color: white;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 16px;
+    line-height: 1.25rem;
 }
+
 .btn:hover {
-  background-color: #2563eb;
+    background-color: #2563eb;
 }
 
 .required {
@@ -296,27 +339,27 @@ h1 {
 }
 
 .form-background {
-  width: 100%;
-  max-width: 1280px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+    width: 100%;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }
 
 .form-container {
-  background-color: #ffffff;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),
-              0 2px 4px -2px rgba(0,0,0,0.1);
-  padding: 1.5rem;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
 }
 
 .list-header {
-  font-size: 1.875rem;
-  font-weight: 700;
-  color: #1f2937;
-  text-align: left;
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #1f2937;
+    text-align: left;
 }

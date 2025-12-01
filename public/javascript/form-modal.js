@@ -129,6 +129,9 @@ class FormModal {
     // Show modal with loading state
     this.modal.classList.remove("hidden");
     this.modal.classList.add("flex");
+    
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = "hidden";
 
     const modalBody = document.getElementById("formModalBody");
     modalBody.innerHTML = `
@@ -162,7 +165,7 @@ class FormModal {
 
         // Move form buttons to footer
         const formButtons = formElement.querySelector(
-          ".flex.gap-3, .flex.gap-4, .mt-6"
+          ".form-actions, .flex.gap-3, .flex.gap-4, .mt-6"
         );
         const modalFooter = document.getElementById("formModalFooter");
 
@@ -195,21 +198,43 @@ class FormModal {
           if (newCancelBtn) {
             newCancelBtn.onclick = () => this.close();
           }
+        } else {
+          // No buttons found or form doesn't have action buttons, hide footer
+          modalFooter.innerHTML = "";
+          modalFooter.classList.add("hidden");
         }
 
         modalBody.innerHTML = "";
+        
+        // Extract scripts before appending form
+        const scripts = Array.from(doc.querySelectorAll("script"));
+        
+        // Remove script tags from form before appending
+        formElement.querySelectorAll("script").forEach(script => script.remove());
+        
         modalBody.appendChild(formElement);
 
-        // Execute any script tags in the loaded content
-        const scripts = doc.querySelectorAll("script");
+        // Now execute scripts after form is in DOM
         scripts.forEach((oldScript) => {
-          const newScript = document.createElement("script");
           if (oldScript.src) {
-            newScript.src = oldScript.src;
-          } else {
-            newScript.textContent = oldScript.textContent;
+            // External scripts - only add if not already loaded
+            if (!document.querySelector(`script[src="${oldScript.src}"]`)) {
+              const newScript = document.createElement("script");
+              newScript.src = oldScript.src;
+              newScript.async = false;
+              document.head.appendChild(newScript);
+            }
+          } else if (oldScript.textContent.trim()) {
+            // Inline scripts - use eval to avoid appendChild parsing issues
+            try {
+              // Wrap in IIFE to maintain scope
+              (function() {
+                eval(oldScript.textContent);
+              })();
+            } catch (error) {
+              console.debug("Skipped script execution:", error.message);
+            }
           }
-          document.head.appendChild(newScript);
         });
 
         // Setup form submission handler
@@ -359,13 +384,45 @@ class FormModal {
   close() {
     if (!this.modal) return;
 
+    // Clear all content properly BEFORE hiding
+    const modalBody = document.getElementById("formModalBody");
+    const modalFooter = document.getElementById("formModalFooter");
+    const modalContainer = this.modal.querySelector(".bg-white");
+    
+    // Remove all form elements and their event listeners
+    while (modalBody.firstChild) {
+      modalBody.removeChild(modalBody.firstChild);
+    }
+    
+    while (modalFooter.firstChild) {
+      modalFooter.removeChild(modalFooter.firstChild);
+    }
+    
+    // Reset inline styles on modal container
+    if (modalContainer) {
+      modalContainer.style.maxHeight = "";
+      modalContainer.style.height = "";
+    }
+    
+    // Reset modal body styles
+    modalBody.style.maxHeight = "";
+    modalBody.style.overflow = "";
+    modalBody.classList.remove("flex-1");
+    
+    // Reset to loading state
+    modalBody.innerHTML = `
+      <div class="flex items-center justify-center py-8">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    `;
+    
+    // Hide the modal
     this.modal.classList.add("hidden");
     this.modal.classList.remove("flex");
-
-    // Clear content
-    document.getElementById("formModalBody").innerHTML = "";
-    document.getElementById("formModalFooter").innerHTML = "";
-    document.getElementById("formModalFooter").classList.add("hidden");
+    modalFooter.classList.add("hidden");
+    
+    // Ensure body scroll is restored
+    document.body.style.overflow = "";
   }
 }
 

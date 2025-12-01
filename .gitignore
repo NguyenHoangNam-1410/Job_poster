@@ -1,5 +1,5 @@
 # Exclude VS Code workspace settings
-.vscode/
+.vscode**
 
 # Exclude all .htaccess files in the project
 **/.htaccess
@@ -9,3 +9,5 @@
 **/.env
 
 /vendor/
+
+note.txt

@@ -223,7 +223,7 @@ if ($currentUserId) {
     </style>
 </head>
 
-<body class="bg-gray-100 <?= $colorClass ?>-theme">
+<body class="bg-gray-100 <?= $colorClass ?>-theme role-<?= strtolower($userRole) ?>">
     <!-- Restore sidebar state immediately to prevent flicker (desktop only) -->
     <script>
         (function () {

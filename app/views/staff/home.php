@@ -8,7 +8,6 @@ require_once '../app/views/layouts/auth_header.php';
         <div class="mb-8">
             <h1 class="text-4xl font-bold text-gray-800 mb-2">Hi,
                 <?= htmlspecialchars($_SESSION['user']['name'] ?? 'Staff'); ?>!</h1>
-            <p class="text-gray-600">Here's your dashboard overview for today</p>
         </div>
 
         <!-- Top Stats Cards -->
@@ -19,7 +18,7 @@ require_once '../app/views/layouts/auth_header.php';
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-yellow-100 text-sm font-medium mb-1">Pending Job Requests</p>
-                        <p class="text-4xl font-bold">8</p>
+                        <p class="text-4xl font-bold"><?= $pendingJobsCount ?></p>
                         <p class="text-yellow-100 text-xs mt-2">Awaiting review</p>
                     </div>
                     <div class="bg-white bg-opacity-20 rounded-full p-4">
@@ -37,7 +36,7 @@ require_once '../app/views/layouts/auth_header.php';
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-green-100 text-sm font-medium mb-1">Reviewed Reports</p>
-                        <p class="text-4xl font-bold">15</p>
+                        <p class="text-4xl font-bold"><?= $reviewedReportsCount ?></p>
                         <p class="text-green-100 text-xs mt-2">Complaints handled</p>
                     </div>
                     <div class="bg-white bg-opacity-20 rounded-full p-4">
@@ -55,7 +54,7 @@ require_once '../app/views/layouts/auth_header.php';
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-blue-100 text-sm font-medium mb-1">Managed Jobs</p>
-                        <p class="text-4xl font-bold">24</p>
+                        <p class="text-4xl font-bold"><?= $managedJobsCount ?></p>
                         <p class="text-blue-100 text-xs mt-2">Total jobs monitored</p>
                     </div>
                     <div class="bg-white bg-opacity-20 rounded-full p-4">
@@ -92,56 +91,40 @@ require_once '../app/views/layouts/auth_header.php';
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="table-cell font-medium text-gray-900">Backend Developer</td>
-                            <td class="table-cell">TechNova Ltd</td>
-                            <td class="table-cell">
-                                <span
-                                    class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                    Pending
-                                </span>
-                            </td>
-                            <td class="table-cell">2025-11-05</td>
-                            <td class="table-cell">
-                                <div class="flex gap-3">
-                                    <a href="/Worknest/public/approvals/detail/1"
-                                        class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm font-medium">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                        Review
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="table-cell font-medium text-gray-900">UI/UX Designer</td>
-                            <td class="table-cell">DesignHub Co</td>
-                            <td class="table-cell">
-                                <span
-                                    class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                    Pending
-                                </span>
-                            </td>
-                            <td class="table-cell">2025-11-06</td>
-                            <td class="table-cell">
-                                <div class="flex gap-3">
-                                    <a href="/Worknest/public/approvals/detail/2"
-                                        class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm font-medium">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                        Review
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
+                        <?php if (!empty($recentJobRequests) && count($recentJobRequests) > 0): ?>
+                            <?php foreach ($recentJobRequests as $job): ?>
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="table-cell font-medium text-gray-900"><?= htmlspecialchars($job->getTitle()) ?></td>
+                                    <td class="table-cell"><?= htmlspecialchars($job->getCompanyName() ?? 'N/A') ?></td>
+                                    <td class="table-cell">
+                                        <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                            <?= ucfirst(htmlspecialchars($job->getStatus())) ?>
+                                        </span>
+                                    </td>
+                                    <td class="table-cell"><?= date('Y-m-d', strtotime($job->getCreatedAt())) ?></td>
+                                    <td class="table-cell">
+                                        <div class="flex gap-3">
+                                            <a href="/Worknest/public/approvals/detail/<?= $job->getId() ?>"
+                                                class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm font-medium">
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                                Review
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="table-cell text-center text-gray-500 py-4" colspan="5">
+                                    No pending job requests at the moment
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -170,27 +153,26 @@ require_once '../app/views/layouts/auth_header.php';
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="table-cell font-medium text-gray-900">Job Posting Spam</td>
-                            <td class="table-cell">Employer123</td>
-                            <td class="table-cell">
-                                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                                    Reviewed
-                                </span>
-                            </td>
-                            <td class="table-cell">2025-11-04</td>
-                        </tr>
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="table-cell font-medium text-gray-900">Incorrect Salary Info</td>
-                            <td class="table-cell">Employer456</td>
-                            <td class="table-cell">
-                                <span
-                                    class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                    Pending
-                                </span>
-                            </td>
-                            <td class="table-cell">2025-11-06</td>
-                        </tr>
+                        <?php if (!empty($recentFeedback) && count($recentFeedback) > 0): ?>
+                            <?php foreach ($recentFeedback as $feedback): ?>
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="table-cell font-medium text-gray-900"><?= htmlspecialchars(substr($feedback->getComments(), 0, 50)) ?></td>
+                                    <td class="table-cell"><?= htmlspecialchars($feedback->getUserName() ?? 'N/A') ?></td>
+                                    <td class="table-cell">
+                                        <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                            Reviewed
+                                        </span>
+                                    </td>
+                                    <td class="table-cell"><?= date('Y-m-d', strtotime($feedback->getCreatedAt())) ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="table-cell text-center text-gray-500 py-4" colspan="4">
+                                    No feedback available at the moment
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>

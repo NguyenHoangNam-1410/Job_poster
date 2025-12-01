@@ -60,7 +60,7 @@ $jobCategoryIds = array_column($jobCategories, 'id');
                         Application Deadline
                     </label>
                     <input type="datetime-local" name="deadline"
-                        value="<?= $job->getDeadline() ? date('d m, Y\TH:i', strtotime($job->getDeadline())) : '' ?>"
+                        value="<?= $job->getDeadline() ? date('Y-m-d', strtotime($job->getDeadline())) . 'T' . date('H:i', strtotime($job->getDeadline())) : '' ?>"
                         class="form-input">
                 </div>
 
