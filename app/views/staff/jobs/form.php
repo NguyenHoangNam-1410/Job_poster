@@ -1,6 +1,6 @@
 <?php $pageTitle = 'Edit Job'; ?>
 <?php
-require_once __DIR__ . '/../../layouts/public_header.php';
+require_once __DIR__ . '/../../layouts/auth_header.php';
 require_once __DIR__ . '/../../../helpers/Icons.php';
 ?>
 
@@ -60,7 +60,7 @@ $jobCategoryIds = array_column($jobCategories, 'id');
                         Application Deadline
                     </label>
                     <input type="datetime-local" name="deadline"
-                        value="<?= $job->getDeadline() ? date('d m, Y\TH:i', strtotime($job->getDeadline())) : '' ?>"
+                        value="<?= $job->getDeadline() ? date('Y-m-d', strtotime($job->getDeadline())) . 'T' . date('H:i', strtotime($job->getDeadline())) : '' ?>"
                         class="form-input">
                 </div>
 
@@ -185,5 +185,8 @@ $jobCategoryIds = array_column($jobCategories, 'id');
 </script>
 
 <?php
-include __DIR__ . '/../../layouts/public_footer.php';
+// Only include footer if not an AJAX request
+if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
+    include __DIR__ . '/../../layouts/auth_footer.php';
+}
 ?>

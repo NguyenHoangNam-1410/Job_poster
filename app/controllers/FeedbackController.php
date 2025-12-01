@@ -151,6 +151,9 @@ class FeedbackController
 
     public function storeMyFeedback()
     {
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $currentUserId = $this->getCurrentUserId();
@@ -158,20 +161,51 @@ class FeedbackController
                     throw new Exception("User not logged in.");
                 }
 
-
                 $comments = $_POST['comments'] ?? '';
 
-                $success = $this->feedbackService->createFeedback($currentUserId, $comments);
+                if (empty($comments)) {
+                    throw new Exception("Comments are required.");
+                }
 
-                if ($success) {
-                    header('Location: /Worknest/public/my-feedbacks?success=' . urlencode('Feedback added successfully'));
-                    exit;
+                if (strlen($comments) > 1000) {
+                    throw new Exception("Feedback cannot exceed 1000 characters.");
+                }
+
+                $result = $this->feedbackService->createFeedback($currentUserId, $comments);
+
+                if ($result) {
+                    if ($isAjax) {
+                        // AJAX request - return JSON
+                        header('Content-Type: application/json');
+                        http_response_code(200);
+                        echo json_encode([
+                            'success' => true,
+                            'message' => 'Feedback added successfully'
+                        ]);
+                        exit;
+                    } else {
+                        // Regular form submission - redirect
+                        header('Location: /Worknest/public/my-feedbacks?success=' . urlencode('Feedback added successfully'));
+                        exit;
+                    }
                 } else {
-                    throw new Exception("Failed to create feedback.");
+                    throw new Exception("Failed to create feedback. Please try again.");
                 }
             } catch (Exception $e) {
-                $error = $e->getMessage();
-                require_once __DIR__ . '/../views/employer/my_feedbacks/form.php';
+                if ($isAjax) {
+                    // AJAX request - return JSON error
+                    header('Content-Type: application/json');
+                    http_response_code(400);
+                    echo json_encode([
+                        'success' => false,
+                        'message' => $e->getMessage()
+                    ]);
+                    exit;
+                } else {
+                    // Regular form submission - redirect with error
+                    header('Location: /Worknest/public/my-feedbacks/create?error=' . urlencode($e->getMessage()));
+                    exit;
+                }
             }
         }
     }

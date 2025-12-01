@@ -96,8 +96,14 @@ if ($currentUserId) {
     }
     $userDAO = new UserDAO();
     $dbAvatar = $userDAO->getAvatar($currentUserId);
+    
+    // Use the database avatar only if it exists and is not empty
     if (!empty($dbAvatar)) {
-        $userAvatar = $dbAvatar;
+        // Verify the file exists, otherwise use default
+        $avatarPath = $_SERVER['DOCUMENT_ROOT'] . $dbAvatar;
+        if (file_exists($avatarPath)) {
+            $userAvatar = $dbAvatar;
+        }
     }
 }
 ?>
@@ -223,7 +229,7 @@ if ($currentUserId) {
     </style>
 </head>
 
-<body class="bg-gray-100 <?= $colorClass ?>-theme">
+<body class="bg-gray-100 <?= $colorClass ?>-theme role-<?= strtolower($userRole) ?>">
     <!-- Restore sidebar state immediately to prevent flicker (desktop only) -->
     <script>
         (function () {

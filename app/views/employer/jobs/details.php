@@ -29,124 +29,124 @@ $jobCategoryIds = array_column($jobCategories, 'id');
 
         <!-- Wrap in a form element for modal compatibility -->
         <form class="space-y-6">
-            <div class="form-grid">
-                <!-- Location -->
-                <div>
-                    <label class="form-label">Location</label>
-                    <div class="form-readonly"><?= htmlspecialchars($job->getLocation() ?? 'N/A') ?></div>
-                </div>
-
-                <!-- Salary -->
-                <div>
-                    <label class="form-label">Salary (VND)</label>
-                    <div class="form-readonly">
-                        <?= $job->getSalary() ? number_format($job->getSalary(), 0, ',', '.') . ' VND' : '<span class="text-gray-400">Negotiable</span>' ?>
-                    </div>
-                </div>
-
-                <!-- Deadline -->
-                <div>
-                    <label class="form-label">Application Deadline</label>
-                    <div class="form-readonly">
-                        <?= $job->getDeadline() ? date('M j, Y H:i', strtotime($job->getDeadline())) : 'N/A' ?>
-                    </div>
-                </div>
-
-                <!-- Status -->
-                <div>
-                    <label class="form-label">Current Status</label>
-                    <span class="px-2 py-1 rounded text-sm <?= $job->getStatusColor() ?>">
-                        <?= ucfirst(str_replace('_', ' ', $job->getStatus())) ?>
-                    </span>
-                </div>
-
-                <!-- Approved At -->
-                <?php if ($job->getStatus() === 'approved'): ?>
+            <!-- Basic Information Section -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 pb-3 border-b border-gray-200">Basic Information</h3>
+                <div class="form-grid">
+                    <!-- Location -->
                     <div>
-                        <label class="form-label">Approved At</label>
-                        <div class="form-readonly">
-                            <?= $job->getApprovedAt() ? date('M j, Y H:i', strtotime($job->getApprovedAt())) : 'N/A' ?>
-                        </div>
+                        <label class="form-label">Location</label>
+                        <div class="form-readonly"><?= htmlspecialchars($job->getLocation() ?? 'N/A') ?></div>
                     </div>
-                <?php endif; ?>
 
-                <!-- Rejected At -->
-                <?php if ($job->getStatus() === 'rejected'): ?>
+                    <!-- Salary -->
                     <div>
-                        <label class="form-label">Rejected At</label>
+                        <label class="form-label">Salary (VND)</label>
                         <div class="form-readonly">
-                            <?= $job->getRejectedAt() ? date('M j, Y H:i', strtotime($job->getRejectedAt())) : 'N/A' ?>
+                            <?= $job->getSalary() ? number_format($job->getSalary(), 0, ',', '.') . ' VND' : '<span class="text-gray-400">Negotiable</span>' ?>
                         </div>
                     </div>
-                <?php endif; ?>
 
-                <!-- Approval Reason -->
-                <?php if ($job->getStatus() === 'approved' && !empty($jobReview)): ?>
-                    <div class="mb-6 p-4 rounded-md bg-green-50 border border-green-200">
-                        <div class="flex">
-                            <div class="flex-shrink-0"><?= Icons::checkCircle('h-5 w-5 text-green-400') ?></div>
-                            <div class="ml-3">
-                                <p class="mt-1 text-sm text-green-700">
-                                    <strong>Reason:</strong> <?= htmlspecialchars($jobReview ?? 'No reason provided.') ?>
-                                </p>
-                            </div>
+                    <!-- Deadline -->
+                    <div>
+                        <label class="form-label">Application Deadline</label>
+                        <div class="form-readonly">
+                            <?= $job->getDeadline() ? date('M j, Y H:i', strtotime($job->getDeadline())) : 'N/A' ?>
                         </div>
                     </div>
-                <?php endif; ?>
 
-                <!-- Rejection Reason -->
-                <?php if ($job->getStatus() === 'rejected' && !empty($jobReview)): ?>
-                    <div class="mb-6 p-4 rounded-md bg-red-50 border border-red-200">
-                        <div class="flex">
-                            <div class="flex-shrink-0"><?= Icons::exclamationCircle('h-5 w-5 text-red-400') ?></div>
-                            <div class="ml-3">
-                                <p class="mt-1 text-sm text-red-700">
-                                    <strong>Reason:</strong> <?= htmlspecialchars($jobReview ?? 'No reason provided.') ?>
-                                </p>
-                            </div>
+                    <!-- Status -->
+                    <div>
+                        <label class="form-label">Current Status</label>
+                        <span class="px-2 py-1 rounded text-sm <?= $job->getStatusColor() ?>">
+                            <?= ucfirst(str_replace('_', ' ', $job->getStatus())) ?>
+                        </span>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="md:col-span-2">
+                        <label class="form-label">Job Categories</label>
+                        <div class="flex flex-wrap gap-2">
+                            <?php foreach ($jobCategories as $category): ?>
+                                <span
+                                    class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                                    <?= htmlspecialchars($category['name'] ?? 'No Name') ?>
+                                </span>
+                            <?php endforeach; ?>
                         </div>
                     </div>
-                <?php endif; ?>
-
-                <!-- Categories -->
-                <div class="md:col-span-2">
-                    <label class="form-label">Job Categories</label>
-                    <div class="flex flex-wrap gap-2">
-                        <?php foreach ($jobCategories as $category): ?>
-                            <span
-                                class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
-                                <?= htmlspecialchars($category['name'] ?? 'No Name') ?>
-                            </span>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-
-                <!-- Description -->
-                <div class="md:col-span-2">
-                    <label class="form-label">Job Description</label>
-                    <p class="form-readonly"><?= nl2br(htmlspecialchars($job->getDescription() ?? 'N/A')) ?></p>
-                </div>
-
-                <!-- Requirements -->
-                <div class="md:col-span-2">
-                    <label class="form-label">Requirements</label>
-                    <p class="form-readonly"><?= nl2br(htmlspecialchars($job->getRequirements() ?? 'N/A')) ?></p>
                 </div>
             </div>
 
-            <!-- Info Box -->
-            <div class="form-info-box">
-                <?= Icons::infoCircle('form-info-icon') ?>
-                <div>
-                    <p class="form-info-title">Meta Information</p>
-                    <p class="form-info-text">
-                        <strong>Employer:</strong> <?= htmlspecialchars($job->getEmployerName() ?? 'N/A') ?><br>
-                        <strong>Posted By:</strong> <?= htmlspecialchars($job->getPostedByName() ?? 'N/A') ?><br>
-                        <strong>Created:</strong>
-                        <?= $job->getCreatedAt() ? date('d m, Y H:i', strtotime($job->getCreatedAt())) : 'N/A' ?><br>
-                        <strong>Last Updated:</strong>
-                        <?= $job->getUpdatedAt() ? date('d m, Y H:i', strtotime($job->getUpdatedAt())) : 'N/A' ?>
-                    </p>
+            <!-- Approval/Rejection Status Section -->
+            <?php if ($job->getStatus() === 'approved'): ?>
+                <div class="bg-green-50 rounded-lg border border-green-200 p-6">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0"><?= Icons::checkCircle('h-6 w-6 text-green-500') ?></div>
+                        <div class="ml-4 flex-1">
+                            <h3 class="font-semibold text-green-900 mb-2">Job Approved</h3>
+                            <p class="text-sm text-green-800 mb-3">
+                                <strong>Approved At:</strong> <?= $job->getApprovedAt() ? date('M j, Y H:i', strtotime($job->getApprovedAt())) : 'N/A' ?>
+                            </p>
+                            <?php if (!empty($jobReview)): ?>
+                                <p class="text-sm text-green-800">
+                                    <strong>Reason:</strong> <?= htmlspecialchars($jobReview) ?>
+                                </p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php elseif ($job->getStatus() === 'rejected'): ?>
+                <div class="bg-red-50 rounded-lg border border-red-200 p-6">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0"><?= Icons::exclamationCircle('h-6 w-6 text-red-500') ?></div>
+                        <div class="ml-4 flex-1">
+                            <h3 class="font-semibold text-red-900 mb-2">Job Rejected</h3>
+                            <p class="text-sm text-red-800 mb-3">
+                                <strong>Rejected At:</strong> <?= $job->getRejectedAt() ? date('M j, Y H:i', strtotime($job->getRejectedAt())) : 'N/A' ?>
+                            </p>
+                            <?php if (!empty($jobReview)): ?>
+                                <p class="text-sm text-red-800">
+                                    <strong>Reason:</strong> <?= htmlspecialchars($jobReview) ?>
+                                </p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- Job Description Section -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 pb-3 border-b border-gray-200">Job Description</h3>
+                <p class="text-gray-700 whitespace-pre-wrap"><?= htmlspecialchars($job->getDescription() ?? 'N/A') ?></p>
+            </div>
+
+            <!-- Requirements Section -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 pb-3 border-b border-gray-200">Requirements</h3>
+                <p class="text-gray-700 whitespace-pre-wrap"><?= htmlspecialchars($job->getRequirements() ?? 'N/A') ?></p>
+            </div>
+
+            <!-- Meta Information Section -->
+            <div class="bg-gray-50 rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 pb-3 border-b border-gray-200">Meta Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <p class="text-gray-600"><strong>Employer:</strong></p>
+                        <p class="text-gray-900"><?= htmlspecialchars($job->getEmployerName() ?? 'N/A') ?></p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600"><strong>Posted By:</strong></p>
+                        <p class="text-gray-900"><?= htmlspecialchars($job->getPostedByName() ?? 'N/A') ?></p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600"><strong>Created:</strong></p>
+                        <p class="text-gray-900"><?= $job->getCreatedAt() ? date('M j, Y H:i', strtotime($job->getCreatedAt())) : 'N/A' ?></p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600"><strong>Last Updated:</strong></p>
+                        <p class="text-gray-900"><?= $job->getUpdatedAt() ? date('M j, Y H:i', strtotime($job->getUpdatedAt())) : 'N/A' ?></p>
+                    </div>
                 </div>
             </div>
 

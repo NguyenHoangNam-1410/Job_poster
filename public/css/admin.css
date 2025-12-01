@@ -1,7 +1,7 @@
 ﻿@import url('auth-shared.css');
 
 .sidebar {
-    background: linear-gradient(135deg, #03010a 0%, #080533 100%);
+    background: linear-gradient(135deg, #03010a 0%, #0b0744 100%);
 }
 
 /* Admin-specific navbar gradient */

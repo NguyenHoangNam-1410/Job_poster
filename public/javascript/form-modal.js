@@ -129,6 +129,9 @@ class FormModal {
     // Show modal with loading state
     this.modal.classList.remove("hidden");
     this.modal.classList.add("flex");
+    
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = "hidden";
 
     const modalBody = document.getElementById("formModalBody");
     modalBody.innerHTML = `
@@ -153,7 +156,12 @@ class FormModal {
       // Extract form content (between form tags)
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, "text/html");
-      const formElement = doc.querySelector("form");
+      
+      // Find the first form, excluding any AI chatbot or other modal forms
+      let formElement = doc.querySelector("form:not([id*='chat']):not([id*='ai'])");
+      if (!formElement) {
+        formElement = doc.querySelector("form");
+      }
 
       if (formElement) {
         // Update the form action to handle modal submission
@@ -162,7 +170,7 @@ class FormModal {
 
         // Move form buttons to footer
         const formButtons = formElement.querySelector(
-          ".flex.gap-3, .flex.gap-4, .mt-6"
+          ".form-actions, .flex.gap-3, .flex.gap-4, .mt-6"
         );
         const modalFooter = document.getElementById("formModalFooter");
 
@@ -195,21 +203,55 @@ class FormModal {
           if (newCancelBtn) {
             newCancelBtn.onclick = () => this.close();
           }
+        } else {
+          // No buttons found or form doesn't have action buttons, hide footer
+          modalFooter.innerHTML = "";
+          modalFooter.classList.add("hidden");
         }
 
         modalBody.innerHTML = "";
+        
+        // Extract scripts before appending form
+        const scripts = Array.from(doc.querySelectorAll("script"));
+        
+        // Remove script tags from form before appending
+        formElement.querySelectorAll("script").forEach(script => script.remove());
+        
+        // Remove any chatbot or footer elements from the form
+        formElement.querySelectorAll("[id*='chat'], [id*='ai'], [class*='chatbot'], footer").forEach(el => {
+          if (el !== formElement) el.remove();
+        });
+        
         modalBody.appendChild(formElement);
 
-        // Execute any script tags in the loaded content
-        const scripts = doc.querySelectorAll("script");
+        // Now execute scripts after form is in DOM
         scripts.forEach((oldScript) => {
-          const newScript = document.createElement("script");
           if (oldScript.src) {
-            newScript.src = oldScript.src;
-          } else {
-            newScript.textContent = oldScript.textContent;
+            // External scripts - only add if not already loaded
+            const scriptSrc = oldScript.src;
+            // Check if script is already loaded by checking if a script tag with same src exists
+            const alreadyLoaded = Array.from(document.querySelectorAll('script[src]')).some(s => 
+              s.src.includes(scriptSrc.split('/').pop())
+            );
+            
+            if (!alreadyLoaded) {
+              const newScript = document.createElement("script");
+              newScript.src = scriptSrc;
+              newScript.async = false;
+              document.head.appendChild(newScript);
+            }
+          } else if (oldScript.textContent.trim()) {
+            // Inline scripts - execute them only if they don't create conflicting globals
+            try {
+              // Wrap in IIFE to maintain scope
+              (function() {
+                eval(oldScript.textContent);
+              })();
+            } catch (error) {
+              // Skip scripts that cause errors (like duplicate class declarations)
+              console.debug("Skipped script execution:", error.message);
+            }
           }
-          document.head.appendChild(newScript);
         });
 
         // Setup form submission handler
@@ -359,13 +401,45 @@ class FormModal {
   close() {
     if (!this.modal) return;
 
+    // Clear all content properly BEFORE hiding
+    const modalBody = document.getElementById("formModalBody");
+    const modalFooter = document.getElementById("formModalFooter");
+    const modalContainer = this.modal.querySelector(".bg-white");
+    
+    // Remove all form elements and their event listeners
+    while (modalBody.firstChild) {
+      modalBody.removeChild(modalBody.firstChild);
+    }
+    
+    while (modalFooter.firstChild) {
+      modalFooter.removeChild(modalFooter.firstChild);
+    }
+    
+    // Reset inline styles on modal container
+    if (modalContainer) {
+      modalContainer.style.maxHeight = "";
+      modalContainer.style.height = "";
+    }
+    
+    // Reset modal body styles
+    modalBody.style.maxHeight = "";
+    modalBody.style.overflow = "";
+    modalBody.classList.remove("flex-1");
+    
+    // Reset to loading state
+    modalBody.innerHTML = `
+      <div class="flex items-center justify-center py-8">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    `;
+    
+    // Hide the modal
     this.modal.classList.add("hidden");
     this.modal.classList.remove("flex");
-
-    // Clear content
-    document.getElementById("formModalBody").innerHTML = "";
-    document.getElementById("formModalFooter").innerHTML = "";
-    document.getElementById("formModalFooter").classList.add("hidden");
+    modalFooter.classList.add("hidden");
+    
+    // Ensure body scroll is restored
+    document.body.style.overflow = "";
   }
 }
 
