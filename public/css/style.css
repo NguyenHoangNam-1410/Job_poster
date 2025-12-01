@@ -171,9 +171,9 @@ h1 {
     background: linear-gradient(270deg,
             #020918ff,
             #070442ff,
-            #595cb4ff,
+            rgb(12, 14, 88),
             #201d5eff,
-            #011c57ff);
+            rgb(3, 17, 48));
     background-size: 400% 400%;
     animation: gradientWave 10s ease infinite;
     color: white;

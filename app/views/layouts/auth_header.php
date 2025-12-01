@@ -96,8 +96,14 @@ if ($currentUserId) {
     }
     $userDAO = new UserDAO();
     $dbAvatar = $userDAO->getAvatar($currentUserId);
+    
+    // Use the database avatar only if it exists and is not empty
     if (!empty($dbAvatar)) {
-        $userAvatar = $dbAvatar;
+        // Verify the file exists, otherwise use default
+        $avatarPath = $_SERVER['DOCUMENT_ROOT'] . $dbAvatar;
+        if (file_exists($avatarPath)) {
+            $userAvatar = $dbAvatar;
+        }
     }
 }
 ?>
