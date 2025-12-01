@@ -1,0 +1,66 @@
+services:
+  # MySQL Database Service
+  db:
+    image: mysql:8.0
+    container_name: worknest-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-job_poster}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_USER: ${DB_USERNAME:-job_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-job_password}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./config/init_db.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./config/create_db.sql:/docker-entrypoint-initdb.d/02-create.sql
+    networks:
+      - worknest-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # PHP Apache Service
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: worknest-web
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_NAME: ${DB_NAME:-job_poster}
+      DB_USERNAME: ${DB_USERNAME:-job_user}
+      DB_PASSWORD: ${DB_PASSWORD:-job_password}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      MAILER_HOST: ${MAILER_HOST:-}
+      MAILER_PORT: ${MAILER_PORT:-587}
+      MAILER_USERNAME: ${MAILER_USERNAME:-}
+      MAILER_PASSWORD: ${MAILER_PASSWORD:-}
+      MAILER_FROM_EMAIL: ${MAILER_FROM_EMAIL:-}
+      MAILER_FROM_NAME: ${MAILER_FROM_NAME:-WorkNest}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html
+      - ./public/image:/var/www/html/public/image
+    networks:
+      - worknest-network
+    stdin_open: true
+    tty: true
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  worknest-network:
+    driver: bridge
