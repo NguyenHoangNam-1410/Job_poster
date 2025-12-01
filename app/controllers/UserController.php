@@ -141,7 +141,7 @@ class UserController
                 $user = $this->userService->getUserById($id);
                 if ($user && $user->getRole() === 'Employer' && isset($_POST['employer_id'])) {
                     require_once __DIR__ . '/../dao/EmployerDAO.php';
-                    $employerDAO = new EmployderDAO();
+                    $employerDAO = new EmployerDAO();
 
                     $employerData = [
                         'company_name' => $_POST['company_name'] ?? '',

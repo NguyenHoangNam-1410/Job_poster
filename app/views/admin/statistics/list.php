@@ -7,7 +7,8 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
     <!-- Header -->
     <div class="mb-8">
         <h1 class="text-4xl font-bold text-gray-800 mb-2">Hi,
-            <?= htmlspecialchars($_SESSION['user']['name'] ?? 'Admin'); ?>!</h1>
+            <?= htmlspecialchars($_SESSION['user']['name'] ?? 'Admin'); ?>!
+        </h1>
     </div>
 
     <?php if (isset($error)): ?>
@@ -156,7 +157,8 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                 </div>
                                 <div class="text-right">
                                     <p class="text-3xl font-bold text-indigo-600">
-                                        <?php echo number_format($staff['action_count']); ?></p>
+                                        <?php echo number_format($staff['action_count']); ?>
+                                    </p>
                                     <p class="text-xs text-gray-500 uppercase">Actions</p>
                                 </div>
                             </div>
@@ -194,7 +196,8 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                                 </div>
                                 <div class="flex-grow">
                                     <h3 class="font-bold text-gray-800 text-lg">
-                                        <?php echo htmlspecialchars($employer['company_name']); ?></h3>
+                                        <?php echo htmlspecialchars($employer['company_name']); ?>
+                                    </h3>
                                     <p class="text-sm text-gray-600">
                                         <?php echo htmlspecialchars($employer['user_name']); ?>
                                         <span class="text-gray-400">• ID:
@@ -233,11 +236,11 @@ require_once __DIR__ . '/../../../helpers/Icons.php';
                     labels: ['Pending', 'Approved', 'Rejected', 'Overdue', 'Deleted'],
                     datasets: [{
                         data: [
-                            <?php echo $stats['job_counts']['pending']; ?>,
-                            <?php echo $stats['job_counts']['approved']; ?>,
-                            <?php echo $stats['job_counts']['rejected']; ?>,
-                            <?php echo $stats['job_counts']['overdue']; ?>,
-                            <?php echo $stats['job_counts']['soft_deleted']; ?>
+                            <?= $stats['job_counts']['pending'] ?? 0 ?>,
+                            <?= $stats['job_counts']['approved'] ?? 0 ?>,
+                            <?= $stats['job_counts']['rejected'] ?? 0 ?>,
+                            <?= $stats['job_counts']['overdue'] ?? 0 ?>,
+                            <?= $stats['job_counts']['soft_deleted'] ?? 0 ?>
                         ],
                         backgroundColor: [
                             '#EAB308', // yellow-500

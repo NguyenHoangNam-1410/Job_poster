@@ -78,8 +78,7 @@ class CompanyController
                 $success = $this->companyService->createCompanyProfile($_SESSION['user']['id'], $data);
 
                 if ($success) {
-                    header('Location: /Worknest/public/company-profile?success=' . urlencode('Company updated successfully'));
-                    exit;
+                    return $this->companyService->getEmployerByUserId($_SESSION['user']['id']);
                 } else {
                     throw new Exception("Failed to create company profile.");
                 }
@@ -88,6 +87,7 @@ class CompanyController
                 require_once __DIR__ . '/../views/employer/my_company/profile.php';
             }
         }
+        return null;
     }
 
     public function updateCompanyProfile()
