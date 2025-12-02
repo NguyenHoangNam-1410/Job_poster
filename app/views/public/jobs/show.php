@@ -925,7 +925,7 @@ $left = days_left($deadlineRaw);
             value="<?= isset($_SESSION['user']['email']) ? h($_SESSION['user']['email']) : '' ?>"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 <?= isset($_SESSION['user']['email']) ? 'bg-gray-50' : '' ?>"
             placeholder="your.email@example.com" <?= isset($_SESSION['user']['email']) ? 'readonly' : '' ?>>
-          <p class="mt-1 text-xs text-gray-500">This email will be used to send your application to the employer.</p>
+          <p class="mt-1 text-xs text-gray-500">This email will be used to send your application to the recruiter.</p>
         </div>
 
         <div>
