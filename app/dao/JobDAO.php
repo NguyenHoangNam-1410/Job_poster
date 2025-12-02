@@ -786,7 +786,8 @@ class JobDAO
         if ($types === '') {
             $stmt->bind_param("ii", $perPage, $off);
         } else {
-            $stmt->bind_param($types . "ii", ...array_merge($binds, [$perPage, $off]));
+            $mergedParams = array_merge($binds, [$perPage, $off]);
+            $stmt->bind_param($types . "ii", ...$mergedParams);
         }
         $stmt->execute();
         $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);

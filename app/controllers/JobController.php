@@ -489,8 +489,6 @@ class JobController
             $categoryFilter,
             $locationFilter,
             $statusesToQuery,
-            $dateFrom,
-            $dateTo,
             $per_page,
             $offset
         );
