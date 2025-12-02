@@ -404,7 +404,13 @@ $userRole = $_SESSION['user']['role'] ?? null;
       <?php else: ?>
         <div class="relative ml-auto" id="profileDropdown">
           <button type="button" class="flex items-center space-x-2 y2k-nav-link transition p-2 rounded-lg cursor-pointer" id="profileDropdownBtn">
-            <img src="<?= $_SESSION['user']['avatar'] ?? '/Worknest/public/image/avatar/default.svg' ?>"
+            <?php
+            // Get current user's avatar from database
+            $currentUserId = $_SESSION['user']['id'] ?? null;
+            $userAvatar = '/Worknest/public/image/avatar/default.svg';
+            $userName = $_SESSION['user']['name'] ?? $userRole . ' User';
+            ?>
+            <img src="<?= $userAvatar ?>"
               alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-white shadow">
             <div class="flex flex-col">
               <span class="text-sm font-semibold text-white"><?= $_SESSION['user']['name'] ?? 'User' ?></span>
