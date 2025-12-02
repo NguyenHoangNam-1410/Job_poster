@@ -101,7 +101,7 @@ require_once '../app/views/layouts/auth_header.php';
                                             <?= ucfirst(htmlspecialchars($job->getStatus())) ?>
                                         </span>
                                     </td>
-                                    <td class="table-cell"><?= date('Y-m-d', strtotime($job->getCreatedAt())) ?></td>
+                                    <td class="table-cell"><?= date('d M, Y', strtotime($job->getCreatedAt())) ?></td>
                                     <td class="table-cell">
                                         <div class="flex gap-3">
                                             <a href="/Worknest/public/approvals/detail/<?= $job->getId() ?>"
@@ -163,7 +163,7 @@ require_once '../app/views/layouts/auth_header.php';
                                             Reviewed
                                         </span>
                                     </td>
-                                    <td class="table-cell"><?= date('Y-m-d', strtotime($feedback->getCreatedAt())) ?></td>
+                                    <td class="table-cell"><?= date('d M, Y', strtotime($feedback->getCreatedAt())) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
