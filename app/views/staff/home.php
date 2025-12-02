@@ -19,6 +19,7 @@ require_once '../app/views/layouts/auth_header.php';
                     <div>
                         <p class="text-yellow-100 text-sm font-medium mb-1">Pending Job Requests</p>
                         <p class="text-4xl font-bold"><?= $pendingJobsCount ?></p>
+                        <p class="text-4xl font-bold"><?= $pendingJobsCount ?></p>
                         <p class="text-yellow-100 text-xs mt-2">Awaiting review</p>
                     </div>
                     <div class="bg-white bg-opacity-20 rounded-full p-4">
@@ -36,6 +37,7 @@ require_once '../app/views/layouts/auth_header.php';
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-green-100 text-sm font-medium mb-1">Reviewed Reports</p>
+                        <p class="text-4xl font-bold"><?= $reviewedReportsCount ?></p>
                         <p class="text-4xl font-bold"><?= $reviewedReportsCount ?></p>
                         <p class="text-green-100 text-xs mt-2">Complaints handled</p>
                     </div>
@@ -55,6 +57,7 @@ require_once '../app/views/layouts/auth_header.php';
                     <div>
                         <p class="text-blue-100 text-sm font-medium mb-1">Managed Jobs</p>
                         <p class="text-4xl font-bold"><?= $managedJobsCount ?></p>
+                        <p class="text-4xl font-bold"><?= $managedJobsCount ?></p>
                         <p class="text-blue-100 text-xs mt-2">Total jobs monitored</p>
                     </div>
                     <div class="bg-white bg-opacity-20 rounded-full p-4">
@@ -68,17 +71,17 @@ require_once '../app/views/layouts/auth_header.php';
         </div>
 
         <!-- Job Posting Requests Table -->
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold text-gray-800">Recent Job Requests</h2>
+            <a href="/Worknest/public/approvals"
+                class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-150 rounded-lg hover:bg-blue-100 transition-colors">
+                View All
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
         <div class="list-table-wrapper mb-8">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-semibold text-gray-800" style="margin-left: 10px;">Recent Job Requests</h2>
-                <a href="/Worknest/public/approvals"
-                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                    View All
-                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
-            </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead>
@@ -101,7 +104,7 @@ require_once '../app/views/layouts/auth_header.php';
                                             <?= ucfirst(htmlspecialchars($job->getStatus())) ?>
                                         </span>
                                     </td>
-                                    <td class="table-cell"><?= date('Y-m-d', strtotime($job->getCreatedAt())) ?></td>
+                                    <td class="table-cell"><?= date('d M, Y', strtotime($job->getCreatedAt())) ?></td>
                                     <td class="table-cell">
                                         <div class="flex gap-3">
                                             <a href="/Worknest/public/approvals/detail/<?= $job->getId() ?>"
@@ -131,17 +134,17 @@ require_once '../app/views/layouts/auth_header.php';
         </div>
 
         <!-- Reports & Complaints Table -->
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold text-gray-800">Recent Feedback</h2>
+            <a href="/Worknest/public/feedbacks"
+                class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-150 rounded-lg hover:bg-blue-100 transition-colors">
+                View All
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
         <div class="list-table-wrapper">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-semibold text-gray-800" style="margin-left: 10px;">Recent Feedback</h2>
-                <a href="/Worknest/public/feedbacks"
-                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                    View All
-                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
-            </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead>
@@ -163,7 +166,7 @@ require_once '../app/views/layouts/auth_header.php';
                                             Reviewed
                                         </span>
                                     </td>
-                                    <td class="table-cell"><?= date('Y-m-d', strtotime($feedback->getCreatedAt())) ?></td>
+                                    <td class="table-cell"><?= date('d M, Y', strtotime($feedback->getCreatedAt())) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
