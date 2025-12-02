@@ -19,6 +19,7 @@ require_once '../app/views/layouts/auth_header.php';
                     <div>
                         <p class="text-yellow-100 text-sm font-medium mb-1">Pending Job Requests</p>
                         <p class="text-4xl font-bold"><?= $pendingJobsCount ?></p>
+                        <p class="text-4xl font-bold"><?= $pendingJobsCount ?></p>
                         <p class="text-yellow-100 text-xs mt-2">Awaiting review</p>
                     </div>
                     <div class="bg-white bg-opacity-20 rounded-full p-4">
@@ -37,6 +38,7 @@ require_once '../app/views/layouts/auth_header.php';
                     <div>
                         <p class="text-green-100 text-sm font-medium mb-1">Reviewed Reports</p>
                         <p class="text-4xl font-bold"><?= $reviewedReportsCount ?></p>
+                        <p class="text-4xl font-bold"><?= $reviewedReportsCount ?></p>
                         <p class="text-green-100 text-xs mt-2">Complaints handled</p>
                     </div>
                     <div class="bg-white bg-opacity-20 rounded-full p-4">
@@ -54,6 +56,7 @@ require_once '../app/views/layouts/auth_header.php';
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-blue-100 text-sm font-medium mb-1">Managed Jobs</p>
+                        <p class="text-4xl font-bold"><?= $managedJobsCount ?></p>
                         <p class="text-4xl font-bold"><?= $managedJobsCount ?></p>
                         <p class="text-blue-100 text-xs mt-2">Total jobs monitored</p>
                     </div>
