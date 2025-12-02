@@ -68,17 +68,17 @@ require_once '../app/views/layouts/auth_header.php';
         </div>
 
         <!-- Job Posting Requests Table -->
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold text-gray-800">Recent Job Requests</h2>
+            <a href="/Worknest/public/approvals"
+                class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-150 rounded-lg hover:bg-blue-100 transition-colors">
+                View All
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
         <div class="list-table-wrapper mb-8">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-semibold text-gray-800" style="margin-left: 10px;">Recent Job Requests</h2>
-                <a href="/Worknest/public/approvals"
-                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                    View All
-                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
-            </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead>
@@ -131,17 +131,17 @@ require_once '../app/views/layouts/auth_header.php';
         </div>
 
         <!-- Reports & Complaints Table -->
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold text-gray-800">Recent Feedback</h2>
+            <a href="/Worknest/public/feedbacks"
+                class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-150 rounded-lg hover:bg-blue-100 transition-colors">
+                View All
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
         <div class="list-table-wrapper">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-semibold text-gray-800" style="margin-left: 10px;">Recent Feedback</h2>
-                <a href="/Worknest/public/feedbacks"
-                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                    View All
-                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
-            </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead>
