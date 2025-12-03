@@ -532,7 +532,7 @@ include __DIR__ . '/../layouts/public_header.php';
     <!-- Video container -->
     <div class="retro-card max-w-5xl mx-auto bg-white p-6">
       <div class="relative overflow-hidden border-3 border-gray-900" style="padding-bottom: 56.25%; height: 0;">
-        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/IawcFovAQRw"
+        <iframe class="absolute top-0 left-0 w-full h-full" src="https://youtu.be/xWPJaEBIaIs?si=OJnBMzK4LNgZRlg9"
           title="WorkNest Intro Video" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen>
