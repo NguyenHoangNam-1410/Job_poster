@@ -35,6 +35,16 @@ class AuthController
             $fullname = $_POST['name'] ?? '';
             $password = $_POST['password'] ?? '';
             $confirmPassword = $_POST['confirm_password'] ?? '';
+            // Validate checkbox agreements
+            $agreePolicy = isset($_POST['agree_policy']) && $_POST['agree_policy'] === 'on';
+            $agreeTerms = isset($_POST['agree_terms']) && $_POST['agree_terms'] === 'on';
+            
+            if (!$agreePolicy || !$agreeTerms) {
+                $_SESSION['terms_error'] = 'You must agree to the Privacy Policy and Terms of Service to create an account.';
+                header("Location: " . BASE_URL . "/auth/register");
+                exit;
+            }
+            
             if ($this->userService->getUserByEmail($email)) {
                 if ($this->userService->getAuthProvider($email) === 'google') {
                     $_SESSION['register_error'] = 'Email already exists with Google. Please login with Google.';

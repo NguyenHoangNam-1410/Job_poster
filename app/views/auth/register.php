@@ -54,6 +54,25 @@ include __DIR__ . '/../layouts/public_header.php';
             <div class="text-red-600 text-sm mt-1 hidden is-invalid-not-match">Passwords do not match.</div>
           </div>
 
+          <div class="mb-4">
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="agree_policy" name="agree_policy" required>
+                <span>I have read the <a href="/Worknest/public/privacy-policy" target="_blank" class="link-underline">Privacy Policy</a><span class="text-red-500">*</span></span>
+              </label>
+            </div>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="agree_terms" name="agree_terms" required>
+                <span>I agree with the <a href="/Worknest/public/terms-of-service" target="_blank" class="link-underline">Terms of Service</a><span class="text-red-500">*</span></span>
+              </label>
+            </div>
+            <?php if (isset($_SESSION['terms_error'])): ?>
+              <div class="text-red-600 text-sm mt-2"><?= $_SESSION['terms_error'] ?></div>
+              <?php unset($_SESSION['terms_error']); ?>
+            <?php endif; ?>
+          </div>
+
           <button type="submit" class="btn btn-primary signup-button w-full mb-4">Sign Up</button>
 
           <div class="text-center text-gray-500 my-3">— or —</div>

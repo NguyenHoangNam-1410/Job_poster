@@ -704,6 +704,53 @@ footer.bg-gray-900 span {
   color: #ffffff !important;
 }
 
+/* Checkbox Styles */
+.checkbox-group {
+  margin-bottom: 0.75rem;
+}
+
+.checkbox-label {
+  display: flex !important;
+  align-items: flex-start !important;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #4a4a4a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  gap: 0.5rem;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  min-height: 18px !important;
+  margin-top: 2px !important;
+  cursor: pointer;
+  accent-color: var(--primary-teal);
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+  background-color: var(--primary-teal) !important;
+  border-color: var(--primary-teal) !important;
+}
+
+.checkbox-label span {
+  flex: 1;
+}
+
+.checkbox-label a.link-underline {
+  color: var(--primary-teal) !important;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.checkbox-label a.link-underline:hover {
+  color: var(--primary-teal-dark) !important;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .welcome-title {
