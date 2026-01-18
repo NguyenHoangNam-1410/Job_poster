@@ -1086,7 +1086,7 @@ We welcome contributions! Here's how you can help:
 
 ## 📊 Project Stats
 
-- **Lines of Code**: ~15,000+
+- ![**Lines of Code**](https://tokei.rs/b1/github/NguyenHoangNam-1410/Job_poster)
 - **Files**: 100+
 - **Database Tables**: 8+
 - **API Endpoints**: 10+
