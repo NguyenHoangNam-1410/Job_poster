@@ -7,7 +7,7 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..'); // points to project root
 $dotenv->load();
 
-define('BASE_URL', '/Worknest/public');
+define('BASE_URL', $_ENV['BASE_URL'] ?? '');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 session_start();

@@ -37,21 +37,21 @@ services:
       DB_NAME: ${DB_NAME:-job_poster}
       DB_USERNAME: ${DB_USERNAME:-job_user}
       DB_PASSWORD: ${DB_PASSWORD:-job_password}
+      BASE_URL: ${BASE_URL:-}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
-      MAILER_HOST: ${MAILER_HOST:-}
-      MAILER_PORT: ${MAILER_PORT:-587}
-      MAILER_USERNAME: ${MAILER_USERNAME:-}
-      MAILER_PASSWORD: ${MAILER_PASSWORD:-}
-      MAILER_FROM_EMAIL: ${MAILER_FROM_EMAIL:-}
-      MAILER_FROM_NAME: ${MAILER_FROM_NAME:-WorkNest}
+      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-noreply@worknest.com}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-WorkNest}
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ./:/var/www/html
-      - ./public/image:/var/www/html/public/image
     networks:
       - worknest-network
     stdin_open: true

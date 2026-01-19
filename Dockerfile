@@ -27,14 +27,13 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
     gd \
     mbstring \
     xml \
-    curl \
-    json
+    curl
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Enable Apache mod_rewrite for URL rewriting
-RUN a2enmod rewrite
+# Enable Apache modules (rewrite for URL rewriting, headers for security headers)
+RUN a2enmod rewrite headers
 
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www/html
